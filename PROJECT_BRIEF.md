@@ -142,6 +142,8 @@ Video playback: fake fullscreen via CSS fixed positioning on play event. Auto-co
 - cubeHint hidden on Face 0, visible on all other faces
 - Watermark numbers 1-6 on each cube face, Cinzel Decorative 120px, opacity 0.07
 - cubeScene height 220px
+- Reveal My Cube button: outside glass card, below it, max-width 56.25% centered
+- Form input fields: cyan rgba(125,212,252,0.1) background, white border when filled
 
 ---
 
@@ -297,10 +299,6 @@ Write 2 additional variations (total 3 per number) for:
 - [x] **FIXED** — Vimeo player color set to cyan 7dd4fc
 - [ ] Spike star CSS still in file (JS generates round stars but CSS classes remain — harmless but can clean up)
 - [ ] Audio re-enable (3 lines to uncomment)
-
-
----
-
 
 ---
 
