@@ -279,7 +279,7 @@ Write 2 additional variations (total 3 per number) for:
 - [x] **FIXED** — payOverlay CSS bug: #payOverlay styles were merged into .legal-link selector, causing "Unlock Your Complete Reading" and "R88" bars to show on Face 0. Split into separate CSS rules. (Fixed April 15, 2026)
 - [ ] Spike star CSS still in file (JS generates round stars but CSS classes remain — harmless but can clean up)
 - [ ] Audio re-enable (3 lines to uncomment)
-- [ ] New video IDs (ZNzo2731VPU intro, lJp2eFZUz_U outro) — in file but embedding needs YouTube Studio confirmation
+
 
 ---
 
