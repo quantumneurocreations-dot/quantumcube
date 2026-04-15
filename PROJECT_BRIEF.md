@@ -356,6 +356,8 @@ Status:  Active development — COMPLETELY SEPARATE CHAT
 - [x] FIXED — Back to Sign Up button same width as Reveal My Cube
 - [x] FIXED — Restored app from git after runCalculation function accidentally deleted by sed command
 
+⚠️ CRITICAL WARNING FOR CURSOR CLAUDE CODE — Start every Cursor chat with: "Never read the full file. Use Grep to find line numbers, then Read only specific lines, then StrReplace." This prevents crashes on the 11.5MB file.
+
 ⚠️ CRITICAL WARNING — NEVER use sed commands to edit JavaScript functions in the HTML file. 
 sed can silently corrupt or delete JS code. Always use Claude Code in Cursor for any JavaScript changes.
 Always run: git log --oneline -5 before making changes so you can restore if needed.
