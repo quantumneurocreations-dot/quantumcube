@@ -1,5 +1,5 @@
 # QUANTUM CUBE — MASTER PROJECT DOCUMENT
-**Version: v10 | Last Updated: April 14, 2026**
+**Version: v10 | Last Updated: April 15, 2026**
 
 ---
 
@@ -15,10 +15,9 @@
 ## FILE LOCATIONS
 ```
 /Users/madcarl/Projects/quantumcube/        ← MAIN PROJECT FOLDER
-├── quantum-cube-v10.html                   ← THE APP (single file, ~13MB)
+├── quantum-cube-v10.html                   ← THE APP (single file, ~11.5MB)
 ├── PROJECT_BRIEF.md                        ← This document
-├── Introduction.mp4                        ← Video local backup
-├── Numerology.mp4                          ← Video local backup
+├── Videos/                                 ← Video local backups (gitignored)
 └── audio/
     ├── ES_Dream_Focus_Beta_Waves.mp3       ← Background binaural music
     ├── Opening_app.wav                     ← App open sound
@@ -30,6 +29,7 @@
 
 **GitHub Repo:** https://github.com/quantumneurocreations-dot/quantumcube
 **Live URL:** https://quantumneurocreations-dot.github.io/quantumcube/quantum-cube-v10.html
+**Note:** Git history was cleaned and fresh repo pushed on April 15, 2026 (videos removed from tracking).
 **YouTube:** Quantum Neuro Creations Academy (quantumneurocreations@gmail.com)
 
 ---
@@ -276,6 +276,7 @@ Write 2 additional variations (total 3 per number) for:
 ---
 
 ## PENDING FIXES FROM LAST SESSION
+- [x] **FIXED** — payOverlay CSS bug: #payOverlay styles were merged into .legal-link selector, causing "Unlock Your Complete Reading" and "R88" bars to show on Face 0. Split into separate CSS rules. (Fixed April 15, 2026)
 - [ ] Spike star CSS still in file (JS generates round stars but CSS classes remain — harmless but can clean up)
 - [ ] Audio re-enable (3 lines to uncomment)
 - [ ] New video IDs (ZNzo2731VPU intro, lJp2eFZUz_U outro) — in file but embedding needs YouTube Studio confirmation
