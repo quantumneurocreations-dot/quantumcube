@@ -133,8 +133,13 @@ Embed URL format: `https://player.vimeo.com/video/ID?badge=0&autopause=0&player_
 - Combined portrait: drop cap "Y" in "You are..." — no name displayed
 - Result card text: centered, 18px body
 - Month dropdown: numbers 1–12 (not names)
-- Day default: 1, Year default: 1999, max year: 2025
-- Mute button (sound FX): fixed bottom-right. Music toggle button: fixed bottom-right next to mute
+- Day and year fields: empty by default, max year 2025
+- Mute button (sound FX): fixed bottom-right. Music toggle: fixed bottom-right next to mute
+- Logo float: continuous elliptical path, linear timing, QUANTUM 6s, CUBE 11s, no stops
+- Sign-up form: glass card transparent with backdrop blur, black input backgrounds
+- cubeHint hidden on Face 0, visible on all other faces
+- Watermark numbers 1-6 on each cube face, Cinzel Decorative 120px, opacity 0.07
+- cubeScene height 220px
 
 ---
 
@@ -193,7 +198,7 @@ AUDIO.init();
   1. Register at payfast.co.za (SA only) OR integrate Stripe/Paddle for global
   2. Swap Merchant ID + Merchant Key in `PF_CONFIG` block
   3. Set `sandbox: false`
-  4. Update price display in app from R88 to $8
+  4. ~~Update price display in app from R88 to $8~~ ✅ Done
   5. Test payment end-to-end
 
 ---
@@ -259,7 +264,7 @@ Write 2 additional variations (total 3 per number) for:
 - [ ] Register PayFast merchant account
 - [ ] Swap sandbox → live credentials
 - [ ] Set sandbox: false
-- [ ] Test live R88 payment
+- [ ] Test live $8 payment
 
 ### 🟢 Priority 5 — App Stores
 - [ ] Google Play: PWABuilder.com → .aab → $25 USD dev account
@@ -273,7 +278,11 @@ Write 2 additional variations (total 3 per number) for:
 ---
 
 ## PENDING FIXES FROM LAST SESSION
-- [x] **FIXED** — payOverlay CSS bug: #payOverlay styles were merged into .legal-link selector, causing "Unlock Your Complete Reading" and "R88" bars to show on Face 0. Split into separate CSS rules. (Fixed April 15, 2026)
+- [x] **FIXED** — payOverlay CSS bug: R88/Unlock bars showing on Face 0 (April 15)
+- [x] **FIXED** — Cube rotation: quaternion system, full 360 freedom, clockwise idle spin
+- [x] **FIXED** — Gimbal lock on top/bottom faces
+- [x] **FIXED** — Idle timer not restarting after long drag
+- [x] **FIXED** — Price updated from R88 to $8 everywhere including legal text
 - [ ] Spike star CSS still in file (JS generates round stars but CSS classes remain — harmless but can clean up)
 - [ ] Audio re-enable (3 lines to uncomment)
 
