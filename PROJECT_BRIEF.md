@@ -350,5 +350,14 @@ Status:  Active development — COMPLETELY SEPARATE CHAT
 **Never bring Academy work into Quantum Cube chats and vice versa.**
 
 ---
+- [x] FIXED — Reveal My Cube button glows cyan when all fields filled (excludes middle name)
+- [x] FIXED — Privacy Policy removed from all pages, Terms of Use + Disclaimer only  
+- [x] FIXED — Form inputs white border, card left margin for mobile scrollbar balance
+- [x] FIXED — Back to Sign Up button same width as Reveal My Cube
+- [x] FIXED — Restored app from git after runCalculation function accidentally deleted by sed command
 
-*Paste this entire document at the start of every new Quantum Cube chat session.*
+⚠️ CRITICAL WARNING — NEVER use sed commands to edit JavaScript functions in the HTML file. 
+sed can silently corrupt or delete JS code. Always use Claude Code in Cursor for any JavaScript changes.
+Always run: git log --oneline -5 before making changes so you can restore if needed.
+For simple CSS changes, sed via Mac terminal is safe.
+For JavaScript changes, Claude Code in Cursor only.
