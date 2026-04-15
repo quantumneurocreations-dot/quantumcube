@@ -30,7 +30,7 @@
 **GitHub Repo:** https://github.com/quantumneurocreations-dot/quantumcube
 **Live URL:** https://quantumneurocreations-dot.github.io/quantumcube/quantum-cube-v10.html
 **Note:** Git history was cleaned and fresh repo pushed on April 15, 2026 (videos removed from tracking).
-**YouTube:** Quantum Neuro Creations Academy (quantumneurocreations@gmail.com)
+
 
 ---
 
