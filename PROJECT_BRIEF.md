@@ -59,7 +59,7 @@ git push
 |----------|-----|---------|---------|
 | **GitHub** | github.com/quantumneurocreations-dot/quantumcube | quantumneurocreations-dot | Push code |
 | **Claude Console** | platform.claude.com | Codex / quantumneurocreations | API keys |
-| **YouTube Studio** | studio.youtube.com | quantumneurocreations@gmail.com | Manage videos |
+| **Vimeo** | vimeo.com/manage/videos | quantumneurocreations@gmail.com | Manage videos |
 | **PayFast** | payfast.co.za | TBD | Payment gateway |
 | **ElevenLabs** | elevenlabs.io | ElevenCreative | Future voice |
 
@@ -68,11 +68,12 @@ git push
 ---
 
 ## HOW TO WORK ON THE FILE
-1. Upload `quantum-cube-v10.html` to a new chat
-2. Paste this full document
-3. All edits via Python string replacement — **never rewrite from scratch**
-4. File is ~13MB (audio base64 embedded)
-5. After edits: drop updated file into `/Users/madcarl/Projects/quantumcube` and push
+1. Start a new chat inside the Quantum Cube project in Cursor
+2. Paste this PROJECT_BRIEF.md document
+3. Claude Code edits quantum-cube-v10.html directly — no need to upload the HTML file
+4. File is ~11.5MB (audio base64 embedded) — do NOT upload to chat
+5. Use live URL for visual checks: https://quantumneurocreations-dot.github.io/quantumcube/quantum-cube-v10.html
+6. After edits: git add, commit, push via Claude Code in terminal
 
 ---
 
@@ -82,7 +83,7 @@ git push
 - CSS3 — 3D transforms, glassmorphism, custom animations
 - Fonts: Cinzel Decorative (logo), Cinzel (labels/UI), Cormorant Garamond (body text)
 - Payment: PayFast (sandbox credentials active)
-- Videos: YouTube embed (unlisted)
+- Videos: Vimeo (Hide from Vimeo, embeddable anywhere)
 - Audio: Base64 embedded (currently disabled)
 - Hosting: GitHub Pages
 - PWA: Web manifest, service worker (cache: qc-v11)
@@ -93,28 +94,28 @@ git push
 | Face | Name | Status | Videos |
 |------|------|--------|--------|
 | Face 0 | Entry / Sign Up Form | ✅ Complete | None |
-| Face 1 | Introduction | ✅ Complete | Introduction + Numerology Explained |
-| Face 2 | Results Explained | ✅ Complete | Results Explained + Astrology |
+| Face 1 | Introduction | ✅ Complete | Introduction (portrait 9:16) |
+| Face 2 | Results Explained | ✅ Complete | Numerology + Results Explained + Astrology (landscape 16:9) |
 | Face 3 | Numerology Results | ✅ Complete | None |
 | Face 4 | Astrology & Horoscope | ✅ Complete | None |
 | Face 5 | Combined Results | ✅ Complete | None |
-| Face 6 | Complete / Outro | ✅ Complete | Your Journey Complete |
+| Face 6 | Complete / Outro | ✅ Complete | Cube Outro (portrait 9:16) |
 | Face 7 | Settings / Launch Guide | ✅ Complete | None |
 
 ---
 
-## YOUTUBE VIDEOS
-| Face | Title | YouTube ID | Status |
-|------|-------|------------|--------|
-| Face 1 | Introduction | ZNzo2731VPU | ✅ New upload — verify embedding enabled |
-| Face 1 | Numerology Explained | eORl2jWAvfs | ✅ Active |
-| Face 2 | Results Explained | Xb6bH09Ggzs | ⚠️ Copyright flag — monitor |
-| Face 2 | Astrology & Horoscope | QHdxiHTiLoY | ✅ Active |
-| Face 6 | Your Journey Complete | lJp2eFZUz_U | ✅ New upload — verify embedding enabled |
+## VIMEO VIDEOS — CURRENT STATE
+All videos on Vimeo. Privacy: Hide from Vimeo (embeddable anywhere). Downloads OFF. Comments OFF.
 
-> **Important:** All videos must have **Allow Embedding = ON** in YouTube Studio.
-> Videos uploaded as YouTube Shorts may not embed — re-upload as regular videos if embedding fails.
-> Always test from live URL, NOT from local file (local = Error 153 always).
+| Face | Title | Vimeo ID | Shape |
+|------|-------|----------|-------|
+| Face 1 | 1 - Introduction | 1183086210 | Portrait (9:16) |
+| Face 2 | 2 - Numerology Explained | 1183086853 | Landscape (16:9) |
+| Face 2 | 3 - Results Explanation | 1183087269 | Landscape (16:9) |
+| Face 2 | 4 - Astrology | 1183087951 | Landscape (16:9) |
+| Face 6 | 5 - Cube Outro | 1183103519 | Portrait (9:16) |
+
+Embed URL format: `https://player.vimeo.com/video/ID?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0&dnt=1`
 
 ---
 
@@ -247,28 +248,22 @@ Write 2 additional variations (total 3 per number) for:
 - [ ] Verify all 144 combination readings
 - [ ] Review combined portrait quality and flow
 
-### 🔴 Priority 3 — Videos
-- [ ] Update Introduction video ID (ZNzo2731VPU) — confirm embedding works
-- [ ] Update Complete video ID (lJp2eFZUz_U) — confirm embedding works
-- [ ] Enable embedding in YouTube Studio for all 5 videos
-- [ ] Re-record all videos at lower volume if needed
-
-### 🟡 Priority 4 — Audio
+### 🟡 Priority 3 — Audio
 - [ ] Re-enable audio (uncomment ~2 lines in JS)
 - [ ] Test all 6 sounds on device
 - [ ] Test music pause/resume on video play
 
-### 🟡 Priority 5 — Payments
+### 🟡 Priority 4 — Payments
 - [ ] Register PayFast merchant account
 - [ ] Swap sandbox → live credentials
 - [ ] Set sandbox: false
 - [ ] Test live R88 payment
 
-### 🟢 Priority 6 — App Stores
+### 🟢 Priority 5 — App Stores
 - [ ] Google Play: PWABuilder.com → .aab → $25 USD dev account
 - [ ] Apple App Store: Capacitor → Xcode → $99/yr dev account
 
-### 🟢 Priority 7 — Final Polish
+### 🟢 Priority 6 — Final Polish
 - [ ] Final QA pass all 6 faces on device
 - [ ] Update legal documents if needed
 - [ ] Review lock screen content
@@ -292,7 +287,7 @@ These points came out of a product review. Address before full launch:
 
 ### 🔴 Critical
 - **Content variations incomplete** — same text repeating on every load kills user trust. Life Path has 3 variations done. All other 8 categories still need 2 more variations each. This is the single biggest content priority.
-- **YouTube dependency is fragile** — videos can break, get copyright flagged, or fail to embed. Plan: host MP4s directly on GitHub as backup, or move to self-hosted video.
+
 
 ### 🟡 Important
 - **No push notifications** — zero retention mechanism once user leaves. Consider adding a "Save your reading" email capture or PWA push notification opt-in.
