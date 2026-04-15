@@ -134,6 +134,7 @@ Embed URL format: `https://player.vimeo.com/video/ID?badge=0&autopause=0&player_
 - Result card text: centered, 18px body
 - Month dropdown: numbers 1–12 (not names)
 - Day default: 1, Year default: 1999, max year: 2025
+- Mute button (sound FX): fixed bottom-right. Music toggle button: fixed bottom-right next to mute
 
 ---
 
