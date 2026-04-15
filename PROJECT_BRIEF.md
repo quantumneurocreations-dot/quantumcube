@@ -150,6 +150,9 @@ Video playback: fake fullscreen via CSS fixed positioning on play event. Auto-co
 - cubeScene height 220px
 - Reveal My Cube button: outside glass card, below it, max-width 56.25% centered
 - Form input fields: cyan rgba(125,212,252,0.1) background, white border when filled
+- All cards use identical glass style: background var(--glass), border var(--border), backdrop-filter blur(16px), ::before/::after top/bottom shine, side glow via box-shadow
+- Lock screens: "Complete Quantum Cube Unlock" with 4 category lines, One-Time Fee $8.00, UNLOCK button
+- Reset arrow ↺ white, fixed position next to cube
 
 ---
 
@@ -284,6 +287,9 @@ Write 2 additional variations (total 3 per number) for:
 - [ ] Final QA pass all 6 faces on device
 - [ ] Update legal documents if needed
 - [ ] Review lock screen content
+- [ ] Add social proof / testimonials section
+- [ ] Add sharing mechanism for readings
+- [ ] Mouse mousedown/mouseup cube glow (desktop)
 
 ---
 
@@ -303,6 +309,15 @@ Write 2 additional variations (total 3 per number) for:
 - [x] **FIXED** — Form inputs cyan 10% background
 - [x] **FIXED** — Reveal My Cube moved outside glass card
 - [x] **FIXED** — Vimeo player color set to cyan 7dd4fc
+- [x] **FIXED** — Lock screen cards compressed and unified glass style on all faces
+- [x] **FIXED** — All cards unified with glass style (var(--glass), var(--border), backdrop-filter blur 16px)
+- [x] **FIXED** — Top and bottom shine gradients on all cards, side glow added
+- [x] **FIXED** — Lock screen content replaced with clean unlock offer on all 4 faces
+- [x] **FIXED** — Gear icon replaced with white reset arrow ↺
+- [x] **FIXED** — Face 7 settings/launch guide internal content removed
+- [x] **FIXED** — Legal footer added to Face 3, 4, 5, 6 lock screens
+- [x] **FIXED** — Fake fullscreen on video play, auto-exit on pause/end
+- [x] **FIXED** — Videos playing correctly via Vimeo Player API
 - [ ] Spike star CSS still in file (JS generates round stars but CSS classes remain — harmless but can clean up)
 - [ ] Audio re-enable (3 lines to uncomment)
 
