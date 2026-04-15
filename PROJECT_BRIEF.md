@@ -84,7 +84,7 @@ git push
 - CSS3 — 3D transforms, glassmorphism, custom animations
 - Fonts: Cinzel Decorative (logo), Cinzel (labels/UI), Cormorant Garamond (body text)
 - Payment: PayFast (sandbox credentials active)
-- Videos: Vimeo (Hide from Vimeo, embeddable anywhere)
+- Videos: Vimeo (Hide from Vimeo, embeddable anywhere) — Player API active, fake fullscreen on play
 - Audio: Base64 embedded (currently disabled)
 - Hosting: GitHub Pages
 - PWA: Web manifest, service worker (cache: qc-v11)
@@ -116,7 +116,9 @@ All videos on Vimeo. Privacy: Hide from Vimeo (embeddable anywhere). Downloads O
 | Face 2 | 4 - Astrology | 1183087951 | Landscape (16:9) |
 | Face 6 | 5 - Cube Outro | 1183103519 | Portrait (9:16) |
 
-Embed URL format: `https://player.vimeo.com/video/ID?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0&dnt=1`
+Embed URL format: `https://player.vimeo.com/video/ID?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0&dnt=1&color=7dd4fc&api=1&playsinline=1`
+
+Video playback: fake fullscreen via CSS fixed positioning on play event. Auto-collapses on pause/end. Vimeo Player API loaded via player.js.
 
 ---
 
@@ -283,6 +285,16 @@ Write 2 additional variations (total 3 per number) for:
 - [x] **FIXED** — Gimbal lock on top/bottom faces
 - [x] **FIXED** — Idle timer not restarting after long drag
 - [x] **FIXED** — Price updated from R88 to $8 everywhere including legal text
+- [x] **FIXED** — Vimeo player: fake fullscreen on play, auto-exit on pause/end (April 15)
+- [x] **FIXED** — Auto scroll to top on every face change including iOS Safari
+- [x] **FIXED** — Month dropdown default set to 1
+- [x] **FIXED** — Responsive glass-card and lock-screen full width on mobile
+- [x] **FIXED** — Legal footer added to all faces
+- [x] **FIXED** — Description card removed from Face 2
+- [x] **FIXED** — Music toggle button added above mute button, both fixed bottom-right
+- [x] **FIXED** — Form inputs cyan 10% background
+- [x] **FIXED** — Reveal My Cube moved outside glass card
+- [x] **FIXED** — Vimeo player color set to cyan 7dd4fc
 - [ ] Spike star CSS still in file (JS generates round stars but CSS classes remain — harmless but can clean up)
 - [ ] Audio re-enable (3 lines to uncomment)
 
