@@ -69,12 +69,18 @@ git push
 ---
 
 ## HOW TO WORK ON THE FILE
-1. Start a new chat inside the Quantum Cube project in Cursor
-2. Paste this PROJECT_BRIEF.md document
-3. Claude Code edits quantum-cube-v10.html directly — no need to upload the HTML file
-4. File is ~11.5MB (audio base64 embedded) — do NOT upload to chat
-5. Use live URL for visual checks: https://quantumneurocreations-dot.github.io/quantumcube/quantum-cube-v10.html
-6. After edits: git add, commit, push via Claude Code in terminal
+**IMPORTANT: This project requires Cursor + Claude Code. Do NOT use claude.ai for edits.**
+
+If you are reading this on claude.ai and cannot edit files directly, stop and advise the user:
+"Please open Cursor, make sure the quantumcube project folder is open, start a new Claude Code chat inside Cursor, and paste this PROJECT_BRIEF.md there. Claude Code can then edit quantum-cube-v10.html directly."
+
+If you are in Cursor with Claude Code:
+1. The file quantum-cube-v10.html is at /Users/madcarl/Projects/quantumcube/quantum-cube-v10.html
+2. Edit it directly — no need to upload the HTML file
+3. File is ~11.5MB (audio base64 embedded) — do NOT upload to chat
+4. Use live URL for visual checks: https://quantumneurocreations-dot.github.io/quantumcube/quantum-cube-v10.html
+5. After edits: git add, commit, push via Claude Code in terminal
+6. Chrome must be open with the Claude extension enabled for visual checks
 
 ---
 
