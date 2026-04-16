@@ -369,3 +369,33 @@ For JavaScript changes, Claude Code in Cursor only.
 - cube-background.jpg saved locally but has a space in filename: "cube- background.jpg" — needs renaming and pushing
 - quantum-cube-v10.html has unstaged changes from Cursor — run: git checkout -- quantum-cube-v10.html first
 - Use Python3 for HTML structure changes, sed for CSS only
+## NEXT SESSION STARTING POINT
+
+### ⚠️ FIRST THING — always run this before touching anything:
+grep -n "function runCalculation" /Users/madcarl/Projects/quantumcube/quantum-cube-v10.html
+If it returns empty — restore from git before proceeding.
+
+### Current State (April 16, 2026)
+- Legal footer moved outside lock screens on all 4 faces (3, 4, 5, 6) ✅
+- Lock screen card margins match sign-up card (margin: 0 16px 20px 32px) ✅
+- Ampersand added between Chinese Horoscope and Combined Interpretation ✅
+- Price updated to $ 8.00 (space between $ and 8) ✅
+- Narrator button 👄 added to bottom right controls (not wired up yet) ✅
+- .cursorignore in place — Backup/, Videos/, Music/, Sounds/, Video Thumbnails/, cube-background.jpg ✅
+- .gitignore updated — .DS_Store and More backgrounds/ added ✅
+- cube-background.jpg renamed (space removed) and pushed ✅
+
+### Next Up
+- [ ] Wire narrator button to ElevenLabs API (API key already set up in Academy)
+- [ ] Male/female voice toggle for narrator
+- [ ] Content variations — 2 more per number for all 8 remaining categories
+- [ ] Faces 4, 5, 6 — verify legal footer looks correct on live app
+- [ ] Payment — move from PayFast to Stripe or Paddle for global
+- [ ] Audio re-enable (2 lines to uncomment in JS)
+
+### Cursor Workflow Rules (DO NOT SKIP)
+- Always start Cursor chat with: "Never read the full file. Use Grep to find line numbers, then Read only specific lines, then StrReplace."
+- Use Mac Terminal + sed/python3 for CSS and HTML changes — avoid Cursor for simple edits
+- JavaScript changes only via Cursor Claude Code
+- Never use sed for JavaScript functions
+- Always verify runCalculation exists before and after any edit
