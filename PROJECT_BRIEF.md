@@ -363,3 +363,9 @@ sed can silently corrupt or delete JS code. Always use Claude Code in Cursor for
 Always run: git log --oneline -5 before making changes so you can restore if needed.
 For simple CSS changes, sed via Mac terminal is safe.
 For JavaScript changes, Claude Code in Cursor only.
+
+## NEXT SESSION STARTING POINT
+- Legal footer still needs moving outside lock screens on faces 3-6
+- cube-background.jpg saved locally but has a space in filename: "cube- background.jpg" — needs renaming and pushing
+- quantum-cube-v10.html has unstaged changes from Cursor — run: git checkout -- quantum-cube-v10.html first
+- Use Python3 for HTML structure changes, sed for CSS only
