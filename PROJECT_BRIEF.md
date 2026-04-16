@@ -1,5 +1,5 @@
 # QUANTUM CUBE — MASTER PROJECT DOCUMENT
-**Version: v10 | Last Updated: April 15, 2026**
+**Version: v10 | Last Updated: April 16, 2026**
 
 ---
 
@@ -12,75 +12,64 @@
 
 ---
 
+## ⚠️ FIRST THING EVERY SESSION — RUN THIS BEFORE TOUCHING ANYTHING:
+grep -n "function runCalculation" /Users/madcarl/Projects/quantumcube/quantum-cube-v10.html
+If it returns empty — restore from git before proceeding.
+
+---
+
 ## FILE LOCATIONS
-```
-/Users/madcarl/Projects/quantumcube/        ← MAIN PROJECT FOLDER
-├── quantum-cube-v10.html                   ← THE APP (single file, ~11.5MB)
+/Users/madcarl/Projects/quantumcube/
+├── quantum-cube-v10.html                   ← THE APP (single file, ~12MB)
 ├── PROJECT_BRIEF.md                        ← This document
+├── cube-background.jpg                     ← Milky Way background (in repo)
+├── Cube Sides/                             ← Cube face images (gitignored — embedded in HTML)
 ├── Videos/                                 ← Video local backups (gitignored)
-└── audio/
-    ├── ES_Dream_Focus_Beta_Waves.mp3       ← Background binaural music
-    ├── Opening_app.wav                     ← App open sound
-    ├── Cube_Side_Selection.wav             ← Cube tap sound
-    ├── rotate_cube.wav                     ← Cube rotation sound
-    ├── Pop1.mp3                            ← Result card expand sound
-    └── Pop_2.mp3                           ← Result card expand sound alt
-```
+└── audio/                                  ← All audio files (gitignored)
 
 **GitHub Repo:** https://github.com/quantumneurocreations-dot/quantumcube
 **Live URL:** https://quantumneurocreations-dot.github.io/quantumcube/quantum-cube-v10.html
-**Note:** Git history was cleaned and fresh repo pushed on April 15, 2026 (videos removed from tracking).
-**Gitignored:** Videos/, Music/, Sounds/, Video Thumbnails/, Backup/ — never pushed to repo.
-
+**Gitignored:** Videos/, Music/, Sounds/, Video Thumbnails/, Backup/, .DS_Store, More backgrounds/, Cube Sides/
 
 ---
 
 ## DEV ENVIRONMENT
-| Item | Detail |
-|------|--------|
-| Machine | Mac Mini (madcarl) |
-| Project path | /Users/madcarl/Projects/quantumcube |
-| Editor | Cursor + Terminal |
-| GitHub Desktop | Installed, authenticated |
-| Node.js | v25.9.0 |
-| SSH Key | Authenticated to GitHub |
+Machine: Mac Mini (madcarl)
+Project path: /Users/madcarl/Projects/quantumcube
+Editor: Cursor + Terminal
+Node.js: v25.9.0
+cwebp: Installed via Homebrew
+SSH Key: Authenticated to GitHub
 
-**Terminal push command:**
-```bash
+Terminal push command:
 cd /Users/madcarl/Projects/quantumcube
 git add .
 git commit -m "description"
 git push
-```
 
 ---
 
-## CHROME TABS NEEDED (Quantum Cube only)
-| Platform | URL | Account | Purpose |
-|----------|-----|---------|---------|
-| **GitHub** | github.com/quantumneurocreations-dot/quantumcube | quantumneurocreations-dot | Push code |
-| **Claude Console** | platform.claude.com | Codex / quantumneurocreations | API keys |
-| **Vimeo** | vimeo.com/manage/videos | quantumneurocreations@gmail.com | Manage videos |
-| **PayFast** | payfast.co.za | TBD | Payment gateway |
-| **ElevenLabs** | elevenlabs.io | ElevenCreative | Future voice |
-
-> Note: Vercel and Supabase are Academy-only. Do NOT open them for Quantum Cube work.
+## WORKFLOW RULES — CRITICAL
+- Use Mac Terminal + sed/python3 for CSS and HTML structure changes
+- JavaScript changes only via Cursor Claude Code
+- Never use sed for JavaScript functions — silently corrupts code
+- Python3 for multi-line replacements — safer than sed
+- Always verify runCalculation before and after any edit
+- Cursor: Start every chat with "Never read the full file. Use Grep to find line numbers, then Read only specific lines, then StrReplace."
+- .cursorignore already in place — prevents indexing of large files
+- Always run git log --oneline -5 before making changes
 
 ---
 
 ## HOW TO WORK ON THE FILE
-**IMPORTANT: This project requires Cursor + Claude Code. Do NOT use claude.ai for edits.**
+Simple CSS/HTML = Mac Terminal. JavaScript = Cursor Claude Code only.
 
-If you are reading this on claude.ai and cannot edit files directly, stop and advise the user:
-"Please open Cursor, make sure the quantumcube project folder is open, start a new Claude Code chat inside Cursor, and paste this PROJECT_BRIEF.md there. Claude Code can then edit quantum-cube-v10.html directly."
-
-If you are in Cursor with Claude Code:
-1. The file quantum-cube-v10.html is at /Users/madcarl/Projects/quantumcube/quantum-cube-v10.html
-2. Edit it directly — no need to upload the HTML file
-3. File is ~11.5MB (audio base64 embedded) — do NOT upload to chat
-4. Use live URL for visual checks: https://quantumneurocreations-dot.github.io/quantumcube/quantum-cube-v10.html
-5. After edits: git add, commit, push via Claude Code in terminal
-6. Chrome must be open with the Claude extension enabled for visual checks
+If in Cursor with Claude Code:
+1. File is at /Users/madcarl/Projects/quantumcube/quantum-cube-v10.html
+2. Do NOT read the full file — Grep first, then read specific lines
+3. File is ~12MB — do NOT upload to chat
+4. Use live URL for visual checks
+5. After edits: git add, commit, push
 
 ---
 
@@ -90,312 +79,166 @@ If you are in Cursor with Claude Code:
 - CSS3 — 3D transforms, glassmorphism, custom animations
 - Fonts: Cinzel Decorative (logo), Cinzel (labels/UI), Cormorant Garamond (body text)
 - Payment: PayFast (sandbox credentials active)
-- Videos: Vimeo (Hide from Vimeo, embeddable anywhere) — Player API active, fake fullscreen on play
+- Videos: Vimeo — Player API active, fake fullscreen on play
 - Audio: Base64 embedded (currently disabled)
 - Hosting: GitHub Pages
 - PWA: Web manifest, service worker (cache: qc-v11)
+- Background: Milky Way image (cube-background.jpg) behind CSS starfield
+- Cube faces: 6 WebP images base64 embedded, 160x160px locked, 50% transparency overlay
 
 ---
 
 ## APP STRUCTURE — 7 FACES
-| Face | Name | Status | Videos |
-|------|------|--------|--------|
-| Face 0 | Entry / Sign Up Form | ✅ Complete | None |
-| Face 1 | Introduction | ✅ Complete | Introduction (portrait 9:16) |
-| Face 2 | Results Explained | ✅ Complete | Numerology + Results Explained + Astrology (landscape 16:9) |
-| Face 3 | Numerology Results | ✅ Complete | None |
-| Face 4 | Astrology & Horoscope | ✅ Complete | None |
-| Face 5 | Combined Results | ✅ Complete | None |
-| Face 6 | Complete / Outro | ✅ Complete | Cube Outro (portrait 9:16) |
-| Face 7 | Settings / Launch Guide | ✅ Complete | None |
+Face 0 | Entry / Sign Up Form       | Complete | No video
+Face 1 | Introduction               | Complete | Portrait 9:16
+Face 2 | Results Explained          | Complete | 3x Landscape 16:9
+Face 3 | Numerology Results         | Complete | No video
+Face 4 | Astrology & Horoscope      | Complete | No video
+Face 5 | Combined Results           | Complete | No video
+Face 6 | Complete / Outro           | Complete | Portrait 9:16
+Face 7 | Settings / Launch Guide    | Complete | No video
 
 ---
 
-## VIMEO VIDEOS — CURRENT STATE
-All videos on Vimeo. Privacy: Hide from Vimeo (embeddable anywhere). Downloads OFF. Comments OFF.
+## VIMEO VIDEOS
+All videos: Hide from Vimeo, embeddable anywhere, Downloads OFF, Comments OFF.
 
-| Face | Title | Vimeo ID | Shape |
-|------|-------|----------|-------|
-| Face 1 | 1 - Introduction | 1183086210 | Portrait (9:16) |
-| Face 2 | 2 - Numerology Explained | 1183086853 | Landscape (16:9) |
-| Face 2 | 3 - Results Explanation | 1183087269 | Landscape (16:9) |
-| Face 2 | 4 - Astrology | 1183087951 | Landscape (16:9) |
-| Face 6 | 5 - Cube Outro | 1183103519 | Portrait (9:16) |
+Face 1 | Introduction         | 1183086210 | Portrait 9:16
+Face 2 | Numerology Explained | 1183086853 | Landscape 16:9
+Face 2 | Results Explanation  | 1183087269 | Landscape 16:9
+Face 2 | Astrology            | 1183087951 | Landscape 16:9
+Face 6 | Cube Outro           | 1183103519 | Portrait 9:16
 
-Embed URL format: `https://player.vimeo.com/video/ID?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0&dnt=1&color=7dd4fc&api=1&playsinline=1`
-
-Video playback: fake fullscreen via CSS fixed positioning on play event. Auto-collapses on pause/end. Vimeo Player API loaded via player.js.
+Video behaviour: fake fullscreen via CSS on play. Portrait videos stay portrait always.
+Landscape videos unlock phone rotation on play via Screen Orientation API, relock to portrait on pause/end.
 
 ---
 
 ## VISUAL DESIGN — KEY DECISIONS (DO NOT CHANGE)
-- Background: Deep space black `#05050f`
-- Starfield: 220 stars, all round glowing dots (spike/plus stars removed)
-- Cube: Glass effect, cyan-white glowing edges `#7dd4fc`, transparent faces, backdrop-filter blur
-- Logo: QUANTUM top, CUBE right-aligned (E under M), CUBE in cyan with glow + float animation
-- QUANTUM CUBE words float with subtle x/y drift animation (quantumFloat + quantumFloatB)
-- Global logo (header): fixed above cube on all pages — Quantum Neuro Creations / QUANTUM CUBE / Your Cosmic Profile
-- Fonts forced with !important — Cinzel Decorative for QUANTUM/CUBE
-- All text: White, no text-shadows (removed globally — black background does the work)
-- "Period Cycles" → "Life Phases" everywhere
-- Combined portrait: drop cap "Y" in "You are..." — no name displayed
-- Result card text: centered, 18px body
-- Month dropdown: numbers 1–12 (not names)
-- Day and year fields: empty by default, max year 2025
-- Mute button (sound FX): fixed bottom-right. Music toggle: fixed bottom-right next to mute
-- Logo float: continuous elliptical path, linear timing, QUANTUM 6s, CUBE 11s, no stops
-- Sign-up form: glass card transparent with backdrop blur, black input backgrounds
-- cubeHint hidden on Face 0, visible on all other faces
-- Watermark numbers 1-6 on each cube face, Cinzel Decorative 120px, opacity 0.07
-- cubeScene height 220px
-- Reveal My Cube button: outside glass card, below it, max-width 56.25% centered
-- Form input fields: cyan rgba(125,212,252,0.1) background, white border when filled
-- All cards use identical glass style: background var(--glass), border var(--border), backdrop-filter blur(16px), ::before/::after top/bottom shine, side glow via box-shadow
-- Lock screens: "Complete Quantum Cube Unlock" with 4 category lines, One-Time Fee $8.00, UNLOCK button
-- Reset arrow ↺ white, fixed position next to cube
+- Background: Milky Way image (cube-background.jpg) + CSS starfield on top
+- Starfield: 220 stars, round glowing dots
+- Cube: Glass effect, cyan-white glowing edges 2px border
+- Cube face images: 6 WebP base64 embedded, 160x160px locked, background-blend-mode multiply rgba(0,0,20,0.5)
+- Cube face mapping: Front=Face1 Introduction, Right=Face2 Results, Back=Face3 Numerology, Left=Face4 Astrology, Top=Face5 Combined, Bottom=Face6 Outro
+- Logo: QUANTUM top, CUBE right-aligned, cyan glow + float animation
+- All cards: glass style, margin 0 16px 20px 32px
+- Lock screens: same margins as sign-up card
+- Scoreboard, matrix, card-stack, astro-grid, combo-full: all have matching side margins (32px left, 16px right)
+- Video-face on Face 2: margin 0 16px 16px 32px
+- Lock card content: "Complete Quantum Cube Unlock", & between Chinese Horoscope and Combined Interpretation, $ 8.00, Unlock button (narrow, centered)
+- Three fixed buttons bottom-right: 👄 narrator (top, 108px), 🎵 music (middle, 64px), 🔇 mute (bottom, 20px)
+- Combined portrait: no drop cap, starts with "You are someone..."
+- Face 6 outro: only "Your Journey Complete" heading + video (icon/title/text removed)
+- Legal footer: Terms of Use + Disclaimer, class=lock-footer, hidden on unlock, restored on reset
+- PWA orientation: portrait, unlocks during landscape video play
 
 ---
 
 ## CUBE BEHAVIOUR
-- Hidden on Face 0 (sign-up), visible on all other faces
-- Idle auto-rotation after **1 second** of no touch
-- Idle rotation only pauses when cube itself is touched (not rest of page)
-- Drag rotates cube — no snap-back on release
-- Snap only occurs when tapping a face or navigating via showFace()
-- Touch glow: frames light up to 100% when touched (JS .touching class)
-- Permanent 30% frame glow at rest (::before pseudo-element)
-- Cube face labels: Cinzel Decorative, 13px, stacked two-word labels, no icons
-- Backdrop-filter: blur(12px) on all faces, gradient opacity = 0 (fully transparent)
-
----
-
-## SCROLL BEHAVIOUR
-- Body scrolls (not #app) — correct for iOS Safari
-- Logo area scrolls page via touch relay
-- Cube sides/hint area scrolls page via touch relay
-- Only cubeWrapper captures rotation touches
-- Face content scrolls within body flow
-
----
-
-## AUDIO SYSTEM (CURRENTLY DISABLED)
-All audio is base64 embedded in the HTML file.
-
-**To re-enable, uncomment these lines in the JS:**
-```javascript
-// Line ~819:
-AUDIO.init();
-
-// Line ~822 (interaction listeners):
-['pointerdown','touchstart','click'].forEach(ev =>
-  document.addEventListener(ev, ()=>AUDIO.startOnInteraction(), {once:true})
-);
-```
-
-**Audio details:**
-- Background music: ES Dream Focus Beta Waves, volume 0.10, loops
-- Opening sound: plays on app load
-- Cube selection sound: plays on face tap
-- Cube rotation sound: plays on drag end
-- Pop 1 & Pop 2: alternate on result card expand
-- Music pauses on video play, resumes after
-- Mute toggle: bottom right 🔊/🔇, persists via localStorage
+- Hidden on Face 0, visible on all other faces
+- Idle auto-rotation after 1 second of no touch
+- Drag rotates cube, no snap-back on release
+- Snap only on face tap or showFace()
+- Touch glow: frames light up to 100% when touched
+- Permanent 30% frame glow at rest
 
 ---
 
 ## PAYMENT SYSTEM
-- Gateway: PayFast (South Africa) — **needs global alternative, see Strategic Notes**
-- Price: **$8 USD once-off unlock** (changed from R88 — going global)
-- Status: **Sandbox credentials active** (not live yet)
-- To go live:
-  1. Register at payfast.co.za (SA only) OR integrate Stripe/Paddle for global
-  2. Swap Merchant ID + Merchant Key in `PF_CONFIG` block
-  3. Set `sandbox: false`
-  4. ~~Update price display in app from R88 to $8~~ ✅ Done
-  5. Test payment end-to-end
+- Gateway: PayFast (SA only) — needs Stripe/Paddle for global
+- Price: $8 USD once-off
+- Status: Sandbox active, not live
+- "Try Demo (test mode)" button — DELETE before going live
 
 ---
 
 ## CONTENT LOCATIONS IN HTML
-```javascript
-// Numerology content:
-const NUM = { ... }          // Search: // ═══ CONTENT DATA ═══
-NUM.lp  = Life Path          // 3 variations per number ✅ DONE
-NUM.bd  = Birthday Number    // Single string — needs 3 variations
-NUM.ex  = Expression         // Single string — needs 3 variations
-NUM.su  = Soul Urge          // Single string — needs 3 variations
-NUM.pe  = Personality        // Single string — needs 3 variations
-NUM.hp  = Hidden Passion     // Single string — needs 3 variations
-NUM.kl  = Karmic Lessons     // Single string — needs 3 variations
-NUM.pc  = Life Phases        // Single string — needs 3 variations
-NUM.py  = Personal Year      // Single string — needs 3 variations
+Numerology content: const NUM = { ... }   // Search: // ═══ CONTENT DATA ═══
+NUM.lp = Life Path        // 3 variations per number DONE
+NUM.bd = Birthday Number  // needs 3 variations
+NUM.ex = Expression       // needs 3 variations
+NUM.su = Soul Urge        // needs 3 variations
+NUM.pe = Personality      // needs 3 variations
+NUM.hp = Hidden Passion   // needs 3 variations
+NUM.kl = Karmic Lessons   // needs 3 variations
+NUM.pc = Life Phases      // needs 3 variations
+NUM.py = Personal Year    // needs 3 variations
 
-// Variation picker:
-function getNumText(cat, num)  // Random pick from array, fallback to string
-
-// Western Zodiac:
-const WSIGN = { ... }        // Search: // ═══ WESTERN SIGN DATA ═══
-
-// Chinese Zodiac:
-const CSIGN = { ... }        // Search: // ═══ CHINESE SIGN DATA ═══
-
-// 144 Combinations:
-const COMBOS = { ... }       // Search: // ═══ COMBINATION DATA ═══
-
-// Combined Portrait:
-function buildCombinationNarrative(data)
-```
+Western Zodiac: const WSIGN  // Search: // ═══ WESTERN SIGN DATA ═══
+Chinese Zodiac: const CSIGN  // Search: // ═══ CHINESE SIGN DATA ═══
+144 Combinations: const COMBOS // Search: // ═══ COMBINATION DATA ═══
+Combined Portrait: function buildCombinationNarrative(data)
 
 ---
 
 ## WHAT STILL NEEDS TO BE DONE
 
-### 🔴 Priority 1 — Content Variations
-Write 2 additional variations (total 3 per number) for:
-- [ ] Birthday Number (11 numbers)
-- [ ] Expression (13 numbers)
-- [ ] Soul Urge (13 numbers)
-- [ ] Personality (11 numbers)
-- [ ] Hidden Passion (9 numbers)
-- [ ] Karmic Lessons (9 numbers)
-- [ ] Life Phases (11 numbers)
-- [ ] Personal Year (11 numbers)
+### PRIORITY 1 — Content Variations (BIGGEST PRIORITY)
+- [ ] Birthday Number (11 numbers) — 2 more variations each
+- [ ] Expression (13 numbers) — 2 more variations each
+- [ ] Soul Urge (13 numbers) — 2 more variations each
+- [ ] Personality (11 numbers) — 2 more variations each
+- [ ] Hidden Passion (9 numbers) — 2 more variations each
+- [ ] Karmic Lessons (9 numbers) — 2 more variations each
+- [ ] Life Phases (11 numbers) — 2 more variations each
+- [ ] Personal Year (11 numbers) — 2 more variations each
 
-### 🔴 Priority 2 — Content Accuracy Review
-- [ ] Verify all numerology interpretations are accurate
+### PRIORITY 2 — Content Accuracy Review
+- [ ] Verify all numerology interpretations
 - [ ] Verify all Western astrology content
 - [ ] Verify all Chinese zodiac content
 - [ ] Verify all 144 combination readings
-- [ ] Review combined portrait quality and flow
+- [ ] Review combined portrait quality
 
-### 🟡 Priority 3 — Audio
+### PRIORITY 3 — Narrator Voice (ElevenLabs)
+- [ ] Wire 👄 button to ElevenLabs API
+- [ ] Male/female voice toggle
+- [ ] API key already set up in Academy — reuse same key
+- [ ] Auto-play reading when result card opens
+
+### PRIORITY 4 — Audio
 - [ ] Re-enable audio (uncomment ~2 lines in JS)
 - [ ] Test all 6 sounds on device
-- [ ] Test music pause/resume on video play
 
-### 🟡 Priority 4 — Payments
-- [ ] Register PayFast merchant account
-- [ ] Swap sandbox → live credentials
-- [ ] Set sandbox: false
+### PRIORITY 5 — Payments
+- [ ] Switch PayFast to Stripe or Paddle for global
+- [ ] Remove Try Demo button before go-live
 - [ ] Test live $8 payment
 
-### 🟢 Priority 5 — App Stores
+### PRIORITY 6 — App Stores
 - [ ] Google Play: PWABuilder.com → .aab → $25 USD dev account
 - [ ] Apple App Store: Capacitor → Xcode → $99/yr dev account
 
-### 🟢 Priority 6 — Final Polish
-- [ ] Final QA pass all 6 faces on device
-- [ ] Update legal documents if needed
-- [ ] Review lock screen content
-- [ ] Add social proof / testimonials section
+### PRIORITY 7 — Final Polish
+- [ ] Final QA pass all faces on device
+- [ ] Add testimonials/social proof section
 - [ ] Add sharing mechanism for readings
-- [ ] Mouse mousedown/mouseup cube glow (desktop)
+- [ ] Email capture or PWA push notification opt-in
+- [ ] Mouse glow on desktop (mousedown/mouseup)
+- [ ] Spike star CSS cleanup (harmless but present)
 
 ---
 
-## PENDING FIXES FROM LAST SESSION
-- [x] **FIXED** — payOverlay CSS bug: R88/Unlock bars showing on Face 0 (April 15)
-- [x] **FIXED** — Cube rotation: quaternion system, full 360 freedom, clockwise idle spin
-- [x] **FIXED** — Gimbal lock on top/bottom faces
-- [x] **FIXED** — Idle timer not restarting after long drag
-- [x] **FIXED** — Price updated from R88 to $8 everywhere including legal text
-- [x] **FIXED** — Vimeo player: fake fullscreen on play, auto-exit on pause/end (April 15)
-- [x] **FIXED** — Auto scroll to top on every face change including iOS Safari
-- [x] **FIXED** — Month dropdown default set to 1
-- [x] **FIXED** — Responsive glass-card and lock-screen full width on mobile
-- [x] **FIXED** — Legal footer added to all faces
-- [x] **FIXED** — Description card removed from Face 2
-- [x] **FIXED** — Music toggle button added above mute button, both fixed bottom-right
-- [x] **FIXED** — Form inputs cyan 10% background
-- [x] **FIXED** — Reveal My Cube moved outside glass card
-- [x] **FIXED** — Vimeo player color set to cyan 7dd4fc
-- [x] **FIXED** — Lock screen cards compressed and unified glass style on all faces
-- [x] **FIXED** — All cards unified with glass style (var(--glass), var(--border), backdrop-filter blur 16px)
-- [x] **FIXED** — Top and bottom shine gradients on all cards, side glow added
-- [x] **FIXED** — Lock screen content replaced with clean unlock offer on all 4 faces
-- [x] **FIXED** — Gear icon replaced with white reset arrow ↺
-- [x] **FIXED** — Face 7 settings/launch guide internal content removed
-- [x] **FIXED** — Legal footer added to Face 3, 4, 5, 6 lock screens
-- [x] **FIXED** — Fake fullscreen on video play, auto-exit on pause/end
-- [x] **FIXED** — Videos playing correctly via Vimeo Player API
-- [ ] Spike star CSS still in file (JS generates round stars but CSS classes remain — harmless but can clean up)
-- [ ] Audio re-enable (3 lines to uncomment)
+## STRATEGIC NOTES
+- Content variations are the single biggest priority before launch
+- PayFast is SA only — need Stripe/Paddle for international sales
+- No user accounts yet — consider email + localStorage
+- No sharing mechanism — users should be able to share readings
 
 ---
-
-## STRATEGIC NOTES — WHAT NEEDS ATTENTION
-
-These points came out of a product review. Address before full launch:
-
-### 🔴 Critical
-- **Content variations incomplete** — same text repeating on every load kills user trust. Life Path has 3 variations done. All other 8 categories still need 2 more variations each. This is the single biggest content priority.
-
-
-### 🟡 Important
-- **No push notifications** — zero retention mechanism once user leaves. Consider adding a "Save your reading" email capture or PWA push notification opt-in.
-- **No user accounts** — no personalisation over time, users can't return to their reading. Consider lightweight account system (email + localStorage for now, Supabase later if needed).
-- **Price changed to $8 USD** — going global, not SA-only. PayFast is SA only — need Stripe or Paddle for international payments.
-
-### 🟢 Nice to Have
-- **No reviews or social proof** — add a testimonial section or star rating prompt after unlock.
-- **No referral or sharing mechanism** — users should be able to share their reading or refer friends.
 
 ## SEPARATE PROJECT — QNC ACADEMY
-```
-Path:    /Users/madcarl/Projects/qnc-academy/
-Stack:   Vercel + Supabase + ElevenLabs + GitHub
-URL:     qnc-academy.vercel.app
-Status:  Active development — COMPLETELY SEPARATE CHAT
-```
-**Never bring Academy work into Quantum Cube chats and vice versa.**
+Path:  /Users/madcarl/Projects/qnc-academy/
+Stack: Vercel + Supabase + ElevenLabs + GitHub
+URL:   qnc-academy.vercel.app
+Status: Active development — COMPLETELY SEPARATE CHAT
+Never bring Academy work into Quantum Cube chats and vice versa.
 
 ---
-- [x] FIXED — Reveal My Cube button glows cyan when all fields filled (excludes middle name)
-- [x] FIXED — Privacy Policy removed from all pages, Terms of Use + Disclaimer only  
-- [x] FIXED — Form inputs white border, card left margin for mobile scrollbar balance
-- [x] FIXED — Back to Sign Up button same width as Reveal My Cube
-- [x] FIXED — Restored app from git after runCalculation function accidentally deleted by sed command
-
-⚠️ CRITICAL WARNING FOR CURSOR CLAUDE CODE — Start every Cursor chat with: "Never read the full file. Use Grep to find line numbers, then Read only specific lines, then StrReplace." This prevents crashes on the 11.5MB file.
-
-⚠️ CRITICAL WARNING — NEVER use sed commands to edit JavaScript functions in the HTML file. 
-sed can silently corrupt or delete JS code. Always use Claude Code in Cursor for any JavaScript changes.
-Always run: git log --oneline -5 before making changes so you can restore if needed.
-For simple CSS changes, sed via Mac terminal is safe.
-For JavaScript changes, Claude Code in Cursor only.
 
 ## NEXT SESSION STARTING POINT
-- Legal footer still needs moving outside lock screens on faces 3-6
-- cube-background.jpg saved locally but has a space in filename: "cube- background.jpg" — needs renaming and pushing
-- quantum-cube-v10.html has unstaged changes from Cursor — run: git checkout -- quantum-cube-v10.html first
-- Use Python3 for HTML structure changes, sed for CSS only
-## NEXT SESSION STARTING POINT
-
-### ⚠️ FIRST THING — always run this before touching anything:
-grep -n "function runCalculation" /Users/madcarl/Projects/quantumcube/quantum-cube-v10.html
-If it returns empty — restore from git before proceeding.
-
-### Current State (April 16, 2026)
-- Legal footer moved outside lock screens on all 4 faces (3, 4, 5, 6) ✅
-- Lock screen card margins match sign-up card (margin: 0 16px 20px 32px) ✅
-- Ampersand added between Chinese Horoscope and Combined Interpretation ✅
-- Price updated to $ 8.00 (space between $ and 8) ✅
-- Narrator button 👄 added to bottom right controls (not wired up yet) ✅
-- .cursorignore in place — Backup/, Videos/, Music/, Sounds/, Video Thumbnails/, cube-background.jpg ✅
-- .gitignore updated — .DS_Store and More backgrounds/ added ✅
-- cube-background.jpg renamed (space removed) and pushed ✅
-
-### Next Up
-- [ ] Wire narrator button to ElevenLabs API (API key already set up in Academy)
-- [ ] Male/female voice toggle for narrator
-- [ ] Content variations — 2 more per number for all 8 remaining categories
-- [ ] Faces 4, 5, 6 — verify legal footer looks correct on live app
-- [ ] Payment — move from PayFast to Stripe or Paddle for global
-- [ ] Audio re-enable (2 lines to uncomment in JS)
-
-### Cursor Workflow Rules (DO NOT SKIP)
-- Always start Cursor chat with: "Never read the full file. Use Grep to find line numbers, then Read only specific lines, then StrReplace."
-- Use Mac Terminal + sed/python3 for CSS and HTML changes — avoid Cursor for simple edits
-- JavaScript changes only via Cursor Claude Code
-- Never use sed for JavaScript functions
-- Always verify runCalculation exists before and after any edit
+1. Run: grep -n "function runCalculation" quantum-cube-v10.html — must return a line number
+2. Check cube face image transparency — currently 50% via rgba(0,0,20,0.5), adjust if needed
+3. Narrator button 👄 is in place but not wired up — next big feature to build
+4. Content variations are #1 priority for launch readiness
+5. Try Demo button needs removing before go-live
