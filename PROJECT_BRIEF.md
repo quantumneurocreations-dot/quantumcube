@@ -301,3 +301,34 @@ Status:  Active development - COMPLETELY SEPARATE CHAT
 - [x] npm install completed in qnc-academy - 407 packages, 0 vulnerabilities
 - [x] .env.local created by pulling environment variables from Vercel
 - [x] Dev server tested - Next.js 16.2.3 running at localhost:3000 in 161ms
+
+---
+
+## SESSION LOG — April 16, 2026 — Afternoon Session
+
+### Fixes & Features
+- [x] Cube face images fully removed — clean glass look live
+- [x] Video pause now exits fullscreen and returns to app
+- [x] Double tap on video toggles play/pause + fullscreen
+- [x] Unlock button — 2px white border, 60% width matching divider line
+- [x] Unlock button — cyan glow on hover/active matching other buttons
+- [x] Loading screen — CUBE text right-aligned to match main logo
+
+### Content Written (not yet inserted into file — do in next session)
+- [x] Birthday Number — 2 additional variations written for all 11 numbers
+- [x] Expression — 2 additional variations written for all 12 numbers
+- [x] Soul Urge — 2 additional variations written for all 12 numbers
+
+### Still To Write (next session)
+- [ ] Personality — 2 additional variations for 11 numbers
+- [ ] Hidden Passion — 2 additional variations for 9 numbers
+- [ ] Karmic Lessons — 2 additional variations for 9 numbers
+- [ ] Life Phases — 2 additional variations for 11 numbers
+- [ ] Personal Year — 2 additional variations for 11 numbers
+
+### Next Session Starting Point
+- Insert Birthday, Expression, Soul Urge variations into HTML file
+- Continue writing remaining category variations
+- Life Path confirmed complete — 12 numbers, 3 variations each
+- All other categories confirmed as single variation only — system ready for arrays
+- "Period Cycles" already removed from file — no fix needed
