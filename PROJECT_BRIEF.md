@@ -264,3 +264,9 @@ BRIEF
 - [x] FIXED — Portrait videos excluded from rotation via .portrait-video class
 - [x] FIXED — Outro video (Face 6) portrait-video class duplicate attribute fixed
 - [x] FIXED — Back to Sign Up button: arrow removed, two lines, width matches portrait video
+- [x] FIXED — Loading screen added with QUANTUM CUBE logo, fades out after 3.5s
+- [x] FIXED — Background image compressed 5.6MB to 327KB, preload hint added
+- [x] FIXED — Cube face images: broken local file references removed, base64 WebP now loads correctly
+- [x] FIXED — Cube face transparency changed to 80% (rgba 0,0,20,0.2)
+- [x] CONTENT — Michelle tested all numerology and astrology outcomes, all accurate ✅
+- [x] UPDATE — Priority 2 Content Accuracy Review: numerology, astrology, Chinese zodiac all verified ✅
