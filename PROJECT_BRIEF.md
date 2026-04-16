@@ -258,3 +258,9 @@ Status:  Active development — COMPLETELY SEPARATE CHAT
 BRIEF
 
 
+
+## FIXES FROM APRIL 16 SESSION (this chat)
+- [x] FIXED — Landscape videos rotate 90deg in fake fullscreen via CSS transform
+- [x] FIXED — Portrait videos excluded from rotation via .portrait-video class
+- [x] FIXED — Outro video (Face 6) portrait-video class duplicate attribute fixed
+- [x] FIXED — Back to Sign Up button: arrow removed, two lines, width matches portrait video
