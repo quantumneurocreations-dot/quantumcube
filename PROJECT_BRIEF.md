@@ -905,3 +905,68 @@ One processor account, two products is the recommended pattern. Cleaner accounti
 - `quantum-cube-v10.html.bak-cleanup-20260417-151711` (created today)
 - Add `*.bak-*` to `.gitignore`, then delete locally
 
+
+---
+
+## SESSION LOG — April 17, 2026 — Night Session (Banner + Timing Polish)
+
+### Shipped (4 more commits on top of morning/afternoon work)
+
+- **7783718** — Chunk 5: Added countdown banner ("Continuing in 3..." ticker) and mirrored marketing consent checkbox added to all 4 lock cards. Visual/timing felt wrong in testing.
+- **487f48e** — Chunk 6: Replaced countdown with two-stage banner flow (Verify your email / Check your inbox). Still felt off visually.
+- **90c9756** — Chunk 7: Major UX rework. Killed the separate glass banner card entirely. Reused the existing `#errMsg` slot below Day/Month/Year to show either "Please complete all fields" (red validation) or "Verify your email" (cyan success) via a new `.err-msg.success` class. Added Cinzel caps + glow + bigger font. Button cycles SENDING → EMAIL SENT.
+- **32c59ae** — Chunk 8: Critical timing + dead-code fix. The choreography now starts IMMEDIATELY on click (not after Supabase API returns), so users see the full 3s SENDING + 3s EMAIL SENT regardless of API latency. Stripped leftover `showMagicLinkBanner()` calls from init + onAuthStateChange (banner element was deleted in Chunk 7, calls were throwing silent ReferenceErrors). Strengthened errMsg centering with margin auto.
+
+### Live-verified
+
+- Fresh incognito + unused email → full 6-second sequence plays correctly: button SENDING (3s) → EMAIL SENT (3s) → face rotate. Magic link arrives in inbox.
+- Rate-limited email → handler correctly aborts rotate, shows "Could not send: EMAIL RATE LIMIT EXCEEDED" in red styling, stays on Face 0.
+- Both happy path and error path working as designed.
+
+### Open decisions / paused items
+
+**1. Payment processor + pricing.** Still unresolved after team call. Options discussed: Paddle (under-$10 gotcha), Lemon Squeezy (being absorbed into Stripe Managed Payments — avoid), Stripe direct (cheaper, team handles tax). Price bump from $8 decided in principle; specific number TBD (candidates: $11, $18, $28, $88). Decision owner: Ronnie/Michelle/Keyzer. Paddle registration confirmed to NOT require going live — sandbox works indefinitely — so we can build Chunk 5 (webhook Edge Function) without commitment.
+
+**2. Lock-card marketing consent checkbox — STILL BROKEN.** Chunk 5 inserted the checkboxes into all 4 lock cards (Face 3/4/5/6) but the `.consent-box` CSS styling isn't applying in those contexts. Checkbox appears as a small cyan arrow artifact instead of the proper styled box (per user screenshot). Not reverted. Diagnosis needed: CSS specificity inside `.lock-screen` likely overrides the base `.marketing-consent` rules. Next session: either fix the CSS or move the checkbox out of the lock-screen block entirely.
+
+**3. Error message copy.** Supabase errors surface as raw uppercase strings ("EMAIL RATE LIMIT EXCEEDED"). Not urgent but worth a friendly rewrite before launch — map common Supabase error codes to human-readable English.
+
+**4. Email template branding.** Supabase's default "Confirm Your Signup" email from `noreply@mail.app.supabase.io` is not brand-aligned. Three levels of fix available:
+   - L1 (free, 10 min): edit the template copy in Supabase dashboard
+   - L2 (moderate): custom SMTP via Resend/Postmark/Google Workspace → sender becomes `hello@qncacademy.com` or similar
+   - L3: full HTML branded template
+   Recommended: L1 before launch; L2 when ready. NOT urgent.
+
+**5. Face 7 (Settings) and cube tweaks.** User flagged there are specific changes wanted on Face 7 and elsewhere on the cube. List not yet captured. Ask for it at start of next session.
+
+### Python replacement scripts committed tonight
+- wire_supabase_05_banner_mirror.py (superseded)
+- wire_supabase_06_banner_v2.py (superseded)
+- wire_supabase_07_inline_msg.py (current approach)
+- wire_supabase_08_timing_fix.py (current timing)
+
+### Next session starting point
+
+**Warm-up (2 min terminal checks):**
+```bash
+grep -n "function runCalculation" /Users/qnc/Projects/quantumcube/quantum-cube-v10.html
+cat /Users/qnc/Projects/quantumcube/.supabase-env
+```
+
+**Then in order of proposed priority:**
+1. Capture the Face 7 + cube change list from the user
+2. Fix the broken lock-card checkbox (Chunk 5 tail)
+3. Decide pricing + payment processor (team decision needed)
+4. Once decided: register sandbox account with chosen processor
+5. Chunk 9 (or equivalent): Supabase Edge Function for payment webhook
+6. Level 1 email template branding in Supabase dashboard (10 min task)
+7. Friendly error message mapping for handleRevealClick
+
+### Everything still working at end of session
+- runCalculation at line 2197 (moved 16 lines across the night's work)
+- Supabase magic-link signup: functional end-to-end
+- Magic-link email delivery: confirmed working via quantumneurocreations@gmail.com
+- profiles.has_paid is source of truth for unlock state
+- Chrome + Safari tested
+- No regressions in runCalculation, resetAll, showFace, or the cube rotation
+
