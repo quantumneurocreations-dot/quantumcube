@@ -502,3 +502,108 @@ Status:  Active development - COMPLETELY SEPARATE CHAT
 4. After privacy drafts approved → begin Supabase Auth wiring
 5. Then: narrator button → ElevenLabs, re-enable audio, DKIM, payments switch
 
+
+---
+
+## SESSION LOG — April 17, 2026 — Infrastructure Day Part 2
+
+### Shipped to production
+- [x] Privacy Policy section rewritten for Supabase-era data handling
+- [x] POPIA & Data Compliance section rewritten (adds Information Officer, cross-border transfer, breach notification)
+- [x] Security section rewritten (magic-link auth, Supabase at-rest, no readings history, 72hr incident response)
+- [x] Commit 7a6a23e pushed to main — live on GitHub Pages
+- [x] rewrite_legal.py committed (Python replacement script with runCalculation safety check)
+
+### Gmail admin@qncacademy.com hardened
+- [x] 5 filters created with labels: Info, Privacy stay in inbox; Michelle, Keyzer, Ronnie skip inbox
+- [x] Chat turned off (shared inbox cleanliness)
+- [x] Smart features off (across all 3 Google popups)
+- [x] Undo Send: 5s → 30s
+- [x] Images: "Ask before displaying" (blocks tracking pixels)
+- [x] Forwarding/POP/IMAP verified secure, Offline disabled at admin level
+- [x] Conversation view on, Out-of-Office off, Dynamic email off
+
+### Cloudflare Email Routing
+- [x] Enabled on quantumcube.app (MX, DKIM, SPF records auto-added)
+- [x] admin@qncacademy.com verified as destination
+- [x] Catch-all rule ACTIVE: *@quantumcube.app → admin@qncacademy.com
+
+### Supabase backend created (Priority 4 — backend phase)
+- [x] Project "quantum-cube" created — project_id fqqdldvnxupzxvvbyvjm
+- [x] Region: eu-central-1 (Frankfurt) — matches POPIA policy
+- [x] Schema: public.profiles (id, email, has_paid, marketing_consent, created_at) — RLS enabled
+- [x] Trigger: auth.users INSERT → public.profiles INSERT (auto-profile creation)
+- [x] RLS policies: users read/update own row; has_paid immutable from client (must be set server-side after payment webhook)
+- [x] Security advisor: 0 issues
+- [x] Credentials saved to /Users/qnc/Projects/quantumcube/.supabase-env (gitignored)
+- [x] SUPABASE_URL=https://fqqdldvnxupzxvvbyvjm.supabase.co
+- [x] SUPABASE_ANON_KEY=sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ
+
+---
+
+## ITEMS CARRIED FORWARD — NOT done today, on radar
+
+### Gmail / Workspace
+- [ ] Send As aliases (info, privacy, keyzer, michelle, ronnie) — check propagation tomorrow; manual add via popup if needed
+- [ ] "Reply from same address the message was sent to" setting — enable after Send As has 2+ addresses
+- [ ] Gmail signature (per-alias) — needs brand wording decision
+- [ ] Decide: hide Meet in sidebar or keep visible for client calls?
+- [ ] IMAP disable at Admin Console level (if unused)
+- [ ] Investigate "Turn on Gmail — Required" banner in admin inbox
+- [ ] 2FA on all 3 partner Google Workspace accounts — verify enabled (Security section asserts "strong account security controls")
+- [ ] Cancel old quantumneurocreations.co.za Workspace once cutover confirmed
+- [ ] DKIM authentication for qncacademy.com (deliverability)
+
+### Legal & content
+- [ ] **LAUNCH BLOCKER: Rewrite Terms of Use section** — currently (line 2375–2376) says "unlock is tied to the device ... stored in local storage ... not responsible for unlocks lost due to clearing browser data or changing devices." This is FACTUALLY INCONSISTENT with the new account-based Privacy Policy once Supabase Auth goes live.
+- [ ] Consider cookie banner for international users (likely optional since only one auth cookie is used, but worth a decision)
+- [ ] If/when payment processor changes from PayFast, update all PayFast references (Privacy line 2338, Terms line 2375, IP line 2428, POPIA section)
+
+### Frontend wiring (tomorrow's main work — launch blocker for Priority 4)
+- [ ] Supabase dashboard: set Site URL to https://quantumneurocreations-dot.github.io/quantumcube/quantum-cube-v10.html
+- [ ] Supabase dashboard: add redirect URLs (GitHub Pages + quantumcube.app)
+- [ ] Supabase dashboard: configure session duration 30-90 days per brief
+- [ ] Add @supabase/supabase-js via CDN to quantum-cube-v10.html
+- [ ] Replace Face 0 sign-up form with email + marketing_consent checkbox (unchecked default)
+- [ ] Wire signup → supabase.auth.signInWithOtp() with marketing_consent in user_metadata
+- [ ] Handle magic-link callback on page load (detect #access_token= hash)
+- [ ] Profile fetch on page load via supabase.from('profiles').select().single()
+- [ ] Replace localStorage STORE_KEY="qc_unlocked_v1" (line 1813) gate with profiles.has_paid as source of truth (keep localStorage as cache)
+- [ ] Supabase Edge Function for PayFast ITN webhook → updates has_paid server-side
+- [ ] Replace placeholder https://YOUR-SERVER.com/payfast-notify (line 1877) with Edge Function URL
+- [ ] Sign-out flow
+- [ ] Age gate on signup (DOB check) — currently privacy policy says "not intended for under 18" without enforcement
+- [ ] E2E test: signup → magic link → unlock payment → has_paid flips → locked content opens
+
+### Pre-launch removal checklist
+- [ ] Remove "Try Demo (test mode)" buttons at lines 608, 644, 678, 710
+- [ ] Remove unlockDemo() JS function
+- [ ] Switch PayFast from sandbox to live credentials
+- [ ] Test live $8 payment end-to-end
+
+### Code repo cleanup (noticed in git status)
+- [ ] Decide fate of write_brief.py (untracked) — delete or commit
+- [ ] Commit .cursorignore changes
+- [ ] Stop tracking .DS_Store
+
+---
+
+## Next Session Starting Point (Saturday April 18, 2026)
+
+**5-minute warm-up (Supabase dashboard + Gmail, no code)**
+1. Set Site URL + Redirect URLs in Supabase Authentication settings
+2. Configure session duration 30-90 days
+3. Check Gmail Send As — aliases should have auto-propagated overnight; finish "Reply from same address" setting
+
+**Launch-blocker content fix (15 min)**
+4. Rewrite Terms of Use section to match new account-based unlock model (use same rewrite_legal.py pattern)
+
+**Main work — Frontend wiring (1-2 hours focused)**
+5. Add supabase-js CDN → Face 0 signup form → magic-link flow → profile fetch
+6. Replace localStorage unlock gate with profiles.has_paid
+7. Supabase Edge Function for PayFast ITN → replace placeholder notify URL at line 1877
+8. E2E test full signup → payment → unlock flow
+
+**Then (if time / fresh head)**
+9. DKIM for qncacademy.com
+10. Investigate "Turn on Gmail — Required" banner
