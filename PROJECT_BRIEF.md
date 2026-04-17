@@ -621,3 +621,39 @@ Status:  Active development - COMPLETELY SEPARATE CHAT
 
 ### Legal docs now fully aligned
 All five modified tabs (Privacy Policy, Terms of Use, POPIA & Data, Security, Intellectual Property) reflect the Supabase/account-era reality. Disclaimer tab untouched (no account-model claims in it — still accurate).
+
+### April 17, 2026 — Evening session (post-Terms rewrite)
+
+#### Shipped
+- [x] Terms of Use section rewritten for account-based unlock model (commit 983cc5a)
+- [x] rewrite_terms.py committed alongside rewrite_legal.py (same safety pattern)
+- [x] Session log dedupe (commit 17879e4)
+
+#### Supabase URL Configuration
+- [x] Site URL set: https://quantumneurocreations-dot.github.io/quantumcube/quantum-cube-v10.html
+- [x] Redirect URL #1: GitHub Pages URL
+- [x] Redirect URL #2: https://quantumcube.app/quantum-cube-v10.html
+- [x] Single-session-per-user: OFF (matches Terms "sign in from any device")
+- [x] Session duration: Pro-plan-gated; free tier defaults (never/user-logout-only) acceptable for launch
+
+#### Email authentication stack for qncacademy.com — COMPLETE
+- [x] "Turn on Gmail — Required" banner diagnosed — it was DKIM
+- [x] DKIM generated via Google Workspace (2048-bit)
+- [x] DKIM TXT record added to Cloudflare at google._domainkey.qncacademy.com
+- [x] DKIM verified live: dig +short TXT google._domainkey.qncacademy.com returns v=DKIM1;...
+- [x] DMARC Management enabled on Cloudflare (Beta feature, aggregates reports)
+- [x] DMARC policy: p=none (monitor-only starter, tighten to quarantine/reject later)
+- [x] SPF: soft fail (~all) — Google Workspace standard, already in place
+- [x] All three email auth pillars (SPF + DKIM + DMARC) now live
+
+#### Still outstanding (carried forward)
+- [ ] Re-check DMARC dashboard in ~24h for first reports
+- [ ] Consider tightening DMARC from p=none to p=quarantine after 1-2 weeks of clean reports
+- [ ] Send As aliases propagation (still pending)
+- [ ] 2FA on all 3 partner Workspace accounts
+- [ ] All frontend wiring items (unchanged from earlier log)
+
+#### Commits this session
+- 983cc5a — Rewrite Terms of Use for account-based unlock model
+- 17879e4 — Dedupe accidentally-doubled Terms rewrite session log block
+- (plus the session log append itself, committed next)
