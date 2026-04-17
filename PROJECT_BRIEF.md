@@ -607,3 +607,17 @@ Status:  Active development - COMPLETELY SEPARATE CHAT
 **Then (if time / fresh head)**
 9. DKIM for qncacademy.com
 10. Investigate "Turn on Gmail — Required" banner
+
+### April 17, 2026 — late session — Terms of Use rewrite (launch-blocker closed)
+- [x] Terms of Use section rewritten for account-based unlock model
+- [x] New section 2 "Your Account" — magic-link, no passwords
+- [x] New section 4 "Payment and Unlock" — account-tied, survives device changes
+- [x] New section 5 "Cooling-off Waiver and Refunds" — explicit CPA/EU waiver language
+- [x] New section 6 "Account Deletion" — 30-day deletion, unlock dies with account
+- [x] Contact aligned to privacy@qncacademy.com
+- [x] rewrite_terms.py committed (same safety pattern as rewrite_legal.py)
+- [x] Commit 983cc5a pushed — live on GitHub Pages
+- [x] runCalculation verified at line 1983 before and after (unchanged)
+
+### Legal docs now fully aligned
+All five modified tabs (Privacy Policy, Terms of Use, POPIA & Data, Security, Intellectual Property) reflect the Supabase/account-era reality. Disclaimer tab untouched (no account-model claims in it — still accurate).
