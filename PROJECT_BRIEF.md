@@ -796,3 +796,11 @@ dig +short TXT google._domainkey.qncacademy.com
 ```
 
 All three should return non-empty. If any returns empty, STOP and diagnose before continuing.
+
+### Audit catch — flagged before close of April 17 session
+
+**Marketing email path — must build before first campaign goes out:**
+Privacy Policy and POPIA sections currently promise users can "withdraw consent at any time from a link in any marketing email" and that "marketing emails are sent only on the basis of affirmative, opt-in consent." Backend records `marketing_consent` correctly on signup. What's NOT yet built: the actual marketing email sending pipeline, the unsubscribe link in those emails, and the endpoint that flips `profiles.marketing_consent=false` when someone unsubscribes. No urgency (zero marketing emails being sent today), but before the first campaign this path must exist or the legal docs become false.
+
+**Cross-project note — confirm Academy chat was updated:**
+Academy project chat needed a sync covering: shared Workspace status, separate Supabase projects in different regions, shared legal decisions (privacy@ as Information Officer, 30-day deletion, age 18+), no new shared recurring costs. If this wasn't pasted into the Academy chat yet, find the paste in the April 17 chat history before closing that chat.
