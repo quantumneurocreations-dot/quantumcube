@@ -657,3 +657,142 @@ All five modified tabs (Privacy Policy, Terms of Use, POPIA & Data, Security, In
 - 983cc5a — Rewrite Terms of Use for account-based unlock model
 - 17879e4 — Dedupe accidentally-doubled Terms rewrite session log block
 - (plus the session log append itself, committed next)
+
+---
+
+## CONSOLIDATED HANDOFF — End of April 17, 2026
+
+This section consolidates everything the next session needs to know. If you read only one section, read this one.
+
+### Authentication model — LOCKED IN, awaiting frontend wiring
+
+**Method:** Supabase magic-link (email OTP). No passwords, ever.
+
+**Flow end-to-end:**
+1. User opens the app. Face 0 shows a sign-up form.
+2. User enters email address + optionally ticks "Email me updates" checkbox (unchecked by default).
+3. App calls `supabase.auth.signInWithOtp({ email, options: { data: { marketing_consent: true|false } } })`.
+4. Supabase sends a one-time sign-in link to the user's email (from Supabase's default sender; can be customised later via custom SMTP).
+5. User clicks the link in their email. Link opens `https://quantumneurocreations-dot.github.io/quantumcube/quantum-cube-v10.html#access_token=...`.
+6. Frontend detects the `#access_token=` hash fragment on page load and swaps the user into "signed in" state.
+7. Frontend fetches the user's profile row: `supabase.from('profiles').select().single()`.
+8. UI gates locked content on `profiles.has_paid` (not on localStorage anymore).
+
+**Backend is already done:**
+- `auth.users` INSERT trigger auto-creates a `public.profiles` row with `email` + `marketing_consent` from user_metadata
+- RLS: users can read/update their own row only
+- `has_paid` is immutable from client — only server-side code (PayFast webhook Edge Function) can flip it to true
+
+**Session duration:** Free-tier Supabase default = sessions persist until explicit sign-out (no inactivity or absolute timeout). This is more user-friendly than the 30-90 days mentioned in earlier planning and is acceptable for launch. Revisit if we upgrade to Pro or if security posture tightens.
+
+### Credentials reference (already saved to gitignored .supabase-env)
+- SUPABASE_URL = https://fqqdldvnxupzxvvbyvjm.supabase.co
+- SUPABASE_ANON_KEY = sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ
+- SUPABASE_PROJECT_ID = fqqdldvnxupzxvvbyvjm
+- Organization: Quantum Neuro Creations (ybhwpcakkaveapdztnrs)
+- Region: eu-central-1 (Frankfurt) — matches POPIA policy
+- Academy's project remains in eu-west-1 — SEPARATE, do not touch
+
+### Frontend wiring checklist (tomorrow's main launch-blocker work)
+
+Do these in order, commit between each bullet, verify runCalculation at line 1983 before/after each HTML change.
+
+**1. Add supabase-js SDK to the HTML**
+- Import via CDN inside `<head>` or just before closing `</body>`
+- Initialise `const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)`
+
+**2. Replace Face 0 signup form**
+- Email input (type=email, required)
+- Marketing consent checkbox, UNCHECKED by default, label "Email me updates about Quantum Cube"
+- "Send magic link" button (rename from current Unlock/Submit button)
+- Loading state ("Check your email for a sign-in link")
+- Error state ("Something went wrong, try again")
+
+**3. Wire signup action**
+- Button onclick → `sb.auth.signInWithOtp({ email, options: { data: { marketing_consent } } })`
+- Handle promise: success → show "Check your email", error → show message
+
+**4. Handle magic-link callback on page load**
+- On page load, check `window.location.hash` for `#access_token=`
+- If present, Supabase SDK auto-handles session persistence; we just clean the URL and flip UI to signed-in state
+
+**5. Fetch profile on sign-in**
+- `const { data: profile } = await sb.from('profiles').select().single()`
+- Read `profile.has_paid` → gate unlock UI
+
+**6. Replace localStorage unlock gate**
+- Current code at line 1813: `const STORE_KEY = "qc_unlocked_v1"`
+- Keep localStorage as a CACHE (fast first paint), but source of truth is `profile.has_paid`
+- On sign-in: if `profile.has_paid === true`, set localStorage AND unlock UI. If false, clear localStorage.
+
+**7. Supabase Edge Function: PayFast ITN webhook**
+- Create Edge Function `payfast-webhook` in Supabase project
+- Function receives POST from PayFast on successful payment
+- Validates PayFast ITN signature (security-critical — use PayFast's documented verification)
+- Looks up user by email or passed m_payment_id
+- Flips `profiles.has_paid = true` via service-role key
+- Replace placeholder URL at line 1877: `https://YOUR-SERVER.com/payfast-notify` → actual Edge Function URL
+
+**8. Sign-out flow**
+- Add sign-out button (in settings/Face 7, or a small "sign out" link)
+- `await sb.auth.signOut()` → clear localStorage cache, return to Face 0
+
+**9. End-to-end test (use PayFast sandbox)**
+- Fresh incognito window
+- Sign up with test email
+- Open email, click magic link
+- Verify signed-in state, has_paid=false, unlock UI locked
+- Click Unlock → complete PayFast sandbox payment → return to app
+- Verify has_paid=true, unlock UI open
+- Sign out, sign back in on a different device/browser → verify unlock persists
+
+### Other outstanding items
+
+**Gmail / Workspace (quick tomorrow AM check, ~5 min):**
+- Send As aliases — should have auto-propagated overnight; finish in Gmail Settings → Accounts
+- "Reply from the same address" — enable once Send As has 2+ addresses
+- Check DMARC Management dashboard for first reports (24h after enable)
+- 2FA on all 3 partner Workspace accounts — verify enabled (Security section claim in legal docs)
+
+**Pre-launch removal checklist (do these last, right before going live):**
+- Remove "Try Demo (test mode)" buttons at lines 608, 644, 678, 710
+- Remove `unlockDemo()` JS function entirely
+- Switch PayFast from sandbox to live credentials in the process action at lines 1871-1872
+
+**Code repo cleanup (low priority):**
+- Decide fate of write_brief.py (untracked) — delete or commit
+- Commit .cursorignore changes
+- Stop tracking .DS_Store
+
+### Systems live at end of today
+
+| System | State |
+|---|---|
+| GitHub Pages | Live, serving latest commit 799bf0c |
+| quantumcube.app domain | Registered, DNS managed by Cloudflare |
+| qncacademy.com domain | Registered, DNS managed by Cloudflare |
+| Google Workspace | admin@qncacademy.com active, 5 aliases created |
+| Gmail inbox filters | 5 rules auto-label incoming mail by recipient alias |
+| Cloudflare Email Routing | *@quantumcube.app → admin@qncacademy.com (active) |
+| Email auth qncacademy.com | SPF (soft fail) + DKIM + DMARC (p=none) all live |
+| Supabase project | quantum-cube in Frankfurt, ACTIVE_HEALTHY, free tier |
+| Supabase schema | profiles table with RLS + auto-create trigger |
+| Supabase auth config | Site URL + 2 redirect URLs set, magic-link ready |
+| Legal docs | Privacy + POPIA + Security + Terms all align with account model |
+| Legal docs | Disclaimer + IP + Epidemic Sound credits unchanged (still accurate) |
+| runCalculation | Stable at line 1983 throughout all HTML rewrites today |
+
+### First 3 things to run at start of next session
+
+```bash
+# 1. Sanity check runCalculation hasn't moved
+grep -n "function runCalculation" /Users/qnc/Projects/quantumcube/quantum-cube-v10.html
+
+# 2. Verify Supabase credentials are still in place
+cat /Users/qnc/Projects/quantumcube/.supabase-env
+
+# 3. Confirm email auth still resolves
+dig +short TXT google._domainkey.qncacademy.com
+```
+
+All three should return non-empty. If any returns empty, STOP and diagnose before continuing.
