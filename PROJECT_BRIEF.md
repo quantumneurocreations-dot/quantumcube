@@ -344,3 +344,67 @@ Status:  Active development - COMPLETELY SEPARATE CHAT
 - [x] Life Phases — 11 numbers, 3 variations each
 - [x] Personal Year — 9 numbers, 3 variations each
 - [x] PRIORITY 1 CONTENT VARIATIONS — COMPLETE
+
+---
+
+## SESSION LOG — April 17, 2026 — Morning Update
+
+### Status Update
+- [x] PRIORITY 1 — Content Variations — COMPLETE
+- [x] PRIORITY 2 — Content Accuracy Review — COMPLETE
+  - Numerology interpretations verified by Michelle
+  - Western astrology verified
+  - Chinese zodiac verified
+  - 144 combination readings reviewed — consistent and accurate
+  - Combined portrait quality confirmed good
+- [x] M4 Mac Mini fully set up and verified
+- [x] SSH permanently configured
+- [x] Cursor workflow established and working
+
+### What Still Needs To Be Done
+
+#### PRIORITY 3 — Narrator Voice (ElevenLabs)
+- [ ] Wire narrator button to ElevenLabs API
+- [ ] Male/female voice toggle
+- [ ] API key already set up in Academy — reuse same key
+- [ ] Play reading text when result card opens, stop button available
+
+#### PRIORITY 4 — Audio
+- [ ] Re-enable audio (uncomment ~2 lines in JS)
+- [ ] Test all 6 sounds on device
+- [ ] Test music pause/resume on video play
+
+#### PRIORITY 5 — Payments
+- [ ] Switch from PayFast to Stripe or Paddle for global
+- [ ] Remove "Try Demo (test mode)" button before go-live
+- [ ] Test live $8 payment end-to-end
+
+#### PRIORITY 6 — User Accounts & Leads (NEW — decision needed)
+- [ ] Decision: simple email capture vs full Supabase accounts
+- [ ] Email + password + PIN for returning users
+- [ ] Save profile to database for leads
+- [ ] Supabase already set up for Academy — can reuse
+
+#### PRIORITY 7 — Legal & Credits
+- [ ] Add Epidemic Sound music credit to Terms/Disclaimer
+- [ ] Privacy Policy — collecting names and birthdates requires one
+- [ ] Cookie/GDPR notice for international users
+
+#### PRIORITY 8 — App Stores
+- [ ] Google Play: PWABuilder.com -> .aab -> $25 USD dev account
+- [ ] Apple App Store: Capacitor -> Xcode -> $99/yr dev account
+
+#### PRIORITY 9 — Final Polish
+- [ ] Final QA pass all faces on device
+- [ ] Add social proof / testimonials section
+- [ ] Add sharing mechanism for readings
+- [ ] Email capture or PWA push notification opt-in
+- [ ] Mouse mousedown/mouseup cube glow (desktop)
+- [ ] Analytics — track usage
+- [ ] Remove "Try Demo (test mode)" button before go-live
+
+### Next Session Starting Point
+- Decide on user accounts approach (simple email capture vs full Supabase)
+- Wire narrator button to ElevenLabs
+- Add Epidemic Sound credit to legal footer
+- Re-enable audio
