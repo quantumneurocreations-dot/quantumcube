@@ -409,3 +409,96 @@ Status:  Active development - COMPLETELY SEPARATE CHAT
 - Wire narrator button to ElevenLabs
 - Add Epidemic Sound credit to legal footer
 - Re-enable audio
+
+---
+
+## SESSION LOG — April 17, 2026 — Infrastructure Day
+
+### Team Structure (documented for future context)
+- **Ronnie (Willem)** — design, programming, tech lead
+- **Michelle** — admin
+- **Keyzer** — marketing + finance/payments
+- Equal 3-way partnership
+- Faceless brand philosophy: public only sees `admin@` and `info@`, never individual names
+
+### Priority 1 — Epidemic Sound Credit — COMPLETE
+- Added "Third-Party Credits" section to Intellectual Property tab in legal docs modal
+- Credits cover music (Epidemic Sound subscription), fonts (Google Fonts SIL Open Font), payments (PayFast)
+- Generic wording — covers all tracks present and future, no track-by-track listing
+- Committed and pushed: commit 3b8428e
+- runCalculation verified at line 1983 before and after — no JS corruption
+
+### Priority 2 — Domain & Email Infrastructure — PARTIALLY COMPLETE
+
+**Domains registered via Cloudflare Registrar:**
+- qncacademy.com — primary product URL + email home
+- quantumcube.app — Cube app URL
+- Both registered Apr 17, 2026 → expire Apr 17, 2027, auto-renew ON
+- Total domain cost: ~R475/year
+
+**Google Workspace setup:**
+- Business Starter (annual commitment, 10% off for 12 months) — €6.12/user/month
+- 14-day free trial active (billing starts ~May 1, 2026)
+- Organisation: "Quantum Neuro Creations"
+- Domain qncacademy.com verified via Cloudflare OAuth
+- MX records + SPF TXT added via Cloudflare DomainConnect
+- Gmail active on qncacademy.com
+- Admin user: admin@qncacademy.com (WK Pretorius)
+- Alias created: info@qncacademy.com
+
+**Team Structure Decision — LOCKED IN:**
+- 1 paid seat only: admin@qncacademy.com
+- All three partners share admin login (trusted team)
+- Personal emails are free aliases, used only for internal team-to-team communication
+- Public face is strictly admin@ and info@
+
+**Still to set up (next session):**
+- [ ] Add 4 remaining aliases: privacy@, michelle@, keyzer@, ronnie@qncacademy.com
+- [ ] "Send As" setup for each named alias (verification code from admin inbox)
+- [ ] Gmail filters to auto-label emails by recipient alias
+- [ ] Cloudflare Email Routing on quantumcube.app → forward to admin@qncacademy.com
+- [ ] DKIM authentication (for email deliverability)
+- [ ] Optional: cancel old quantumneurocreations.co.za Workspace once cutover verified
+
+### Priority 3 — Privacy Policy / POPIA / Security Rewrite — NOT STARTED
+
+**Context:** Current legal docs claim "zero data collection, no backend, no user accounts." Supabase Auth + email storage + marketing consent will make those claims false. Must rewrite BEFORE Supabase goes live.
+
+**Decisions locked in:**
+- Supabase region: Frankfurt (eu-central-1) — GDPR-strong
+- Data deletion timeline: 30 days
+- Support email for legal docs: privacy@qncacademy.com
+- Marketing consent: unchecked checkbox on signup (not pre-ticked, per GDPR/POPIA)
+
+**Still to do:**
+- [ ] Draft replacement Privacy Policy section
+- [ ] Draft replacement POPIA & Data Compliance section
+- [ ] Draft replacement Security section
+- [ ] Python replacement command (same pattern as Epidemic Sound insert)
+- [ ] Deploy at same moment Supabase Auth goes live
+
+### Priority 4 — Supabase Auth (ORIGINAL ITEM 1) — NOT STARTED
+
+**Decisions locked in:**
+- Magic link / OTP auth, no passwords
+- Session persists 30–90 days
+- No readings history saved (readings deterministic from name + birthdate)
+- Minimal DB: email, has_paid, marketing_consent, created_at
+- Signup form: one checkbox "Email me updates" — UNCHECKED by default
+- Separate Supabase project from Academy (per project isolation rule)
+
+### Annual Running Cost Summary
+- 1× Google Workspace seat: ~R1,340/year
+- qncacademy.com renewal: ~R200/year
+- quantumcube.app renewal: ~R275/year
+- **TOTAL: ~R1,815/year (~R150/month)**
+
+(Excludes: PayFast transaction fees, Supabase paid tier if free limits exceeded, ElevenLabs narrator API usage)
+
+### Next Session Starting Point
+1. Finish aliases (privacy, michelle, keyzer, ronnie) + Send As setup — 15 min
+2. Cloudflare Email Routing on quantumcube.app — 10 min
+3. Draft privacy rewrite (Privacy / POPIA / Security) — Claude drafts, you review
+4. After privacy drafts approved → begin Supabase Auth wiring
+5. Then: narrator button → ElevenLabs, re-enable audio, DKIM, payments switch
+
