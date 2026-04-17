@@ -5,10 +5,11 @@
 
 ## ⚠️ CRITICAL RULE — ALWAYS READ FIRST
 **Quantum Cube and QNC Academy are COMPLETELY SEPARATE projects.**
-- Never mix code, files, credentials, or platforms between them
-- Quantum Cube lives on **GitHub Pages only** — no Vercel, no Supabase
-- Academy lives on Vercel + Supabase — never touches Quantum Cube
+- Never mix code or files between them
+- Quantum Cube currently lives on GitHub Pages
+- If creating new Vercel or Supabase projects, create them FOR Quantum Cube — never modify or touch the Academy project
 - Always confirm which project you are working on before making any changes
+- Vercel, Supabase, and all platforms are allowed — just make sure you are working on the Quantum Cube project, not the Academy
 
 ---
 
