@@ -19,3 +19,4 @@ write_brief.py
 
 # Rewrite script backups
 *.bak-*
+screenshots/
