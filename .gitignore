@@ -6,3 +6,16 @@ Backup/
 .DS_Store
 More backgrounds/
 Cube Sides/
+.supabase-env
+
+# Supabase CLI local state
+supabase/.temp/
+
+# Ad-hoc scripts not for production
+write_brief.py
+
+# macOS
+.DS_Store
+
+# Rewrite script backups
+*.bak-*
