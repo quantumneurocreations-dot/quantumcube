@@ -424,6 +424,16 @@ Excludes Paddle fees (~5% + $0.50/tx), Supabase paid tier if scaled, ElevenLabs 
 
 ---
 
+## 📝 TOMORROW'S PUNCH LIST (Ronnie's notes, end of April 18)
+
+1. **Quantum Cube contact info + email address creation** — set up `info@quantumcube.app` / `contact@quantumcube.app` or equivalent. Decide on public-facing contact strategy for the app.
+2. **Numerology results rotation — switch from random to sequential.** Currently the 3 content variations pick randomly each session. Change to rotate in order (1 → 2 → 3 → 1 → ...) so a returning user sees a different variation each time rather than possibly repeating.
+3. **Verify content variations exist for Astrology + Horoscope (Faces 4 + 5).** Brief currently only confirms numerology has 3 variations per category. Check Western Astrology, Chinese Horoscope, and Combined Results — do they also have 3 variations each? If not, that's a content task.
+4. **Faces 3, 4, 5, 6 — layout finetuning + polish pass.** Walk through each results face with fresh eyes, tighten spacing / typography / rhythm. Look for inconsistencies.
+5. **Music library — need at least 5 similar tracks rotating.** One ambient track gets repetitive fast. Source 4 more in the same Dream-Focus-Beta-Waves style, rotate through them, persist index between sessions so users don't hear the same track every time.
+
+---
+
 ## NEXT SESSION STARTING POINT
 
 **Hot item — audio button architecture redesign:**
