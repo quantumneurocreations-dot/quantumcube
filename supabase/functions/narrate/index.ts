@@ -25,7 +25,7 @@ serve(async (req) => {
     const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`, {
       method: "POST",
       headers: { "xi-api-key": KEY, "Content-Type": "application/json", "Accept": "audio/mpeg" },
-      body: JSON.stringify({ text, model_id: MODEL, voice_settings: { stability: 0.5, similarity_boost: 0.75 } }),
+      body: JSON.stringify({ text, model_id: MODEL, voice_settings: { stability: 0.5, similarity_boost: 0.75, speed: 1.15 } }),
     });
     if (!r.ok) {
       const err = await r.text();
