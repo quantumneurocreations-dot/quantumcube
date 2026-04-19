@@ -1,5 +1,5 @@
 # QUANTUM CUBE — MASTER PROJECT DOCUMENT
-**Version: v14 | Last Updated: April 18, 2026 (evening)**
+**Version: v15 | Last Updated: April 19, 2026 (evening)**
 
 ---
 
@@ -28,7 +28,7 @@ The kickoff doc handles session startup, role split between Chat Claude and Curs
 
 ## FILE LOCATIONS
 /Users/qnc/Projects/quantumcube/              <- MAIN PROJECT FOLDER
-|- quantum-cube-v10.html                      <- THE APP (~11 MiB, ~2870 lines)
+|- quantum-cube-v10.html                      <- THE APP (~11 MiB, ~2978 lines)
 |- PROJECT_BRIEF.md                           <- This document
 |- CHAT_KICKOFF.md                            <- Chat operating protocol
 |- cube-background.jpg                        <- Milky Way background (in repo)
@@ -36,12 +36,12 @@ The kickoff doc handles session startup, role split between Chat Claude and Curs
 |- .cursorignore                              <- Cursor indexing rules (committed)
 |- .gitignore                                 <- Git ignore rules (committed)
 |- supabase/                                  <- Supabase CLI linked project (.temp gitignored)
-|- Sounds/                                    <- Audio assets (committed now — see below)
-|- Cube Sides/                                <- Cube face images (gitignored - embedded in HTML)
+|- Sounds/                                    <- Audio assets (committed)
+|- Cube Sides/                                <- Cube face images (gitignored — cube faces are now text + lines ONLY, no images)
 |- Videos/                                    <- Video local backups (gitignored)
 |- audio/                                     <- Audio files
 |- screenshots/                               <- Audit screenshots (gitignored)
-|- .bak-                                    <- Rewrite script backups (gitignored)
+|- .bak-                                      <- Rewrite script backups (gitignored)
 
 **GitHub Repo:** https://github.com/quantumneurocreations-dot/quantumcube
 **Live URL:** https://quantumneurocreations-dot.github.io/quantumcube/quantum-cube-v10.html
@@ -75,10 +75,10 @@ The kickoff doc handles session startup, role split between Chat Claude and Curs
 - **Email:** Resend via custom SMTP on Supabase (unlimited)
 - **Payment:** PayFast sandbox currently wired — Paddle swap Monday April 20
 - **Videos:** Vimeo Player API — native real fullscreen only
-- **Audio:** 5 base64 embedded (currently disabled) + 2 lightsaber MP3s extracted to Sounds/ (cube touch FX, silenced)
+- **Audio:** 5 base64 embedded (currently disabled) + 2 lightsaber MP3s extracted to Sounds/ (cube touch FX, silenced). ElevenLabs narrator NOT yet wired.
 - **Haptics:** window.haptic('light'|'medium'|'success') — wired on all major interactions
 - **Hosting:** GitHub Pages
-- **PWA:** Web manifest, service worker (cache: qc-v41)
+- **PWA:** Web manifest, service worker (**cache: qc-v99**)
 
 ---
 
@@ -121,12 +121,12 @@ Coexist cleanly with existing Cloudflare Email Routing at root `@`.
 | Face | Name | Notes |
 |------|------|-------|
 | Face 0 | Entry / Sign Up Form | |
-| faceCheckEmail | Interstitial — "Check Your Email" | 3 lines (Check Your Email / A Sign-In Link Was Sent / Click On The Link To Verify Your Email) inside glass-card, all form-title style. Resend button (60s cooldown) + Back to Sign Up card button |
+| faceCheckEmail | Interstitial — "Check Your Email" | 3 form-title lines inside glass-card. Resend button (60s cooldown) + Back to Sign Up card button |
 | Face 1 | Introduction video | Auto-advance destination after magic-link SIGNED_IN |
 | Face 2 | Results Explained videos | |
-| Face 3 | Numerology Results | Locked until has_paid |
-| Face 4 | Astrology & Horoscope | Locked until has_paid |
-| Face 5 | Combined Results | Locked until has_paid |
+| Face 3 | Numerology Results | Locked until has_paid. Voice button below matrix grid. |
+| Face 4 | Astrology & Horoscope | Locked until has_paid. Voice button below astro-grid. |
+| Face 5 | Combined Results | Locked until has_paid. Voice button above "Your Complete Portrait" header. |
 | Face 6 | Complete / Outro video | |
 | Face 7 | Settings (Sign Out + Back) | Reached via Settings link in Face 0 legal footer |
 
@@ -137,48 +137,59 @@ Privacy: Hide from Vimeo. Downloads OFF. Comments OFF.
 
 | Face | Title | Vimeo ID | Shape |
 |------|-------|----------|-------|
-| Face 1 | 1 - Introduction | 1183086210 | Portrait (9:16) |
+| Face 1 | 1 - Introduction | 1183086210 | Portrait (9:16) — container 75% wide |
 | Face 2 | 2 - Numerology Explained | 1183086853 | Landscape (16:9) |
 | Face 2 | 3 - Results Explanation | 1183087269 | Landscape (16:9) |
 | Face 2 | 4 - Astrology | 1183087951 | Landscape (16:9) |
-| Face 6 | 5 - Cube Outro | 1183103519 | Portrait (9:16) |
+| Face 6 | 5 - Cube Outro | 1183103519 | Portrait (9:16) — container 75% wide |
 
-**Video behaviour (UPDATED April 18):**
-- Real fullscreen only (Vimeo native) — no more fake CSS fullscreen
+**Video behaviour:**
+- Real fullscreen only (Vimeo native) — no fake CSS fullscreen
 - On play: unlock orientation, enter fullscreen, lock to landscape (landscape videos) or portrait (portrait videos)
 - On exit fullscreen: re-lock portrait
-- Exit via Vimeo's own controls (built-in). No custom × button needed.
-- 2px black border on video containers, cyan top-gradient removed
+- Exit via Vimeo's own controls (built-in). No custom × button.
+- 2px black border on video containers
+- iframes use `allow="autoplay; fullscreen; ..."` — redundant `allowfullscreen` attribute removed
+
+**Fullscreen toast (Android Chrome):** Android OS shows a non-suppressible toast with URL on fullscreen entry. This is an OS-level security feature, not fixable from code. Behaviour may be cleaner in installed PWA — test post-launch.
 
 ---
 
 ## VISUAL DESIGN — KEY DECISIONS (DO NOT CHANGE)
 - Background: Milky Way image + CSS starfield (220 stars)
-- Cube: Glass effect, cyan-white glowing edges 2px, clean glass faces
-- Cube faces (NEW): No giant center number. 4 small corner numbers per face (13px Cinzel Decorative, matches label) + 4 thin cyan edge lines inset 28px from corners so they never touch the numbers.
-- Cube hint text: "rotate the cube / tap a side to open" — 10px Cinzel, 2px letter-spacing, two lines
+- Cube: Glass effect, cyan-white glowing edges 2px
+- Cube faces: **TEXT + LINES ONLY, NO IMAGES.** 4 small corner numbers per face (13px Cinzel Decorative) + 4 thin cyan edge lines inset 28px from corners. Face transparency 20% tinted navy (rgba(0,0,20,0.2)), backdrop-filter blur 6px (halved from 12px for crisper stars), dead linear-gradient removed.
+- Cube DEFAULT ORIENTATION: **Face 4 (Astrology & Horoscope) facing viewer at load** — initial quat `{w:Math.SQRT1_2, x:0, y:Math.SQRT1_2, z:0}` (90° Y rotation). data-active="4" matches. Idle auto-rotate continues normally from there.
+- Cube face lock icon: 🗝️ old key emoji (U+1F5DD), 18px, absolute-positioned `bottom:22px` (Face 6 uses `bottom:42px` scoped override), `transform:translateX(-50%) rotate(-41deg) scaleX(-1)` — teeth point east, pulse animation removed.
+- Cube hint text: "rotate the cube / tap a side to open" — 10px Cinzel, 2px letter-spacing, two lines, non-bold
 - Logo: QUANTUM top, CUBE right-aligned inline-block, CUBE cyan with glow + float
-- All cards: glass style, NO margin overrides (centered via face-container padding — see Layout below)
-- Lock screens: "Complete Quantum Cube Unlock" title, stacked bullets (9 Numerology / 5 Western Astrology / 5 Chinese Horoscope / & / Combined Interpretation), $17.00, cyan-glow UNLOCK button. Margin normalized to 0 — centered by parent.
-- Payment overlay: matched `#globalLogo` at top (32px 0 8px padding), two-line title, same bullets as lock card, $17 + stacked meta, cyan-glow Pay $17 button, white-outline Back to Cube button (exact size match to Pay). Bottom padding trimmed to 20px.
-- Audio buttons: Music bottom-right, Voice bottom-LEFT (moved from right). Pill shape, reveal label on scroll, 30% idle opacity. **⚠ Architecture being reconsidered — see Tomorrow's starting point.**
+- Glass cards: NO margin overrides (centered via face-container padding)
+- Lock screens: "Complete Quantum Cube Unlock" title, stacked bullets, $17.00, cyan-glow UNLOCK button. **Max-width 88% on mobile + auto horizontal margins** (base rule, line 190). `@media (min-width:600px)` caps to 44%.
+- Payment overlay: Pay $17 + Back to Cube buttons NOW BOTH INSIDE the lock card — identical width automatically via shared `.unlock-btn` class. Back to Cube is `unlock-btn pay-overlay-btn` with transparent background + white border.
+- Audio buttons:
+  - **Music**: permanent inline-centered below #cubeHint. White border, white "MUSIC" label, cyan emoji + glow. Shown on faces 1-5 ONLY. `showFace()` hides on 0/CheckEmail/6/7. Extra 10px top margin on Faces 1 & 2 (22px vs 12px) to avoid crowding.
+  - **Voice**: 3 instances via `.voice-btn` class. Face 3 inside face3-content below matrix. Face 4 inside face4-content below astro-grid (+10px top margin scoped `#face4-content .voice-btn{margin-top:30px}`). Face 5 inside face5-content above "Your Complete Portrait" header. Same white-border/white-label/cyan-emoji styling as Music. **NOT yet wired to ElevenLabs — UI only.**
+  - Old scroll-reveal IIFE REMOVED.
 - Legal footer on Face 0: Terms + Disclaimer + Settings (Settings signed-in only)
 - Month dropdown: numbers 1-12
 - PWA orientation: portrait locked, unlocks during landscape video play
 
-**LAYOUT — CRITICAL (added April 18):**
-- `.face` padding is now symmetric `24px 18px 0 18px` (was `24px 18px 0 0` — the 0 on left caused everything to drift left visually vs truly-centered elements like the logo).
-- `.video-face` margin normalized to `0 0 16px 0` (was `0 16px 16px 32px` — old compensation trick, no longer needed).
-- `.lock-screen` margin normalized to `0 0 20px 0` (was `0 16px 20px 32px` — same reason).
-- If a future element looks off-center, check its own margins BEFORE touching face padding.
+**LAYOUT — CRITICAL:**
+- `.face` padding symmetric `24px 18px 0 18px`
+- All 5 result containers (`.scoreboard`, `.matrix-wrap`, `.astro-grid`, `.card-stack`, `.combo-full`) now have ZERO side margins — they fill `.face` padding for symmetric 18px breathing room matching videos
+- `.icard-body` horizontal margin REMOVED (was stacking with padding for 36px inset) — now 18px padding only, matches `.combo-full`'s 20px feel
+- Numerology matrix cells (`.mc`): **square via `aspect-ratio:1/1`** with flex centering. Multiply count (`mc-c`) REMOVED — just number + dots.
+- Astrology cells (`.astro-item`): **square via `aspect-ratio:1/1`** with flex centering. (Note: duplicate `.astro-item` selector — harmless but flag for next audit.)
+- Combined teaser paragraph (combo-box on Face 4) REMOVED — already covered in full Face 5 narrative.
+- Face 4 combo-txt summary line + Face 3 matLeg line (hidden passion / karmic lessons summary) REMOVED.
 
-**BUTTON SIZES (bumped April 18):**
-- `.calc-btn`, `.unlock-btn`, `.reset-btn`, `.pay-back` all use `font-size:clamp(11px,3vw,13px)` and `letter-spacing:clamp(3px,1.5vw,5px)` (previously 9-11 / 2-4).
-- `.pay-overlay-btn` no longer has a `letter-spacing:6px` override — inherits clamp so Pay $17 matches other CTAs.
+**BUTTON SIZES:**
+- `.calc-btn`, `.unlock-btn`, `.reset-btn`, `.pay-back` all use `font-size:clamp(11px,3vw,13px)` and `letter-spacing:clamp(3px,1.5vw,5px)`
+- `.err-msg` styling matches `.consent-main` — Cormorant Garamond 15px, no uppercase, no letter-spacing, red-pink color + subtle glow
 
 ---
 
-## 🪨 HAPTIC MAP — shipped April 18
+## 🪨 HAPTIC MAP
 Global helper: `window.haptic(type)` where type = `'light'` (25ms), `'medium'` (40ms), `'success'` ([30, 80, 30]).
 
 | Trigger | Type |
@@ -197,19 +208,15 @@ Silent on iOS (Safari doesn't expose navigator.vibrate) — graceful fallback.
 
 ---
 
-## 🔊 AUDIO ASSETS — status April 18
+## 🔊 AUDIO ASSETS
 **Extracted from base64 into `Sounds/` folder (committed):**
-- `bgMusic.mp3` — ambient music (Dream Focus Beta Waves)
-- `openSound.wav` — face open sound
-- `selectSound.wav` — selection
-- `pop1.mp3`, `pop2.mp3` — UI pops
-- `ES_Lightsaber, Swing, Electronic Hum 04 - Epidemic Sound.mp3` — cube touch FX
-- `ES_Scifi, Weapon, Lightsaber, Swing, Electronic Hum - Epidemic Sound.mp3` — cube touch FX
+- `bgMusic.mp3`, `openSound.wav`, `selectSound.wav`, `pop1.mp3`, `pop2.mp3`
+- Two lightsaber cube-touch FX (wired but silenced)
 
 **Current state:**
-- Cube touch sound (random between 2 lightsaber MP3s) is **wired but silenced** at `/* a.play().catch(...) */`
-- The 5 original sounds are still base64-embedded in HTML at lines ~828-832 (`this._bgMusic`, `this._openSound`, `this._selectSound`, `this._pop1`, `this._pop2`). Not yet rewired to load from Sounds/ folder.
-- Cleanup pending: base64 → file references (will significantly shrink HTML).
+- Cube touch sound is wired but silenced at `/* a.play().catch(...) */`
+- The 5 original sounds are still base64-embedded in HTML (~lines 828-832). Not yet rewired to load from Sounds/ folder.
+- Base64 → file references cleanup: significantly shrinks HTML when done. **HIGH PRIORITY post-launch** — biggest perf win available.
 
 ---
 
@@ -217,7 +224,7 @@ Silent on iOS (Safari doesn't expose navigator.vibrate) — graceful fallback.
 - **Project:** quantum-cube (ref `fqqdldvnxupzxvvbyvjm`)
 - **Region:** Central EU (Frankfurt) — POPIA/GDPR aligned
 - **Org:** Quantum Neuro Creations (`ybhwpcakkaveapdztnrs`)
-- **Credentials:** `.supabase-env` (gitignored) — SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_PROJECT_ID, RESEND_API_KEY
+- **Credentials:** `.supabase-env` (gitignored) — SUPABASE_URL, SUPABASE_ANON_KEY (new sb_publishable_... format), SUPABASE_PROJECT_ID, RESEND_API_KEY
 
 ### Schema — `public.profiles`
 | Column | Type | Notes |
@@ -228,7 +235,7 @@ Silent on iOS (Safari doesn't expose navigator.vibrate) — graceful fallback.
 | marketing_consent | boolean | From user_metadata at signup |
 | created_at | timestamptz | |
 
-### RLS Policies (verified April 18)
+### RLS Policies
 - RLS enabled
 - `users_select_own_profile` — SELECT where `auth.uid() = id`
 - `users_insert_own_profile` — INSERT backup
@@ -243,12 +250,19 @@ Silent on iOS (Safari doesn't expose navigator.vibrate) — graceful fallback.
 - Redirect URLs: GitHub Pages + quantumcube.app
 - Magic-link only, session persists until explicit sign-out
 - Custom SMTP via Resend
+- `persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "implicit"`
+- `window.sb = sb` exposed for debugging
 
 ### Edge Functions
 None deployed. Paddle webhook is Monday's work.
 
+### Supabase CLI commands (v2.90.0) — CORRECT SYNTAX
+- **NOT** `supabase db execute --project-ref X "SQL"` (doesn't exist)
+- **YES** `supabase db query --linked "SQL"` (from linked project directory)
+- Example: `supabase db query --linked -o table "SELECT id, email, has_paid FROM public.profiles WHERE email = 'X';"`
+
 ### Test data in profiles (delete before launch)
-- `quantumneurocreations@gmail.com`
+- `quantumneurocreations@gmail.com` — **currently flipped to has_paid=true for testing**
 - `rkelbrickmail@gmail.com`
 - `carlkelbrick@gmail.com`
 - Any `test+*@qncacademy.com`
@@ -257,35 +271,59 @@ None deployed. Paddle webhook is Monday's work.
 
 ## FRONTEND WIRING — SHIPPED
 
-### Key line refs (April 18 evening — use grep, numbers drift)
+### Key line refs (April 19 evening — use grep, numbers drift)
 | What | Approx line |
 |---|---|
-| Supabase UMD script tag | ~443 |
-| SUPABASE_URL / ANON_KEY / client | ~445–447 |
-| Loading screen (#loadingScreen) | ~463 |
+| const sb = createClient | ~499 |
+| Loading screen | ~463 |
 | Face 0 div open | ~531 |
-| faceCheckEmail interstitial | ~549 (3 form-title lines inside glass-card) |
-| Resend Email button | ~560 |
-| Face 1 Back to Sign Up (reset-btn) | ~586 |
-| window.haptic definition | ~1100 |
-| _cubeTouchSounds array | ~1100 (same line as haptic) |
-| playCubeTouchFX function | ~1100 |
-| Two-finger twist block | ~1154 |
-| Audio button scroll-reveal IIFE | ~1134 |
-| DOMContentLoaded cube-corner injector | before onDragStart |
-| STORE_KEY const | ~1890 |
-| has_paid check | ~1905 |
-| applyUnlockedState | ~1975 |
-| launchPayFast notify placeholder | ~1981 |
-| signInWithOtp | ~2155 |
-| handleBackToSignUp | ~2230 |
-| **function runCalculation** | **~2333** |
-| onAuthStateChange | ~2206 |
-| Vimeo fullscreen block | ~2505 |
-| #payOverlay | ~2825 |
-| SW code string | ~2643 |
+| faceCheckEmail interstitial | ~547 (3 form-title lines inside glass-card) |
+| Resend Email button | ~601 |
+| Face 1 Back to Sign Up (reset-btn) | ~626 |
+| #musicBtn (inline after cubeHint) | ~536 |
+| #cubeHint | ~535 |
+| window.haptic definition | ~1141 |
+| _cubeTouchSounds array | ~1141 |
+| playCubeTouchFX function | ~1141 |
+| Two-finger twist block | ~1195 |
+| let quat (init to Face 4 orientation) | ~1091 |
+| function showFace | ~1341 |
+| function pickRotation (narrative variations) | ~1905 |
+| function buildCombinationNarrative | ~1917 |
+| STORE_KEY const | ~1994 |
+| function checkStoredUnlock | ~1998 |
+| function syncUnlockFromProfile | ~2008 |
+| function applyUnlockedState | ~2038 |
+| launchPayFast notify placeholder | ~2080 |
+| QC_PENDING_KEY const | ~2185 |
+| async function handleRevealClick | ~2222 |
+| signInWithOtp (handleRevealClick path) | ~2276 |
+| signInWithOtp (resend path) | ~2341 |
+| sb.auth.onAuthStateChange | ~2368 |
+| **function runCalculation** | **~2407** |
+| function textToParas (array-safe) | ~2449 |
+| function getNumText (rotation-based) | ~2459 |
+| function renderAllContent | ~2475 |
+| NUM.pc reference (Life Phases render) | ~2517 |
+| SW code string | **~2734** (currently `qc-v99`) |
 
 **Always grep before editing — these drift.**
+
+---
+
+## 🔐 AUTH + UNLOCK FLOW — SHIPPED ARCHITECTURE
+
+### Entry paths that populate profileData + render results
+1. **Fresh first-time signup** → form submit → magic link → redirect → `onAuthStateChange` SIGNED_IN → calls `restorePendingProfile()` then `runCalculation()` → profileData built → `renderAllContent()` called at end of runCalculation
+2. **Returning verified user (session exists)** → form submit → `handleRevealClick` short-circuits via `sb.auth.getSession()` email match → skips magic link → calls `runCalculation()` → same flow
+3. **Already-paid user page reload** → `initSupabaseSession` → `restorePendingProfile()` → if session exists, `runCalculation()` fires with populated form
+
+### Key fixes shipped April 19:
+- `applyUnlockedState` now hides `.lock-screen` and reveals face3-6 content (previously only hid keys — returning paid users saw empty cards)
+- `onAuthStateChange` SIGNED_IN now calls `restorePendingProfile()` BEFORE `runCalculation` (was empty-form bailing)
+- `handleRevealClick` short-circuits when session email matches entered email (no magic-link loop for verified users)
+- `runCalculation` now ALWAYS calls `renderAllContent()` at the end (previously only on payment success — returning paid users saw blank faces)
+- `textToParas` made array-safe (was crashing on NUM array entries → killed renderAllContent partway → Face 3 interpretations + Face 4 astro + Face 5 combined were blank)
 
 ---
 
@@ -299,43 +337,38 @@ None deployed. Paddle webhook is Monday's work.
 - [ ] Remove `PF_CONFIG.amount = "88.00"` or repurpose
 - [ ] Update legal docs: remove all PayFast refs, add Paddle + Resend
 - [ ] E2E test: signup → magic link → Paddle payment → has_paid flips → unlock persists
-- [ ] Delete test rows from profiles table
+- [ ] Delete test rows from profiles (INCLUDING the one currently flipped to paid for testing)
 
-### ⚙️ Sunday (remaining weekend work)
-- [ ] User re-test of signup → interstitial → magic link flow with fresh emails
-- [ ] Age gate on signup (DOB ≥ 18)
-- [ ] Paddle prep doc for Monday team meeting (business entity, bank, tax ID, product URL, checkout flow)
-- [ ] **Audio button architecture redesign** — see "Next Session" below
+### ⚙️ Sunday/early week
+- [ ] **ElevenLabs narrator wiring** — Voice buttons on Faces 3/4/5 are UI only. Reuse Academy API key. Decide: toggle on/off per face vs per-card click trigger. Ronnie's preference: clean + practical, default toggle model.
+- [ ] **Fine-comb audit/debug pass** — dead code, date bugs, duplicate CSS selectors (e.g. `.astro-item` duplicate, `.err-msg` duplicate at line 189). Do AFTER Paddle ships.
+- [ ] **Base64 asset extraction** — biggest perf win: HTML is 11.6MB. Extracting the 5 base64-embedded sounds will shrink meaningfully + reduce cold-load jank. Rewire to load from Sounds/ folder, test playback, music pause/resume on video play.
+- [ ] Paddle prep doc for team meeting (business entity, bank, tax ID, product URL, checkout flow)
 
-### 📝 After-launch follow-ups
-- [ ] Narrator button → ElevenLabs (reuse Academy API key) — triggered from Voice button inline on Faces 3/4/5
-- [ ] Re-enable audio: rewire base64-embedded sounds to load from Sounds/ folder, test playback, music pause/resume on video play
+### 📝 Post-launch follow-ups
+- [ ] **Astrology / Horoscope / Combined content variations** — currently single-string by design. Combined = Western × Chinese only (144 combos). Rotation helper is reusable if/when variations are authored. NOT confirmed, deferred.
+- [ ] **Face 5 narrative opener variations** — 3 variations shipped for p1/p7/p9. Other 6 paragraphs unchanged.
+- [ ] **Music library** — source 4 more ambient tracks similar to Dream-Focus-Beta-Waves, rotate through, persist index between sessions.
+- [ ] **Numerology sequential rotation** — SHIPPED April 19. Per-user persisted via `qc_rotIdx` localStorage key.
+- [ ] **Contact info + email address creation** — `info@quantumcube.app` via Cloudflare routing
 - [ ] Marketing email pipeline + unsubscribe endpoint (Privacy Policy promises this)
-- [ ] Brand the Supabase magic-link email (currently plain default)
+- [ ] Brand the Supabase magic-link email
 - [ ] Fix Resend return-path: `@send.quantumcube.app` → display `@quantumcube.app`
-- [ ] App stores — Google Play (PWABuilder → .aab → $25); Apple (Capacitor → Xcode → $99/yr)
-- [ ] Social proof / testimonials section
+- [ ] App stores — Google Play (PWABuilder → .aab → $25); Apple (Capacitor → Xcode → $99/yr). Note: native wrappers don't make web code run faster — just distribution + native permissions.
+- [ ] Social proof / testimonials
 - [ ] Sharing mechanism for readings
 - [ ] Analytics
 - [ ] Profile deletion Edge Function
-- [ ] Dead CSS cleanup: `.pay-btn`, `.pay-btn-alt`, `.pay-price-lines span`, `.demo-btn`, `.pay-back` (still used by Continue button on success screen — rename for clarity?)
-- [ ] Remove inert `AUDIO._updateMuteBtn` helper (mute button deleted)
-- [ ] Fix iframe `allow`/`allowfullscreen` console warning (5 iframes)
 - [ ] Gmail aliases propagation check + 2FA on all 3 partner accounts
 - [ ] DMARC tighten p=none → p=quarantine after 2 weeks clean reports
 - [ ] Migrate business services: `quantumneurocreations@gmail.com` → `admin@qncacademy.com`
 
-### 📦 Content complete
-- [x] Content variations (all 9 numerology categories, 3 variations each)
-- [x] Content accuracy review (numerology + Western + Chinese zodiac verified)
-
 ---
 
-## INFRASTRUCTURE LIVE (end of April 18)
-
+## INFRASTRUCTURE LIVE
 | System | State |
 |---|---|
-| GitHub Pages | Live, serving latest HTML commit (SW v41) |
+| GitHub Pages | Live, serving latest HTML commit (**SW qc-v99**) |
 | quantumcube.app | Registered (Cloudflare), DNS managed, not yet pointed at Pages |
 | qncacademy.com | Registered (Cloudflare), full email auth stack live |
 | Google Workspace | admin@qncacademy.com active, 5 aliases |
@@ -353,8 +386,6 @@ None deployed. Paddle webhook is Monday's work.
 - Resend: free tier
 - **Total: ~R1,815/year (~R150/month)**
 
-Excludes Paddle fees (~5% + $0.50/tx), Supabase paid tier if scaled, ElevenLabs narrator.
-
 ---
 
 ## SEPARATE PROJECT — QNC ACADEMY
@@ -366,87 +397,75 @@ Excludes Paddle fees (~5% + $0.50/tx), Supabase paid tier if scaled, ElevenLabs 
 
 ---
 
-## SESSION LOG — April 18, 2026 (second session, evening)
+## SESSION LOG — April 19, 2026 (marathon session, 56 commits, SW qc-v42 → qc-v99)
 
-41 commits shipped in this session. Headlines by theme:
+### Content / data
+- Numerology variation picker: random → per-user persisted sequential rotation (`qc_rotIdx` localStorage)
+- Face 5 narrative: 3 variations each for paragraph 1 (life-path opener), 7 (astrology transition), 9 (closing) via `pickRotation` helper
+- `textToParas` made array-safe (critical bug fix — was crashing renderAllContent for paid users)
+- Combo teaser on Face 4 removed (redundant with Face 5 full narrative)
+- Hidden Passion / Karmic Lessons summary line on Face 3 (matLeg) removed
 
-**Videos — settled on native Vimeo real fullscreen:**
-- Removed real-fullscreen trigger, then re-added it (native-only)
-- Added × overlay, then removed it (Vimeo's own controls are enough)
-- Forced landscape orientation lock on landscape videos, portrait on portrait
-- 2px black border, removed cyan top-gradient
-- Fixed `Video-container` typo on Face 6 outro
+### Auth / unlock (BIG ARCHITECTURE FIXES)
+- Age gate on signup (18+)
+- `applyUnlockedState` now reveals face content (was only hiding keys)
+- `onAuthStateChange` SIGNED_IN calls `restorePendingProfile` before runCalculation
+- `handleRevealClick` short-circuits when session matches entered email (no redundant magic-link loop)
+- `runCalculation` always calls `renderAllContent` at end
 
-**Cube interactions:**
-- Two-finger twist → Z-axis rotation (one-finger drag unchanged)
-- Haptic system (`window.haptic`) wired across all major CTAs
-- Cube touch random lightsaber sound FX (wired, silenced)
-- Extracted 5 base64 audio files to Sounds/ folder
+### Cube
+- Default orientation: Face 4 facing viewer (quat + data-active synced)
+- Dead zero-alpha background gradient removed
+- Backdrop-filter blur halved 12px → 6px (crisper stars)
+- Inset edge lines glow tried + reverted
 
-**Cube visual:**
-- Deleted giant center number
-- Added 4 small corner numbers per face (matches label size)
-- Added 4 thin cyan edge lines inset from corners
-- Cube hint text: two lines, non-bold, 10px
+### Cube face key icon overhaul (many iterations)
+- 🔒 padlock emoji → 🗝️ old key emoji
+- Size tuned (11px → 18px)
+- Position tuned (bottom:22px; Face 6 scoped bottom:42px)
+- Rotation tuned through scaleX(-1) + rotate(-41deg) so teeth point east with bit on east side
+- lockPulse flashing animation removed
 
-**Audio buttons (provisional — to revisit):**
-- Removed mute button entirely
-- Music + Voice as pill buttons with scroll-reveal labels
-- Voice moved bottom-left, Music bottom-right
-- **User feedback: scroll-reveal is distracting during reading. Plan for tomorrow: relocate Voice inline with Faces 3/4/5 results, Music stays bottom-right at 30% always.**
+### Layout / cards
+- All 5 result containers side margins zeroed → fill face padding (symmetric 18px)
+- `.icard-body` 18px horizontal margin removed (was stacking with padding for 36px inset)
+- Numerology matrix cells: square via aspect-ratio, multiply count removed
+- Astrology cards: square via aspect-ratio (duplicate selector to flag in audit)
+- Portrait videos widened 56.25% → 75%
+- Payment lock cards: base max-width:88% added (mobile was uncapped because cap was in `@media (min-width:600px)`)
+- Back to Cube button: moved INSIDE lock card below Pay $17 → both share parent, identical width
+- err-msg typography matched to consent-main (Cormorant Garamond 15px, no uppercase)
 
-**Layout / centering — the big fix:**
-- Root cause identified: `.face` padding was `24px 18px 0 0` (0 left, 18 right)
-- Workarounds on `.video-face` and `.lock-screen` used asymmetric margins to compensate
-- Fixed at root: face padding now symmetric 18/18, video/lock-screen margins normalized to 0
-- Everything now truly centered
+### Audio buttons
+- Music: permanent inline-centered, white border, white label, cyan emoji+glow, shown on faces 1-5 only. Extra 10px top margin on Faces 1 & 2.
+- Voice: 3 instances via `.voice-btn` class on Faces 3/4/5. NOT wired to ElevenLabs yet.
+- Scroll-reveal IIFE removed.
 
-**Pay overlay polish:**
-- Logo gap matched to Face 0 (32px 0 8px)
-- Legal footer matches other faces (Terms + Disclaimer, `.legal-footer` class)
-- Back to Cube → white-outline card exactly matching Pay $17 size
-- Bottom padding trimmed 60px → 20px
-- Pay button letter-spacing override removed (inherits clamp)
+### Marketing consent
+- "Email me updates" × 5 locations → "Add Me To The Quantum" + "News And Insights From The Cube" subtitle (POPIA/GDPR specificity, brand voice)
 
-**Buttons global:**
-- Font-size bumped `clamp(9px,2.5vw,11px)` → `clamp(11px,3vw,13px)`
-- Letter-spacing bumped `clamp(2px,1.2vw,4px)` → `clamp(3px,1.5vw,5px)`
+### Iframe + cleanup
+- `allowfullscreen` attribute removed from 5 Vimeo iframes (redundant with `allow="fullscreen"`)
+- `_updateMuteBtn` inert helper removed (mute button already deleted)
+- 4 dead CSS blocks removed
 
-**Interstitial:**
-- Back to Sign Up upgraded to white-outline reset-btn card
-- "Check Your Email" moved inside glass-card
-- Two body lines replaced with "A Sign-In Link Was Sent To Your Email" and "Click On The Link To Verify Your Email", all three form-title style
-
-### Lessons learned this session
-- BSD sed on macOS doesn't handle multi-line replacements cleanly — Cursor Claude correctly shifted to Python one-shots when needed, which was the right call.
-- `grep -c` with 0 matches exits 1 and kills pipelines — use `|| true` on verify greps.
-- When elements look "off center", check each element's own margins BEFORE touching the root container. Workarounds stack and eventually collide.
-
----
-
-## 📝 TOMORROW'S PUNCH LIST (Ronnie's notes, end of April 18)
-
-1. **Quantum Cube contact info + email address creation** — set up `info@quantumcube.app` / `contact@quantumcube.app` or equivalent. Decide on public-facing contact strategy for the app.
-2. **Numerology results rotation — switch from random to sequential.** Currently the 3 content variations pick randomly each session. Change to rotate in order (1 → 2 → 3 → 1 → ...) so a returning user sees a different variation each time rather than possibly repeating.
-3. **Verify content variations exist for Astrology + Horoscope (Faces 4 + 5).** Brief currently only confirms numerology has 3 variations per category. Check Western Astrology, Chinese Horoscope, and Combined Results — do they also have 3 variations each? If not, that's a content task.
-4. **Faces 3, 4, 5, 6 — layout finetuning + polish pass.** Walk through each results face with fresh eyes, tighten spacing / typography / rhythm. Look for inconsistencies.
-5. **Music library — need at least 5 similar tracks rotating.** One ambient track gets repetitive fast. Source 4 more in the same Dream-Focus-Beta-Waves style, rotate through them, persist index between sessions so users don't hear the same track every time.
+### Process lessons
+- **@media (min-width:600px) is desktop-only on mobile viewports.** Changes inside that media query are invisible on phones. Always check whether a rule is wrapped in a min-width media query before assuming it'll affect mobile.
+- **`grep -c` with 0 matches exits 1** — use `|| true` on verify greps.
+- **BSD sed can't do multi-line replacements** — Cursor correctly shifts to Python one-shots.
+- **Never iterate on Python scripts to fix HTML** — break into smaller str_replace edits instead.
+- **Cursor self-corrects verbatim output** when a Python script's anchor string doesn't match disk — this is welcomed and the correct behaviour.
+- **`supabase db query --linked "SQL"`** is the correct CLI command for Supabase 2.90.0 — NOT `db execute --project-ref`.
+- **`sb_publishable_...` key format** works with SDK 2.45.4 for auth. Session persists correctly in regular Chrome tabs.
+- **Magic link opening "in browser"** (not Gmail's internal browser) is critical for session to land in main Chrome context where user tests.
 
 ---
 
 ## NEXT SESSION STARTING POINT
 
-**Hot item — audio button architecture redesign:**
-User proposed (and we agreed) to scrap the scroll-reveal approach. New plan:
-- **Voice button**: appears INLINE with content only on Faces 3/4/5 (where there's interpretation text to narrate). Alongside the "Your Interpretations" section header on each. Scrolls naturally with content.
-- **Music button**: one persistent spot, fixed bottom-right, always at 30% opacity, no reveal behaviour. Toggle once per session.
-- Remove the current fixed bottom-left/bottom-right buttons and scroll-reveal IIFE. Remove pill styling.
+1. **Paddle prep doc** — biggest priority for Monday team meeting
+2. **ElevenLabs narrator wiring** — Voice button UI exists on Faces 3/4/5, needs backend integration
+3. **Base64 audio extraction** — perf win, shrinks HTML meaningfully
+4. **Fine-comb audit pass** — duplicate CSS selectors (`.astro-item`, `.err-msg`), dead CSS cleanup, date bugs
 
-**Other Sunday work:**
-1. User re-test with fresh emails (signup → interstitial → magic link flow)
-2. Age gate on signup (DOB ≥ 18)
-3. Paddle prep doc for Monday team meeting
-
-**Monday:** Paddle team meeting, then webhook Edge Function.
-
-**First action of next chat:** attach this brief + CHAT_KICKOFF.md, run the minimal health check (see kickoff), then jump into the audio button redesign.
+**First action of next chat:** attach this brief + CHAT_KICKOFF.md, run the minimal health check (see kickoff), then pick from the list above.

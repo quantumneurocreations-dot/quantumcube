@@ -22,7 +22,7 @@ Start fast. One minimal check, trust the result, build. Full audits only when so
 - Edits files on the Mac at `/Users/qnc/Projects/quantumcube/`
 - Reports verbatim output back
 - Announces branch changes loudly (see Branch Awareness below)
-- May self-correct verbatim output before submitting — this is welcomed
+- **Self-corrects verbatim output before submitting — this is welcomed and should be trusted.** If Cursor says "your anchor string didn't match, I used the actual on-disk text X instead" — that's correct behaviour.
 
 **The user (Ronnie) is the bridge.** He copies paste blocks from Chat Claude to Cursor Claude, and copies output back. That's how we communicate.
 
@@ -45,7 +45,13 @@ Report verbatim.
 
 3. Wait for output. If output shows runCalculation present + on `main` + working tree clean + DNS working, we're green. Start on whatever he asks for.
 
-**Do not run the long 7-section audit unless something is suspect.** It burns time and user patience.
+**Do not run the long audit unless something is suspect.** It burns time and user patience.
+
+---
+
+## USER PREFERENCES — CRITICAL
+
+**Never use the ask_user_input_v0 (tap-to-select options) tool.** Ronnie dictates by voice and often wants to say more than a preset list allows. Always present options inline in chat, give a recommendation, let him respond freely.
 
 ---
 
@@ -56,26 +62,38 @@ Report verbatim.
 - **Simple shell sed** is OK for one-off CSS/HTML text swaps, but prefer str_replace.
 - **If an edit needs a Python script, break it into smaller str_replace edits instead.**
 - **Exception:** multi-line / nested-quote swaps where BSD sed will fail — Python one-shot is acceptable IF it's a single read-replace-write pass with no iteration. Still verify with grep afterward. Never iterate on a Python script to make it work.
-- **File is ~11 MiB.** Don't read the whole thing. Grep for line numbers, read 20-30 line ranges.
+- **File is ~11.6 MiB.** Don't read the whole thing. Grep for line numbers, read 20-30 line ranges.
 - **Always verify `runCalculation` exists** before and after any HTML edit.
 - **One logical change = one commit.** Makes `git revert` safe.
 
 ### Service Worker cache (CRITICAL — users will see stale content without this)
-- **Every commit that changes `quantum-cube-v10.html` MUST bump `qc-vXX`** in the SW code string (around line ~2640).
+- **Every commit that changes `quantum-cube-v10.html` MUST bump `qc-vXX`** in the SW code string.
 - Current version at top of each session: grep it first, then increment.
 - The SW bump goes in the same paste block as the change, not a separate commit.
+
+### Mobile CSS rules — THE @media (min-width:600px) TRAP
+- **Any CSS rule inside `@media (min-width:600px)` only applies on tablet/desktop.** On mobile (Ronnie's primary test device), those rules don't fire.
+- **Before changing a width/margin/padding value, check whether it's inside a min-width media query.** If yes, you're modifying desktop-only and Ronnie won't see the change on his phone.
+- If you need to affect mobile, add/modify the BASE rule (outside the media query).
+- This cost us 3 wasted commits on April 19 before realising `.lock-screen{max-width}` at line 421 was desktop-only.
 
 ### sed / grep safety on macOS (BSD)
 - **BSD sed doesn't handle embedded newlines cleanly.** Multi-line swaps → use awk block-replacement OR Python one-shot.
 - **`grep -c` returns exit 1 on zero matches** — kills pipelines silently. Use `|| true` after every verify grep that might legitimately return 0.
 - **`head -N` piped after `git log` can trigger SIGPIPE (exit 141)** on macOS. Use `|| true` at the end of that line too.
 - **Escaping nightmares**: if a sed pattern needs more than 2 levels of quote escaping, stop and use Python.
+- **Python regex across 11MB HTML is dangerous** — e.g. `re.sub(r' +', ' ', src)` globally collapses spaces. Only use regex when anchored to a narrow context. Cursor correctly refused a dangerous regex on April 19 — this kind of refusal should be welcomed.
+
+### Supabase CLI syntax (v2.90.0)
+- **NOT** `supabase db execute --project-ref X "SQL"` — doesn't exist
+- **YES** `supabase db query --linked "SQL"` — from linked project directory
+- Example: `supabase db query --linked -o table "SELECT id, email, has_paid FROM public.profiles WHERE email = 'X';"`
 
 ### Cursor Claude specifics
-- **Cursor Claude can't script-edit `quantum-cube-v10.html`** because `.cursorignore` blocks the editor's str_replace tool on it. It CAN edit via `sed` or direct shell redirection. If Chat Claude asks for str_replace on the HTML, Cursor Claude should use shell sed as the equivalent.
+- **Cursor Claude can't script-edit `quantum-cube-v10.html` via the IDE's tools** because `.cursorignore` blocks str_replace on it. It CAN edit via `sed` or direct shell redirection or Python one-shot. If Chat Claude asks for str_replace on the HTML, Cursor should use shell sed or Python.
 - **Cursor Claude cannot handle OS file-picker dialogs** (native macOS file chooser). User must do manual uploads.
 - **Cursor Claude's Browser MCP struggles with long-text fields** in web forms (seen with Cloudflare DNS). When that happens, switch to user doing it manually — don't endlessly retry.
-- **If Cursor Claude silently rewrites the user's paste block**, the user should reject and ask it to run exactly as given.
+- **If Cursor Claude silently rewrites the user's paste block**, the user should reject and ask it to run exactly as given. Self-correction of a Python anchor string is welcomed; silent rewrites of intent are not.
 
 ### Branch awareness
 - Default working branch is `main`. Every paste block assumes it.
@@ -95,8 +113,11 @@ If a change is confirmed on disk + pushed + GitHub Pages rebuilt (~1 min), but R
 
 Triage in this order:
 1. Have him open the live GitHub Pages URL in a regular Chrome tab (not the PWA). If the change shows there → code is correct, PWA is cached.
-2. Force-stop the PWA on Android (long-press icon → App info → Force stop, optionally Clear storage).
-3. If that still doesn't help, uninstall + reinstall the PWA.
+2. Force-stop the PWA on Android (long-press icon → App info → Force stop, optionally Clear storage). **If long-press only shows "Remove"** (some Android launchers), navigate via Settings → Apps → find app name → Force stop / Clear storage.
+3. If still stuck, test in regular Chrome to bypass the PWA entirely.
+4. If that still doesn't help, uninstall + reinstall the PWA.
+
+**Magic link + browser:** if Ronnie clicks a magic link from Gmail, make sure it opens in main Chrome ("Open in browser"), NOT Gmail's internal browser. Session won't match otherwise.
 
 **Never burn a diagnostic commit on a "fix" that's just PWA cache stickiness.** Ask triage step 1 first.
 
@@ -115,6 +136,8 @@ Triage in this order:
 - The question is "should I do X, Y, or Z?" where all three would be fine — just pick one, say which, move on
 
 **Never ask 3 clarifying questions in a row.** Pick the most important one. Or just proceed with an assumption and say "assuming X — say if not."
+
+**Present options in CHAT (not via tool) with a recommendation.** See User Preferences above.
 
 ---
 
