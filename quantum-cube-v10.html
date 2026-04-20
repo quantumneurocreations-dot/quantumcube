@@ -2320,6 +2320,22 @@ function restorePendingProfile(){
   }catch(e){}
 }
 
+/* --- TEMP DEBUG: Reveal short-circuit diagnostics --- */
+(function(){
+  if(document.getElementById("qcDebug")) return;
+  const o = document.createElement("div");
+  o.id = "qcDebug";
+  o.style.cssText = "position:fixed;bottom:8px;left:8px;right:8px;max-height:140px;overflow-y:auto;background:rgba(0,0,0,.85);color:#0ff;font:11px monospace;padding:6px 8px;z-index:99999;border:1px solid #0ff;border-radius:4px;white-space:pre-wrap";
+  o.textContent = "[debug] ready";
+  document.addEventListener("DOMContentLoaded",()=>document.body.appendChild(o));
+  window.qcLog = function(msg){
+    const d = document.getElementById("qcDebug");
+    if(d){ d.textContent = new Date().toLocaleTimeString() + " " + msg + "\n" + d.textContent; }
+    console.log("[qc]", msg);
+  };
+})();
+/* --- end debug --- */
+
 async function handleRevealClick(){
   if(window.QC_AUDIO) window.QC_AUDIO.play("reveal_my_cube");
   const fn = document.getElementById("firstName").value.trim();
@@ -2356,7 +2372,9 @@ async function handleRevealClick(){
   // skip the magic link and go straight to the app
   try {
     const { data: { session } } = await sb.auth.getSession();
+    if(window.qcLog) qcLog("getSession -> " + (session && session.user ? ("user=" + session.user.email) : "NULL") + " | form=" + em);
     if(session && session.user && session.user.email && session.user.email.toLowerCase() === em.toLowerCase()){
+      if(window.qcLog) qcLog("MATCH -> short-circuit firing");
       qcCurrentUser = session.user;
       updateSettingsLinkVisibility();
       const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
@@ -2367,6 +2385,7 @@ async function handleRevealClick(){
     }
     // If signed in but with a different email, sign out first so we can start fresh
     if(session && session.user && session.user.email && session.user.email.toLowerCase() !== em.toLowerCase()){
+      if(window.qcLog) qcLog("MISMATCH session=" + session.user.email + " vs form=" + em + " -> signOut()");
       try { await sb.auth.signOut(); } catch(e) {}
     }
   } catch(e){}
@@ -2853,7 +2872,7 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-const swCode="const CACHE='qc-v108';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
+const swCode="const CACHE='qc-v109';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
 try{const blob=new Blob([swCode],{type:"application/javascript"});const swURL=URL.createObjectURL(blob);navigator.serviceWorker.register(swURL).catch(()=>{});}catch(e){}
 }
 </script>
