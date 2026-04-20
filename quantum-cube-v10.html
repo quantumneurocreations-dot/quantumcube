@@ -996,7 +996,7 @@ function rotateTo(face, animate){
 // Touch / Mouse drag
 let dragMoved=false;
 
-window.haptic=function(t){if(!navigator.vibrate)return;var p={light:75,medium:120,success:[90,240,90]}[t]||75;navigator.vibrate(p);}; const _cubeTouchSounds = ["Sounds/Touch Cube 1.mp3","Sounds/Touch Cube 2.mp3"].map(function(src){ const a = new Audio(encodeURI(src)); a.preload = "auto"; a.volume = 0.30; return a; }); function playCubeTouchFX(){ haptic("light"); try { const a = _cubeTouchSounds[Math.floor(Math.random() * _cubeTouchSounds.length)]; a.currentTime = 0; a.play().catch(function(){}); } catch(e){} }
+window.haptic=function(t){if(!navigator.vibrate)return;var p={light:75,medium:120,success:[90,240,90]}[t]||75;navigator.vibrate(p);}; const _cubeTouchSounds = ["Sounds/Touch Cube 1.mp3"].map(function(src){ const a = new Audio(encodeURI(src)); a.preload = "auto"; a.volume = 0.30; return a; }); function playCubeTouchFX(){ haptic("light"); try { const a = _cubeTouchSounds[Math.floor(Math.random() * _cubeTouchSounds.length)]; a.currentTime = 0; a.play().catch(function(){}); } catch(e){} }
 
 /* --- QC SFX + Music System --- */
 const QC_AUDIO = {
