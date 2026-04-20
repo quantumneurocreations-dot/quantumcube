@@ -2096,27 +2096,11 @@ const STORE_KEY  = "qc_unlocked_v1";
 const STORE_PAID = "qc_payment_ref";
 
 // ── CHECK PERSISTENT UNLOCK ON LOAD ─────────
-/* --- TEMP PAYWALL DEBUG --- */
-(function(){
-  if(document.getElementById("qcDebug")) return;
-  const o = document.createElement("div");
-  o.id = "qcDebug";
-  o.style.cssText = "position:fixed;bottom:8px;left:8px;right:8px;max-height:160px;overflow-y:auto;background:rgba(0,0,0,.9);color:#0ff;font:11px monospace;padding:6px 8px;z-index:99999;border:1px solid #0ff;border-radius:4px;white-space:pre-wrap";
-  o.textContent = "[debug] ready";
-  document.addEventListener("DOMContentLoaded",()=>document.body.appendChild(o));
-  window.qcLog = function(msg){
-    const d = document.getElementById("qcDebug");
-    if(d){ d.textContent = new Date().toLocaleTimeString() + " " + msg + "\n" + d.textContent; }
-    console.log("[qc]", msg);
-  };
-})();
-/* --- end debug --- */
 async function checkStoredUnlock(){
   // User-scoped unlock: only honor localStorage flag if it belongs to the current session user.
   // Prevents paywall bypass when a paid user signs out and a different (unpaid) user signs in on the same device.
   try{
     const stored = localStorage.getItem(STORE_KEY);
-    if(window.qcLog) qcLog("checkStoredUnlock: stored=" + (stored||"NULL"));
     if(!stored) return;
     let session = null;
     try {
@@ -2136,7 +2120,6 @@ async function checkStoredUnlock(){
 
 function syncUnlockFromProfile(profile){
   const paid = !!(profile && profile.has_paid === true);
-  if(window.qcLog) qcLog("syncUnlock: profile=" + (profile?JSON.stringify({email:profile.email,has_paid:profile.has_paid}):"NULL") + " -> paid=" + paid);
   if(paid){
     if(!isUnlocked){
       applyUnlockedState(false);
@@ -2144,29 +2127,29 @@ function syncUnlockFromProfile(profile){
       try{const uid=(qcCurrentUser&&qcCurrentUser.id)||null;if(uid)localStorage.setItem(STORE_KEY,uid);}catch(e){}
     }
   }else{
+    // User is not paid — ALWAYS enforce locked state, regardless of previous isUnlocked value.
+    // Previously guarded by `if(isUnlocked)` which meant a freshly-loaded unpaid user (isUnlocked starts false)
+    // would skip the lock enforcement entirely, leaving face-content visible = paywall bypass.
     try{localStorage.removeItem(STORE_KEY);}catch(e){}
-    if(isUnlocked){
-      isUnlocked = false;
-      document.querySelectorAll(".lock-screen").forEach(el=>el.style.display="block");
-      ["face3-content","face4-content","face5-content","face6-content"].forEach(id=>{
-        const el=document.getElementById(id);if(el)el.style.display="none";
-      });
-      document.querySelectorAll(".lock-footer").forEach(el=>el.style.display="");
-      ["lock3","lock4","lock5","lock6"].forEach(id=>{
-        const el=document.getElementById(id);if(el)el.style.display="block";
-      });
-      [2,3,4,5].forEach(n=>{
-        const faceEl=document.querySelectorAll(".cube-face")[n];
-        if(faceEl)faceEl.classList.add("locked");
-      });
-    }
+    isUnlocked = false;
+    document.querySelectorAll(".lock-screen").forEach(el=>el.style.display="block");
+    ["face3-content","face4-content","face5-content","face6-content"].forEach(id=>{
+      const el=document.getElementById(id);if(el)el.style.display="none";
+    });
+    document.querySelectorAll(".lock-footer").forEach(el=>el.style.display="");
+    ["lock3","lock4","lock5","lock6"].forEach(id=>{
+      const el=document.getElementById(id);if(el)el.style.display="block";
+    });
+    [2,3,4,5].forEach(n=>{
+      const faceEl=document.querySelectorAll(".cube-face")[n];
+      if(faceEl)faceEl.classList.add("locked");
+    });
   }
 }
 
 // ── APPLY UNLOCKED STATE ─────────────────────
 // animate=true shows success screen, false = silent
 function applyUnlockedState(animate){
-  if(window.qcLog) qcLog("applyUnlockedState called (animate=" + animate + "), caller=" + (new Error().stack||"").split("\n")[2]);
   isUnlocked = true;
   // Remove lock icons from cube faces
   ["lock3","lock4","lock5","lock6"].forEach(id=>{
@@ -2883,7 +2866,7 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-const swCode="const CACHE='qc-v112';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
+const swCode="const CACHE='qc-v113';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
 try{const blob=new Blob([swCode],{type:"application/javascript"});const swURL=URL.createObjectURL(blob);navigator.serviceWorker.register(swURL).catch(()=>{});}catch(e){}
 }
 </script>
