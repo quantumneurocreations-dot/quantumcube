@@ -1353,6 +1353,7 @@ async function fetchNarration(text){
   try{
     const map = await _loadNarrationManifest();
     const hash = await _sha256Hex(text);
+    console.log("[narrate-debug] len=" + text.length + " hash=" + hash.slice(0,16) + " head=" + JSON.stringify(text.slice(0,80)) + " tail=" + JSON.stringify(text.slice(-40)));
     const filename = map.get(hash);
     if(filename){
       return NARRATION_DIR + filename;
