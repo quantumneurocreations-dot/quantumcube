@@ -25,4 +25,3 @@ node_modules/
 .DS_Store
 
 # Narration pipeline — audio outputs not tracked until decision on delivery method
-Sounds/Narration/*.mp3
