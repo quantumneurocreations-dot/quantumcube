@@ -26,4 +26,3 @@ node_modules/
 
 # Narration pipeline — audio outputs not tracked until decision on delivery method
 Sounds/Narration/*.mp3
-narration-manifest.json
