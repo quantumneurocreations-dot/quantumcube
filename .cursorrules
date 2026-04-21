@@ -1,0 +1,33 @@
+# Quantum Cube — project rules for AI assistants
+
+## Stack (do not guess)
+- **Primary dev environment:** Mac mini M4 with ARM-native Node, Homebrew, Python 3.9. **No Docker** in this project.
+- **App:** Single-page **vanilla HTML + JavaScript** in `quantum-cube-v10.html` (~3k lines): embedded CSS, Supabase client from CDN (`@supabase/supabase-js`), inline **service worker** registration.
+- **Backend:** **Supabase** (e.g. `profiles`); Edge Function **`supabase/functions/narrate`** — **Deno** + **TypeScript**, calls **ElevenLabs**; config in `supabase/config.toml` (e.g. `verify_jwt` for `narrate`).
+- **Tooling:** **No** root `package.json`, **no** Next/React/Vite, **no** Tailwind, **no** repo-wide ESLint/Prettier/test runner. Optional **Python** scripts at repo root for one-off edits — not the production runtime.
+- **Deploy:** Not defined in-repo; assume **static hosting + Supabase cloud**. Do not assume Vercel/Netlify unless config appears.
+
+## Conventions
+- **Prefer editing existing files** over adding new ones. The canonical app surface is `quantum-cube-v10.html` unless the user points elsewhere.
+- **Match existing style:** same naming, indentation, and patterns already in that file (e.g. paywall/auth helpers, logging discipline, service worker version bumps when cache behavior changes).
+- **Supabase:** Treat DB as **RLS-aware**; use the existing client patterns (`sb.from(...)`). Do not weaken auth or paywall logic without explicit user request and clear reasoning. Edge functions: keep secrets in **env vars** (Deno `Deno.env.get`), never hardcode API keys in committed source.
+- **HTML/JS changes:** Keep behavior compatible with **service worker** caching when SW source or asset URLs change; follow existing bump/version comments if present.
+- **Python scripts:** Use only when they match the repo’s existing ad-hoc scripting approach; do not introduce a heavy build pipeline unless asked.
+
+## Workflow
+- For **non-trivial** changes (auth, paywall, SW, Supabase schema/function behavior, legal copy): **brief plan first** (files to touch, risks), then implement.
+- **When changing service worker behavior, asset URLs, or caching logic**, bump the SW version comment so users get the new version. Match the existing bump pattern in the file.
+- **Paywall and auth changes require a plan before edits.** These are revenue/access-critical.
+- **Tests:** The project has **no automated test suite**. Do **not** add a full test framework unless the user asks. If tests are added later, then require updating them when logic changes.
+
+## Context
+- The main app file `quantum-cube-v10.html` is ~3,000 lines. When asked to make changes, **read the relevant section first** — do not guess at structure. Use grep/search before edits.
+- If `.cursorignore` excludes the main HTML, **flag it to the user** rather than working blind.
+
+## Safety
+- **Never commit secrets** (API keys, service role keys, `.supabase-env`, private tokens). **Before any commit**, scan the diff for anything resembling a key: `sk_`, `pk_live_`, `service_role`, `xoxb-`, Bearer tokens, `.env` contents, or 32+ char hex/base64 strings. If you see one, **stop and ask the user**. The **anon key in the HTML is expected and public**; **service role keys and ElevenLabs keys are not**.
+- **Do not `git commit` or `git push`** without **explicit user approval** for that action.
+
+## Tone
+- **Tone in code:** Match the existing code's comment density — don't add tutorial comments, but preserve any existing section headers or version bump comments.
+- **Tone in chat:** Concise. Plan → confirm → execute for non-trivial work. No restating the request back to me.

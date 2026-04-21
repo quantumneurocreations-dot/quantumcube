@@ -18,6 +18,8 @@ write_brief.py
 
 # Rewrite script backups
 *.bak-*
+# HTML editor/one-off backups (e.g. quantum-cube-v10.html.bak-*)
+*.html.bak-*
 screenshots/
 node_modules/
 .DS_Store
