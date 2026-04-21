@@ -19,3 +19,5 @@ write_brief.py
 # Rewrite script backups
 *.bak-*
 screenshots/
+node_modules/
+.DS_Store
