@@ -1353,12 +1353,10 @@ async function fetchNarration(text){
   try{
     const map = await _loadNarrationManifest();
     const hash = await _sha256Hex(text);
-    console.log("[narrate-debug] len=" + text.length + " hash=" + hash.slice(0,16) + " head=" + JSON.stringify(text.slice(0,80)) + " tail=" + JSON.stringify(text.slice(-40)));
     const filename = map.get(hash);
     if(filename){
       return NARRATION_DIR + filename;
     }
-    console.log("[narrate-debug] no local match — falling back to live");
   }catch(e){ console.warn("local narration lookup err", e); }
   // Fallback: live Edge Function
   try{
@@ -1430,7 +1428,7 @@ window.qcNarrateCard = function(card, faceNum){
   if(!isOpen){ if(_currentCard===card) stopNarration(); return; }
   if(_currentCard===card && _currentAudio && !_currentAudio.paused) return;
   const title = (card.querySelector(".icard-title")||{}).textContent || "";
-  const body = (card.querySelector(".icard-body")||{}).textContent || "";
+  const body = (card.querySelector(".icard-body")||{}).innerText || "";
   const text = (title + ". " + body).replace(/\s+/g," ").trim();
   if(text) startNarration(text, card);
 };
@@ -2905,7 +2903,7 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-const swCode="const CACHE='qc-v117';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
+const swCode="const CACHE='qc-v118';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
 try{const blob=new Blob([swCode],{type:"application/javascript"});const swURL=URL.createObjectURL(blob);navigator.serviceWorker.register(swURL).catch(()=>{});}catch(e){}
 }
 </script>
