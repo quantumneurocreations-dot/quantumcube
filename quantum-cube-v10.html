@@ -1311,10 +1311,36 @@ function openFace(n){
 /* --- Quantum Cube Narrator (ElevenLabs via Supabase Edge Function) --- */
 const NARRATE_URL = "https://fqqdldvnxupzxvvbyvjm.supabase.co/functions/v1/narrate";
 const VALORY_VOICE_ID = "VhxAIIZM8IRmnl5fyeyk";
+const NARRATION_DIR = "Sounds/Narration/";
+const MANIFEST_URL = "narration-manifest.json";
 const voiceState = { 3:true, 4:true, 5:true };
 let _currentAudio = null;
 let _currentCard = null;
 let _narrateInflight = false;
+let _narrationMap = null;
+let _manifestPromise = null;
+async function _sha256Hex(text){
+  const buf = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+async function _loadNarrationManifest(){
+  if(_narrationMap) return _narrationMap;
+  if(_manifestPromise) return _manifestPromise;
+  _manifestPromise = (async()=>{
+    try{
+      const res = await fetch(MANIFEST_URL, {cache:"no-cache"});
+      if(!res.ok){ console.warn("manifest fetch failed", res.status); return new Map(); }
+      const rows = await res.json();
+      const m = new Map();
+      for(const r of rows) if(r.sha256 && r.filename) m.set(r.sha256, r.filename);
+      console.log("narration manifest loaded:", m.size, "entries");
+      return m;
+    }catch(e){ console.warn("manifest load err", e); return new Map(); }
+  })();
+  _narrationMap = await _manifestPromise;
+  return _narrationMap;
+}
 
 function stopNarration(){
   if(_currentAudio){ try{ _currentAudio.pause(); _currentAudio.src=""; }catch(e){} _currentAudio=null; }
@@ -1323,6 +1349,16 @@ function stopNarration(){
 
 async function fetchNarration(text){
   if(!text) return null;
+  // Try local pre-recorded MP3 first (matched by sha256 of text)
+  try{
+    const map = await _loadNarrationManifest();
+    const hash = await _sha256Hex(text);
+    const filename = map.get(hash);
+    if(filename){
+      return NARRATION_DIR + filename;
+    }
+  }catch(e){ console.warn("local narration lookup err", e); }
+  // Fallback: live Edge Function
   try{
     const res = await fetch(NARRATE_URL, {
       method: "POST",
@@ -2867,7 +2903,7 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-const swCode="const CACHE='qc-v116';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
+const swCode="const CACHE='qc-v117';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
 try{const blob=new Blob([swCode],{type:"application/javascript"});const swURL=URL.createObjectURL(blob);navigator.serviceWorker.register(swURL).catch(()=>{});}catch(e){}
 }
 </script>
