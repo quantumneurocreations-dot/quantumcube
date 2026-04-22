@@ -1312,35 +1312,10 @@ function openFace(n){
 const NARRATE_URL = "https://fqqdldvnxupzxvvbyvjm.supabase.co/functions/v1/narrate";
 const VALORY_VOICE_ID = "VhxAIIZM8IRmnl5fyeyk";
 const NARRATION_DIR = "Sounds/Narration/";
-const MANIFEST_URL = "narration-manifest.json";
 const voiceState = { 3:true, 4:true, 5:true };
 let _currentAudio = null;
 let _currentCard = null;
 let _narrateInflight = false;
-let _narrationMap = null;
-let _manifestPromise = null;
-async function _sha256Hex(text){
-  const buf = new TextEncoder().encode(text);
-  const hash = await crypto.subtle.digest("SHA-256", buf);
-  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,"0")).join("");
-}
-async function _loadNarrationManifest(){
-  if(_narrationMap) return _narrationMap;
-  if(_manifestPromise) return _manifestPromise;
-  _manifestPromise = (async()=>{
-    try{
-      const res = await fetch(MANIFEST_URL, {cache:"no-cache"});
-      if(!res.ok){ console.warn("manifest fetch failed", res.status); return new Map(); }
-      const rows = await res.json();
-      const m = new Map();
-      for(const r of rows) if(r.sha256 && r.filename) m.set(r.sha256, r.filename);
-      console.log("narration manifest loaded:", m.size, "entries");
-      return m;
-    }catch(e){ console.warn("manifest load err", e); return new Map(); }
-  })();
-  _narrationMap = await _manifestPromise;
-  return _narrationMap;
-}
 
 function stopNarration(){
   if(_currentAudio){ try{ _currentAudio.pause(); _currentAudio.src=""; }catch(e){} _currentAudio=null; }
@@ -1349,18 +1324,6 @@ function stopNarration(){
 
 async function fetchNarration(text){
   if(!text) return null;
-  // Normalise "Personal Year NNNN" -> "Personal Year" so hash matches manifest
-  const normText = text.replace(/^Personal Year \d{4}\./, "Personal Year.");
-  // Try local pre-recorded MP3 first (matched by sha256 of text)
-  try{
-    const map = await _loadNarrationManifest();
-    const hash = await _sha256Hex(normText);
-    const filename = map.get(hash);
-    if(filename){
-      return NARRATION_DIR + filename;
-    }
-  }catch(e){ console.warn("local narration lookup err", e); }
-  // Fallback: live Edge Function
   try{
     const res = await fetch(NARRATE_URL, {
       method: "POST",
@@ -1423,16 +1386,37 @@ document.addEventListener("click", function(e){
 
 
 /* Direct icard narration handler — called from inline onclick */
+async function startNarrationFromUrl(url, cardEl){
+  if(_narrateInflight) return;
+  _narrateInflight = true;
+  try{
+    stopNarration();
+    const audio = new Audio(url);
+    audio.preload = "auto";
+    _currentAudio = audio;
+    _currentCard = cardEl;
+    audio.addEventListener("ended", ()=>{ if(_currentAudio===audio){ _currentAudio=null; _currentCard=null; } });
+    audio.addEventListener("error", ()=>{ if(_currentAudio===audio){ _currentAudio=null; _currentCard=null; } });
+    await audio.play().catch(()=>{});
+  } finally { _narrateInflight = false; }
+}
+
 window.qcNarrateCard = function(card, faceNum){
   if(card.classList.contains("open") && window.QC_AUDIO) window.QC_AUDIO.play("reveal_result");
   if(!voiceState[faceNum]) return;
   const isOpen = card.classList.contains("open");
   if(!isOpen){ if(_currentCard===card) stopNarration(); return; }
   if(_currentCard===card && _currentAudio && !_currentAudio.paused) return;
-  const title = (card.querySelector(".icard-title")||{}).textContent || "";
-  const body = (card.querySelector(".icard-body")||{}).innerText || "";
-  const text = (title + ". " + body).replace(/\s+/g," ").trim();
-  if(text) startNarration(text, card);
+  // Phase 1: Face 3 numerology only. Face 4 astro/chinese silent until phase 2.
+  if(faceNum !== 3) return;
+  const cat = card.dataset.cat;
+  const num = card.dataset.first || card.dataset.num;
+  if(!cat || !num) return;
+  if(cat === "pc") return;                    // Life Phases not pre-recorded
+  if(num === "None" || num === "0") return;   // empty Karmic Lessons
+  const variant = Math.floor(Math.random()*3) + 1;
+  const url = "Sounds/Narration/num_" + cat + "_" + num + "_v" + variant + ".mp3";
+  startNarrationFromUrl(url, card);
 };
 
 /* Welcome greeting — once per user on Face 1 */
@@ -2675,7 +2659,7 @@ else if(s.cycleAll){
 }
 else if(s.multi&&s.multi.length>0){body=s.multi.map(k=>{const txt=NUM[s.k]&&NUM[s.k][k]?NUM[s.k][k]:"Content for "+k+" coming soon.";return s.multi.length>1?"<span class='icard-sub'>Number "+k+"</span>"+textToParas(txt):textToParas(txt)}).join("");}
 else{const ln=s.nk!==undefined?s.nk:s.n;body=textToParas(getNumText(s.k,ln));}
-return"<div class='icard' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,3)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.n+"</span></div><div class='icard-body'>"+body+"</div></div>";
+return"<div class='icard' data-cat='"+s.k+"' data-num='"+s.n+"' data-first='"+(s.multi?s.multi[0]:s.n)+"' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,3)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.n+"</span></div><div class='icard-body'>"+body+"</div></div>";
 }).join("");
 
 document.getElementById("face3-lock").style.display="none";
@@ -2905,7 +2889,7 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-const swCode="const CACHE='qc-v122';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
+const swCode="const CACHE='qc-v123';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
 try{const blob=new Blob([swCode],{type:"application/javascript"});const swURL=URL.createObjectURL(blob);navigator.serviceWorker.register(swURL).catch(()=>{});}catch(e){}
 }
 </script>
