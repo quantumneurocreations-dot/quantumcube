@@ -2898,7 +2898,10 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-window.__swDiag={step:'start',unregCount:0,err:''};
+window.__swDiag={step:'start',unregCount:0,err:'',lastMsg:''};
+navigator.serviceWorker.addEventListener('message',function(ev){
+  if(ev.data&&ev.data.__swLog){ window.__swDiag.lastMsg=ev.data.__swLog; }
+});
 (async function(){
   try{
     window.__swDiag.step='getRegs';
@@ -3196,6 +3199,7 @@ window.__swDiag={step:'start',unregCount:0,err:''};
         parts.push('step:'+window.__swDiag.step);
         if(window.__swDiag.unregCount>0) parts.push('unreg:'+window.__swDiag.unregCount);
         if(window.__swDiag.err) parts.push('DiagERR:'+window.__swDiag.err.slice(0,50));
+        if(window.__swDiag.lastMsg) parts.push('sw:'+window.__swDiag.lastMsg.slice(0,60));
       }
       if('caches' in window){
         caches.keys().then(function(ks){
