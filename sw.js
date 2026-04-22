@@ -1,4 +1,4 @@
-const CACHE='qc-v133';
+const CACHE='qc-v134';
 const NARR_CACHE='qc-narration-v1';
 const ASSETS=['./'];
 
