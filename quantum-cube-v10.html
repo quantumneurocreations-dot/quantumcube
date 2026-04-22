@@ -415,6 +415,10 @@ input[type="number"]{-moz-appearance:textfield}
 #musicBtn.show-label,.voice-btn.show-label{opacity:1}
 #musicBtn.show-label .audio-label,.voice-btn.show-label .audio-label{max-width:80px;margin-left:4px}
 #musicBtn:active,.voice-btn:active{background:rgba(20,50,90,0.9)}
+.face-label-card{background:var(--glass);border:1px solid var(--border);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 1px 0 0 0 rgba(125,212,252,0.15),inset -1px 0 0 0 rgba(125,212,252,0.15);padding:16px 24px;margin:14px auto;max-width:340px;text-align:center;position:relative;overflow:hidden;transition:opacity .3s}
+.face-label-card::before{content:'';position:absolute;top:0;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,rgba(125,212,252,0.6),transparent)}
+.face-label-card::after{content:'';position:absolute;bottom:0;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,rgba(125,212,252,0.6),transparent)}
+.face-label-text{font-family:'Cinzel Decorative',serif;font-size:18px;letter-spacing:2px;color:#fff;text-transform:uppercase;font-weight:700;display:block}
 /* Music button — permanent inline centered placement below cubeHint */
 #musicBtn{
   position:static !important;
@@ -566,7 +570,7 @@ window.sb = sb;
   </div>
   <button id="settingsBtn" onclick="showFace(1)" style="position:absolute;bottom:6px;right:12px;background:transparent;border:none;color:#ffffff;font-size:16px;cursor:pointer;padding:6px;line-height:1" title="Back to Introduction">&#8634;</button>
 </div>
-<div id="cubeHint" style="display:none">rotate the cube<br>tap a side to open</div>
+<div id="faceLabelCard" class="face-label-card" style="display:none"><span class="face-label-text">Introduction</span></div>
 <button id="musicBtn" onclick="window.QC_AUDIO && window.QC_AUDIO.toggleMusic()" title="Toggle music">🎵<span class="audio-label">Music</span></button>
 <div id="faceContainer">
 <div class="face active" id="face0">
@@ -1301,11 +1305,35 @@ function faceClick(n){
 
 function openFace(n){
   if((n===3||n===4||n===5||n===6)&&!isUnlocked){
-    showFace(n); // shows lock screen
+    showFace(n);
+    scrollBelowCube();
     return;
   }
   showFace(n);
+  scrollBelowCube();
 }
+function scrollBelowCube(){
+  setTimeout(()=>{
+    const fc=document.getElementById('faceContainer');
+    if(fc && typeof fc.scrollIntoView==='function'){
+      fc.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  },80);
+}
+const FACE_NAMES={1:"Introduction",2:"Videos",3:"Your Numbers",4:"Stars and Signs",5:"Combination",6:"Complete"};
+function updateFaceLabel(n){
+  const txt=document.querySelector('#faceLabelCard .face-label-text');
+  if(!txt) return;
+  const name=FACE_NAMES[n];
+  if(name) txt.textContent=name;
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const cw=document.getElementById('cubeWrapper');
+  if(!cw) return;
+  const sync=()=>{const v=parseInt(cw.getAttribute('data-active'));if(v>=1&&v<=6)updateFaceLabel(v);};
+  new MutationObserver(muts=>{for(const m of muts){if(m.attributeName==='data-active'){sync();break;}}}).observe(cw,{attributes:true,attributeFilter:['data-active']});
+  sync();
+});
 
 
 /* --- Quantum Cube Narrator (ElevenLabs via Supabase Edge Function) --- */
@@ -1520,7 +1548,7 @@ window.addEventListener("load",function(){setTimeout(function(){var ls=document.
   currentFace=n;
   // Hide cube on entry screen (face0) and interstitial; show elsewhere
   const cs=document.getElementById('cubeScene');
-  const ch=document.getElementById('cubeHint');
+  const ch=document.getElementById('faceLabelCard');
   const hideCube = (n===0 || n==='CheckEmail');
   if(hideCube){cs.classList.remove('visible');if(ch)ch.style.display='none';}else{cs.classList.add('visible');if(ch)ch.style.display='block';}
   // Music button: visible only on numeric faces 1-5 (not on 0, CheckEmail, 6, or 7)
@@ -2623,7 +2651,6 @@ const chin=getChin(year);
 const combo=getCombo(west.n,chin.n);
 const MONTHS=["","January","February","March","April","May","June","July","August","September","October","November","December"];
 profileData={fullName,day,month,year,CY,lifePath,birthday,expression,soulUrge,personality,matrix,passions,lessons,cycles,personalYr,west,chin,combo,dobStr:day+" "+MONTHS[month]+" "+year};
-const _hint=document.getElementById("cubeHint");if(_hint)_hint.innerHTML="rotate the cube<br>tap a side to open";
 // Always render results so faces 3-6 are populated; locked faces hide content via display:none anyway
 try { renderAllContent(); } catch(e){ console.warn('renderAllContent failed:', e); }
 showFace(1);
