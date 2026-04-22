@@ -2899,7 +2899,7 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
 const swBase=location.href.substring(0,location.href.lastIndexOf('/')+1);
-const swCode="const BASE='"+swBase+"';const CACHE='qc-v129';const NARR_CACHE='qc-narration-v1';const ASSETS=[BASE];self.addEventListener('install',e=>{e.waitUntil((async()=>{const c=await caches.open(CACHE);await c.addAll(ASSETS);try{const nc=await caches.open(NARR_CACHE);const res=await fetch(BASE+'narration-manifest.json',{cache:'no-cache'});if(res.ok){const rows=await res.json();const urls=rows.filter(r=>r.filename).map(r=>BASE+'Sounds/Narration/'+r.filename);urls.push(BASE+'Sounds/Narration/welcome.mp3');for(let i=0;i<urls.length;i+=8){const batch=urls.slice(i,i+8);await Promise.all(batch.map(u=>nc.add(u).catch(()=>{})));}}}catch(e){}self.skipWaiting();})())});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE&&k!==NARR_CACHE&&k.startsWith('qc-v')).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(u.pathname.includes('/Sounds/Narration/')){e.respondWith(caches.open(NARR_CACHE).then(c=>c.match(e.request).then(r=>r||fetch(e.request).then(resp=>{if(resp.ok)c.put(e.request,resp.clone());return resp;}).catch(()=>new Response('',{status:504})))));return;}e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match(BASE))))});";
+const swCode="const BASE='"+swBase+"';const CACHE='qc-v130';const NARR_CACHE='qc-narration-v1';const ASSETS=[BASE];self.addEventListener('install',e=>{e.waitUntil((async()=>{const c=await caches.open(CACHE);await c.addAll(ASSETS);try{const nc=await caches.open(NARR_CACHE);const res=await fetch(BASE+'narration-manifest.json',{cache:'no-cache'});if(res.ok){const rows=await res.json();const urls=rows.filter(r=>r.filename).map(r=>BASE+'Sounds/Narration/'+r.filename);urls.push(BASE+'Sounds/Narration/welcome.mp3');for(let i=0;i<urls.length;i+=8){const batch=urls.slice(i,i+8);await Promise.all(batch.map(u=>nc.add(u).catch(()=>{})));}}}catch(e){}self.skipWaiting();})())});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE&&k!==NARR_CACHE&&k.startsWith('qc-v')).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(u.pathname.includes('/Sounds/Narration/')){e.respondWith(caches.open(NARR_CACHE).then(c=>c.match(e.request).then(r=>r||fetch(e.request).then(resp=>{if(resp.ok)c.put(e.request,resp.clone());return resp;}).catch(()=>new Response('',{status:504})))));return;}e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match(BASE))))});";
 try{const blob=new Blob([swCode],{type:"application/javascript"});const swURL=URL.createObjectURL(blob);navigator.serviceWorker.register(swURL).catch(()=>{});}catch(e){}
 }
 </script>
@@ -3147,52 +3147,5 @@ try{const blob=new Blob([swCode],{type:"application/javascript"});const swURL=UR
   <button type="button" class="pay-back" onclick="afterPaySuccess()">Continue</button>
 </div>
 
-<div id="qcCacheDbg" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,0.85);color:#0f0;font:10px monospace;padding:4px 6px;pointer-events:none;word-break:break-all">cache: checking...</div>
-<script>
-(function(){
-  var swErr='';
-  function upd(){
-    const el=document.getElementById('qcCacheDbg');
-    if(!el) return;
-    const parts=[];
-    // SW state
-    if('serviceWorker' in navigator){
-      const ctrl=navigator.serviceWorker.controller;
-      parts.push('sw:'+(ctrl?'active':'none'));
-      navigator.serviceWorker.getRegistrations().then(regs=>{
-        if(regs.length===0){ parts.push('reg:0'); }
-        else{
-          const r=regs[0];
-          const st=r.active?'active':(r.installing?'installing':(r.waiting?'waiting':'idle'));
-          parts.push('reg:'+st);
-        }
-        if(swErr) parts.push('ERR:'+swErr.slice(0,30));
-        // caches
-        if('caches' in window){
-          caches.keys().then(ks=>{
-            parts.push('caches:['+ks.join(',')+']');
-            return caches.open('qc-narration-v1').then(c=>c.keys());
-          }).then(keys=>{
-            parts.push('narr:'+keys.length+'/257');
-            el.textContent=parts.join(' | ');
-          }).catch(e=>{
-            parts.push('cErr:'+String(e).slice(0,25));
-            el.textContent=parts.join(' | ');
-          });
-        }
-      });
-    }
-  }
-  // Capture SW registration errors
-  if('serviceWorker' in navigator){
-    const origReg=navigator.serviceWorker.register.bind(navigator.serviceWorker);
-    navigator.serviceWorker.register=function(url,opts){
-      return origReg(url,opts).catch(e=>{ swErr=String(e); throw e; });
-    };
-  }
-  upd();
-  setInterval(upd, 2000);
-})();
-</script>
 </body>
 </html>
