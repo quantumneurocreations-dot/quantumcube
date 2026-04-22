@@ -1358,11 +1358,13 @@ window.qcLog = function(msg){
 };
 async function fetchNarration(text){
   if(!text){ window.qcLog && qcLog("fetchNarration: no text"); return null; }
+  // Normalise "Personal Year NNNN" -> "Personal Year" so hash matches manifest
+  const normText = text.replace(/^Personal Year \d{4}\./, "Personal Year.");
   // Try local pre-recorded MP3 first (matched by sha256 of text)
   try{
     const map = await _loadNarrationManifest();
     window.qcLog && qcLog("manifest size=" + map.size);
-    const hash = await _sha256Hex(text);
+    const hash = await _sha256Hex(normText);
     window.qcLog && qcLog("text len=" + text.length + " hash=" + hash.slice(0,12));
     const filename = map.get(hash);
     if(filename){
@@ -2919,7 +2921,7 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-const swCode="const CACHE='qc-v119';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
+const swCode="const CACHE='qc-v120';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
 try{const blob=new Blob([swCode],{type:"application/javascript"});const swURL=URL.createObjectURL(blob);navigator.serviceWorker.register(swURL).catch(()=>{});}catch(e){}
 }
 </script>

@@ -12,12 +12,12 @@ const MANIFEST_PATH = 'narration-manifest.json';
 
 const CAT_LABELS = {
   lp: 'Life Path',
-  bd: 'Birthday',
+  bd: 'Birthday Number',
   ex: 'Expression',
   su: 'Soul Urge',
   pe: 'Personality',
   hp: 'Hidden Passion',
-  kl: 'Karmic Lesson',
+  kl: 'Karmic Lessons',
   py: 'Personal Year',
 };
 
