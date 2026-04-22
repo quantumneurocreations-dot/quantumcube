@@ -1329,14 +1329,24 @@ async function _loadNarrationManifest(){
   if(_manifestPromise) return _manifestPromise;
   _manifestPromise = (async()=>{
     try{
+      window.qcLog && qcLog("mf fetch start url=" + MANIFEST_URL);
       const res = await fetch(MANIFEST_URL, {cache:"no-cache"});
-      if(!res.ok){ console.warn("manifest fetch failed", res.status); return new Map(); }
-      const rows = await res.json();
+      window.qcLog && qcLog("mf http " + res.status + " ct=" + (res.headers.get("content-type")||"?"));
+      if(!res.ok){ return new Map(); }
+      const txt = await res.text();
+      window.qcLog && qcLog("mf body bytes=" + txt.length + " head=" + JSON.stringify(txt.slice(0,40)));
+      let rows;
+      try{ rows = JSON.parse(txt); }
+      catch(pe){ window.qcLog && qcLog("mf JSON parse err: " + pe.message); return new Map(); }
+      window.qcLog && qcLog("mf rows=" + (Array.isArray(rows)?rows.length:"not-array"));
       const m = new Map();
       for(const r of rows) if(r.sha256 && r.filename) m.set(r.sha256, r.filename);
-      console.log("narration manifest loaded:", m.size, "entries");
+      window.qcLog && qcLog("mf map size=" + m.size);
       return m;
-    }catch(e){ console.warn("manifest load err", e); return new Map(); }
+    }catch(e){
+      window.qcLog && qcLog("mf outer err: " + (e && e.message || String(e)));
+      return new Map();
+    }
   })();
   _narrationMap = await _manifestPromise;
   return _narrationMap;
@@ -2921,7 +2931,7 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-const swCode="const CACHE='qc-v120';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
+const swCode="const CACHE='qc-v121';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
 try{const blob=new Blob([swCode],{type:"application/javascript"});const swURL=URL.createObjectURL(blob);navigator.serviceWorker.register(swURL).catch(()=>{});}catch(e){}
 }
 </script>
