@@ -2714,8 +2714,10 @@ else{const ln=s.nk!==undefined?s.nk:s.n;body=textToParas(getNumText(s.k,ln));}
 return"<div class='icard' data-cat='"+s.k+"' data-num='"+s.n+"' data-first='"+(s.multi?s.multi[0]:s.n)+"' data-variant='"+((s.multi||s.cycleAll||s.none)?1:(getNumIdx(s.k,s.n)+1))+"' data-phases='"+(s.phases?JSON.stringify(s.phases):'')+"' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,3)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.n+"</span></div><div class='icard-body'>"+body+"</div></div>";
 }).join("");
 
-document.getElementById("face3-lock").style.display="none";
-document.getElementById("face3-content").style.display="block";
+if(isUnlocked){
+  document.getElementById("face3-lock").style.display="none";
+  document.getElementById("face3-content").style.display="block";
+}
 
 // Face 3
 document.getElementById("rName5").textContent=d.fullName.toUpperCase();
@@ -2743,8 +2745,10 @@ astroSecs.push({t:d.chin.n+" \u2014 Love &amp; Relationships",b:"\u2661",body:te
 astroSecs.push({t:d.chin.n+" \u2014 Career &amp; Purpose",b:"\u25c7",body:textToParas(cData.career),prefix:"chin",key:cKey,slot:"career"});
 }
 document.getElementById("astroCards").innerHTML=astroSecs.map(s=>"<div class='icard' data-prefix='"+s.prefix+"' data-key='"+s.key+"' data-slot='"+s.slot+"' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,4)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.b+"</span></div><div class='icard-body'>"+s.body+"</div></div>").join("");
-document.getElementById("face4-lock").style.display="none";
-document.getElementById("face4-content").style.display="block";
+if(isUnlocked){
+  document.getElementById("face4-lock").style.display="none";
+  document.getElementById("face4-content").style.display="block";
+}
 
 // Face 4
 document.getElementById("rName4").textContent=d.fullName.toUpperCase();
@@ -2753,11 +2757,12 @@ const narrative=buildCombinationNarrative(d);
 document.getElementById("comboContent").innerHTML="<div class='combo-narrative'>"+narrative+"</div>";
 
 // Face 5
-document.getElementById("face5-lock").style.display="none";
-document.getElementById("face5-content").style.display="block";
-
-document.getElementById("face6-lock").style.display="none";
-document.getElementById("face6-content").style.display="block";
+if(isUnlocked){
+  document.getElementById("face5-lock").style.display="none";
+  document.getElementById("face5-content").style.display="block";
+  document.getElementById("face6-lock").style.display="none";
+  document.getElementById("face6-content").style.display="block";
+}
 }
 
 // ═══════════════════════════════════════════
