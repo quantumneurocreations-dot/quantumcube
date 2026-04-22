@@ -2044,5 +2044,1037 @@
     "variant": 3,
     "text": "Personal Year. A Personal Year 9 marks a year of culmination, compassion, and clearing space for what comes next. This year asks you to give, forgive, and release. The next cycle cannot begin cleanly until this one is genuinely closed. Be aware that emotions run deeper in 9 years. Give yourself room to grieve what is ending.",
     "sha256": "f336b208f44bacf54a8d5623bb1f36c9d03fd0d00a9730f399eb4eff54d73244"
+  },
+  {
+    "filename": "num_pc_1_v1.mp3",
+    "group": "pc",
+    "num": "1",
+    "variant": 1,
+    "text": "A Life Phase governed by the 1 marks a long chapter in which the central theme of your life is the development of personal identity and individual strength. New directions open. Old identities are shed. The question this cycle asks, again and again, is: who are you when you are not defined by your circumstances? The gift of a 1 Life Phase is that it builds genuine self-reliance.",
+    "sha256": "ff3cd8d8ec70b96cf71595eddda987911fa0197f113d18eec78e3056b43aeec6"
+  },
+  {
+    "filename": "num_pc_2_v1.mp3",
+    "group": "pc",
+    "num": "2",
+    "variant": 1,
+    "text": "A 2 Life Phase marks a long chapter in which the themes of relationship, emotional development, and cooperation are central. This is a period of slow and patient development. Partnerships are important, requiring understanding and compromise. During this cycle, life asks you to develop patience — with others, with timing, and with slower forms of progress.",
+    "sha256": "fe0f52c079eaaeacf92ab782de150e76ac41c972a39f5962c74a11093037901e"
+  },
+  {
+    "filename": "num_pc_3_v1.mp3",
+    "group": "pc",
+    "num": "3",
+    "variant": 1,
+    "text": "A 3 Life Phase marks a long chapter in which creativity, self-expression, and social connection are the dominant themes. Any ability you possess in the arts will be brought to new heights. You are socially active and charming. Your challenge during this cycle is to stay focused.",
+    "sha256": "1e8905e88aff6fac36567edae12a84c98e7d48d30e80ac74a0fb97328baed657"
+  },
+  {
+    "filename": "num_pc_4_v1.mp3",
+    "group": "pc",
+    "num": "4",
+    "variant": 1,
+    "text": "A 4 Life Phase marks a long chapter in which the central themes are work, responsibility, and the building of solid foundations. Work is the order of the day. Through these characteristics, you will be seen as the foundation of your family, job, and community. Your challenge is to find genuine meaning in the work rather than experiencing it only as obligation.",
+    "sha256": "cdcccfbc10ab7f7e681e63511c7ed43f1e6a27ed4c3691d5a517e8220c3aaf31"
+  },
+  {
+    "filename": "num_pc_5_v1.mp3",
+    "group": "pc",
+    "num": "5",
+    "variant": 1,
+    "text": "A 5 Life Phase marks a long chapter of change, movement, and learning through experience. You will travel, move residences, and change jobs. Seek change and take hold of new opportunities. The gift of a 5 Life Phase is the breadth and variety of experience it brings.",
+    "sha256": "68babaa84da5b44d809b3460f9823487c243b739a45bc7382bc1e8ac6d9e2460"
+  },
+  {
+    "filename": "num_pc_6_v1.mp3",
+    "group": "pc",
+    "num": "6",
+    "variant": 1,
+    "text": "A 6 Life Phase marks a long chapter in which the themes of family, relationship, responsibility, and service are central. The issues of commitment, marriage, and family all come into sharp focus. You are greatly needed by those around you. Your task is to give generously from a place of genuine choice.",
+    "sha256": "81e9ea8ea4eb254e8f89edcf7d41a5bf5b3ae575992343cfdf886dec19efd79a"
+  },
+  {
+    "filename": "num_pc_7_v1.mp3",
+    "group": "pc",
+    "num": "7",
+    "variant": 1,
+    "text": "A 7 Life Phase marks a long chapter of inner development, study, and the deepening of understanding. This is a time to specialise, think deeply, and contemplate the deeper questions of life. Your challenge is to resist the pressure to produce visible results at a pace this cycle is not designed to support.",
+    "sha256": "66fe6c03398c1a1e84336196e9e1bba77b78ac6fda013f027e7fa4856e1612c8"
+  },
+  {
+    "filename": "num_pc_8_v1.mp3",
+    "group": "pc",
+    "num": "8",
+    "variant": 1,
+    "text": "An 8 Life Phase marks a long chapter in which the themes of career, financial development, authority, and material achievement are central. It is a time when power falls to you, but must be used wisely and with purpose. Your task is to pursue your ambitions with full commitment while maintaining ethical clarity.",
+    "sha256": "7bf8f729d4d995ced992c8e6565adf1833c03c2de6be6c4f5c77f1d847459d60"
+  },
+  {
+    "filename": "num_pc_9_v1.mp3",
+    "group": "pc",
+    "num": "9",
+    "variant": 1,
+    "text": "A 9 Life Phase marks a long chapter of completion, release, and the gradual expansion of your awareness beyond the personal. Humanitarian principles and social service are the keys to personal happiness during a 9 Period. The gift of a 9 Life Phase is the breadth of perspective and depth of compassion it develops.",
+    "sha256": "be2cefb5fbe54b48b17a93e539ba9b18dd0e4853cd2cc8df552f985105ae1907"
+  },
+  {
+    "filename": "west_aries_core.mp3",
+    "group": "west",
+    "sign": "Aries",
+    "slot": "core",
+    "text": "Aries — Core Nature. Aries is the first sign of the zodiac — and it carries that position like a birthright. There is an elemental forwardness to Aries that is unlike any other sign: a willingness to begin, to move, to act before the full picture has assembled itself, trusting that the momentum of motion will reveal what caution never could. The Aries nature is direct, energetic, and fundamentally self-directed. You know what you want — often before you have consciously articulated it — and your first instinct is always to move toward it.",
+    "sha256": "d5ada9c81b615288eac871a3260db0bca0d914dd63b72af6cd96ef441149e683"
+  },
+  {
+    "filename": "west_aries_str.mp3",
+    "group": "west",
+    "sign": "Aries",
+    "slot": "str",
+    "text": "Aries — Strengths. Courage is the most fundamental Aries gift — not the absence of fear, but the consistent willingness to act despite it. You are also gifted with genuine enthusiasm: a quality of aliveness and forward momentum that is genuinely inspiring. Your directness is also a strength. You say what you mean. People always know where they stand with you.",
+    "sha256": "b44e6c541d9ca2c4432aec75f300f97947afe2f570c08e46e6b388d17fdc70d0"
+  },
+  {
+    "filename": "west_aries_shadow.mp3",
+    "group": "west",
+    "sign": "Aries",
+    "slot": "shadow",
+    "text": "Aries — Shadow Side. The Aries shadow is impatience — a difficulty tolerating the time it takes for things to develop at their natural pace. There is also a tendency toward self-centredness — not maliciously, but structurally. The Aries orientation is so naturally self-directed that the needs of others can become peripheral.",
+    "sha256": "8b6eb9b268c4f9d9628e31e7298a86fca65d47751cd3c4f044d4589630273578"
+  },
+  {
+    "filename": "west_aries_love.mp3",
+    "group": "west",
+    "sign": "Aries",
+    "slot": "love",
+    "text": "Aries — Love & Relationships. In relationships, Aries is passionate, direct, and surprisingly loyal once genuinely committed. You pursue what you want with characteristic intensity. Your challenge in relationships is to develop patience — with your partner's pace, with the natural rhythms of intimacy that cannot be rushed.",
+    "sha256": "5b32dab6058166da308d32093d822b2a3e50508ae4f962be98ac5b3775c5aa4e"
+  },
+  {
+    "filename": "west_aries_career.mp3",
+    "group": "west",
+    "sign": "Aries",
+    "slot": "career",
+    "text": "Aries — Career & Purpose. Aries thrives in environments that reward initiative, speed, and independent thinking. You are at your best when you are leading rather than following. Your challenge professionally is longevity and follow-through. Building the capacity to finish what you start is where your professional development lives.",
+    "sha256": "e5b1e973a50d5c6dc3ac289568779b23865cdb83367bcdb726fc49f3fe09b474"
+  },
+  {
+    "filename": "west_taurus_core.mp3",
+    "group": "west",
+    "sign": "Taurus",
+    "slot": "core",
+    "text": "Taurus — Core Nature. Taurus is the sign of patient accumulation — of building slowly, deliberately, and with a quality of sensory awareness that makes everything it creates rich with texture and substance. You are not in a hurry. There is a groundedness to Taurus that is immediately palpable. You are here — fully, physically, sensory present in your life.",
+    "sha256": "161a58243da18e13986e524944de41ba4d2ee66785150c72f81d2b0beda40005"
+  },
+  {
+    "filename": "west_taurus_str.mp3",
+    "group": "west",
+    "sign": "Taurus",
+    "slot": "str",
+    "text": "Taurus — Strengths. Reliability is the Taurus signature. When you commit, you follow through. You finish things. You honour your word. You show up. You also have a natural aesthetic sensibility — an eye for beauty, quality, and the kinds of material and sensory richness that make life worth inhabiting.",
+    "sha256": "b65c928d1e51027bb01d17719ba16ca14a69d31c3e8c756c5e93fd133fa69e33"
+  },
+  {
+    "filename": "west_taurus_shadow.mp3",
+    "group": "west",
+    "sign": "Taurus",
+    "slot": "shadow",
+    "text": "Taurus — Shadow Side. The Taurus shadow is resistance to change — a tendency to cling to what is familiar even when it has clearly stopped serving you. Possessiveness is another shadow tendency — in relationships, in material things, and even in ideas.",
+    "sha256": "6b3c9fad635f5d48efac02d9ede7b9d8d609291191ef12a69de7341f1344535f"
+  },
+  {
+    "filename": "west_taurus_love.mp3",
+    "group": "west",
+    "sign": "Taurus",
+    "slot": "love",
+    "text": "Taurus — Love & Relationships. In relationships, Taurus is deeply devoted, sensually rich, and genuinely loyal. You love with your whole body — through physical presence, through the care of domestic life. Your challenge in relationships is flexibility — both in accommodating your partner's need for change and in allowing the relationship itself to evolve.",
+    "sha256": "dc2695e0512cffdc02d24e50a5668b723238749316fc3e5570fbc9991cce264b"
+  },
+  {
+    "filename": "west_taurus_career.mp3",
+    "group": "west",
+    "sign": "Taurus",
+    "slot": "career",
+    "text": "Taurus — Career & Purpose. Taurus thrives in environments that value quality, consistency, and the patient development of real expertise. Finance, the arts, and any field that rewards craftsmanship tend to suit the Taurus temperament. Your professional challenge is to avoid becoming too comfortable — to resist the pull toward the safe and familiar when growth is asking for something more.",
+    "sha256": "a3607690d9e6373fadfc440b93fd3eb7fa219e6eea74f9e674974fa27818ad11"
+  },
+  {
+    "filename": "west_gemini_core.mp3",
+    "group": "west",
+    "sign": "Gemini",
+    "slot": "core",
+    "text": "Gemini — Core Nature. Gemini is the sign of the mind in motion — endlessly curious, quick to connect, and always looking for the angle or question that hasn't been considered yet. The Gemini nature is fundamentally dualistic — you contain multitudes, often in genuine tension with each other, and you are unusually comfortable with that complexity.",
+    "sha256": "d6316bb49f86a11098d0cabeac2e5e589430a6f2e7a412b2e2b349ea2ecb2277"
+  },
+  {
+    "filename": "west_gemini_str.mp3",
+    "group": "west",
+    "sign": "Gemini",
+    "slot": "str",
+    "text": "Gemini — Strengths. Your greatest gift is your mind — specifically, its speed, its flexibility, and its ability to find the connecting thread between things that appear unrelated. You are a natural communicator. You are also genuinely adaptable — able to function effectively in a wide range of social and professional environments.",
+    "sha256": "f71f4d05452d3e3933485ecf7151944e714bdb59aaa0f996bbb199cef584b3d7"
+  },
+  {
+    "filename": "west_gemini_shadow.mp3",
+    "group": "west",
+    "sign": "Gemini",
+    "slot": "shadow",
+    "text": "Gemini — Shadow Side. The Gemini shadow is inconsistency — a difficulty sustaining commitment, focus, or emotional presence over the long arc that most meaningful things require. There is also a tendency toward superficiality — toward privileging the interesting over the true.",
+    "sha256": "e3fe35971975236133ca20e6b25335ad0532ae0001d88d834eefabc48416e8c4"
+  },
+  {
+    "filename": "west_gemini_love.mp3",
+    "group": "west",
+    "sign": "Gemini",
+    "slot": "love",
+    "text": "Gemini — Love & Relationships. In relationships, Gemini brings intellectual stimulation, genuine curiosity about their partner, and a quality of playful engagement that keeps things feeling alive. Your challenge in relationships is depth and consistency — the willingness to stay present through the less stimulating phases of intimacy.",
+    "sha256": "d34a80aba188954cada76fdd3b9fb77f68322439ef1f7c8cd037b3b4180fc09d"
+  },
+  {
+    "filename": "west_gemini_career.mp3",
+    "group": "west",
+    "sign": "Gemini",
+    "slot": "career",
+    "text": "Gemini — Career & Purpose. Gemini thrives in environments that reward communication, versatility, and the ability to think quickly across multiple domains. Your professional challenge is to develop genuine expertise in something — to resist the pull toward breadth at the expense of depth.",
+    "sha256": "2cbd90126d2392e0ec3f91709bef0185aded63ca55a22b3271d7883a41691b4d"
+  },
+  {
+    "filename": "west_cancer_core.mp3",
+    "group": "west",
+    "sign": "Cancer",
+    "slot": "core",
+    "text": "Cancer — Core Nature. Cancer is the sign of emotional depth, protective instinct, and the fierce, unsentimental love of the truly devoted. You feel things at a level that most people never access. At your core, you are oriented toward home — the place where people feel genuinely safe. You are a creator of sanctuary.",
+    "sha256": "b0e9bfef1864fbc1fd26bfd2ab2d37a442a2e4c96a17bf0d56c13d9714c9c5d8"
+  },
+  {
+    "filename": "west_cancer_str.mp3",
+    "group": "west",
+    "sign": "Cancer",
+    "slot": "str",
+    "text": "Cancer — Strengths. Your emotional intelligence is your most fundamental gift — the ability to perceive what others feel, to respond with genuine care, and to create environments in which vulnerability feels safe. You also have a remarkable memory — not just for facts, but for the emotional texture of experiences.",
+    "sha256": "135c2b442f9ff5bbeb75268a5bf846d4df93fc6d900ea3a1e58ca446ed988b56"
+  },
+  {
+    "filename": "west_cancer_shadow.mp3",
+    "group": "west",
+    "sign": "Cancer",
+    "slot": "shadow",
+    "text": "Cancer — Shadow Side. The Cancer shadow is emotional reactivity — a tendency to respond to perceived hurt with withdrawal, moodiness, or a protectiveness that shuts down the very connection it is trying to defend. Clinging is another shadow tendency — holding onto people, situations, and the past longer than is healthy.",
+    "sha256": "bab3c160e250d75eeafec30bfc23c2945e52f835ad1a4db406e493ae15cd3365"
+  },
+  {
+    "filename": "west_cancer_love.mp3",
+    "group": "west",
+    "sign": "Cancer",
+    "slot": "love",
+    "text": "Cancer — Love & Relationships. In relationships, Cancer is among the most devoted and genuinely loving of all the signs. You give yourself fully — your care, your attention, your emotional presence. Your challenge in relationships is to communicate your needs clearly rather than retreating into hurt silence.",
+    "sha256": "82fdad2e7bb2632d32e4ebf0c92560088bdfcf13703e67dd7504deeb1280b321"
+  },
+  {
+    "filename": "west_cancer_career.mp3",
+    "group": "west",
+    "sign": "Cancer",
+    "slot": "career",
+    "text": "Cancer — Career & Purpose. Cancer thrives in environments that allow genuine care, creativity, and emotional attunement to be expressed as professional contributions. Your professional challenge is to develop clear professional boundaries — to bring your considerable emotional gifts to your work without losing yourself in it.",
+    "sha256": "5797f2aec3ab55a6a6464735636e20e3749e85787f9df8d8d3a364851c3a3fff"
+  },
+  {
+    "filename": "west_leo_core.mp3",
+    "group": "west",
+    "sign": "Leo",
+    "slot": "core",
+    "text": "Leo — Core Nature. Leo is the sign of creative self-expression, natural leadership, and the generous, warm-hearted authority of someone who knows their worth and is not afraid to inhabit it. At your core, you are a creator and a leader — someone whose energy, when expressed authentically, has the power to inspire, organise, and elevate.",
+    "sha256": "cec4192230b1589e3d2b8436ef36a5d504b0eb190ac04130840d4ef6e5b24932"
+  },
+  {
+    "filename": "west_leo_str.mp3",
+    "group": "west",
+    "sign": "Leo",
+    "slot": "str",
+    "text": "Leo — Strengths. Your warmth and generosity are your most immediately felt gifts — the quality of attention you bring to people, the genuine delight you take in others' strengths and accomplishments. You also have a remarkable creative vitality — an ability to bring energy, vision, and genuine originality to whatever you put your attention on.",
+    "sha256": "13d688fe884293da94fe4b925839f0819eae44b406f25c6c22e50c276ffdbada"
+  },
+  {
+    "filename": "west_leo_shadow.mp3",
+    "group": "west",
+    "sign": "Leo",
+    "slot": "shadow",
+    "text": "Leo — Shadow Side. The Leo shadow is pride — specifically, the kind that requires constant external validation to feel real. There is also a tendency toward drama — toward amplifying experiences and emotions to a scale that occasionally loses the room.",
+    "sha256": "23d9d63952ef3095cc6375ce66bcfa18257cfb5a581be7b75a7f379556d4a226"
+  },
+  {
+    "filename": "west_leo_love.mp3",
+    "group": "west",
+    "sign": "Leo",
+    "slot": "love",
+    "text": "Leo — Love & Relationships. In relationships, Leo is passionate, loyal, and genuinely devoted to the person they have chosen. You love with your whole heart. Your challenge in relationships is reciprocity — the capacity to be genuinely interested in your partner's inner world.",
+    "sha256": "302baf96754b6db66bdac50733fe1d6cbfe6c83574cc6de2222017c5bfa3ead9"
+  },
+  {
+    "filename": "west_leo_career.mp3",
+    "group": "west",
+    "sign": "Leo",
+    "slot": "career",
+    "text": "Leo — Career & Purpose. Leo thrives in environments that reward leadership, creative vision, and genuine personal presence. Your professional challenge is to develop genuine humility alongside your natural confidence.",
+    "sha256": "005f9c914de1baba9e2576ae8e05c766c6ffafd54679cc11cea164ba98dae240"
+  },
+  {
+    "filename": "west_virgo_core.mp3",
+    "group": "west",
+    "sign": "Virgo",
+    "slot": "core",
+    "text": "Virgo — Core Nature. Virgo is the sign of discernment, craft, and the kind of dedicated service that improves things through sustained attention and genuine expertise. At your core, you are someone who cares about the quality of what you do — genuinely, deeply, sometimes almost painfully.",
+    "sha256": "8261addd7b2e94c82fd1200b28aa899fe1c8a3122f41459cdc9ec8b5ad75b344"
+  },
+  {
+    "filename": "west_virgo_str.mp3",
+    "group": "west",
+    "sign": "Virgo",
+    "slot": "str",
+    "text": "Virgo — Strengths. Your analytical intelligence is one of your most powerful gifts — the ability to break complex situations down into their component parts, identify what is working and what isn't. Your dedication and work ethic are equally significant strengths. The work you produce tends to be excellent.",
+    "sha256": "af7e394da75dec18bda4ec628ba76052dd400d90e0c601b045be292a4fadb818"
+  },
+  {
+    "filename": "west_virgo_shadow.mp3",
+    "group": "west",
+    "sign": "Virgo",
+    "slot": "shadow",
+    "text": "Virgo — Shadow Side. The Virgo shadow is criticism — both of others and, more painfully, of yourself. Your capacity for discernment can tip into a relentless focus on what is wrong. Anxiety is another shadow tendency — a difficulty trusting that things will be alright when perfect control is not available.",
+    "sha256": "0eb0142524d6addfe8b367c98c46351d023f429da25f010ed9bd6dd2964ac1fe"
+  },
+  {
+    "filename": "west_virgo_love.mp3",
+    "group": "west",
+    "sign": "Virgo",
+    "slot": "love",
+    "text": "Virgo — Love & Relationships. In relationships, Virgo is devoted, genuinely attentive, and deeply caring in ways that are expressed through action rather than declaration. Your challenge in relationships is to allow yourself to be loved imperfectly.",
+    "sha256": "8f753fbcc9fb1a20a53501b3727cd390c132f1296df140085d5d49c85f599eba"
+  },
+  {
+    "filename": "west_virgo_career.mp3",
+    "group": "west",
+    "sign": "Virgo",
+    "slot": "career",
+    "text": "Virgo — Career & Purpose. Virgo thrives in environments that value precision, expertise, and careful, systematic improvement. Your professional challenge is to develop confidence in your own expertise — to stop qualifying your contributions before you offer them.",
+    "sha256": "b56f15ea06fc636f1e36898507419ec3fb378b8d1da2510a8299bbc1aa046b1f"
+  },
+  {
+    "filename": "west_libra_core.mp3",
+    "group": "west",
+    "sign": "Libra",
+    "slot": "core",
+    "text": "Libra — Core Nature. Libra is the sign of balance, beauty, and the ongoing negotiation between self and other that makes genuine relationship possible. You see what is out of balance and your instinct is always to move toward something more fair and more equitable. At your core, you are a relational being — someone who thinks most clearly and operates most effectively in genuine connection with others.",
+    "sha256": "8f66c7e6277294ff755402efd21a81453d69365d483e30685dde32d0298580e9"
+  },
+  {
+    "filename": "west_libra_str.mp3",
+    "group": "west",
+    "sign": "Libra",
+    "slot": "str",
+    "text": "Libra — Strengths. Your capacity for genuine fairness is one of your most valuable gifts — the ability to see multiple perspectives simultaneously, to understand how a situation looks from where each person is standing. Your aesthetic sensibility is equally significant — a natural eye for beauty, proportion, and elegance.",
+    "sha256": "6ef99a17da4e183dc2bfcfa8e48d59aaf6a3f25cca77767c17abf5ece6f59621"
+  },
+  {
+    "filename": "west_libra_shadow.mp3",
+    "group": "west",
+    "sign": "Libra",
+    "slot": "shadow",
+    "text": "Libra — Shadow Side. The Libra shadow is indecision — a tendency to see the legitimate merit in every position with such clarity that committing to any single one feels like a betrayal. People-pleasing is another shadow tendency. Real harmony is not the absence of conflict — it is the resolution of genuine conflict through genuine honesty.",
+    "sha256": "392b04307cac9e11b441e2595aeaec86171271b26833fb9b67151f2d3e532863"
+  },
+  {
+    "filename": "west_libra_love.mp3",
+    "group": "west",
+    "sign": "Libra",
+    "slot": "love",
+    "text": "Libra — Love & Relationships. In relationships, Libra is attentive, romantic, and genuinely committed to the project of genuine partnership. Your challenge in relationships is honesty — specifically, the honesty to express your own needs and displeasures clearly.",
+    "sha256": "2816a40067a276ee7d351e751b11c500980cc5af3d26f3fa6abb2d437c3255f5"
+  },
+  {
+    "filename": "west_libra_career.mp3",
+    "group": "west",
+    "sign": "Libra",
+    "slot": "career",
+    "text": "Libra — Career & Purpose. Libra thrives in environments that reward diplomacy, aesthetic intelligence, and the ability to bring people and ideas into genuine alignment. Your professional challenge is to develop the capacity to make and defend positions.",
+    "sha256": "49b076ff95db3cc152b8346e622f3bd3770852582120941f9f1f170c81d4b1f4"
+  },
+  {
+    "filename": "west_scorpio_core.mp3",
+    "group": "west",
+    "sign": "Scorpio",
+    "slot": "core",
+    "text": "Scorpio — Core Nature. Scorpio is the sign of depth, transformation, and the unflinching willingness to encounter what most people spend their lives avoiding. You are drawn to the real — the genuine, unvarnished truth of things beneath their social surface. At your core, you are a person of profound intensity — someone whose engagement with life, love, and ideas goes deeper than most people are comfortable following.",
+    "sha256": "07a95ded95e5ca1d9698c8a15d93eed0f1a7b807ecb3149abbb1e3e5325e4367"
+  },
+  {
+    "filename": "west_scorpio_str.mp3",
+    "group": "west",
+    "sign": "Scorpio",
+    "slot": "str",
+    "text": "Scorpio — Strengths. Your perceptiveness is your most extraordinary gift — the ability to see into situations, relationships, and people with an accuracy that borders on the uncanny. Your capacity for transformation — both personal and in the lives of others — is equally significant.",
+    "sha256": "d3d32134da34d26f4734a838f4dca68a472ec6bbdcfc2ca5963ce7108b229c69"
+  },
+  {
+    "filename": "west_scorpio_shadow.mp3",
+    "group": "west",
+    "sign": "Scorpio",
+    "slot": "shadow",
+    "text": "Scorpio — Shadow Side. The Scorpio shadow is control — the use of emotional intensity and strategic withholding as instruments of power. Resentment is another shadow territory — the tendency to hold grievances long past the point at which they serve any useful purpose.",
+    "sha256": "934c0c37c54b6054871aa97d842cb1bf92a4033d13de9c08f9c064ba761ed79f"
+  },
+  {
+    "filename": "west_scorpio_love.mp3",
+    "group": "west",
+    "sign": "Scorpio",
+    "slot": "love",
+    "text": "Scorpio — Love & Relationships. In relationships, Scorpio is the most intensely committed and the most genuinely transformative of all the signs. When you choose someone, you choose them completely. Your challenge in relationships is vulnerability — the willingness to be genuinely known rather than strategically revealed.",
+    "sha256": "2c6517d796eff27ded4bc7d7f4bbacb5758a7ac832aa0af1249741ec8f7c221e"
+  },
+  {
+    "filename": "west_scorpio_career.mp3",
+    "group": "west",
+    "sign": "Scorpio",
+    "slot": "career",
+    "text": "Scorpio — Career & Purpose. Scorpio thrives in environments that reward depth, precision, and the willingness to go where others won't. Your professional challenge is to develop collaborative trust — to allow others into your process.",
+    "sha256": "c5928babc6291a302763bf5558bac512f39907accdd7ea556d7f74fc61f5c9f9"
+  },
+  {
+    "filename": "west_sagittarius_core.mp3",
+    "group": "west",
+    "sign": "Sagittarius",
+    "slot": "core",
+    "text": "Sagittarius — Core Nature. Sagittarius is the sign of expansion, truth-seeking, and the restless, generous spirit of someone who has decided that life is an adventure worth throwing yourself into fully. At your core, you are a philosopher and an explorer — someone whose engagement with life is animated by genuine curiosity about its meaning.",
+    "sha256": "8ac0af8ca724a222b4c0fc15af1f2f580b84322788f373a7892160cbc94f1de7"
+  },
+  {
+    "filename": "west_sagittarius_str.mp3",
+    "group": "west",
+    "sign": "Sagittarius",
+    "slot": "str",
+    "text": "Sagittarius — Strengths. Your optimism is your most immediately felt gift — a genuine, deep-seated faith in life's possibilities that is not naïve but experienced. Your honesty is equally significant — a directness and transparency that comes from a genuine commitment to truth over comfort.",
+    "sha256": "23dc1fb0833841e5d51569a643d1765e69ff5ac5a1cf338e33f7631dad04ee38"
+  },
+  {
+    "filename": "west_sagittarius_shadow.mp3",
+    "group": "west",
+    "sign": "Sagittarius",
+    "slot": "shadow",
+    "text": "Sagittarius — Shadow Side. The Sagittarius shadow is overextension — a tendency to promise more than you can deliver, to begin more than you can finish. There is also a tendency toward self-righteousness — toward treating your own perspective on truth as more reliable than it actually is.",
+    "sha256": "38d02f471a676b255ac8821ea8fe688ca755f89af520f5e98bf8b2a76c9cba6f"
+  },
+  {
+    "filename": "west_sagittarius_love.mp3",
+    "group": "west",
+    "sign": "Sagittarius",
+    "slot": "love",
+    "text": "Sagittarius — Love & Relationships. In relationships, Sagittarius is warm, adventurous, and genuinely generous — a partner who makes life feel larger and more possible. Your challenge in relationships is depth and consistency — the willingness to stay present through the quieter phases of intimacy.",
+    "sha256": "49c537de54f6aa8be7d71ffa4267038821dbb56e49c8d69826780f1bf736eeb3"
+  },
+  {
+    "filename": "west_sagittarius_career.mp3",
+    "group": "west",
+    "sign": "Sagittarius",
+    "slot": "career",
+    "text": "Sagittarius — Career & Purpose. Sagittarius thrives in environments that reward vision, enthusiasm, and the ability to communicate big ideas in ways that move people. Your professional challenge is follow-through — the sustained, detail-oriented effort that converts inspiring vision into actual results.",
+    "sha256": "ce6a040165a92b4e3a73683a5b2be177c2571a648f899f29a40833a5c8b38104"
+  },
+  {
+    "filename": "west_capricorn_core.mp3",
+    "group": "west",
+    "sign": "Capricorn",
+    "slot": "core",
+    "text": "Capricorn — Core Nature. Capricorn is the sign of mastery, earned authority, and the patient, disciplined pursuit of goals that matter enough to deserve real effort. At your core, you are someone who takes your commitments seriously — to your work, to the people who depend on you, and to your own development.",
+    "sha256": "fdc7eca131ab73a59169225413e1ffb7eeeb186fc1eab0daef690974ee67df61"
+  },
+  {
+    "filename": "west_capricorn_str.mp3",
+    "group": "west",
+    "sign": "Capricorn",
+    "slot": "str",
+    "text": "Capricorn — Strengths. Your discipline and follow-through are your most fundamental strengths — the ability to identify what needs to be done, develop a plan, and execute with consistent effort. Your practical intelligence is equally significant — an ability to assess situations realistically.",
+    "sha256": "695134831e98e7d081c095dd93972fb989d2db39b13ea664cac5fa512d4d18d5"
+  },
+  {
+    "filename": "west_capricorn_shadow.mp3",
+    "group": "west",
+    "sign": "Capricorn",
+    "slot": "shadow",
+    "text": "Capricorn — Shadow Side. The Capricorn shadow is a tendency to measure life's value primarily in terms of achievement and status. Rigidity is another shadow tendency — a reluctance to adapt your methods when the evidence suggests they are no longer working.",
+    "sha256": "89921ee5808ef06e6f5e0bb9e1339c619df7a903a3933295584f8ff91020c264"
+  },
+  {
+    "filename": "west_capricorn_love.mp3",
+    "group": "west",
+    "sign": "Capricorn",
+    "slot": "love",
+    "text": "Capricorn — Love & Relationships. In relationships, Capricorn is loyal, reliable, and profoundly committed — a partner who shows up, follows through, and takes the long view of love. Your challenge in relationships is warmth and expressiveness — the willingness to let your emotional life become visible.",
+    "sha256": "219756c0bdd3a89a8b70e558181d2db4b5130a39a56fd6c045a6775b14cea3b9"
+  },
+  {
+    "filename": "west_capricorn_career.mp3",
+    "group": "west",
+    "sign": "Capricorn",
+    "slot": "career",
+    "text": "Capricorn — Career & Purpose. Capricorn thrives in environments that reward expertise, strategic thinking, and sustained, disciplined effort. Your professional challenge is to develop the capacity to lead with warmth as well as with authority.",
+    "sha256": "8f1cd99a4d62e0ef428ab3726357a815cfa1e45baf7e9030133868a4881ad40b"
+  },
+  {
+    "filename": "west_aquarius_core.mp3",
+    "group": "west",
+    "sign": "Aquarius",
+    "slot": "core",
+    "text": "Aquarius — Core Nature. Aquarius is the sign of original thinking, humanitarian vision, and the courageous commitment to a future that doesn't exist yet but needs to. You are oriented toward what could be rather than what is. At your core, you are an independent thinker — someone whose relationship with ideas and ways of living is developed through genuine reflection.",
+    "sha256": "3d25f735e0d8bbd54f20e1f8d6536dc2cec8584ff966c7fb020d77d8d6fb9727"
+  },
+  {
+    "filename": "west_aquarius_str.mp3",
+    "group": "west",
+    "sign": "Aquarius",
+    "slot": "str",
+    "text": "Aquarius — Strengths. Your originality is your most fundamental gift — the ability to think outside the frameworks that contain most people's thinking, to identify what is being missed. Your humanitarian impulse is equally significant — a genuine concern for collective wellbeing.",
+    "sha256": "16b016b7d119b50cbb36c65184c5dd5a3896332d78d31aade31a374de5a67622"
+  },
+  {
+    "filename": "west_aquarius_shadow.mp3",
+    "group": "west",
+    "sign": "Aquarius",
+    "slot": "shadow",
+    "text": "Aquarius — Shadow Side. The Aquarius shadow is emotional detachment — a tendency to engage with the human dimension of life intellectually rather than felt. There is also a tendency toward contrarianism — toward defining your independence partly through opposition to whatever is conventional.",
+    "sha256": "ebb487aab8f8dca7d6d40f73033346fe4294531b2b781312e70cdff7b6504141"
+  },
+  {
+    "filename": "west_aquarius_love.mp3",
+    "group": "west",
+    "sign": "Aquarius",
+    "slot": "love",
+    "text": "Aquarius — Love & Relationships. In relationships, Aquarius is loyal, intellectually stimulating, and genuinely interested in who their partner actually is as a person. Your challenge in relationships is emotional availability — the willingness to be present not only intellectually but emotionally.",
+    "sha256": "3f998a32f9ca203f443e3fabe6c4d1b6ce6eb5b0c0fa4ffa9f010a23fe5eef2c"
+  },
+  {
+    "filename": "west_aquarius_career.mp3",
+    "group": "west",
+    "sign": "Aquarius",
+    "slot": "career",
+    "text": "Aquarius — Career & Purpose. Aquarius thrives in environments that reward original thinking, social vision, and the ability to work effectively toward goals that serve a broader good. Your professional challenge is to develop the practical follow-through to convert your remarkable vision into actual results.",
+    "sha256": "77fa6d1c859bf96998ae22ca315219350bf3da0cc4baec79ef39395eb691a715"
+  },
+  {
+    "filename": "west_pisces_core.mp3",
+    "group": "west",
+    "sign": "Pisces",
+    "slot": "core",
+    "text": "Pisces — Core Nature. Pisces is the final sign of the zodiac — and it carries within it the accumulated wisdom and accumulated wounds of all the signs that preceded it. You are oriented toward the invisible: the emotional undercurrents of situations, the spiritual dimensions of experience. At your core, you are a being of unusual permeability — someone whose boundaries between self and other are thinner than most.",
+    "sha256": "7b7c1184cd5eb3ea4ef5256763b3eff2b323ba12d15c68c4b41c42ca8cf37dba"
+  },
+  {
+    "filename": "west_pisces_str.mp3",
+    "group": "west",
+    "sign": "Pisces",
+    "slot": "str",
+    "text": "Pisces — Strengths. Your empathy and compassion are your most immediately felt gifts — the ability to feel what others feel with an accuracy and immediacy that makes you a genuinely extraordinary companion. Your creative and spiritual imagination is equally significant.",
+    "sha256": "cea3d8b0047d4c0a02a8f5dc97a3714a2603b669219f55cbb0981991d06ad30c"
+  },
+  {
+    "filename": "west_pisces_shadow.mp3",
+    "group": "west",
+    "sign": "Pisces",
+    "slot": "shadow",
+    "text": "Pisces — Shadow Side. The Pisces shadow is dissolution — a tendency to lose the boundaries of the self in ways that can be genuinely destabilising. Escapism is another shadow tendency — the use of fantasy or spiritual dissociation to avoid the difficult reality of the present moment.",
+    "sha256": "a8ce99debf989010db73d77f843663763d26ff27163ed380609c9658cf11bc5e"
+  },
+  {
+    "filename": "west_pisces_love.mp3",
+    "group": "west",
+    "sign": "Pisces",
+    "slot": "love",
+    "text": "Pisces — Love & Relationships. In relationships, Pisces is among the most romantic, devoted, and genuinely selfless of all the signs. You love with your whole being. Your challenge in relationships is clarity — both about who your partner actually is and about what you actually need.",
+    "sha256": "a4600e3cfffdac1820af533fb1b2a5736e34256245f487bd45ebab9434c12de5"
+  },
+  {
+    "filename": "west_pisces_career.mp3",
+    "group": "west",
+    "sign": "Pisces",
+    "slot": "career",
+    "text": "Pisces — Career & Purpose. Pisces thrives in environments that allow creative, spiritual, and empathic gifts to be expressed as genuine professional contributions. Your professional challenge is structure and self-discipline.",
+    "sha256": "295c2d46b59c54a07f338965974cba484a3dc6db79641ccb7073ea7daaf0fd64"
+  },
+  {
+    "filename": "chin_rat_core.mp3",
+    "group": "chin",
+    "sign": "Rat",
+    "slot": "core",
+    "text": "Rat — Core Nature. The Rat is the first animal of the Chinese zodiac — and it carries the energy of the pioneer and the initiator. You are quick, resourceful, and perceptive — someone who reads situations rapidly and responds with intelligence that is both practical and strategic. The Rat nature is fundamentally adaptive — capable of thriving in a wide range of circumstances through a combination of intelligence, social skill, and practical resourcefulness.",
+    "sha256": "1cc017d440d7b7219777d094e8955070dc9dd0823b3d468d8a03302464a55bc8"
+  },
+  {
+    "filename": "chin_rat_str.mp3",
+    "group": "chin",
+    "sign": "Rat",
+    "slot": "str",
+    "text": "Rat — Strengths. Your intelligence and perceptiveness are your most fundamental strengths — the ability to assess situations quickly, identify what matters, and move toward it with precision. Your resourcefulness is equally significant — a practical creativity that finds solutions to problems others have declared unsolvable.",
+    "sha256": "c5d350a8a3c77c5441b8275b613a2326d172654ca72c7293a3ff53124319fd4b"
+  },
+  {
+    "filename": "chin_rat_shadow.mp3",
+    "group": "chin",
+    "sign": "Rat",
+    "slot": "shadow",
+    "text": "Rat — Shadow Side. The Rat shadow is a tendency toward calculation — toward managing relationships and situations from a position of strategic awareness that can tip into manipulation. Hoarding is another shadow tendency — of resources, of information, of emotional availability.",
+    "sha256": "171f2dd3abaee44a506350ee6f59b85c5d8e0728c77700e33f54eabc2b73b8ed"
+  },
+  {
+    "filename": "chin_rat_love.mp3",
+    "group": "chin",
+    "sign": "Rat",
+    "slot": "love",
+    "text": "Rat — Love & Relationships. In relationships, the Rat is devoted, protective, and genuinely caring — someone who expresses love through practical support and attentive presence. Your challenge in relationships is genuine emotional vulnerability — the willingness to be known at the level of your actual feelings.",
+    "sha256": "a9c85ec20f96b047515b2b0faacf5e2e63c02e3f9da54d07fbcee0f19cb70dc6"
+  },
+  {
+    "filename": "chin_rat_career.mp3",
+    "group": "chin",
+    "sign": "Rat",
+    "slot": "career",
+    "text": "Rat — Career & Purpose. The Rat thrives in environments that reward quick thinking, adaptability, and the ability to identify opportunity. Your professional challenge is follow-through and integrity.",
+    "sha256": "a0d7a2d9377636cd86983bfb311d9c0f3c55e49680976a506b15c373730221ed"
+  },
+  {
+    "filename": "chin_ox_core.mp3",
+    "group": "chin",
+    "sign": "Ox",
+    "slot": "core",
+    "text": "Ox — Core Nature. The Ox is the sign of quiet power — of the kind of strength that does not announce itself but that, over time, moves mountains. You are methodical, patient, and possessed of an endurance that allows you to sustain effort long after those around you have given up. The Ox nature is fundamentally honest and reliable. Your word is your bond.",
+    "sha256": "c74de63b6b7b91894516913e1bcc4863d29aced2fddcbe7ed613c725e6612b8f"
+  },
+  {
+    "filename": "chin_ox_str.mp3",
+    "group": "chin",
+    "sign": "Ox",
+    "slot": "str",
+    "text": "Ox — Strengths. Your endurance and reliability are your most foundational strengths — the ability to show up, to stay the course, and to deliver on your commitments with a consistency that produces genuinely impressive results. Your integrity is equally significant.",
+    "sha256": "1c8ae96c8f196907115b18da858f501bbb3b99c3d5ecb8ef2cffbc21045ebbe2"
+  },
+  {
+    "filename": "chin_ox_shadow.mp3",
+    "group": "chin",
+    "sign": "Ox",
+    "slot": "shadow",
+    "text": "Ox — Shadow Side. The Ox shadow is stubbornness — a resistance to change, to new perspectives, and to the possibility that a better way might exist. There is also a tendency toward emotional guardedness.",
+    "sha256": "1536aa654dadadd2a4544b5920f81721c702b1f9fc4b113cfb720cab1ab9abba"
+  },
+  {
+    "filename": "chin_ox_love.mp3",
+    "group": "chin",
+    "sign": "Ox",
+    "slot": "love",
+    "text": "Ox — Love & Relationships. In relationships, the Ox is among the most devoted and genuinely loyal of all the Chinese zodiac animals. When you commit to someone, you commit completely. Your challenge in relationships is expressiveness and flexibility.",
+    "sha256": "26748709517f1079302d4e67b6f75f9057a544eea6e4306cd40bf5ccb917cb1b"
+  },
+  {
+    "filename": "chin_ox_career.mp3",
+    "group": "chin",
+    "sign": "Ox",
+    "slot": "career",
+    "text": "Ox — Career & Purpose. The Ox thrives in environments that reward patience, reliability, and methodical sustained effort. Your professional challenge is to develop adaptability alongside your considerable endurance.",
+    "sha256": "7861eaf63590162f53d5f2a0ba929a4ebc7120056c9727be81bcd6f9c8fdb3a0"
+  },
+  {
+    "filename": "chin_tiger_core.mp3",
+    "group": "chin",
+    "sign": "Tiger",
+    "slot": "core",
+    "text": "Tiger — Core Nature. The Tiger is the sign of courage, charisma, and the kind of fierce, unpredictable vitality that makes life genuinely exciting. You are not designed for half-measures. When you engage with something — an idea, a cause, a person — you engage completely. The Tiger nature is fundamentally magnetic — you draw people to you through genuine confidence and natural warmth.",
+    "sha256": "5215a340c657fc5d3bbf0aa20d5e2a490ccf427249d25244fb1cb37457129f6f"
+  },
+  {
+    "filename": "chin_tiger_str.mp3",
+    "group": "chin",
+    "sign": "Tiger",
+    "slot": "str",
+    "text": "Tiger — Strengths. Your courage and charisma are your most immediately felt gifts — the willingness to take on challenges others avoid, to speak truths others manage. Your passion and commitment are equally significant.",
+    "sha256": "862c83167d6f2d227c9a6d186e761b0ea36093039a89534bdafca6428e8eeb60"
+  },
+  {
+    "filename": "chin_tiger_shadow.mp3",
+    "group": "chin",
+    "sign": "Tiger",
+    "slot": "shadow",
+    "text": "Tiger — Shadow Side. The Tiger shadow is impulsivity — a tendency to act before the full picture has assembled itself. Dominance is another shadow tendency — a difficulty sharing the centre of things.",
+    "sha256": "43be94220aad30c7204a77920bc3eca160f60afe68f5c305ef56f04320d6eb21"
+  },
+  {
+    "filename": "chin_tiger_love.mp3",
+    "group": "chin",
+    "sign": "Tiger",
+    "slot": "love",
+    "text": "Tiger — Love & Relationships. In relationships, the Tiger is passionate, protective, and genuinely devoted — with a quality of fierce, wholehearted love. Your challenge in relationships is steadiness — the willingness to be present through the ordinary phases of intimacy.",
+    "sha256": "412a5763bdae262d9c06e486681de09645fb2add7652df8c3b6711ecf0d38d82"
+  },
+  {
+    "filename": "chin_tiger_career.mp3",
+    "group": "chin",
+    "sign": "Tiger",
+    "slot": "career",
+    "text": "Tiger — Career & Purpose. The Tiger thrives in environments that reward courage, charisma, and bold decision-making. Your professional challenge is patience and strategic thinking.",
+    "sha256": "163a6929e541777443bf633f4b2149750c084087f6339413658c530d40644edf"
+  },
+  {
+    "filename": "chin_rabbit_core.mp3",
+    "group": "chin",
+    "sign": "Rabbit",
+    "slot": "core",
+    "text": "Rabbit — Core Nature. The Rabbit is the sign of grace, sensitivity, and the quiet but profound depth of someone who navigates the world through perception and subtlety rather than force. You are attuned — to the emotional atmosphere around you, to aesthetic quality. The Rabbit nature is fundamentally diplomatic — skilled at finding the path through difficulty that avoids unnecessary conflict.",
+    "sha256": "103db8be5e3b15adca445f95b487acd4b8cff813d9281585a999454c4aab3884"
+  },
+  {
+    "filename": "chin_rabbit_str.mp3",
+    "group": "chin",
+    "sign": "Rabbit",
+    "slot": "str",
+    "text": "Rabbit — Strengths. Your emotional intelligence and social grace are your most immediately felt gifts — the ability to read people and situations accurately, to respond with appropriate sensitivity. You are also genuinely creative — with a refined aesthetic sensibility.",
+    "sha256": "678289bb1d2f78cf93c5c6415ae845ec89786e3c2e0b005d67e295560c36c03d"
+  },
+  {
+    "filename": "chin_rabbit_shadow.mp3",
+    "group": "chin",
+    "sign": "Rabbit",
+    "slot": "shadow",
+    "text": "Rabbit — Shadow Side. The Rabbit shadow is avoidance — a tendency to prioritise the preservation of harmony over the pursuit of truth. There is also a tendency toward anxiety — an overconcern with potential threats.",
+    "sha256": "fb6a40b555923afd19e536c303d87985bc95b456d40f6fbce0e8315e18346ce4"
+  },
+  {
+    "filename": "chin_rabbit_love.mp3",
+    "group": "chin",
+    "sign": "Rabbit",
+    "slot": "love",
+    "text": "Rabbit — Love & Relationships. In relationships, the Rabbit is tender, attentive, and genuinely caring — someone who creates an atmosphere of warmth and safety. Your challenge in relationships is directness — the willingness to express your own needs clearly.",
+    "sha256": "7c4b18692538fd8871aafe0dc99b51b0f506fd4d2f800063b50860480eeed11e"
+  },
+  {
+    "filename": "chin_rabbit_career.mp3",
+    "group": "chin",
+    "sign": "Rabbit",
+    "slot": "career",
+    "text": "Rabbit — Career & Purpose. The Rabbit thrives in environments that reward sensitivity, diplomacy, and refined intelligence. Your professional challenge is assertiveness.",
+    "sha256": "46aa2bf31ccd7e3d69400b01032c38931a2d1f889bed7694a3bb21f172a4716b"
+  },
+  {
+    "filename": "chin_dragon_core.mp3",
+    "group": "chin",
+    "sign": "Dragon",
+    "slot": "core",
+    "text": "Dragon — Core Nature. The Dragon is the most auspicious sign in the Chinese zodiac — a being of extraordinary vitality, natural authority, and the kind of compelling presence that makes others stop and pay attention. The Dragon nature is fundamentally visionary — oriented toward the possible rather than the probable.",
+    "sha256": "536823258c7b0a603eb91707ba26b7898bc8149d4d5acbc31dd99d98c27f5ef7"
+  },
+  {
+    "filename": "chin_dragon_str.mp3",
+    "group": "chin",
+    "sign": "Dragon",
+    "slot": "str",
+    "text": "Dragon — Strengths. Your vitality, vision, and natural authority are your most immediately felt gifts — the quality of presence that commands attention without demanding it. Your courage is equally significant — a genuine willingness to attempt things that others regard as impossible.",
+    "sha256": "f7b369fe1cd909d501a744f38d8d46c61d5b2290916d829cd16852d76d21575b"
+  },
+  {
+    "filename": "chin_dragon_shadow.mp3",
+    "group": "chin",
+    "sign": "Dragon",
+    "slot": "shadow",
+    "text": "Dragon — Shadow Side. The Dragon shadow is arrogance — a tendency to treat your own perspective as definitive. There is also a tendency toward perfectionism that creates impossible standards.",
+    "sha256": "85a52319155f1b6a52338ec60dd11ca015f88e743f1b657b38f022adca14c6c9"
+  },
+  {
+    "filename": "chin_dragon_love.mp3",
+    "group": "chin",
+    "sign": "Dragon",
+    "slot": "love",
+    "text": "Dragon — Love & Relationships. In relationships, the Dragon is passionate, generous, and genuinely devoted — with a quality of wholehearted commitment. Your challenge in relationships is humility — the willingness to be genuinely influenced by your partner.",
+    "sha256": "8eccdf3d003c488757556996f06c045e1fe1570d1aa436578b2ace87ad34a4d7"
+  },
+  {
+    "filename": "chin_dragon_career.mp3",
+    "group": "chin",
+    "sign": "Dragon",
+    "slot": "career",
+    "text": "Dragon — Career & Purpose. The Dragon thrives in environments that reward vision, natural authority, and the ability to inspire collective action. Your professional challenge is collaborative depth.",
+    "sha256": "5f6b37cb2fbb88bd01c70c87f19cd65ad748d2f3b604869e4b11c08378c12f79"
+  },
+  {
+    "filename": "chin_snake_core.mp3",
+    "group": "chin",
+    "sign": "Snake",
+    "slot": "core",
+    "text": "Snake — Core Nature. The Snake is the sign of wisdom, intuition, and the quiet, penetrating intelligence that sees to the heart of things without revealing how much it has seen. You are a thinker — genuinely, deeply, and with a quality of contemplative precision. The Snake nature is fundamentally mysterious — not through performance, but through a natural reticence.",
+    "sha256": "1d3b924dc2f0fc64bd27080b9d39432ed94ee9518b02288626860c95ce22528f"
+  },
+  {
+    "filename": "chin_snake_str.mp3",
+    "group": "chin",
+    "sign": "Snake",
+    "slot": "str",
+    "text": "Snake — Strengths. Your wisdom and intuition are your most fundamental gifts — the ability to perceive patterns that others miss. Your refinement is equally significant — a natural aesthetic sensibility, an instinct for quality over quantity.",
+    "sha256": "545a9715fcc5a075b26ef74ea338cea6096c5c31587fd0a8596819dd9cc9ceab"
+  },
+  {
+    "filename": "chin_snake_shadow.mp3",
+    "group": "chin",
+    "sign": "Snake",
+    "slot": "shadow",
+    "text": "Snake — Shadow Side. The Snake shadow is possessiveness — a tendency to hold tightly to people, ideas, and resources. There is also a tendency toward suspicion — toward assuming hidden motives.",
+    "sha256": "3877d1eb94f0b9aae9a988dddea82faf0cbc393519f15c14c184d84f875aa344"
+  },
+  {
+    "filename": "chin_snake_love.mp3",
+    "group": "chin",
+    "sign": "Snake",
+    "slot": "love",
+    "text": "Snake — Love & Relationships. In relationships, the Snake is deeply devoted, intensely attentive, and possessed of a quality of emotional loyalty that, once given, is genuine and lasting. Your challenge in relationships is openness — the willingness to reveal your inner world more fully.",
+    "sha256": "c3579741bb65e6bd245e21693f27f9e015ba9193bfd92d34449e664688af42ec"
+  },
+  {
+    "filename": "chin_snake_career.mp3",
+    "group": "chin",
+    "sign": "Snake",
+    "slot": "career",
+    "text": "Snake — Career & Purpose. The Snake thrives in environments that reward wisdom, strategic thinking, and patient, precise intelligence. Your professional challenge is communication — the willingness to share your thinking and insights more openly.",
+    "sha256": "e76791522ae557bb9a9268da022ca40b3170fdaba506290e66be32079cb434fc"
+  },
+  {
+    "filename": "chin_horse_core.mp3",
+    "group": "chin",
+    "sign": "Horse",
+    "slot": "core",
+    "text": "Horse — Core Nature. The Horse is the sign of freedom, vitality, and the restless, forward-moving energy of someone who is always in motion. You are energetic, enthusiastic, and possessed of a quality of aliveness that makes life feel genuinely exciting in your presence. The Horse nature is fundamentally independent — someone who needs room to move and to develop their own direction through experience.",
+    "sha256": "e7b4f2e7b3bf5a84d34038dcd81d306c0e2de7c2ada2dd09e6454e68485a05de"
+  },
+  {
+    "filename": "chin_horse_str.mp3",
+    "group": "chin",
+    "sign": "Horse",
+    "slot": "str",
+    "text": "Horse — Strengths. Your energy, enthusiasm, and natural charisma are your most immediately felt gifts — the ability to animate environments through your presence. Your adaptability is equally significant.",
+    "sha256": "df7d5d8f9f0f0455bf30191dc49b9ef8d3077357f2fb33df4f1a4bd9abf22d94"
+  },
+  {
+    "filename": "chin_horse_shadow.mp3",
+    "group": "chin",
+    "sign": "Horse",
+    "slot": "shadow",
+    "text": "Horse — Shadow Side. The Horse shadow is impatience — a difficulty tolerating the slower rhythms that most meaningful things require. There is also a tendency toward self-centredness in relationships.",
+    "sha256": "294959c258063cd05901fc5f0714e4b50689e2ec22a13274792f9f75c6b73f6f"
+  },
+  {
+    "filename": "chin_horse_love.mp3",
+    "group": "chin",
+    "sign": "Horse",
+    "slot": "love",
+    "text": "Horse — Love & Relationships. In relationships, the Horse is warm, devoted, and genuinely exciting to be with — someone who brings enthusiasm and forward movement. Your challenge in relationships is commitment to the ordinary — the willingness to be fully present in quiet moments.",
+    "sha256": "5119d5a58354faf3e1b0bd0011a7d92756dd2644788b26d307cb4ab06f8e75e1"
+  },
+  {
+    "filename": "chin_horse_career.mp3",
+    "group": "chin",
+    "sign": "Horse",
+    "slot": "career",
+    "text": "Horse — Career & Purpose. The Horse thrives in environments that reward energy, adaptability, and the ability to move quickly through changing circumstances. Your professional challenge is follow-through and specialisation.",
+    "sha256": "80bea9b1a20937501cfcb30873ee69fb760c62c7d409d2e3390c9b2f7f6ba698"
+  },
+  {
+    "filename": "chin_goat_core.mp3",
+    "group": "chin",
+    "sign": "Goat",
+    "slot": "core",
+    "text": "Goat — Core Nature. The Goat is the sign of creativity, gentleness, and the quiet but profound depth of someone whose inner world is rich with feeling, imagination, and beauty. The Goat nature is fundamentally creative and relational — oriented toward beauty, toward harmony, and toward deep connection.",
+    "sha256": "505107b43c97752af1f7cc554108e6fae64e567d9afc64c9096c0c30cefc4f65"
+  },
+  {
+    "filename": "chin_goat_str.mp3",
+    "group": "chin",
+    "sign": "Goat",
+    "slot": "str",
+    "text": "Goat — Strengths. Your creativity and aesthetic sensibility are your most fundamental gifts — a natural access to beauty in all its forms. Your empathy and kindness are equally significant.",
+    "sha256": "29139fcc8aca83373c6590c5b22d8f96beece9fc38ca5c782f525f8d2d249df5"
+  },
+  {
+    "filename": "chin_goat_shadow.mp3",
+    "group": "chin",
+    "sign": "Goat",
+    "slot": "shadow",
+    "text": "Goat — Shadow Side. The Goat shadow is dependency — a tendency to require more support and reassurance than is healthy. Indecisiveness is another shadow tendency.",
+    "sha256": "aa235199e464a5d01d17874acd0e0514bb2615babadad9e4143b9bd853c10864"
+  },
+  {
+    "filename": "chin_goat_love.mp3",
+    "group": "chin",
+    "sign": "Goat",
+    "slot": "love",
+    "text": "Goat — Love & Relationships. In relationships, the Goat is among the most tender, devoted, and genuinely loving of all the Chinese zodiac animals. Your challenge in relationships is self-sufficiency — developing enough of an independent inner life that you are genuinely choosing your partner.",
+    "sha256": "117b947b464cce1f3140c7822fc9ce7cc0fcd7c84037496849dae2cad7a62438"
+  },
+  {
+    "filename": "chin_goat_career.mp3",
+    "group": "chin",
+    "sign": "Goat",
+    "slot": "career",
+    "text": "Goat — Career & Purpose. The Goat thrives in environments that allow creative, empathic, and aesthetic gifts to be expressed as genuine contributions. Your professional challenge is confidence and self-promotion.",
+    "sha256": "4ca706e0543912481870bca97151af01fbe61bf99b81fdab6f61144d6b42cd29"
+  },
+  {
+    "filename": "chin_monkey_core.mp3",
+    "group": "chin",
+    "sign": "Monkey",
+    "slot": "core",
+    "text": "Monkey — Core Nature. The Monkey is the sign of wit, ingenuity, and the delightful, slightly unpredictable intelligence of someone who sees the world as a puzzle to be solved — with a combination of brilliance, humour, and improvisational creativity. The Monkey nature is fundamentally curious and inventive — always looking for the interesting angle.",
+    "sha256": "9d9b649dc0be986d4f40a838677006b7819df2b3a5298164def2abfce27ed909"
+  },
+  {
+    "filename": "chin_monkey_str.mp3",
+    "group": "chin",
+    "sign": "Monkey",
+    "slot": "str",
+    "text": "Monkey — Strengths. Your intelligence and ingenuity are your most fundamental gifts — the ability to think quickly across multiple domains, find creative solutions to genuinely difficult problems. Your adaptability is equally significant.",
+    "sha256": "f1f8d5860dc97ddb12278217b2da5fd0bcc772214eb8e6495cfb89b8149875ef"
+  },
+  {
+    "filename": "chin_monkey_shadow.mp3",
+    "group": "chin",
+    "sign": "Monkey",
+    "slot": "shadow",
+    "text": "Monkey — Shadow Side. The Monkey shadow is unreliability — a tendency to commit to more than you can deliver, to change direction when something more interesting comes along. There is also a tendency toward manipulation.",
+    "sha256": "9cb59d161df6064fc30bbe412fb7a65c70832036a470cc56110d4f9c1355d875"
+  },
+  {
+    "filename": "chin_monkey_love.mp3",
+    "group": "chin",
+    "sign": "Monkey",
+    "slot": "love",
+    "text": "Monkey — Love & Relationships. In relationships, the Monkey is playful, affectionate, and genuinely entertaining — bringing a quality of lightness and creative energy. Your challenge in relationships is consistency and emotional depth.",
+    "sha256": "2d5f39859a40f34c1702d754b8bcfa658f76236e4554165d33bfa9640c529e4f"
+  },
+  {
+    "filename": "chin_monkey_career.mp3",
+    "group": "chin",
+    "sign": "Monkey",
+    "slot": "career",
+    "text": "Monkey — Career & Purpose. The Monkey thrives in environments that reward creative intelligence, versatility, and the ability to solve problems in unexpected ways. Your professional challenge is depth and follow-through.",
+    "sha256": "dfddf26d5a7db8c8c32e4e23a40207990823e1fef1db9fe242c293e34a28c019"
+  },
+  {
+    "filename": "chin_rooster_core.mp3",
+    "group": "chin",
+    "sign": "Rooster",
+    "slot": "core",
+    "text": "Rooster — Core Nature. The Rooster is the sign of precision, confidence, and the kind of meticulous attention to quality that makes everything it touches more polished and more impressive. You have high standards — for yourself, for your work. The Rooster nature is fundamentally honest and direct — someone who says what they think and means what they say.",
+    "sha256": "8f31df8dceb6f2bb9520dabfbd68746afc89ffb692b7bb50a0be6bf3cdbe9da5"
+  },
+  {
+    "filename": "chin_rooster_str.mp3",
+    "group": "chin",
+    "sign": "Rooster",
+    "slot": "str",
+    "text": "Rooster — Strengths. Your precision, conscientiousness, and attention to detail are your most fundamental strengths. Your honesty and directness are equally significant.",
+    "sha256": "5e9e7a44b731b2a134096352b6955670b27ffd365b915b31b6b23a280981a1cc"
+  },
+  {
+    "filename": "chin_rooster_shadow.mp3",
+    "group": "chin",
+    "sign": "Rooster",
+    "slot": "shadow",
+    "text": "Rooster — Shadow Side. The Rooster shadow is criticism — a tendency to focus on what is wrong with an intensity that can be genuinely demoralising. There is also a tendency toward vanity.",
+    "sha256": "57a67162584111c91167e9f8297fc6ac9aa441cba512e6aeefd39002c24bdfe4"
+  },
+  {
+    "filename": "chin_rooster_love.mp3",
+    "group": "chin",
+    "sign": "Rooster",
+    "slot": "love",
+    "text": "Rooster — Love & Relationships. In relationships, the Rooster is devoted, protective, and genuinely caring — someone who expresses love through practical support and consistent reliability. Your challenge in relationships is softness — the willingness to temper your directness with warmth.",
+    "sha256": "456477c4251cdc067a21c1dcad5d45d2baf46591197e928348ac489f76f3f68c"
+  },
+  {
+    "filename": "chin_rooster_career.mp3",
+    "group": "chin",
+    "sign": "Rooster",
+    "slot": "career",
+    "text": "Rooster — Career & Purpose. The Rooster thrives in environments that reward precision, organisation, and high-standards conscientiousness. Your professional challenge is flexibility and collaborative warmth.",
+    "sha256": "601b62173842bd9d3fe6b42719a136c00a138d3d15dec3d41178610cd4d7eb56"
+  },
+  {
+    "filename": "chin_dog_core.mp3",
+    "group": "chin",
+    "sign": "Dog",
+    "slot": "core",
+    "text": "Dog — Core Nature. The Dog is the sign of loyalty, integrity, and the kind of deep, unconditional devotion that makes it one of the most genuinely beloved signs in the Chinese zodiac. The Dog nature is fundamentally honest — someone who cannot pretend or maintain a front that contradicts their actual inner state.",
+    "sha256": "beb8e085af44f82c4d23c7276a15aa6678309cbe429c94c03eda5516928b5a5b"
+  },
+  {
+    "filename": "chin_dog_str.mp3",
+    "group": "chin",
+    "sign": "Dog",
+    "slot": "str",
+    "text": "Dog — Strengths. Your loyalty and integrity are your most fundamental gifts — the ability to stand by the people and values you believe in with a consistency and courage that does not waver. Your sense of justice is equally significant.",
+    "sha256": "8721e0a50b35600e1b2c80120778f7c5d37f2917e0a17fae633b3778f76ab3b3"
+  },
+  {
+    "filename": "chin_dog_shadow.mp3",
+    "group": "chin",
+    "sign": "Dog",
+    "slot": "shadow",
+    "text": "Dog — Shadow Side. The Dog shadow is anxiety — a tendency to worry, to anticipate threat, and to remain in a state of protective vigilance. There is also a tendency toward cynicism.",
+    "sha256": "e026a407e8c7dce01f0251deb67418e7b9f58b96796bb46b86764338f997f6c3"
+  },
+  {
+    "filename": "chin_dog_love.mp3",
+    "group": "chin",
+    "sign": "Dog",
+    "slot": "love",
+    "text": "Dog — Love & Relationships. In relationships, the Dog is among the most genuinely devoted and loving of all the Chinese zodiac animals. You give yourself completely. You stay. Your challenge in relationships is self-care.",
+    "sha256": "0dca7b49aed76454554bb9841d4b9901e34b547caf4a8b1b89300a433e605faa"
+  },
+  {
+    "filename": "chin_dog_career.mp3",
+    "group": "chin",
+    "sign": "Dog",
+    "slot": "career",
+    "text": "Dog — Career & Purpose. The Dog thrives in environments that reward integrity, loyalty, and genuine commitment to doing what is right. Your professional challenge is confidence in your own judgement.",
+    "sha256": "abbd969cff52fb2906636ea2c8afda6b695e510fdd5ab78de32d02b290a1cab9"
+  },
+  {
+    "filename": "chin_pig_core.mp3",
+    "group": "chin",
+    "sign": "Pig",
+    "slot": "core",
+    "text": "Pig — Core Nature. The Pig is the final sign of the Chinese zodiac — and it carries within it a quality of completion and a generosity and warmth that has been developed over the full arc of the cycle. You are genuinely good-natured — not as a performance, but as a fundamental expression of who you are. The Pig nature is fundamentally trusting and generous.",
+    "sha256": "34fc057289990f95c3c4627d9d14e835bc17f4d5601175c55cca2d6a0617c8c8"
+  },
+  {
+    "filename": "chin_pig_str.mp3",
+    "group": "chin",
+    "sign": "Pig",
+    "slot": "str",
+    "text": "Pig — Strengths. Your generosity and genuine warmth are your most immediately felt gifts — the quality of open-heartedness that makes people feel welcomed and genuinely cared for in your presence. Your sincerity is equally significant.",
+    "sha256": "4aa0ffa04dc038fc1733b94cd15e320783b26fdaac509482772b7436ed8dd211"
+  },
+  {
+    "filename": "chin_pig_shadow.mp3",
+    "group": "chin",
+    "sign": "Pig",
+    "slot": "shadow",
+    "text": "Pig — Shadow Side. The Pig shadow is naivety — a tendency to trust too quickly, to see the best in people beyond what the evidence warrants. There is also a tendency toward overindulgence.",
+    "sha256": "82d7e4df263f43dbfa80e00682c2a44570dfbef3d46c27db43038792ab9720ec"
+  },
+  {
+    "filename": "chin_pig_love.mp3",
+    "group": "chin",
+    "sign": "Pig",
+    "slot": "love",
+    "text": "Pig — Love & Relationships. In relationships, the Pig is among the most genuinely loving and devoted of all the Chinese zodiac animals. You love with your whole heart — freely, warmly, and generously. Your challenge in relationships is selectivity.",
+    "sha256": "0e4b3c7854dc636f884bce99df3e102dc22a714b14fea83e63d70deaefdaee60"
+  },
+  {
+    "filename": "chin_pig_career.mp3",
+    "group": "chin",
+    "sign": "Pig",
+    "slot": "career",
+    "text": "Pig — Career & Purpose. The Pig thrives in environments that reward genuine care, sincerity, and warm collaborative spirit. Your professional challenge is discipline and boundary-setting.",
+    "sha256": "ae3d7c5f5a952d604065a5ab363836ba741a4aba526838528289daee0ad1590c"
   }
 ]

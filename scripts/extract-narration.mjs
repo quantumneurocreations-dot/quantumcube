@@ -1,8 +1,8 @@
 // scripts/extract-narration.mjs
-// Extracts numerology narration text from quantum-cube-v10.html into a manifest.
+// Extracts narration text from quantum-cube-v10.html into a manifest.
 // Phase 1: numerology (lp, bd, ex, su, pe, hp, kl, py) + welcome greeting.
-// Each entry carries a sha256 of the exact text sent for TTS — runtime can
-// verify MP3 matches current card text and fall back to live TTS on mismatch.
+// Phase 2: life phases pc (keys 1-9, v1 only), western astro (WSIGN), chinese zodiac (CSIGN).
+// Each entry carries a sha256 of the exact text sent for TTS.
 
 import fs from 'node:fs';
 import crypto from 'node:crypto';
@@ -91,6 +91,73 @@ for (const [cat, label] of Object.entries(CAT_LABELS)) {
       });
       counts[cat]++;
     });
+  }
+}
+
+// ─── Phase 2a: Life Phases (NUM.pc, keys 1-9, single variant) ───────────────
+{
+  const pcData = NUM['pc'];
+  if (!pcData) {
+    console.warn('NUM.pc missing — skipped');
+  } else {
+    counts['pc'] = 0;
+    for (let n = 1; n <= 9; n++) {
+      const variants = pcData[n];
+      if (!Array.isArray(variants) || variants.length === 0) {
+        console.warn(`NUM.pc[${n}] missing or empty — skipped`);
+        continue;
+      }
+      const text = String(variants[0]).replace(/\s+/g, ' ').trim();
+      manifest.push({
+        filename: `num_pc_${n}_v1.mp3`,
+        group: 'pc',
+        num: String(n),
+        variant: 1,
+        text,
+        sha256: sha256(text),
+      });
+      counts['pc']++;
+    }
+  }
+}
+
+// ─── Phase 2b: Western Astro (WSIGN) and Chinese Zodiac (CSIGN) ──────────────
+const ASTRO_SLOTS = [
+  { key: 'core',   label: 'Core Nature' },
+  { key: 'str',    label: 'Strengths' },
+  { key: 'shadow', label: 'Shadow Side' },
+  { key: 'love',   label: 'Love & Relationships' },
+  { key: 'career', label: 'Career & Purpose' },
+];
+
+function extractAstroObject(src, objName) {
+  const raw = extractBalancedLiteral(src, new RegExp(`const\\s+${objName}\\s*=\\s*\\{`));
+  // eval-safe: object literal with string values only
+  return new Function(`return ${raw};`)();
+}
+
+for (const [prefix, objName] of [['west', 'WSIGN'], ['chin', 'CSIGN']]) {
+  const data = extractAstroObject(src, objName);
+  counts[prefix] = 0;
+  for (const [name, entry] of Object.entries(data)) {
+    for (const { key, label } of ASTRO_SLOTS) {
+      const body = entry[key];
+      if (!body || typeof body !== 'string') {
+        console.warn(`${objName}.${name}.${key} missing — skipped`);
+        continue;
+      }
+      const clean = body.replace(/\s+/g, ' ').trim();
+      const text = `${name} — ${label}. ${clean}`;
+      manifest.push({
+        filename: `${prefix}_${name.toLowerCase()}_${key}.mp3`,
+        group: prefix,
+        sign: name,
+        slot: key,
+        text,
+        sha256: sha256(text),
+      });
+      counts[prefix]++;
+    }
   }
 }
 
