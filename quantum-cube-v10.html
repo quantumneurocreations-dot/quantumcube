@@ -3147,5 +3147,51 @@ navigator.serviceWorker.register('sw.js').catch(()=>{});
   <button type="button" class="pay-back" onclick="afterPaySuccess()">Continue</button>
 </div>
 
+<div id="qcCacheDbg" style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,0.85);color:#0f0;font:10px monospace;padding:4px 6px;pointer-events:none;word-break:break-all">cache: checking...</div>
+<script>
+(function(){
+  var swErr='';
+  if('serviceWorker' in navigator){
+    var origReg=navigator.serviceWorker.register.bind(navigator.serviceWorker);
+    navigator.serviceWorker.register=function(url,opts){
+      return origReg(url,opts).catch(function(e){ swErr=String(e); throw e; });
+    };
+  }
+  function upd(){
+    var el=document.getElementById('qcCacheDbg');
+    if(!el) return;
+    var parts=[];
+    if(!('serviceWorker' in navigator)){ el.textContent='sw:unsupported'; return; }
+    var ctrl=navigator.serviceWorker.controller;
+    parts.push('ctrl:'+(ctrl?'yes':'no'));
+    navigator.serviceWorker.getRegistrations().then(function(regs){
+      if(regs.length===0){ parts.push('reg:0'); }
+      else{
+        var r=regs[0];
+        var st=r.active?'active':(r.installing?'installing':(r.waiting?'waiting':'idle'));
+        parts.push('reg:'+st);
+        parts.push('scope:'+r.scope.slice(-30));
+      }
+      if(swErr) parts.push('ERR:'+swErr.slice(0,40));
+      if('caches' in window){
+        caches.keys().then(function(ks){
+          parts.push('caches:['+ks.join(',')+']');
+          return caches.open('qc-narration-v1').then(function(c){ return c.keys(); });
+        }).then(function(keys){
+          parts.push('narr:'+keys.length+'/257');
+          el.textContent=parts.join(' | ');
+        }).catch(function(e){
+          parts.push('cErr:'+String(e).slice(0,25));
+          el.textContent=parts.join(' | ');
+        });
+      }else{
+        el.textContent=parts.join(' | ');
+      }
+    });
+  }
+  upd();
+  setInterval(upd, 2000);
+})();
+</script>
 </body>
 </html>
