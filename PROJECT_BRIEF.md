@@ -30,10 +30,10 @@ The kickoff doc handles session startup, role split between Chat Claude and Curs
 
 ## ⚠️ OPEN ISSUE AT START OF NEXT SESSION — NARRATION PIPELINE NOT VERIFIED
 
-**Status: pipeline shipped but NOT verified working on Ronnie's phone.**
+**Status: MP3s generated and served by GitHub Pages, frontend wired, but pipeline NOT verified on Ronnie's phone.**
 
 What's live on `origin/main` as of commit `1381917`:
-- 256 MP3s committed at `Sounds/Narration/` (phase 1 numerology + welcome)
+- 256 MP3s exist at `Sounds/Narration/` and are fetchable from GitHub Pages (HTTP 200 confirmed via curl). Frontend code to use them is shipped. Whether Ronnie's phone actually loads them on card tap is NOT verified — airplane-mode test is silent, debug overlay showed manifest size=0. Phase 1 covers numerology + welcome only.
 - `narration-manifest.json` committed (256 entries with sha256 drift hashes)
 - `scripts/extract-narration.mjs` extractor
 - `scripts/generate-narration.mjs` generator (not committed/pushed, lives locally only as `d3451f7` unpushed)
@@ -224,7 +224,8 @@ Not launch-blocking if narration stays on current tracks temporarily.
 
 **All must be true before charging a single real user:**
 
-- [ ] **Narration pipeline verified end-to-end on Ronnie's phone** — airplane mode test passes (NEW, blocking)
+- [ ] **Narration phase 1 verified end-to-end on Ronnie's phone** — airplane mode test passes for numerology (NEW, blocking)
+- [ ] **Narration phase 2 shipped** — astro + chinese pre-recorded, committed, verified on phone
 - [ ] **Music + SFX refresh complete** — team has signed off (NEW, locked decision)
 - [ ] **Paywall verified both directions** — paid unlocks, unpaid stays locked, sign-out re-locks, same-device different-user doesn't inherit unlock
 - [ ] **Paddle E2E** — signup → verify → checkout → webhook → `has_paid=true` → unlock persists
@@ -276,7 +277,7 @@ Not launch-blocking if narration stays on current tracks temporarily.
 - Model: `eleven_turbo_v2_5` (0.5 credits/char)
 - Edge Function: `supabase/functions/narrate/index.ts` deployed with `--no-verify-jwt` + inline apikey check
 - Pre-record phase 1 complete (numerology + welcome, 256 clips)
-- Phase 2 pending: astro/chinese pre-record (requires variations authoring decision first)
+- Phase 2 pending: astro/chinese pre-record — scope LOCKED (single version, no variations, 120 clips total). Blocked only on phase 1 verification.
 
 ---
 
@@ -354,7 +355,7 @@ Michelle has M1 data (company registration, bank details, tax IDs). Ready to sen
 7. Accessibility h1/h2 structure (heading tags) — h1/h2 deferred post-launch per earlier decision
 8. Static `manifest.json` + `sw.js` — replace blob URLs
 9. Sentry error monitoring
-10. Astro/Chinese pre-record phase 2
+10. Astro/Chinese pre-record phase 2 — 60 western × 5 fields + 60 chinese × 5 fields = 120 clips, no variations, ~36k credits (~$11 overage). Use extended extractor on ASTRO and CHINESE objects. Frontend already handles lookup agnostic to category.
 
 ### 🧹 POST-LAUNCH CLEANUP
 11. Split HTML into .js + .css files
