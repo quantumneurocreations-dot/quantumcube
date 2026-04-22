@@ -509,7 +509,7 @@ window.sb = sb;
 </script>
 
 </head>
-<body><div id="qcDebug" style="position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.85);color:#0f0;font-family:monospace;font-size:10px;padding:6px;z-index:99999;max-height:30vh;overflow-y:auto;pointer-events:none;white-space:pre-wrap;word-break:break-all"></div><div id="loadingScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#05050f;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s ease"><div style="text-align:center"><p style="font-family:Cinzel,serif;font-size:7px;letter-spacing:6px;color:#ffffff;text-transform:uppercase;margin-bottom:20px">Quantum Neuro Creations</p><div style="display:inline-block;text-align:center"><div style="font-family:Cinzel Decorative,serif;font-weight:900;font-size:clamp(30px,8vw,54px);line-height:1.1;animation:quantumFloat 6s linear infinite"><span style="color:#ffffff">QUANTUM</span></div><div style="font-family:Cinzel Decorative,serif;font-weight:900;font-size:clamp(30px,8vw,54px);color:#7dd4fc;filter:drop-shadow(0 0 8px rgba(125,212,252,0.8));animation:quantumFloatB 11s linear 0.8s infinite;text-align:right">CUBE</div></div><p style="font-family:Cinzel,serif;font-size:7px;letter-spacing:5px;color:#ffffff;text-transform:uppercase;margin-top:20px">Your Cosmic Profile</p></div></div>
+<body><div id="loadingScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#05050f;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s ease"><div style="text-align:center"><p style="font-family:Cinzel,serif;font-size:7px;letter-spacing:6px;color:#ffffff;text-transform:uppercase;margin-bottom:20px">Quantum Neuro Creations</p><div style="display:inline-block;text-align:center"><div style="font-family:Cinzel Decorative,serif;font-weight:900;font-size:clamp(30px,8vw,54px);line-height:1.1;animation:quantumFloat 6s linear infinite"><span style="color:#ffffff">QUANTUM</span></div><div style="font-family:Cinzel Decorative,serif;font-weight:900;font-size:clamp(30px,8vw,54px);color:#7dd4fc;filter:drop-shadow(0 0 8px rgba(125,212,252,0.8));animation:quantumFloatB 11s linear 0.8s infinite;text-align:right">CUBE</div></div><p style="font-family:Cinzel,serif;font-size:7px;letter-spacing:5px;color:#ffffff;text-transform:uppercase;margin-top:20px">Your Cosmic Profile</p></div></div>
 <div id="stars"></div>
 <div id="app">
 <div id="installBanner">
@@ -1329,24 +1329,14 @@ async function _loadNarrationManifest(){
   if(_manifestPromise) return _manifestPromise;
   _manifestPromise = (async()=>{
     try{
-      window.qcLog && qcLog("mf fetch start url=" + MANIFEST_URL);
       const res = await fetch(MANIFEST_URL, {cache:"no-cache"});
-      window.qcLog && qcLog("mf http " + res.status + " ct=" + (res.headers.get("content-type")||"?"));
-      if(!res.ok){ return new Map(); }
-      const txt = await res.text();
-      window.qcLog && qcLog("mf body bytes=" + txt.length + " head=" + JSON.stringify(txt.slice(0,40)));
-      let rows;
-      try{ rows = JSON.parse(txt); }
-      catch(pe){ window.qcLog && qcLog("mf JSON parse err: " + pe.message); return new Map(); }
-      window.qcLog && qcLog("mf rows=" + (Array.isArray(rows)?rows.length:"not-array"));
+      if(!res.ok){ console.warn("manifest fetch failed", res.status); return new Map(); }
+      const rows = await res.json();
       const m = new Map();
       for(const r of rows) if(r.sha256 && r.filename) m.set(r.sha256, r.filename);
-      window.qcLog && qcLog("mf map size=" + m.size);
+      console.log("narration manifest loaded:", m.size, "entries");
       return m;
-    }catch(e){
-      window.qcLog && qcLog("mf outer err: " + (e && e.message || String(e)));
-      return new Map();
-    }
+    }catch(e){ console.warn("manifest load err", e); return new Map(); }
   })();
   _narrationMap = await _manifestPromise;
   return _narrationMap;
@@ -1357,35 +1347,19 @@ function stopNarration(){
   _currentCard = null;
 }
 
-window.qcLog = function(msg){
-  try{
-    console.log("[qc]", msg);
-    const el = document.getElementById("qcDebug");
-    if(!el) return;
-    const t = new Date().toISOString().slice(11,19);
-    el.textContent = (t + " " + msg + "\n" + el.textContent).slice(0, 2000);
-  }catch(e){}
-};
 async function fetchNarration(text){
-  if(!text){ window.qcLog && qcLog("fetchNarration: no text"); return null; }
+  if(!text) return null;
   // Normalise "Personal Year NNNN" -> "Personal Year" so hash matches manifest
   const normText = text.replace(/^Personal Year \d{4}\./, "Personal Year.");
   // Try local pre-recorded MP3 first (matched by sha256 of text)
   try{
     const map = await _loadNarrationManifest();
-    window.qcLog && qcLog("manifest size=" + map.size);
     const hash = await _sha256Hex(normText);
-    window.qcLog && qcLog("text len=" + text.length + " hash=" + hash.slice(0,12));
     const filename = map.get(hash);
     if(filename){
-      window.qcLog && qcLog("LOCAL HIT: " + filename);
       return NARRATION_DIR + filename;
     }
-    window.qcLog && qcLog("MISS — text head=" + JSON.stringify(text.slice(0,60)));
-  }catch(e){
-    window.qcLog && qcLog("LOCAL ERR: " + (e && e.message || String(e)));
-    console.warn("local narration lookup err", e);
-  }
+  }catch(e){ console.warn("local narration lookup err", e); }
   // Fallback: live Edge Function
   try{
     const res = await fetch(NARRATE_URL, {
@@ -2931,7 +2905,7 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-const swCode="const CACHE='qc-v121';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
+const swCode="const CACHE='qc-v122';const ASSETS=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./'))))});";
 try{const blob=new Blob([swCode],{type:"application/javascript"});const swURL=URL.createObjectURL(blob);navigator.serviceWorker.register(swURL).catch(()=>{});}catch(e){}
 }
 </script>
