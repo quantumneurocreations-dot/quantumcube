@@ -1401,22 +1401,67 @@ async function startNarrationFromUrl(url, cardEl){
   } finally { _narrateInflight = false; }
 }
 
+async function playSequence(urls, cardEl){
+  if(_narrateInflight) return;
+  _narrateInflight = true;
+  let cancelled = false;
+  try{
+    stopNarration();
+    for(let i=0; i<urls.length; i++){
+      if(cancelled || _currentCard !== cardEl && i > 0) break;
+      const audio = new Audio(urls[i]);
+      audio.preload = "auto";
+      _currentAudio = audio;
+      _currentCard = cardEl;
+      await new Promise(res=>{
+        audio.addEventListener("ended", res, {once:true});
+        audio.addEventListener("error", res, {once:true});
+        audio.play().catch(()=>res());
+      });
+      if(_currentCard !== cardEl) { cancelled = true; break; }
+    }
+  } finally {
+    _narrateInflight = false;
+  }
+}
+
 window.qcNarrateCard = function(card, faceNum){
   if(card.classList.contains("open") && window.QC_AUDIO) window.QC_AUDIO.play("reveal_result");
   if(!voiceState[faceNum]) return;
   const isOpen = card.classList.contains("open");
   if(!isOpen){ if(_currentCard===card) stopNarration(); return; }
   if(_currentCard===card && _currentAudio && !_currentAudio.paused) return;
-  // Phase 1: Face 3 numerology only. Face 4 astro/chinese silent until phase 2.
-  if(faceNum !== 3) return;
-  const cat = card.dataset.cat;
-  const num = card.dataset.first || card.dataset.num;
-  if(!cat || !num) return;
-  if(cat === "pc") return;                    // Life Phases not pre-recorded
-  if(num === "None" || num === "0") return;   // empty Karmic Lessons
-  const variant = card.dataset.variant || "1";
-  const url = "Sounds/Narration/num_" + cat + "_" + num + "_v" + variant + ".mp3";
-  startNarrationFromUrl(url, card);
+
+  if(faceNum === 3){
+    const cat = card.dataset.cat;
+    if(!cat) return;
+    if(cat === "pc"){
+      try{
+        const phases = JSON.parse(card.dataset.phases || "[]");
+        if(!phases.length) return;
+        const urls = phases.map(p => "Sounds/Narration/num_pc_" + p + "_v1.mp3");
+        playSequence(urls, card);
+      }catch(e){}
+      return;
+    }
+    const num = card.dataset.first || card.dataset.num;
+    if(!num) return;
+    if(num === "None" || num === "0") return;
+    const variant = card.dataset.variant || "1";
+    const url = "Sounds/Narration/num_" + cat + "_" + num + "_v" + variant + ".mp3";
+    startNarrationFromUrl(url, card);
+    return;
+  }
+
+  if(faceNum === 4){
+    const prefix = card.dataset.prefix;
+    const key = card.dataset.key;
+    const slot = card.dataset.slot;
+    if(!prefix || !key || !slot) return;
+    const url = "Sounds/Narration/" + prefix + "_" + key + "_" + slot + ".mp3";
+    startNarrationFromUrl(url, card);
+    return;
+  }
 };
 
 /* Welcome greeting — once per user on Face 1 */
@@ -2650,7 +2695,7 @@ const numSecs=[
 {t:"Personality",n:d.personality,k:"pe"},
 {t:"Hidden Passion",n:d.passions.join(" & "),k:"hp",multi:d.passions},
 {t:"Karmic Lessons",n:d.lessons.length?d.lessons.join(", "):"None",k:"kl",multi:d.lessons,none:d.lessons.length===0},
-{t:"Life Phases",n:d.cycles.f+"\u2192"+d.cycles.s+"\u2192"+d.cycles.t,k:"pc",cycleAll:true},
+{t:"Life Phases",n:d.cycles.f+"\u2192"+d.cycles.s+"\u2192"+d.cycles.t,k:"pc",cycleAll:true,phases:[d.cycles.f,d.cycles.s,d.cycles.t]},
 {t:"Personal Year "+d.CY,n:d.personalYr,k:"py"}
 ];
 document.getElementById("numCards").innerHTML=numSecs.map(s=>{
@@ -2666,7 +2711,7 @@ else if(s.cycleAll){
 }
 else if(s.multi&&s.multi.length>0){body=s.multi.map(k=>{const txt=NUM[s.k]&&NUM[s.k][k]?NUM[s.k][k]:"Content for "+k+" coming soon.";return s.multi.length>1?"<span class='icard-sub'>Number "+k+"</span>"+textToParas(txt):textToParas(txt)}).join("");}
 else{const ln=s.nk!==undefined?s.nk:s.n;body=textToParas(getNumText(s.k,ln));}
-return"<div class='icard' data-cat='"+s.k+"' data-num='"+s.n+"' data-first='"+(s.multi?s.multi[0]:s.n)+"' data-variant='"+((s.multi||s.cycleAll||s.none)?1:(getNumIdx(s.k,s.n)+1))+"' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,3)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.n+"</span></div><div class='icard-body'>"+body+"</div></div>";
+return"<div class='icard' data-cat='"+s.k+"' data-num='"+s.n+"' data-first='"+(s.multi?s.multi[0]:s.n)+"' data-variant='"+((s.multi||s.cycleAll||s.none)?1:(getNumIdx(s.k,s.n)+1))+"' data-phases='"+(s.phases?JSON.stringify(s.phases):'')+"' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,3)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.n+"</span></div><div class='icard-body'>"+body+"</div></div>";
 }).join("");
 
 document.getElementById("face3-lock").style.display="none";
@@ -2680,22 +2725,24 @@ document.getElementById("astroGrid").innerHTML=
 "<div class='astro-item'><span class='sb-label'>Chinese Zodiac</span><span class='astro-sign'>"+d.chin.n+"</span><span class='astro-sub'>"+d.chin.sym+"</span><span class='astro-el'>"+d.chin.el+"</span></div>";
 
 const wData=WSIGN[d.west.n];const cData=CSIGN[d.chin.n];
+const wKey=d.west.n.toLowerCase();
+const cKey=d.chin.n.toLowerCase();
 const astroSecs=[];
 if(wData){
-astroSecs.push({t:d.west.n+" \u2014 Core Nature",b:d.west.sym,body:textToParas(wData.core)});
-astroSecs.push({t:d.west.n+" \u2014 Strengths",b:"&#10022;",body:textToParas(wData.str)});
-astroSecs.push({t:d.west.n+" \u2014 Shadow Side",b:"\u25c6",body:textToParas(wData.shadow)});
-astroSecs.push({t:d.west.n+" \u2014 Love &amp; Relationships",b:"\u2661",body:textToParas(wData.love)});
-astroSecs.push({t:d.west.n+" \u2014 Career &amp; Purpose",b:"\u25c7",body:textToParas(wData.career)});
+astroSecs.push({t:d.west.n+" \u2014 Core Nature",b:d.west.sym,body:textToParas(wData.core),prefix:"west",key:wKey,slot:"core"});
+astroSecs.push({t:d.west.n+" \u2014 Strengths",b:"&#10022;",body:textToParas(wData.str),prefix:"west",key:wKey,slot:"str"});
+astroSecs.push({t:d.west.n+" \u2014 Shadow Side",b:"\u25c6",body:textToParas(wData.shadow),prefix:"west",key:wKey,slot:"shadow"});
+astroSecs.push({t:d.west.n+" \u2014 Love &amp; Relationships",b:"\u2661",body:textToParas(wData.love),prefix:"west",key:wKey,slot:"love"});
+astroSecs.push({t:d.west.n+" \u2014 Career &amp; Purpose",b:"\u25c7",body:textToParas(wData.career),prefix:"west",key:wKey,slot:"career"});
 }
 if(cData){
-astroSecs.push({t:d.chin.n+" \u2014 Core Nature",b:d.chin.sym,body:textToParas(cData.core)});
-astroSecs.push({t:d.chin.n+" \u2014 Strengths",b:"&#10022;",body:textToParas(cData.str)});
-astroSecs.push({t:d.chin.n+" \u2014 Shadow Side",b:"\u25c6",body:textToParas(cData.shadow)});
-astroSecs.push({t:d.chin.n+" \u2014 Love &amp; Relationships",b:"\u2661",body:textToParas(cData.love)});
-astroSecs.push({t:d.chin.n+" \u2014 Career &amp; Purpose",b:"\u25c7",body:textToParas(cData.career)});
+astroSecs.push({t:d.chin.n+" \u2014 Core Nature",b:d.chin.sym,body:textToParas(cData.core),prefix:"chin",key:cKey,slot:"core"});
+astroSecs.push({t:d.chin.n+" \u2014 Strengths",b:"&#10022;",body:textToParas(cData.str),prefix:"chin",key:cKey,slot:"str"});
+astroSecs.push({t:d.chin.n+" \u2014 Shadow Side",b:"\u25c6",body:textToParas(cData.shadow),prefix:"chin",key:cKey,slot:"shadow"});
+astroSecs.push({t:d.chin.n+" \u2014 Love &amp; Relationships",b:"\u2661",body:textToParas(cData.love),prefix:"chin",key:cKey,slot:"love"});
+astroSecs.push({t:d.chin.n+" \u2014 Career &amp; Purpose",b:"\u25c7",body:textToParas(cData.career),prefix:"chin",key:cKey,slot:"career"});
 }
-document.getElementById("astroCards").innerHTML=astroSecs.map(s=>"<div class='icard' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,4)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.b+"</span></div><div class='icard-body'>"+s.body+"</div></div>").join("");
+document.getElementById("astroCards").innerHTML=astroSecs.map(s=>"<div class='icard' data-prefix='"+s.prefix+"' data-key='"+s.key+"' data-slot='"+s.slot+"' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,4)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.b+"</span></div><div class='icard-body'>"+s.body+"</div></div>").join("");
 document.getElementById("face4-lock").style.display="none";
 document.getElementById("face4-content").style.display="block";
 

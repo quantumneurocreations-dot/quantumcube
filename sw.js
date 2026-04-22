@@ -1,5 +1,5 @@
-const CACHE='qc-v137';
-const NARR_CACHE='qc-narration-v1';
+const CACHE='qc-v138';
+const NARR_CACHE='qc-narration-v2';
 
 self.addEventListener('install', e => {
   e.waitUntil((async () => {
@@ -24,7 +24,7 @@ self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(ks =>
       Promise.all(
-        ks.filter(k => k !== CACHE && k !== NARR_CACHE && k.startsWith('qc-v'))
+        ks.filter(k => k !== CACHE && k !== NARR_CACHE && (k.startsWith('qc-v') || k.startsWith('qc-narration-')))
           .map(k => caches.delete(k))
       )
     )
