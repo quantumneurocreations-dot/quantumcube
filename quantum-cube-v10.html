@@ -2898,9 +2898,17 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-try{
-navigator.serviceWorker.register('sw.js').catch(()=>{});
-}catch(e){}
+(async function(){
+  try{
+    var regs=await navigator.serviceWorker.getRegistrations();
+    for(var i=0;i<regs.length;i++){
+      if(regs[i].active && regs[i].active.scriptURL && regs[i].active.scriptURL.startsWith('blob:')){
+        await regs[i].unregister();
+      }
+    }
+    await navigator.serviceWorker.register('sw.js',{scope:'./'});
+  }catch(e){ console.warn('SW setup failed',e); }
+})();
 }
 </script>
 
@@ -3170,7 +3178,8 @@ navigator.serviceWorker.register('sw.js').catch(()=>{});
         var r=regs[0];
         var st=r.active?'active':(r.installing?'installing':(r.waiting?'waiting':'idle'));
         parts.push('reg:'+st);
-        parts.push('scope:'+r.scope.slice(-30));
+        var surl=(r.active&&r.active.scriptURL)||(r.installing&&r.installing.scriptURL)||(r.waiting&&r.waiting.scriptURL)||'?';
+        parts.push('src:'+surl.slice(-20));
       }
       if(swErr) parts.push('ERR:'+swErr.slice(0,40));
       if('caches' in window){
