@@ -1,4 +1,4 @@
-const CACHE='qc-v135';
+const CACHE='qc-v136';
 const NARR_CACHE='qc-narration-v1';
 const ASSETS=['./'];
 
@@ -61,9 +61,13 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
+let _fetchCount=0, _narrFetchCount=0;
 self.addEventListener('fetch', e => {
+  _fetchCount++;
   const u = new URL(e.request.url);
   if (u.pathname.includes('/Sounds/Narration/')) {
+    _narrFetchCount++;
+    tell('fetch:narr#'+_narrFetchCount+':'+u.pathname.split('/').pop());
     e.respondWith(
       caches.open(NARR_CACHE).then(c =>
         c.match(e.request).then(r =>

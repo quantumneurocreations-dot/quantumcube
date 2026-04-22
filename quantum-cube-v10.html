@@ -2898,25 +2898,20 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-window.__swDiag={step:'start',unregCount:0,err:'',lastMsg:''};
+window.__swDiag={step:'start',err:'',lastMsg:''};
 navigator.serviceWorker.addEventListener('message',function(ev){
   if(ev.data&&ev.data.__swLog){ window.__swDiag.lastMsg=ev.data.__swLog; }
 });
 (async function(){
   try{
-    window.__swDiag.step='getRegs';
-    var regs=await navigator.serviceWorker.getRegistrations();
-    window.__swDiag.step='foundRegs:'+regs.length;
-    for(var i=0;i<regs.length;i++){
-      var sURL=(regs[i].active&&regs[i].active.scriptURL)||(regs[i].installing&&regs[i].installing.scriptURL)||(regs[i].waiting&&regs[i].waiting.scriptURL)||'';
-      if(sURL.startsWith('blob:')){
-        await regs[i].unregister();
-        window.__swDiag.unregCount++;
-      }
-    }
     window.__swDiag.step='registering';
-    var reg=await navigator.serviceWorker.register('sw.js',{scope:'./'});
+    var reg=await navigator.serviceWorker.register('sw.js');
     window.__swDiag.step='registered:'+(reg.installing?'installing':(reg.active?'active':'waiting'));
+    if(reg.active){
+      window.__swDiag.step='forcing-update';
+      await reg.update();
+      window.__swDiag.step='update-done';
+    }
   }catch(e){
     window.__swDiag.step='ERROR';
     window.__swDiag.err=String(e&&e.message?e.message:e);
