@@ -1001,7 +1001,7 @@ function rotateTo(face, animate){
 // Touch / Mouse drag
 let dragMoved=false;
 
-window.haptic=function(t){if(!navigator.vibrate)return;var p={light:75,medium:120,success:[90,240,90]}[t]||75;navigator.vibrate(p);}; const _cubeTouchSounds = ["Sounds/Touch Cube 1.mp3"].map(function(src){ const a = new Audio(encodeURI(src)); a.preload = "auto"; a.volume = 0.30; return a; }); function playCubeTouchFX(){ haptic("light"); try { const a = _cubeTouchSounds[Math.floor(Math.random() * _cubeTouchSounds.length)]; a.currentTime = 0; a.play().catch(function(){}); } catch(e){} }
+window.haptic=function(t){if(!navigator.vibrate)return;var p={light:75,medium:120,success:[90,240,90]}[t]||75;navigator.vibrate(p);};
 
 /* --- QC SFX + Music System --- */
 const QC_AUDIO = {
@@ -1009,11 +1009,11 @@ const QC_AUDIO = {
   musicVol: 0.20,
   sfx: {},
   _musicTracks: [
-    "Sounds/Music/ES_Abisko - Strom.mp3",
     "Sounds/Music/ES_Across the Meadow - Hanna Lindgren.mp3",
-    "Sounds/Music/ES_Arc of Transcendence - Lama House.mp3",
+    "Sounds/Music/ES_Subterranean Room - Hanna Lindgren.mp3",
     "Sounds/Music/ES_Tranquil Dawn - Amber Glow.mp3",
-    "Sounds/Music/ES_Subterranean Room - Hanna Lindgren.mp3"
+    "Sounds/Music/ambient.mp3",
+    "Sounds/Music/bgMusic.mp3"
   ],
   _musicIdx: 0,
   _music: null,
@@ -1032,11 +1032,17 @@ const QC_AUDIO = {
   _ensureMusic: function(){
     if(this._music) return;
     try{ this._musicIdx = parseInt(localStorage.getItem("qc_musicIdx")||"0",10)||0; }catch(e){}
-    if(this._musicIdx<0||this._musicIdx>=this._musicTracks.length) this._musicIdx=0;
+    if(this._musicIdx<0||this._musicIdx>=this._musicTracks.length) this._musicIdx=Math.floor(Math.random()*this._musicTracks.length);
     const a = new Audio(encodeURI(this._musicTracks[this._musicIdx]));
     a.preload="auto"; a.volume=0; a.loop=false;
     a.addEventListener("ended", ()=>{
-      this._musicIdx = (this._musicIdx+1) % this._musicTracks.length;
+      // pick a random next track, avoiding repeat of current if >1 track
+      var _n=this._musicTracks.length;
+      if(_n>1){
+        var _next;
+        do { _next=Math.floor(Math.random()*_n); } while(_next===this._musicIdx);
+        this._musicIdx=_next;
+      } else { this._musicIdx=0; }
       try{ localStorage.setItem("qc_musicIdx", String(this._musicIdx)); }catch(e){}
       this._music = null;
       if(this._musicOn) this.startMusic();
@@ -1133,7 +1139,7 @@ document.addEventListener('DOMContentLoaded', function(){
 // ── AUDIO BUTTON SCROLL REVEAL (removed: music is now permanent inline) ──
 function onDragStart(ex,ey){
   isDragging=true;
-  playCubeTouchFX();
+  haptic("light");
   dragMoved=false;
   dragStartX=ex; dragStartY=ey;
   dragStartQuat={w:quat.w, x:quat.x, y:quat.y, z:quat.z};
