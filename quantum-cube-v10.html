@@ -614,7 +614,6 @@ window.sb = sb;
 <div class="face" id="face1">
 
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Introduction &nbsp; &#10022;</span><div class="sec-line"></div></div>
-<div id="welcomeBtnWrap" style="text-align:center"><button id="welcomeBtn" onclick="playWelcomeGreeting()" style="display:none;margin:14px auto 6px;padding:10px 22px;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6);border-radius:999px;font-family:Cinzel,serif;letter-spacing:3px;font-size:12px;cursor:pointer;text-transform:uppercase">&#9658;&nbsp;Welcome</button></div>
 <div class="video-face">
   <div class="video-container portrait-video" style="width:75%;margin:0 auto;">
     <div style="position:relative;width:100%;padding-bottom:177.78%;">
@@ -1498,23 +1497,20 @@ window.qcNarrateCard = function(card, faceNum){
   }
 };
 
-/* Welcome greeting — once per user on Face 1 */
-window.playWelcomeGreeting = async function(){
-  const btn = document.getElementById("welcomeBtn");
-  if(btn) btn.style.display = "none";
-  try{ localStorage.setItem("qc_greeted","1"); }catch(e){}
+/* Welcome greeting — auto-plays first 2 times user lands on Face 1 */
+window.playWelcomeGreeting = function(){
   if(typeof haptic==="function") haptic("medium");
-  await startNarration("Welcome to the Quantum Cube, where numbers meet the stars. Enjoy your exploration.", null);
+  try{ if(typeof startNarrationFromUrl==="function"){ startNarrationFromUrl("Sounds/Narration/welcome.mp3"); } }catch(e){}
 };
 
 function onFaceShown(n){
   stopNarration();
   if(n===1){
-    const btn = document.getElementById("welcomeBtn");
-    if(btn){
-      let greeted = false;
-      try{ greeted = !!localStorage.getItem("qc_greeted"); }catch(e){}
-      btn.style.display = greeted ? "none" : "inline-block";
+    let count = 0;
+    try{ count = parseInt(localStorage.getItem("qc_greet_count")||"0",10)||0; }catch(e){}
+    if(count < 2){
+      try{ localStorage.setItem("qc_greet_count", String(count+1)); }catch(e){}
+      setTimeout(function(){ if(typeof playWelcomeGreeting==="function") playWelcomeGreeting(); }, 400);
     }
   }
   if(n===5 && voiceState[5]){
