@@ -1030,8 +1030,15 @@ const QC_AUDIO = {
   },
   _ensureMusic: function(){
     if(this._music) return;
-    try{ this._musicIdx = parseInt(localStorage.getItem("qc_musicIdx")||"0",10)||0; }catch(e){}
-    if(this._musicIdx<0||this._musicIdx>=this._musicTracks.length) this._musicIdx=Math.floor(Math.random()*this._musicTracks.length);
+    var _last = -1;
+    try{ _last = parseInt(localStorage.getItem("qc_musicIdx")||"-1",10); if(isNaN(_last)) _last=-1; }catch(e){}
+    var _n = this._musicTracks.length;
+    if(_n > 1){
+      do { this._musicIdx = Math.floor(Math.random()*_n); } while(this._musicIdx === _last);
+    } else {
+      this._musicIdx = 0;
+    }
+    try{ localStorage.setItem("qc_musicIdx", String(this._musicIdx)); }catch(e){}
     const a = new Audio(encodeURI(this._musicTracks[this._musicIdx]));
     a.preload="auto"; a.volume=0; a.loop=false;
     a.addEventListener("ended", ()=>{
@@ -1506,12 +1513,20 @@ window.playWelcomeGreeting = function(){
 function onFaceShown(n){
   stopNarration();
   if(n===1){
-    let count = 0;
-    try{ count = parseInt(localStorage.getItem("qc_greet_count")||"0",10)||0; }catch(e){}
-    if(count < 2){
-      try{ localStorage.setItem("qc_greet_count", String(count+1)); }catch(e){}
-      setTimeout(function(){ if(typeof playWelcomeGreeting==="function") playWelcomeGreeting(); }, 400);
-    }
+    (async function(){
+      var uid = "";
+      try{
+        var s = await sb.auth.getSession();
+        uid = (s && s.data && s.data.session && s.data.session.user) ? s.data.session.user.id : "";
+      }catch(e){}
+      var key = uid ? ("qc_greet_count_" + uid) : "qc_greet_count";
+      var count = 0;
+      try{ count = parseInt(localStorage.getItem(key)||"0",10)||0; }catch(e){}
+      if(count < 2){
+        try{ localStorage.setItem(key, String(count+1)); }catch(e){}
+        setTimeout(function(){ if(typeof playWelcomeGreeting==="function") playWelcomeGreeting(); }, 400);
+      }
+    })();
   }
   if(n===5 && voiceState[5]){
     const f5entryToken = Date.now();
