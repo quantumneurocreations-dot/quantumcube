@@ -287,6 +287,14 @@ input[type="number"]{-moz-appearance:textfield}
 .reset-btn{background:transparent;border:2px solid #ffffff;color:#fff;font-family:'Cinzel',serif;font-size:clamp(11px,3vw,13px);letter-spacing:clamp(3px,1.5vw,5px);text-transform:uppercase;padding:18px;cursor:pointer;transition:all .3s;width:100%;text-align:center;line-height:1.4}
 .reset-btn:hover{background:rgba(125,212,252,0.08);border-color:#7dd4fc;color:#7dd4fc;box-shadow:0 0 20px rgba(125,212,252,0.3),inset 0 0 20px rgba(125,212,252,0.05);letter-spacing:6px;transition:all 0.4s ease}
 
+/* ── ACCOUNT MANAGEMENT BUTTONS (POPIA/GDPR rights) ── */
+.export-btn{background:transparent;border:2px solid rgba(255,255,255,0.4);color:#cfd8e3;font-family:'Cinzel',serif;font-size:clamp(10px,2.6vw,12px);letter-spacing:clamp(2px,1.2vw,4px);text-transform:uppercase;padding:14px;cursor:pointer;transition:all .3s;width:100%;text-align:center;line-height:1.4}
+.export-btn:hover{border-color:#7dd4fc;color:#7dd4fc}
+.delete-btn{background:transparent;border:2px solid rgba(220,80,80,0.55);color:#e88a8a;font-family:'Cinzel',serif;font-size:clamp(10px,2.6vw,12px);letter-spacing:clamp(2px,1.2vw,4px);text-transform:uppercase;padding:14px;cursor:pointer;transition:all .3s;width:100%;text-align:center;line-height:1.4}
+.delete-btn:hover{border-color:#ff6b6b;color:#ff8a8a}
+.delete-btn.armed{background:rgba(220,40,40,0.18);border-color:#ff5252;color:#ffffff;box-shadow:0 0 20px rgba(255,80,80,0.45);animation:deletePulse 1s ease-in-out infinite}
+@keyframes deletePulse{0%,100%{box-shadow:0 0 20px rgba(255,80,80,0.45)}50%{box-shadow:0 0 30px rgba(255,80,80,0.75)}}
+
 /* ── LEGAL SCREEN ── */
 #legalOverlay{
   position:fixed;inset:0;z-index:998;
@@ -468,6 +476,7 @@ input[type="number"]{-moz-appearance:textfield}
   .lock-screen{max-width:44%;margin-left:auto;margin-right:auto}
   .calc-btn{max-width:56.25%;margin-left:auto;margin-right:auto;display:block}
   .reset-btn{max-width:56.25%;margin-left:auto;margin-right:auto;display:block}
+  .export-btn,.delete-btn{max-width:56.25%;margin-left:auto;margin-right:auto;display:block}
 }
 
 .video-container.vid-fullscreen{position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;z-index:9999!important;margin:0!important;padding-bottom:0!important;background:#000!important}
@@ -849,7 +858,9 @@ Sign Up</button>
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Settings &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div style="display:flex;flex-direction:column;align-items:center;padding:24px 32px 32px;">
 <button type="button" class="reset-btn" onclick="signOut()">Sign Out</button>
-<button type="button" class="legal-link" onclick="openFace(0)" style="margin-top:12px">Back</button>
+<button type="button" class="export-btn" onclick="haptic('light');exportMyData()" style="margin-top:14px">Download My Data</button>
+<button type="button" class="delete-btn" id="deleteAccountBtn" onclick="haptic('medium');armDeleteAccount()" style="margin-top:14px">Delete Account</button>
+<button type="button" class="legal-link" onclick="openFace(0)" style="margin-top:18px">Back</button>
 </div>
 </div>
 
@@ -2625,6 +2636,99 @@ async function signOut(){
   location.reload();
 }
 
+// ── ACCOUNT MANAGEMENT (POPIA/GDPR rights) ─────────────────
+// Wipes ALL Quantum Cube localStorage keys. Used on account deletion.
+// Sign-out clears less because next sign-in re-syncs from DB; deletion
+// must leave zero residual state on device.
+function _wipeAllLocalState(){
+  try {
+    localStorage.removeItem(STORE_KEY);
+    localStorage.removeItem(QC_PENDING_KEY);
+    localStorage.removeItem("qc_musicIdx");
+    localStorage.removeItem("qc_rotIdx");
+    localStorage.removeItem("qc_greet_count");
+    // user-scoped greet count keys
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && k.indexOf("qc_greet_count_") === 0) localStorage.removeItem(k);
+    }
+  } catch(e) {}
+}
+
+async function exportMyData(){
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { alert("Please sign in first."); return; }
+    const url = SUPABASE_URL + "/functions/v1/export-data";
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + session.access_token,
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY
+      }
+    });
+    if (!res.ok) { alert("Export failed. Please try again."); return; }
+    const blob = await res.blob();
+    const dl = document.createElement("a");
+    dl.href = URL.createObjectURL(blob);
+    dl.download = "quantum-cube-data.json";
+    document.body.appendChild(dl);
+    dl.click();
+    document.body.removeChild(dl);
+    setTimeout(() => URL.revokeObjectURL(dl.href), 1000);
+  } catch(e){ console.warn("exportMyData err", e); alert("Export failed. Please try again."); }
+}
+
+// Two-tap delete confirmation pattern.
+// Tap 1 -> button arms (red glow, "Tap again to confirm" text), 5s timer.
+// Tap 2 within 5s -> deletion fires.
+// Timeout or different tap -> reverts.
+let _deleteArmed = false;
+let _deleteTimer = null;
+function armDeleteAccount(){
+  const btn = document.getElementById("deleteAccountBtn");
+  if (!btn) return;
+  if (_deleteArmed) { confirmDeleteAccount(); return; }
+  _deleteArmed = true;
+  btn.classList.add("armed");
+  btn.textContent = "Tap again to confirm — permanent";
+  if (_deleteTimer) clearTimeout(_deleteTimer);
+  _deleteTimer = setTimeout(() => {
+    _deleteArmed = false;
+    btn.classList.remove("armed");
+    btn.textContent = "Delete Account";
+    _deleteTimer = null;
+  }, 5000);
+}
+
+async function confirmDeleteAccount(){
+  if (_deleteTimer) { clearTimeout(_deleteTimer); _deleteTimer = null; }
+  _deleteArmed = false;
+  const btn = document.getElementById("deleteAccountBtn");
+  if (btn) { btn.disabled = true; btn.textContent = "Deleting..."; }
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      const url = SUPABASE_URL + "/functions/v1/delete-account";
+      await fetch(url, {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + session.access_token,
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY
+        }
+      });
+    }
+  } catch(e){ console.warn("delete-account err", e); }
+  finally {
+    try { await sb.auth.signOut(); } catch(e) {}
+    _wipeAllLocalState();
+    // Redirect to landing page (not /app) so they see the public site
+    window.location.href = "/";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => { initSupabaseSession(); });
 
 function runCalculation(){
@@ -3167,6 +3271,7 @@ if("serviceWorker" in navigator){
       <div class="legal-h2">At Rest</div>
       <p class="legal-p">Account data is stored in Supabase&rsquo;s managed Postgres database, encrypted at rest. Supabase maintains SOC 2 Type II certification and publishes the results of third-party audits.</p>
       <div class="legal-h2">Authentication</div>
+      <p class="legal-p"><strong>Your data rights:</strong> You can download a copy of all account data we hold about you, or permanently delete your account, at any time from the Settings screen inside the app. Deletion is immediate and irreversible &mdash; we remove your authentication record and your profile row, including unlock status and marketing preference. Reading content is generated from your inputs and is not stored, so nothing else remains.</p>
       <p class="legal-p">We use magic-link authentication. You sign in by clicking a one-time link sent to your email. No password is stored on our servers or yours. If your email is compromised, the attacker would gain access to your Quantum Cube account &mdash; which holds only your email, your unlock status, and your marketing preference &mdash; and you should change your email password and contact us at privacy@qncacademy.com immediately.</p>
       <div class="legal-h2">No Readings History</div>
       <p class="legal-p">We do not store your reading results. Calculations are deterministic &mdash; the same inputs always produce the same output &mdash; so there is no need to keep a history, and we do not. Nothing about your character analysis is held by us.</p>
