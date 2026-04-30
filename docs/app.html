@@ -2455,6 +2455,78 @@ function restorePendingProfile(){
   }catch(e){}
 }
 
+// ── PROFILE PERSISTENCE (name + DOB) ─────────────────
+// Saves name + DOB to public.profiles after a successful runCalculation.
+// Lets returning users skip the form (auto-populated from profile).
+async function saveProfileFromForm(){
+  if(!qcCurrentUser) return;
+  const fn = document.getElementById("firstName")?.value.trim() || "";
+  const mn = document.getElementById("middleName")?.value.trim() || "";
+  const ln = document.getElementById("lastName")?.value.trim() || "";
+  const d  = document.getElementById("dobDay")?.value.trim() || "";
+  const m  = document.getElementById("dobMonth")?.value || "";
+  const y  = document.getElementById("dobYear")?.value.trim() || "";
+  if(!fn || !ln || !d || !m || !y) return;
+  const fullName = [fn, mn, ln].filter(Boolean).join(" ");
+  const dobIso = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  try {
+    await sb.from("profiles").update({ name: fullName, dob: dobIso }).eq("id", qcCurrentUser.id);
+  } catch(e) { console.error("saveProfileFromForm error:", e); }
+}
+
+// Populates Face 0 form fields from a profile row + auth user metadata.
+// Returns true if all required fields were populated (caller can fire runCalculation).
+function populateFormFromProfile(profile, user){
+  if(!profile && !user) return false;
+  // Name: prefer profile.name, fall back to OAuth metadata (full_name from Google)
+  let nameStr = (profile && profile.name) || "";
+  if(!nameStr && user && user.user_metadata){
+    nameStr = user.user_metadata.full_name || user.user_metadata.name || "";
+  }
+  if(nameStr){
+    const parts = nameStr.trim().split(/\s+/);
+    const fnEl = document.getElementById("firstName");
+    const mnEl = document.getElementById("middleName");
+    const lnEl = document.getElementById("lastName");
+    if(parts.length === 1){
+      if(fnEl && !fnEl.value) fnEl.value = parts[0];
+    } else if(parts.length === 2){
+      if(fnEl && !fnEl.value) fnEl.value = parts[0];
+      if(lnEl && !lnEl.value) lnEl.value = parts[1];
+    } else {
+      if(fnEl && !fnEl.value) fnEl.value = parts[0];
+      if(mnEl && !mnEl.value) mnEl.value = parts.slice(1, -1).join(" ");
+      if(lnEl && !lnEl.value) lnEl.value = parts[parts.length - 1];
+    }
+  }
+  // Email: prefer profile.email, fall back to user.email
+  const emEl = document.getElementById("email");
+  const emailStr = (profile && profile.email) || (user && user.email) || "";
+  if(emEl && !emEl.value && emailStr){
+    emEl.value = emailStr;
+    emEl.readOnly = true;
+    emEl.style.opacity = "0.7";
+  }
+  // DOB: only profile.dob (Google doesn't give DOB)
+  if(profile && profile.dob){
+    const [yy, mm, dd] = profile.dob.split("-");
+    const dEl = document.getElementById("dobDay");
+    const mEl = document.getElementById("dobMonth");
+    const yEl = document.getElementById("dobYear");
+    if(dEl && !dEl.value) dEl.value = String(parseInt(dd));
+    if(mEl) mEl.value = String(parseInt(mm));
+    if(yEl && !yEl.value) yEl.value = yy;
+  }
+  if(typeof updateCalcBtnReady === "function") updateCalcBtnReady();
+  // Has all fields?
+  const hasAll = !!(document.getElementById("firstName")?.value &&
+                    document.getElementById("lastName")?.value &&
+                    document.getElementById("dobDay")?.value &&
+                    document.getElementById("dobMonth")?.value &&
+                    document.getElementById("dobYear")?.value);
+  return hasAll;
+}
+
 async function handleGoogleSignIn(){
   try {
     const { error } = await sb.auth.signInWithOAuth({
@@ -2623,21 +2695,30 @@ async function handleResendMagicLink(){
   }, 1000);
 }
 
-sb.auth.onAuthStateChange((event, session) => {
+sb.auth.onAuthStateChange(async (event, session) => {
   if(event === "SIGNED_IN" && session && session.user){
     qcCurrentUser = session.user;
     updateSettingsLinkVisibility();
-    // Restore pending profile data (name + DOB) from localStorage into form fields
-    // so runCalculation has real values to work with, not empty strings
+    // Magic-link path: restore pending name+DOB from localStorage
     restorePendingProfile();
-    // If user is on Face 0 or the interstitial when they sign in, advance to the app
-    if(currentFace === 0 || currentFace === 'CheckEmail'){
-      try { runCalculation(); } catch(e) { showFace(1); }
-    }
-    sb.from("profiles").select("*").maybeSingle().then(r => {
-      qcCurrentProfile = r.data || null;
+    // Fetch profile FIRST so we can populate the form before deciding whether to run
+    let profileRow = null;
+    try {
+      const r = await sb.from("profiles").select("*").maybeSingle();
+      profileRow = r.data || null;
+      qcCurrentProfile = profileRow;
       syncUnlockFromProfile(qcCurrentProfile);
-    });
+    } catch(e) { console.error("profile fetch error:", e); }
+    // Populate Face 0 form fields from profile/auth metadata.
+    // OAuth users with no DOB yet get email + name pre-filled, must add DOB manually.
+    // Returning users with full profile get everything pre-filled.
+    const formReady = populateFormFromProfile(profileRow, session.user);
+    if(currentFace === 0 || currentFace === 'CheckEmail'){
+      if(formReady){
+        try { runCalculation(); } catch(e) { showFace(1); }
+      }
+      // else: stay on Face 0; user fills missing fields and taps Reveal manually
+    }
   }
   if(event === "SIGNED_OUT"){
     qcCurrentUser = null;
@@ -2788,6 +2869,8 @@ if(_m<0||(_m===0&&_today.getDate()<_dob.getDate())) _age--;
 if(_age<18){err.textContent="You must be 18 or older to use Quantum Cube";err.style.display="block";return}
 err.textContent="Please complete all fields";
 err.style.display="none";
+// Persist name + DOB to profile (fire-and-forget; no await needed)
+try { saveProfileFromForm(); } catch(e) {}
 const fullName=[fn,mn,ln].filter(Boolean).join(" ");
 const CY=2026;
 const lifePath=calcLP(day,month,year);
