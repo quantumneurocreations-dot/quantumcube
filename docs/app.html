@@ -867,8 +867,9 @@ Sign Up</button>
 
 </div>
 </div>
+<style>#settingsGear:hover{border-color:rgba(125,212,252,0.7) !important;box-shadow:0 0 20px rgba(125,212,252,0.4) !important}#settingsGear:active{transform:scale(0.95)}</style>
+<button type="button" id="settingsGear" onclick="haptic('light');openFace(7)" aria-label="Settings" title="Settings" style="display:none;position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);right:calc(env(safe-area-inset-right,0px) + 14px);width:40px;height:40px;align-items:center;justify-content:center;background:rgba(15,24,41,0.65);border:1px solid rgba(125,212,252,0.35);border-radius:50%;color:#ffffff;font-size:18px;cursor:pointer;padding:0;line-height:1;z-index:9999;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 0 12px rgba(125,212,252,0.15);transition:box-shadow 0.2s,border-color 0.2s,transform 0.1s">&#9881;</button>
 <script>
-
 // Audio disabled for development
 // Start on first user touch or click anywhere
 // Audio triggers disabled for development
@@ -2628,6 +2629,8 @@ sb.auth.onAuthStateChange((event, session) => {
 function updateSettingsLinkVisibility(){
   const el = document.getElementById('settingsLink');
   if(el) el.style.display = qcCurrentUser ? '' : 'none';
+  const gear = document.getElementById('settingsGear');
+  if(gear) gear.style.display = qcCurrentUser ? 'flex' : 'none';
 }
 
 async function signOut(){
