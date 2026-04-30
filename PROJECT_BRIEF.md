@@ -1,5 +1,5 @@
 # QUANTUM CUBE — MASTER PROJECT DOCUMENT
-**Version: v25.1 | Last Updated: April 29, 2026 (Wednesday, evening)**
+**Version: v26 | Last Updated: April 30, 2026 (Thursday, morning)**
 
 ---
 
@@ -36,13 +36,15 @@ The kickoff doc handles session startup, role split between Chat Claude and Curs
 
 **3. narrate Edge Function rate-limited.** Postgres RPC-based (5/min, 20/hr per IP). Closes the ElevenLabs credit-burn vulnerability that was a launch-blocker.
 
-**4. Static manifest.json replaces blob URL.** Google Play submission prerequisite met. Real PNG icons still pending (cube icon design work).
+**4. Real PNG icon family wired across the entire site.** ← Apr 30. The SVG cube placeholder is gone. Manifest now references actual PNGs (192, 512, 512-maskable). Apple-touch-icon, favicon, and manifest links added to landing page + all 8 legal pages (which previously had ZERO icon refs). Favicon corners rounded for bookmark consistency. Single biggest visual upgrade since the public site shipped.
 
-**5. Magic-link email rebranded.** Dark cosmic Quantum Cube template applied via Supabase dashboard, preview confirmed.
+**5. Brand identity rebuilt — QC monogram chosen over cube icon.** ← Apr 30. After exploring cube illustrations in Canva (glass cube, wireframe, outline) the team voted for a Cinzel Decorative "QC" monogram (white Q + cyan C with cyan glow + curved underline tail). It's the app icon AND the brand mark. Plus full wordmark pack rebuilt in Canva — 9 variants total covering full-layout/stacked, white/black text, off-right/centred CUBE, and on cosmic/transparent backgrounds.
 
-**6. Brand wordmark pack committed.** White/gold Cinzel Decorative wordmark in 3 PNG variants + Cinzel/Cinzel Decorative woff2 fonts (self-hosted backup).
+**6. Magic-link email rebranded.** Dark cosmic Quantum Cube template applied via Supabase dashboard, preview confirmed.
 
 **7. Database migration history reconciled.** The `profiles` table + RLS + handle_new_user trigger migration that had been applied directly to remote without a committed file is now properly tracked. `db push` works again.
+
+**8. Static manifest.json replaces blob URL.** ← Apr 29 + Apr 30. Apr 29 made it static with SVG data-URI icon. Apr 30 swapped to real PNG icons. Google Play submission prerequisite fully met.
 
 ---
 
@@ -141,6 +143,29 @@ SW: qc-v142 → qc-v147.
 - Paddle/PayFast 26-line punch list captured for post-Dodo cleanup
 - Cube icon priority surfaced (needed for app icons + social profile pics — single dependency for two work items)
 - Lesson on JWT-handling: tokens never go through Cursor or chat; debug via DevTools Console + Promise.race timeouts instead
+
+### April 30, 2026 (Thursday — brand identity sprint, 3 commits)
+
+Full morning of brand work. Three commits shipped:
+
+| Commit | What |
+|---|---|
+| `4fb2e40` | feat(brand): replace Apr 29 brand pack with QC monogram + wordmarks |
+| `039b0c1` | feat(icons): wire QC monogram PNG icon family across site |
+| `78a8e00` | feat(icons): round favicon corners (18% radius, medium) |
+
+SW: qc-v147 → qc-v149.
+
+**Outcomes Apr 30:**
+- Confirmed orphan Firebase project ("QuantumCubeApp") was never used by either Cube or Academy. Cleared for deletion. (Lesson: Firebase ≠ Supabase — verify before action.)
+- Built full wordmark pack in Canva Pro (Cinzel Decorative). 9 PNG variants exported transparent at 2800×1800.
+- Cube icon path explored (glass cube, wireframe, outline) but team voted for **QC monogram** instead — a Cinzel-Decorative type-as-logo mark. Stronger silhouette, scales clean to favicon, brand-coherent with wordmarks.
+- App icon family generated via macOS native `sips` (no homebrew/imagemagick needed) from `brand/QC - Solid.png` master.
+- Favicon corners rounded via Python PIL (18% radius, medium — matches Claude/YouTube/Vimeo bookmark style).
+- Landing page + 8 legal pages were missing all icon refs (favicon, apple-touch, manifest) — fixed in same commit as app.html SVG → PNG swap.
+- Two C-only monogram variants created as bonus (could become a secondary mark later, like Mickey ears vs full Disney logo).
+- Decision: HTML text wordmarks stay in app/site (sharper, faster, accessible, selectable). PNG wordmarks reserved for contexts where text won't render (email).
+- Apr 29 brand pack (Cinzel woff2 fonts + old wordmark PNGs + Cube Sides source images) all retired — git history preserves.
 
 ---
 
@@ -337,44 +362,71 @@ Leave `{{ .ConfirmationURL }}` exactly as written — Supabase replaces it at se
 
 **Visual:** dark navy background, "QUANTUM CUBE" wordmark in spaced caps (system font fallback — see note below), single rounded-pill "VERIFY" button with sky-blue glow border, small grey "didn't request this?" footer.
 
-**Pending upgrade:** swap inline text wordmark for hosted PNG from `brand/quantum-cube-logo-1400.png` once brand folder is publicly served. Email clients don't render Cinzel Decorative reliably (no web fonts in email), so PNG is the only way to get true on-brand wordmark.
+**Pending upgrade:** swap inline text wordmark for hosted PNG. The new wordmark pack lives in `/brand/` (NOT publicly served — it's outside `/docs/` which is the GitHub Pages source). To enable in the email template: copy a wordmark variant — likely `brand/QC Full White.png` (transparent, white text + cyan CUBE works on the dark email bg) — to `docs/qc-wordmark-email.png`. Then reference `https://quantumcube.app/qc-wordmark-email.png` in the email template's `<img src>`. Email clients don't render Cinzel Decorative reliably (no web fonts in email), so a hosted PNG is the only way to get true on-brand wordmark.
 
 ---
 
 ## 🎨 BRAND IDENTITY
 
-### Existing assets — committed Apr 29 in `brand/` folder
+### Brand pack — committed Apr 30 in `brand/` folder
 
-- `quantum-cube-logo-1400.png` — wordmark, 1400px wide
-- `quantum-cube-logo-2800.png` — wordmark, 2800px wide (high-res print)
-- `quantum-cube-logo.svg` — wordmark vector
-- `quantum-cube-tiktok-1080.png` — TikTok profile variant, 1080×1080 square
-- `quantum-cube-tiktok-profile.svg` — TikTok variant vector
-- `cinzel-decorative-bold.woff2` + `cinzel-regular.woff2` — self-hosted fonts (backup if Google Fonts CDN fails)
+**Master files:**
+- `QC - Solid.png` — QC monogram (white Q + cyan glowing C with curved underline tail) on solid dark cosmic bg. **APP ICON MASTER** — 2048×2048.
+- `QC - Stars.png` — same QC monogram on cosmic Milky Way bg. **SOCIAL PROFILE PIC MASTER** — 2048×2048.
+- `QC - White.png` — QC monogram on solid dark bg, alternate (similar to Solid).
+
+**Standalone variants:**
+- `QC - Black.png` — C-only mark (cyan C with cyan glow, no Q) on dark bg
+- `QC - Black & Light.png` — C-only mark (white C with cyan glow) on dark bg
+
+**Wordmark variants** (2800×1800, transparent PNGs):
+- `QC Full White.png` — full layout: "QUANTUM NEURO CREATIONS / QUANTUM / CUBE / YOUR COSMIC PROFILE" with white QUANTUM + cyan glowing CUBE off-right
+- `QC Full Black.png` — same layout, black text
+- `QC White.png` — minimal: just QUANTUM + CUBE, white + cyan
+- `QC Black.png` — minimal: just QUANTUM + CUBE, black text
+
+⚠️ **Filename note:** wordmark filenames have spaces (e.g. `QC Full White.png`). Works on macOS but in HTML/CSS code, spaces must be URL-encoded as `%20`. For example: `<img src="brand/QC%20Full%20White.png">`. Eventually worth a `git mv` rename to lowercase-with-hyphens, but not blocking.
+
+### App icon family — committed Apr 30 in `docs/` folder
+
+Generated from `brand/QC - Solid.png` master via macOS `sips` (high-quality LANCZOS resampling):
+- `qc-icon-192.png` — manifest, 192×192
+- `qc-icon-512.png` — manifest, 512×512
+- `qc-icon-512-maskable.png` — Android maskable, 512×512 (currently same as icon-512; QC monogram has enough padding to survive any launcher's mask shape)
+- `qc-apple-touch-180.png` — iOS home screen, 180×180 (square; iOS applies its own squircle mask)
+- `qc-favicon-32.png` — browser tab/bookmark, 32×32, **18% rounded corners baked in** (Python PIL with rounded-rect mask). Browsers don't auto-round favicons; Apple/Android auto-round their respective icons.
 
 ### Visual language — locked
 
-- **Primary typeface:** Cinzel Decorative (wordmarks)
-- **Secondary typeface:** Cinzel (subtitles, smaller text)
+- **Primary typeface:** Cinzel Decorative (wordmarks, QC monogram)
+- **Secondary typeface:** Cinzel (subtitles, smaller text — e.g. "QUANTUM NEURO CREATIONS", "YOUR COSMIC PROFILE")
 - **Tertiary typeface:** Cormorant Garamond (body, italic)
-- **Colour pattern:** white-as-base + ONE gold/orange accent word as keyword highlight
-- **Background:** dark cosmic / black (#05050f primary, #071b2e secondary)
+- **Colour pattern:** white-as-base + ONE cyan accent word/letter as keyword highlight (e.g. CUBE, the C in QC)
+- **Background:** dark cosmic / black (#05050f primary, #071b2e secondary, #0a0e1a magic-link email)
 - **Accent glow:** cyan (#7dd4fc) for cube and interactive elements
 - **Style:** ornate serif, premium, mystical-but-clean
 
-### Logo work still needed
+### Logo work — status
 
 | Asset | Purpose | Status |
 |---|---|---|
-| **Cyan cube icon (square)** | App icon, favicon, social profile pic | **Needed — Canva Pro attempt then Fiverr if needed** |
-| Real PNG icons at 192/512/maskable | manifest.json, Google Play submission | **Needed (depends on cube icon)** |
-| Apple touch icon (180×180 PNG) | iOS home screen | **Needed (depends on cube icon)** |
-| Favicon (32×32 PNG) | Browser tab | **Needed (depends on cube icon)** |
+| QC monogram master | App icon, social profile, brand mark | ✅ DONE Apr 30 |
+| Wordmark PNG pack (9 variants) | Email, video overlays, marketing, merch | ✅ DONE Apr 30 |
+| Manifest PNG icons (192/512/maskable) | PWA, Google Play | ✅ DONE Apr 30 |
+| Apple touch icon (180×180) | iOS home screen | ✅ DONE Apr 30 |
+| Favicon (32×32, rounded) | Browser tab | ✅ DONE Apr 30 |
+| Magic-link email PNG wordmark | Replace inline text in Supabase email template | ⏳ Pending — copy `QC Full White.png` to `docs/qc-wordmark-email.png` to make publicly hostable |
 | Brain + CPU chip half/half icon | Brand family conceptual badge | Optional, post-launch |
 
-**Tool decision:** Canva Pro for cube icon attempt (Ronnie has access). 30-min Canva attempt; if illustration doesn't land well, $30-50 Fiverr designer for square icons matching the in-app cyan cube vibe. Don't sink hours into Canva trying to make illustration work — wordmarks are trivial in Canva (text), icons are illustration.
+### Why QC monogram instead of cube icon
 
-The cube icon is **the single dependency** for two outstanding work items (manifest PNGs + social profile pics). Knock it out, both unblock.
+Cube icon was the original plan (per Apr 29 brief). On Apr 30, after exploring three Canva options (glass cube — too photorealistic, wireframe impossible cube — too busy at small sizes, simple outline cube — closest fit but Canva couldn't add cyan glow to graphics), the team voted for the **QC monogram** instead. Reasons:
+
+- Type-as-logo: like Netflix's red N, Disney's D, the QC mark IS the brand
+- Better separation: cube lives **in the app** (rotating, alive, hero element); QC monogram lives **outside** (icon, profile pic, favicon). Different jobs, both consistent.
+- Scales clean: works at favicon size and full app icon size with same silhouette
+- Brand coherence: shares Cinzel Decorative + cyan accent with the wordmark
+- Faster delivery: no Fiverr round needed
 
 ---
 
@@ -397,7 +449,7 @@ Decided April 28, confirmed April 29. Claim now, **post nothing until launch ann
 3. Set up profiles with consistent display name "Quantum Cube" + same bio + same logo + same banner
 4. **Don't post anything** until launch — prevents impersonation, locks brand consistency
 
-**Blocker:** social media setup needs the cube icon for profile pics. Sequence: cube icon → social claiming.
+**Profile pic asset ready:** `brand/QC - Stars.png` (2048×2048, QC monogram on cosmic Milky Way bg). Drop into each platform's profile pic field. Some platforms auto-crop to circle — the QC mark is centred enough to survive any crop.
 
 ---
 
@@ -407,16 +459,27 @@ Decided April 28, confirmed April 29. Claim now, **post nothing until launch ann
 |   |- index.html                              <- public landing page
 |   |- app.html                                <- THE CUBE APP
 |   |- styles.css                              <- shared Cinzel + Cormorant dark cosmic styling
-|   |- manifest.json                           <- static PWA manifest (committed Apr 29)
+|   |- manifest.json                           <- static PWA manifest (Apr 30: real PNG icon entries)
 |   |- privacy.html / terms.html / refund.html
 |   |- disclaimer.html / ip.html / popia.html
 |   |- security.html / contact.html
-|   |- sw.js                                   <- Service worker (qc-v147 + qc-narration-v2)
+|   |- sw.js                                   <- Service worker (qc-v149 + qc-narration-v2)
 |   |- CNAME                                   <- quantumcube.app
 |   |- .nojekyll
+|   |- qc-icon-192.png                         <- PWA manifest icon (Apr 30)
+|   |- qc-icon-512.png                         <- PWA manifest icon (Apr 30)
+|   |- qc-icon-512-maskable.png                <- PWA manifest maskable icon (Apr 30)
+|   |- qc-apple-touch-180.png                  <- iOS home screen icon (Apr 30)
+|   |- qc-favicon-32.png                       <- favicon, 18% rounded (Apr 30)
 |   |- Sounds/                                 <- audio assets (385 narration MP3s + 5 music tracks)
 |   - cube-background.jpg                     <- Milky Way background
-|- brand/                                      <- Wordmark PNGs + SVGs + Cinzel fonts (committed Apr 29)
+|- brand/                                      <- QC monogram + wordmark pack (Apr 30 rebuild)
+|   |- QC - Solid.png                          <- APP ICON MASTER (2048×2048)
+|   |- QC - Stars.png                          <- SOCIAL PROFILE PIC MASTER (2048×2048)
+|   |- QC - White.png                          <- alt monogram
+|   |- QC - Black.png / QC - Black & Light.png <- C-only marks
+|   - QC Full White.png / QC Full Black.png   <- full wordmarks
+|     QC White.png / QC Black.png              <- minimal wordmarks (QUANTUM + CUBE only)
 |- supabase/
 |   |- config.toml                             <- function-level flags (3 functions: narrate, delete-account, export-data)
 |   |- migrations/
@@ -428,7 +491,7 @@ Decided April 28, confirmed April 29. Claim now, **post nothing until launch ann
 |       - export-data/index.ts                <- Profile JSON export (Apr 29)
 |- scripts/                                    <- Narration pipeline scripts
 |- narration-manifest.json                     <- 385 entries
-|- PROJECT_BRIEF.md                            <- This document (v25.1)
+|- PROJECT_BRIEF.md                            <- This document (v26)
 |- CHAT_KICKOFF.md                             <- Chat operating protocol
 |- .supabase-env                               <- creds (gitignored)
 |- .cursorrules                                <- Cursor project rules
@@ -446,6 +509,9 @@ Decided April 28, confirmed April 29. Claim now, **post nothing until launch ann
 
 | Commit | Why you don't revert past it |
 |---|---|
+| `78a8e00` | Favicon 18% rounded corners. Reverting = sharp-cornered favicon (cosmetic, but visible regression). |
+| `039b0c1` | **QC PNG icon family wired across site.** Reverting = SVG cube placeholder returns in app.html + manifest.json, AND landing + 8 legal pages lose all icon refs (favicon, apple-touch, manifest link). Visible regression on every page. |
+| `4fb2e40` | **QC monogram + wordmark brand pack.** Reverting = Apr 29 brand assets return (old wordmark PNGs + Cinzel woff2 + Cube Sides). Note: the Apr 30 commits depend on this; revert in reverse order if needed. |
 | `21b9c99` | **Account deletion + export production-ready.** Reverting = stuck "Deleting..." bug returns + Google Play hard-requirement fails. CRITICAL |
 | `0fcbdb9` | Account deletion + export shipped. Reverting = no in-app deletion, Google Play submission blocked. CRITICAL |
 | `43e397e` | Static manifest.json. Reverting = blob URL returns, PWABuilder broken, Google Play submission blocked |
@@ -507,7 +573,7 @@ When in doubt, `git revert <commit>` a specific bad change rather than resetting
 ### ✅ DONE
 - [x] Narration phase 1 verified (256 numerology MP3s, offline-capable)
 - [x] Narration phase 2 shipped (9 Life Phases + 60 Western Astro + 60 Chinese MP3s, offline-capable)
-- [x] Service worker rebuilt (qc-v147, two-cache architecture)
+- [x] Service worker rebuilt (qc-v149, two-cache architecture)
 - [x] Paywall fix #3 (renderAllContent gated)
 - [x] Music refresh + randomisation
 - [x] Welcome greeting auto-plays
@@ -523,7 +589,11 @@ When in doubt, `git revert <commit>` a specific bad change rather than resetting
 - [x] **Data export mechanism (POPIA/GDPR right of access)** ← Apr 29
 - [x] **Magic-link email redesigned + applied** ← Apr 29
 - [x] **Migration history reconciled** ← Apr 29
-- [x] **Brand wordmark pack committed** ← Apr 29
+- [x] **Brand wordmark pack v1 committed** ← Apr 29 (subsequently replaced Apr 30)
+- [x] **Brand identity rebuilt — QC monogram + 9-variant wordmark pack** ← Apr 30
+- [x] **Real PNG icon family wired across site (favicon, apple-touch, manifest 192/512/maskable)** ← Apr 30
+- [x] **Favicon corners rounded (18%, baked in)** ← Apr 30
+- [x] **Landing page + 8 legal pages: favicon + apple-touch + manifest links added** (previously had ZERO icon refs) ← Apr 30
 
 ### ⏳ TO DO — pre-launch
 
@@ -533,12 +603,10 @@ When in doubt, `git revert <commit>` a specific bad change rather than resetting
 - [ ] **`launchDodo()` swap** (~30 min after Dodo approval) — replaces `launchPayFast()`
 - [ ] **26-line Paddle/PayFast wording swap** (after Dodo approved + entity name confirmed)
 - [ ] **E2E payment test** → refund to self
-- [ ] **Real PNG icons in manifest** (192/512/maskable, plus apple-touch-icon, favicon) — needs cube icon designed first
 
 **Non-code (Ronnie solo):**
-- [ ] **Cube icon designed in Canva Pro** (~30 min attempt; if doesn't land, Fiverr ~$50)
-- [ ] **Social media handles claimed** across 6 platforms (~30 min, after cube icon done)
-- [ ] **Magic-link email PNG wordmark upgrade** (post brand-folder-deployed, swap inline text for hosted PNG)
+- [ ] **Social media handles claimed** across 6 platforms (~30 min) — profile pic asset ready: `brand/QC - Stars.png`
+- [ ] **Magic-link email PNG wordmark upgrade** (~10 min) — copy `brand/QC Full White.png` → `docs/qc-wordmark-email.png`, then update email template `<img src>` in Supabase dashboard
 
 **Backend cleanup:**
 - [ ] **Delete 9+ test profile rows** from Supabase profiles table before launch (re-snapshot pending)
@@ -550,8 +618,8 @@ When in doubt, `git revert <commit>` a specific bad change rather than resetting
 - [ ] At least 5 smoke tests against live site
 
 ### Not required for launch but strongly recommended
-- [ ] Quantum Cube wordmark refinement (already have base, may want crisper export)
 - [ ] Brain + CPU chip icon (designer, post-launch)
+- [ ] `git mv` rename brand wordmark filenames to lowercase-with-hyphens (avoids `%20` URL encoding)
 
 ---
 
@@ -589,10 +657,10 @@ Hardware + OS unchanged. Native ARM64 dev tools confirmed (Node v24.15.0, Supaba
 
 ## TECH STACK (LOCKED)
 
-- **Frontend:** Single HTML file at `docs/app.html`, vanilla JS, CSS3 3D transforms, glassmorphism. **File size: ~349 KB, ~3194 lines.** `runCalculation` at line 2745 (Apr 29 reference; will drift)
+- **Frontend:** Single HTML file at `docs/app.html`, vanilla JS, CSS3 3D transforms, glassmorphism. **File size: ~349 KB, ~3196 lines.** `runCalculation` at line ~2746 (Apr 30 reference; will drift)
 - **Public site:** static HTML pages at `docs/index.html` + 8 legal pages, shared `docs/styles.css`
-- **PWA Manifest:** static file at `docs/manifest.json` (Apr 29). SVG data-URI icon for now; PNG icons pending cube icon design.
-- **Fonts:** Cinzel Decorative, Cinzel, Cormorant Garamond (Google Fonts CDN; self-hosted backup in `brand/`)
+- **PWA Manifest:** static file at `docs/manifest.json`. **Real PNG icons (Apr 30):** 192/512/512-maskable.
+- **Fonts:** Cinzel Decorative, Cinzel, Cormorant Garamond — Google Fonts CDN only (self-hosted woff2 backup retired Apr 30; Google Fonts has been rock-solid for over a decade)
 - **Auth:** Supabase magic-link (email OTP), SDK v2.45.4 UMD. Google OAuth pending.
 - **Database:** Supabase Postgres (Frankfurt) — `public.profiles` with RLS, `public.narrate_rate_counters` (Apr 29)
 - **Email:** Resend via custom SMTP on Supabase. Magic-link template applied Apr 29.
@@ -606,8 +674,8 @@ Hardware + OS unchanged. Native ARM64 dev tools confirmed (Node v24.15.0, Supaba
 - **Hosting:** GitHub Pages (source: `/docs` directory on `main`)
 - **Custom domain:** `quantumcube.app` via Cloudflare CNAME → `quantumneurocreations-dot.github.io`
 - **Email routing:** Cloudflare `*@quantumcube.app` → `admin@qncacademy.com` (incl. `support@quantumcube.app`)
-- **PWA:** Real `sw.js` file + static `manifest.json`. Two-cache architecture:
-  - `qc-v147` — HTML + root assets
+- **PWA:** Real `sw.js` file + static `manifest.json` with PNG icons. Two-cache architecture:
+  - `qc-v149` — HTML + root assets (Apr 30)
   - `qc-narration-v2` — 385 MP3s (precached on install + on-demand fallback)
 
 ---
@@ -741,46 +809,47 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 
 ## FRONTEND WIRING — KEY LINE REFS
 
-**Numbers float — use grep, anchor by function/const name not line number.** Snapshot from Apr 29:
+**Numbers float — use grep, anchor by function/const name not line number.** Snapshot from Apr 30:
 
 | What | Approx line in `docs/app.html` |
 |---|---|
-| const sb = window.supabase.createClient | ~499 |
-| Static manifest link | ~17 |
-| Apple touch icon | ~29 |
-| `#faceLabelCard` HTML | ~569 |
-| `.face-label-card` CSS | ~418 |
-| `.export-btn` / `.delete-btn` CSS | ~289-296 |
-| `updateFaceLabel` + `FACE_NAMES` + MutationObserver | ~1310+ |
-| `scrollBelowCube()` | ~1300+ |
-| `openFace()` (calls scrollBelowCube) | ~1290+ |
-| window.haptic + QC_AUDIO init | ~1004 / ~1007 |
-| `_musicTracks` array (5 entries, randomised) | ~1011 |
-| `fetchNarration` (Edge Function, Face 5 only) | ~1349 |
-| `startNarration` | ~1380 |
-| `startNarrationFromUrl` | ~1388 |
-| `playSequence` (Life Phases sequential) | ~1404 |
-| `window.qcNarrateCard` (Face 3 + Face 4 dispatch) | ~1420 |
-| `playWelcomeGreeting` | ~1501 |
-| voiceState defaults | ~1361 |
-| `showFace(n){` | ~1534 |
-| `onFaceShown` (Face 1 counter-based auto-play) | ~1510 |
-| NUM data | ~1550+ |
-| STORE_KEY const | ~2161 |
-| `async function checkStoredUnlock` | ~2165 |
-| `syncUnlockFromProfile` | ~2187 |
-| applyUnlockedState | ~2218 |
-| handleRevealClick | ~2323 |
-| signInWithOtp paths | ~2378, ~2444 |
-| sb.auth.onAuthStateChange | ~2471 |
-| signOut | ~2621 |
-| **`function runCalculation`** | **~2745** (STABLE ANCHOR — verified Apr 29) |
-| `_wipeAllLocalState` | ~2630 |
-| `exportMyData` | ~2640 |
-| `armDeleteAccount` | ~2680 |
-| `confirmDeleteAccount` | ~2700 |
-| `renderAllContent` + 4× `if(isUnlocked){}` reveal gates | ~2800+ |
-| SW registration | ~2995 |
+| const sb = window.supabase.createClient | ~500 |
+| Static manifest link | ~18 |
+| Favicon link (qc-favicon-32.png) | ~25 |
+| Apple touch icon (qc-apple-touch-180.png) | ~26 |
+| `#faceLabelCard` HTML | ~570 |
+| `.face-label-card` CSS | ~419 |
+| `.export-btn` / `.delete-btn` CSS | ~290-297 |
+| `updateFaceLabel` + `FACE_NAMES` + MutationObserver | ~1311+ |
+| `scrollBelowCube()` | ~1301+ |
+| `openFace()` (calls scrollBelowCube) | ~1291+ |
+| window.haptic + QC_AUDIO init | ~1005 / ~1008 |
+| `_musicTracks` array (5 entries, randomised) | ~1012 |
+| `fetchNarration` (Edge Function, Face 5 only) | ~1350 |
+| `startNarration` | ~1381 |
+| `startNarrationFromUrl` | ~1389 |
+| `playSequence` (Life Phases sequential) | ~1405 |
+| `window.qcNarrateCard` (Face 3 + Face 4 dispatch) | ~1421 |
+| `playWelcomeGreeting` | ~1502 |
+| voiceState defaults | ~1362 |
+| `showFace(n){` | ~1535 |
+| `onFaceShown` (Face 1 counter-based auto-play) | ~1511 |
+| NUM data | ~1551+ |
+| STORE_KEY const | ~2162 |
+| `async function checkStoredUnlock` | ~2166 |
+| `syncUnlockFromProfile` | ~2188 |
+| applyUnlockedState | ~2219 |
+| handleRevealClick | ~2324 |
+| signInWithOtp paths | ~2379, ~2445 |
+| sb.auth.onAuthStateChange | ~2472 |
+| signOut | ~2622 |
+| **`function runCalculation`** | **~2746** (STABLE ANCHOR — verified Apr 30) |
+| `_wipeAllLocalState` | ~2631 |
+| `exportMyData` | ~2641 |
+| `armDeleteAccount` | ~2681 |
+| `confirmDeleteAccount` | ~2701 |
+| `renderAllContent` + 4× `if(isUnlocked){}` reveal gates | ~2801+ |
+| SW registration | ~2996 |
 
 ---
 
@@ -854,24 +923,22 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 
 ---
 
-## WHAT'S LEFT — ORDERED BY PRIORITY (Apr 29 update)
+## WHAT'S LEFT — ORDERED BY PRIORITY (Apr 30 update)
 
 ### 🚨 LAUNCH-BLOCKING
 
 1. **Dodo Payments approval** (24-72hr pending — submitted Apr 29)
-2. **Cube icon design** (Canva Pro attempt, then Fiverr if needed) — single dependency for items 3 + 4
-3. **Real PNG icons in manifest** (192/512/maskable) — needs #2
-4. **Social media handles claimed** across 6 platforms — needs #2
-5. **Google OAuth 2.0** (~2-3 hrs)
-6. **Dodo wiring + 26-line MoR swap** — needs #1 first
-7. **E2E payment test** → refund to self — needs #6
-8. **Delete 9+ test profile rows**
+2. **Google OAuth 2.0** (~2-3 hrs)
+3. **Social media handles claimed** across 6 platforms (~30 min — profile pic asset ready)
+4. **Dodo wiring + 26-line MoR swap** — needs #1 first
+5. **E2E payment test** → refund to self — needs #4
+6. **Delete 9+ test profile rows**
 
 ### ⚠️ HIGH-VALUE (not launch-blocker)
 - Settings discoverability fix (gear icon, ~30 min)
 - Sentry error monitoring (~20 min)
 - Email re-verification UX — same-email resubmit detection
-- Magic-link email PNG wordmark upgrade
+- Magic-link email PNG wordmark upgrade (~10 min — copy file + update template img tag)
 
 ### 🧹 POST-LAUNCH CLEANUP
 - Split `docs/app.html` into .js + .css files
@@ -880,6 +947,7 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 - HeyGen cleanup (Academy side)
 - Fine-comb audit pass — duplicate CSS selectors, dead code
 - Brain + CPU chip icon (designer)
+- `git mv` rename brand wordmark filenames to lowercase-with-hyphens
 
 ### 📝 POST-LAUNCH FOLLOW-UPS (weeks-months)
 - Astrology/Chinese 3-variant versions (currently single-string)
@@ -892,7 +960,7 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 - Analytics, social proof, sharing, smoke tests
 
 ### 🏪 APP STORE SUBMISSIONS
-- **Google Play:** $25 one-time, PWABuilder → .aab (after Dodo live + cube icon designed + account deletion ✓)
+- **Google Play:** $25 one-time, PWABuilder → .aab (after Dodo live + account deletion ✓ + real PNG icons ✓)
 - **Apple App Store:** $99/year, Capacitor wrap, Xcode archive (DEFERRED — revisit post-Google-Play launch, tackle iOS payment politics then)
 
 ---
@@ -901,7 +969,7 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 
 | System | State |
 |---|---|
-| GitHub Pages | Live (source: `/docs` on `main`. SW **qc-v147**, narration **qc-narration-v2**) |
+| GitHub Pages | Live (source: `/docs` on `main`. SW **qc-v149**, narration **qc-narration-v2**) |
 | **quantumcube.app** | **LIVE** — landing + 8 legal + /app, all HTTP 200 ✓ |
 | qncacademy.com | Full email stack live |
 | Google Workspace | admin@qncacademy.com + 5 aliases |
@@ -928,7 +996,7 @@ Path `/Users/qnc/Projects/qnc-academy/`. Stack: Next.js + Vercel + Supabase (Ire
 
 ---
 
-## Lessons learned (running, updated Apr 29)
+## Lessons learned (running, updated Apr 30)
 
 - **SW diagnosis via phone screenshots is a trap.** Use Cursor Browser MCP with DevTools access OR diagnose via console.log on a fresh deploy.
 - **Blob-URL service workers fail silently on Android Chrome 117+.** Use real files at origin scope.
@@ -937,7 +1005,7 @@ Path `/Users/qnc/Projects/qnc-academy/`. Stack: Next.js + Vercel + Supabase (Ire
 - **`renderAllContent` had unconditional reveal logic** that predated the April 20 paywall fixes. Lesson: when patching paywall, grep ALL call sites that touch `display='block'` on `.lock-screen` or face-content IDs.
 - **Python anchor strings for multi-block replacements must account for blank lines and indentation.** Cursor's repeated self-corrections on Apr 29 caught indentation mismatches and stale anchor text. Welcome the corrections.
 - **Compression risk is real at multi-hour sessions.** Respect stop signals, update brief, start fresh.
-- **Every brief version must be self-contained.** No "See vN for detail" — info loss on aging. v25 violated this; v25.1 fixes.
+- **Every brief version must be self-contained.** No "See vN for detail" — info loss on aging. v25 violated this; v25.1 + v26 fix.
 - **Public legal pages + landing page unlock BOTH payment processor AND Google Play in one go.** Build it once, satisfy two reviewers.
 - **Paddle is NOT a fit for esoteric / non-SaaS digital content.** Their AUP is restrictive. Verified directly Apr 29.
 - **Dodo Payments actively markets to astrology brands.** Better category fit than the more general MoRs.
@@ -949,24 +1017,38 @@ Path `/Users/qnc/Projects/qnc-academy/`. Stack: Next.js + Vercel + Supabase (Ire
 - **Diagnostic console.logs are scaffolding, not production code.** Always rip them in a follow-up commit.
 - **Edge Functions need `verify_jwt = false` if they handle JWT manually.** Otherwise Supabase 401s before the function runs.
 - **Supabase Edge Functions don't expose `Deno.openKv()`.** Use Postgres RPC for state instead.
-- **Today's wins compound: each launch-blocker shipped tightens the path to revenue.** April 29 took us from 4 hard blockers to 2 (Dodo + cube icon).
+- **Today's wins compound: each launch-blocker shipped tightens the path to revenue.** April 29 took us from 4 hard blockers to 2 (Dodo + cube icon). April 30 took us to 1 (Dodo only) by killing the cube-icon dependency entirely.
+
+### Apr 30 lessons
+- **Firebase ≠ Supabase.** They're different backend services. When something Firebase-related shows up, run `grep -ril "firebase\|firestore"` across both Cube and Academy before acting. The orphan "QuantumCubeApp" Firebase project from a previous IT person was never used by either project.
+- **Canva Pro page-background colour bakes into PNG export EVEN when "Transparent background" is ticked.** The transparent toggle only strips the default empty canvas, not custom page bg colours. Workaround: use a rectangle layer as design scaffolding (locked, easy to delete pre-export) instead of a page bg colour. OR explicitly set page bg to "no fill" before exporting.
+- **Claude chat upload pipeline strips alpha channels from PNGs.** When verifying transparency, check the file in Preview on the user's Mac (look for grey-and-white checkered pattern) — Claude's image preview cannot be trusted for alpha.
+- **HTML text wordmarks > PNG wordmarks for in-app/web use.** Sharper at all sizes, faster (50 bytes vs 600KB), accessible to screen readers, selectable for copy-paste, easier to edit. Only use PNG wordmarks where text won't render reliably (email clients without web fonts).
+- **Favicon "blurriness" at 32×32 viewed in macOS Preview is normal.** Preview upscales the 32px file to ~200px on a Retina display, antialiasing softens. Inside an actual browser tab the favicon renders at 16-32px native and looks like every other favicon. Don't redesign for that.
+- **iOS auto-rounds apple-touch-icon (squircle mask).** Android launchers auto-mask manifest icons (shape varies by phone). Browsers do NOT round favicons. So only the favicon needs baked-in rounding. Pre-rounding apple-touch or manifest icons risks "double rounding" artifacts.
+- **macOS Finder folder paste** into an existing same-named folder defaults to "Replace" — wipes existing contents entirely. To preserve existing files, either choose "Merge" in the dialog OR paste files individually. Always run `git status` after a folder paste to catch unintended deletions before committing.
+- **macOS native `sips` is enough for image resizing.** No homebrew/imagemagick needed. `sips -Z 192 source.png --out dest.png` for high-quality LANCZOS resampling.
+- **PIL/Pillow may need a one-time `pip3 install Pillow`** when first used for image manipulation on the Mac. Cursor handled this autonomously on Apr 30 — that's the right behaviour for a standard, safe library.
+- **One logical change = one commit, even when commits are related.** Apr 30: brand pack → wire icons → round favicon = 3 separate commits. If rounded corners had looked wrong, only `78a8e00` needed reverting, not the whole brand swap.
+- **Type-as-logo can replace illustration-as-logo entirely.** The QC monogram solved both the app-icon AND brand-mark problems in one move, without a designer round. Sometimes the type IS the logo.
 
 ---
 
 ## NEXT SESSION STARTING POINT
 
-1. Attach PROJECT_BRIEF.md (v25.1) + CHAT_KICKOFF.md to new chat
+1. Attach PROJECT_BRIEF.md (v26) + CHAT_KICKOFF.md to new chat
 2. Start a fresh Cursor chat alongside (or continue current if context clean)
-3. **Minimal health check:** confirm HEAD on `origin/main`, SW = qc-v147, all 4 live URLs return 200
+3. **Minimal health check:** confirm HEAD on `origin/main`, SW = qc-v149, all 4 live URLs return 200
 4. **Check Dodo Payments approval status** — has Michelle heard back?
 5. **If Dodo approved:** start payment integration session (webhook + launchDodo + 26-line MoR swap + E2E test)
 6. **If Dodo still pending:** parallel work options:
    - Google OAuth 2.0 implementation (~2-3 hrs code)
-   - Cube icon in Canva Pro (Ronnie solo, ~30 min attempt)
-   - Settings discoverability fix (~30 min code)
+   - Social media handles claimed (Ronnie solo, ~30 min — `brand/QC - Stars.png` ready)
+   - Settings discoverability fix (~30 min code — gear ⚙️ icon)
+   - Magic-link email PNG wordmark upgrade (~10 min — copy `brand/QC Full White.png` → `docs/qc-wordmark-email.png` + update template img tag)
 7. Re-snapshot test profile rows in case list has drifted
 8. Update brief at end of session if meaningful drift
 
 ---
 
-**End of brief v25.1.**
+**End of brief v26.**
