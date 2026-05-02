@@ -2252,6 +2252,41 @@ async function launchDodo(){
   }
 }
 
+// Banner shown after successful payment when session was lost during
+// the cross-domain return from Dodo. Tells user payment succeeded and
+// to sign in again. Auto-dismisses after 12s.
+function showPaymentSuccessBanner(){
+  try {
+    const existing = document.getElementById("qc-payment-banner");
+    if (existing) existing.remove();
+    const banner = document.createElement("div");
+    banner.id = "qc-payment-banner";
+    banner.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;"
+      + "background:linear-gradient(135deg,#0f1829 0%,#071b2e 100%);"
+      + "border-bottom:1px solid #7dd4fc;padding:18px 20px;text-align:center;"
+      + "color:#ffffff;font-family:Georgia,serif;font-size:14px;line-height:1.5;"
+      + "letter-spacing:1px;box-shadow:0 4px 16px rgba(125,212,252,0.25);"
+      + "animation:qcPayBannerSlide 0.4s ease-out;";
+    banner.innerHTML = '<div style="max-width:520px;margin:0 auto;">'
+      + '<div style="font-size:16px;color:#7dd4fc;letter-spacing:2px;margin-bottom:6px;">'
+      + 'PAYMENT RECEIVED</div>'
+      + '<div>Thank you. Sign in below to unlock your cube.</div></div>';
+    document.body.appendChild(banner);
+    if (!document.getElementById("qc-payment-banner-keyframes")) {
+      const style = document.createElement("style");
+      style.id = "qc-payment-banner-keyframes";
+      style.textContent = "@keyframes qcPayBannerSlide{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}";
+      document.head.appendChild(style);
+    }
+    setTimeout(() => {
+      const b = document.getElementById("qc-payment-banner");
+      if (b) b.style.transition = "opacity 0.4s", b.style.opacity = "0", setTimeout(() => b.remove(), 400);
+    }, 12000);
+  } catch (e) {
+    console.error("banner display failed:", e);
+  }
+}
+
 // ── Handle return from Dodo checkout ────────────────────────
 // Dodo appends ?payment_id=...&status=...&email=... to redirect_url.
 // We added our own ?dodo=1 marker so we know to interpret these.
@@ -2268,12 +2303,36 @@ async function checkDodoReturn(){
 
   if (status === "succeeded") {
     console.log("Dodo payment succeeded:", paymentId);
-    // Give the webhook 1.5s to land has_paid=true server-side, then
-    // hard-reload. Reload re-runs onAuthStateChange from clean state,
-    // which fetches the freshly-flipped profile and unlocks the cube.
-    // Avoids race conditions with session restore after cross-domain return.
-    setTimeout(() => {
-      window.location.reload();
+    // Give the webhook 1.5s to land has_paid=true server-side,
+    // then branch on whether the auth session survived the cross-domain
+    // round-trip. If alive -> in-place profile refetch + sync (best UX).
+    // If lost -> show a friendly banner so the user knows their payment
+    // was received and just needs to sign back in.
+    setTimeout(async () => {
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        if (session && session.user) {
+          // Session survived. Refetch profile and sync unlock state in place.
+          const { data: profile } = await sb
+            .from("profiles")
+            .select("*")
+            .eq("id", session.user.id)
+            .single();
+          if (profile) {
+            if (typeof qcCurrentProfile !== "undefined") qcCurrentProfile = profile;
+            if (typeof syncUnlockFromProfile === "function") {
+              syncUnlockFromProfile(profile);
+            }
+          }
+        } else {
+          // Session lost during redirect. Show a banner so user knows
+          // payment was received and just needs to sign back in.
+          showPaymentSuccessBanner();
+        }
+      } catch (e) {
+        console.error("post-payment profile sync failed:", e);
+        showPaymentSuccessBanner();
+      }
     }, 1500);
   } else if (status === "cancelled" || status === "failed") {
     console.log("Dodo payment not completed:", status);
