@@ -3259,7 +3259,7 @@ document.addEventListener('mousedown',e=>{
 });
 resetIdleTimer();
 
-// ── ON PAGE LOAD: check stored unlock and PayFast return ──
+// ── ON PAGE LOAD: check stored unlock ──
 (function(){
   checkStoredUnlock();
   // Always start on face0 unless payment just completed
@@ -3321,7 +3321,7 @@ if("serviceWorker" in navigator){
       <div class="legal-h2">2. Information We Collect</div>
       <p class="legal-p"><strong>Reading inputs (not stored):</strong> When you enter your name and date of birth to generate a reading, these inputs are used to calculate your numerology, Western astrology, and Chinese zodiac results. We do not save them. Every time you open the app, your results are generated fresh from the inputs you provide.</p>
       <p class="legal-p"><strong>Account data (stored):</strong> If you choose to create an account, we store your email address, your purchase status, whether you have opted in to marketing emails, and the date your account was created. That is all.</p>
-      <p class="legal-p"><strong>Payment information:</strong> Your payment is processed by PayFast (Pty) Ltd, a registered South African payment service provider. We do not receive, see, or store your card number, banking details, or any payment credentials. PayFast&rsquo;s Privacy Policy governs how your payment data is handled.</p>
+      <p class="legal-p"><strong>Payment information:</strong> Your payment is processed by Dodo Payments, Inc., a Delaware-incorporated payment service provider acting as our Merchant of Record. We do not receive, see, or store your card number, banking details, or any payment credentials. Dodo Payments&rsquo; Privacy Policy governs how your payment data is handled.</p>
       <div class="legal-h2">3. Information We Do Not Collect</div>
       <p class="legal-p">We do not collect or store your reading history, your device identifiers, your location, your browsing history outside the app, or any behavioural tracking data. We do not sell your data, share it with advertisers, or build profiles on you.</p>
       <div class="legal-h2">4. How We Use Your Email</div>
@@ -3332,7 +3332,7 @@ if("serviceWorker" in navigator){
       <p class="legal-p">If you delete your account or ask us to remove your data, we erase your account record from our database within 30 days. Email privacy@qncacademy.com to request deletion.</p>
       <div class="legal-h2">7. Third-Party Services</div>
       <p class="legal-p"><strong>Supabase:</strong> Database and authentication provider. Frankfurt region. Supabase&rsquo;s Privacy Policy applies to data stored on their infrastructure.</p>
-      <p class="legal-p"><strong>PayFast:</strong> Payment processing only. Governed by PayFast&rsquo;s own Privacy Policy and PCI DSS Level 1 certification.</p>
+      <p class="legal-p"><strong>Dodo Payments:</strong> Payment processing and Merchant of Record. Governed by Dodo Payments&rsquo; own Privacy Policy and PCI DSS Level 1 certification.</p>
       <p class="legal-p"><strong>Cloudflare:</strong> Our traffic is served through Cloudflare, which provides content delivery, TLS, and denial-of-service protection. Cloudflare&rsquo;s Privacy Policy applies to this routing.</p>
       <p class="legal-p"><strong>Google Fonts:</strong> The app loads fonts from Google Fonts. Google&rsquo;s Privacy Policy applies to the font request.</p>
       <div class="legal-h2">8. Children</div>
@@ -3422,7 +3422,7 @@ if("serviceWorker" in navigator){
       <div class="legal-h2">Third-Party Credits</div>
       <p class="legal-p"><strong>Music &amp; Sound Effects:</strong> All music and sound effects used in Quantum Cube are licensed through Epidemic Sound AB under an active subscription. Visit <a href="https://www.epidemicsound.com" target="_blank" rel="noopener">www.epidemicsound.com</a>.</p>
       <p class="legal-p"><strong>Fonts:</strong> Cinzel, Cinzel Decorative, and Cormorant Garamond are served via Google Fonts under the SIL Open Font License.</p>
-      <p class="legal-p"><strong>Payment Processing:</strong> Payments are processed by PayFast (Pty) Ltd &mdash; <a href="https://www.payfast.co.za" target="_blank" rel="noopener">payfast.co.za</a>.</p>
+      <p class="legal-p"><strong>Payment Processing:</strong> Payments are processed by Dodo Payments, Inc. &mdash; <a href="https://dodopayments.com" target="_blank" rel="noopener">dodopayments.com</a>.</p>
     </div>
 
     <!-- POPIA & DATA -->
@@ -3447,8 +3447,8 @@ if("serviceWorker" in navigator){
       <p class="legal-p"><strong>Data subject participation:</strong> You may access, correct, or delete your data at any time.</p>
       <div class="legal-h2">Cross-Border Transfer</div>
       <p class="legal-p">Your account data is stored in Frankfurt, Germany, on infrastructure operated by Supabase Inc. Section 72 of POPIA permits transfers to a jurisdiction that provides an adequate level of data protection. The European Union&rsquo;s GDPR is widely regarded as providing that standard.</p>
-      <div class="legal-h2">PayFast and POPIA</div>
-      <p class="legal-p">When you make a payment, PayFast processes your payment information as a registered operator under POPIA and PCI DSS. PayFast maintains its own POPIA compliance programme. Quantum Neuro Creations receives only a payment confirmation &mdash; no card or banking details.</p>
+      <div class="legal-h2">Dodo Payments and POPIA</div>
+      <p class="legal-p">When you make a payment, Dodo Payments, Inc. processes your payment information as our Merchant of Record under applicable data-protection law and PCI DSS. Dodo Payments maintains its own compliance programme. Quantum Neuro Creations receives only a payment confirmation &mdash; no card or banking details.</p>
       <div class="legal-h2">Your POPIA Rights</div>
       <p class="legal-p">Under POPIA you have the right to: know what personal information is held about you; request a copy of that information; request correction of inaccurate information; request deletion of your information; object to direct marketing; object to processing; and lodge a complaint with the Information Regulator.</p>
       <p class="legal-p">To exercise any of these rights, email <strong>privacy@qncacademy.com</strong>. We respond within 30 days.</p>
@@ -3475,7 +3475,7 @@ if("serviceWorker" in navigator){
       <div class="legal-h2">Access Controls</div>
       <p class="legal-p">Only members of the Quantum Neuro Creations team have administrative access to our production database. All administrative access passes through the Supabase dashboard and Google Workspace, both of which support and require strong account security controls.</p>
       <div class="legal-h2">Payment Data</div>
-      <p class="legal-p">We never see, process, or store your payment card details. Payments are handled by PayFast, which holds PCI DSS Level 1 certification. Your card details are entered directly on PayFast&rsquo;s secure pages and never pass through Quantum Cube&rsquo;s code.</p>
+      <p class="legal-p">We never see, process, or store your payment card details. Payments are handled by Dodo Payments, Inc., which holds PCI DSS Level 1 certification. Your card details are entered directly on Dodo Payments&rsquo; secure pages and never pass through Quantum Cube&rsquo;s code.</p>
       <div class="legal-h2">Incident Response</div>
       <p class="legal-p">If we become aware of a security incident that affects your personal information, we will notify you and the Information Regulator within 72 hours, as required by POPIA and GDPR.</p>
       <div class="legal-h2">What We Cannot Protect Against</div>

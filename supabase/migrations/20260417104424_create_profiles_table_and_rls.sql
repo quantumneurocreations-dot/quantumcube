@@ -13,7 +13,7 @@ create table public.profiles (
 comment on table public.profiles is 'One row per signed-up user. Stores minimum account data per Quantum Cube privacy policy: email, unlock status, marketing opt-in, creation date.';
 comment on column public.profiles.id is 'Foreign key to auth.users.id. Cascades on delete so removing an auth user wipes their profile.';
 comment on column public.profiles.email is 'Mirror of auth.users.email at sign-up time.';
-comment on column public.profiles.has_paid is 'True once PayFast (or future processor) confirms a successful unlock payment.';
+comment on column public.profiles.has_paid is 'True once Dodo Payments confirms a successful purchase via webhook.';
 comment on column public.profiles.marketing_consent is 'True only if the user explicitly ticked the opt-in checkbox on sign-up. Unchecked by default per GDPR/POPIA.';
 
 -- Enable Row Level Security
