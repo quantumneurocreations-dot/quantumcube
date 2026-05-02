@@ -2250,21 +2250,17 @@ async function checkDodoReturn(){
   const status = params.get("status");
   if (!paymentId) return; // not a Dodo return
 
-  console.log("[QC-DIAG] checkDodoReturn detected payment_id=", paymentId, "status=", status);
-
   // Strip the params so a refresh doesn't loop the unlock attempt
   const cleanUrl = window.location.origin + window.location.pathname;
   window.history.replaceState({}, "", cleanUrl);
 
   if (status !== "succeeded") {
-    console.log("[QC-DIAG] payment not succeeded, no unlock");
     return;
   }
 
   // Mark a pending unlock — onAuthStateChange will pick this up
   // when SIGNED_IN fires (or has already fired by the time we poll).
   _qcPendingPaymentUnlock = true;
-  console.log("[QC-DIAG] pending unlock flagged, waiting for SIGNED_IN...");
 
   // Try immediately in case auth was restored before checkDodoReturn ran.
   // If session isn't ready yet, the onAuthStateChange handler will retry.
@@ -2292,40 +2288,35 @@ function _readSessionFromStorage(){
       }
     }
   } catch (e) {
-    console.error("[QC-DIAG] _readSessionFromStorage error:", e);
+    console.error("readSessionFromStorage error:", e);
   }
   return null;
 }
 
 async function attemptPaymentUnlock(passedSession){
   if (!_qcPendingPaymentUnlock) {
-    console.log("[QC-DIAG] attemptPaymentUnlock skipped — no pending unlock");
     return;
   }
   if (_qcUnlockInFlight) {
-    console.log("[QC-DIAG] attemptPaymentUnlock skipped — already in flight");
     return;
   }
   _qcUnlockInFlight = true;
-  console.log("[QC-DIAG] attemptPaymentUnlock starting (session arg:", passedSession ? "present" : "absent", ")");
 
   let attempts = 0;
   const maxAttempts = 8;
 
   const poll = async () => {
     attempts++;
-    console.log("[QC-DIAG] poll attempt", attempts);
 
     // Get session: prefer passed-in arg, else read localStorage directly.
     let session = passedSession || _readSessionFromStorage();
     passedSession = null; // only use it once
 
     if (!session || !session.user || !session.access_token) {
-      console.log("[QC-DIAG] no session in storage yet, retry in 1.5s");
       if (attempts < maxAttempts) {
         setTimeout(poll, 1500);
       } else {
-        console.error("[QC-DIAG] gave up — no session after", maxAttempts, "attempts");
+        console.error("post-payment unlock: gave up — no session after", maxAttempts, "attempts");
         _qcPendingPaymentUnlock = false;
         _qcUnlockInFlight = false;
       }
@@ -2336,7 +2327,6 @@ async function attemptPaymentUnlock(passedSession){
     try {
       const url = window.QC_SUPABASE_URL + "/rest/v1/profiles?id=eq."
         + session.user.id + "&select=*";
-      console.log("[QC-DIAG] direct profile fetch:", url);
       const res = await fetch(url, {
         headers: {
           "apikey": window.QC_SUPABASE_ANON_KEY,
@@ -2344,10 +2334,9 @@ async function attemptPaymentUnlock(passedSession){
           "Accept": "application/json",
         },
       });
-      console.log("[QC-DIAG] profile fetch status:", res.status);
       if (!res.ok) {
         const errText = await res.text();
-        console.error("[QC-DIAG] profile fetch failed:", errText);
+        console.error("post-payment unlock: profile fetch failed:", errText);
         if (attempts < maxAttempts) {
           setTimeout(poll, 1500);
         } else {
@@ -2358,13 +2347,11 @@ async function attemptPaymentUnlock(passedSession){
       }
       const rows = await res.json();
       const profile = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
-      console.log("[QC-DIAG] profile:", profile ? `has_paid=${profile.has_paid}` : "NO PROFILE");
 
       if (profile && profile.has_paid === true) {
         if (typeof qcCurrentProfile !== "undefined") qcCurrentProfile = profile;
         if (typeof syncUnlockFromProfile === "function") {
           syncUnlockFromProfile(profile);
-          console.log("[QC-DIAG] unlock applied");
         }
         _qcPendingPaymentUnlock = false;
         _qcUnlockInFlight = false;
@@ -2375,16 +2362,13 @@ async function attemptPaymentUnlock(passedSession){
         if (typeof populateFormFromProfile === "function") {
           const userObj = { id: profile.id, email: profile.email };
           const populated = populateFormFromProfile(profile, userObj);
-          console.log("[QC-DIAG] form populated:", populated);
           if (populated && typeof runCalculation === "function") {
-            console.log("[QC-DIAG] triggering runCalculation");
             // Small delay so DOM updates from populate settle
             setTimeout(() => {
               try {
                 runCalculation();
-                console.log("[QC-DIAG] runCalculation called");
               } catch (e) {
-                console.error("[QC-DIAG] runCalculation error:", e);
+                console.error("post-payment unlock: runCalculation error:", e);
               }
             }, 200);
           }
@@ -2393,15 +2377,14 @@ async function attemptPaymentUnlock(passedSession){
       }
 
       if (attempts < maxAttempts) {
-        console.log("[QC-DIAG] has_paid still false, retry in 1.5s");
         setTimeout(poll, 1500);
       } else {
-        console.error("[QC-DIAG] gave up waiting for has_paid after", maxAttempts, "attempts");
+        console.error("post-payment unlock: gave up waiting for has_paid after", maxAttempts, "attempts");
         _qcPendingPaymentUnlock = false;
         _qcUnlockInFlight = false;
       }
     } catch (e) {
-      console.error("[QC-DIAG] direct profile fetch error:", e);
+      console.error("post-payment unlock: profile fetch error:", e);
       if (attempts < maxAttempts) {
         setTimeout(poll, 1500);
       } else {
@@ -2415,7 +2398,6 @@ async function attemptPaymentUnlock(passedSession){
 }
 
 async function handleDodoEvent(event){
-  console.log("[QC-DIAG] handleDodoEvent ENTRY:", JSON.stringify(event));
   if (!event || !event.event_type) return;
   // checkout.redirect fires on successful payment before checkout.closed.
   // checkout.closed fires whether the user paid, cancelled, or hit X.
@@ -2427,22 +2409,17 @@ async function handleDodoEvent(event){
     // already handles this gracefully via syncUnlockFromProfile.
     setTimeout(async () => {
       try {
-        console.log("[QC-DIAG] post-checkout setTimeout firing");
         const { data: { session } } = await sb.auth.getSession();
-        console.log("[QC-DIAG] session check:", session ? "ALIVE" : "DEAD");
         if (!session || !session.user) return;
-        console.log("[QC-DIAG] before profile fetch");
         const { data: profile } = await sb
           .from("profiles")
           .select("*")
           .eq("id", session.user.id)
           .single();
-        console.log("[QC-DIAG] profile fetched:", profile ? `has_paid=${profile.has_paid}` : "NO PROFILE");
         if (profile) {
           if (typeof qcCurrentProfile !== "undefined") qcCurrentProfile = profile;
           if (typeof syncUnlockFromProfile === "function") {
             syncUnlockFromProfile(profile);
-            console.log("[QC-DIAG] syncUnlockFromProfile called");
           }
         }
       } catch (e) {
@@ -2964,9 +2941,7 @@ async function handleResendMagicLink(){
 }
 
 sb.auth.onAuthStateChange(async (event, session) => {
-  console.log("[QC-DIAG] onAuthStateChange:", event, "user:", session?.user?.email || "(no user)");
   if (_qcPendingPaymentUnlock && (event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
-    console.log("[QC-DIAG] auth event fired with pending unlock, calling unlock with session");
     attemptPaymentUnlock(session);
   }
   if(event === "SIGNED_IN" && session && session.user){
