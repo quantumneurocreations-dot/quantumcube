@@ -2197,7 +2197,7 @@ return paras.map(p=>"<p>"+p+"</p>").join("");
 // session loss. Webhook (dodo-webhook) flips has_paid server-side;
 // onEvent handler refetches profile + unlocks the cube in place.
 
-const DODO_MODE = "test"; // "test" or "live" — flip for production
+const DODO_MODE = "live"; // "test" or "live" — flip for production
 
 // The jsdelivr UMD bundle attaches the API as window.DodoPaymentsCheckout.DodoPayments.
 // This helper resolves the right object regardless of how the SDK is loaded.

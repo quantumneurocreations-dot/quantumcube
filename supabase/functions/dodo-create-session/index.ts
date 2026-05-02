@@ -25,7 +25,7 @@ const CORS = {
 };
 
 // Mode + product config — kept in sync with frontend DODO_MODE
-const MODE = "test"; // flip to "live" for production
+const MODE = "live"; // flip to "live" for production
 const CONFIG = {
   test: {
     apiBase: "https://test.dodopayments.com",
@@ -33,7 +33,7 @@ const CONFIG = {
   },
   live: {
     apiBase: "https://live.dodopayments.com",
-    productId: "PLACEHOLDER_LIVE_PRODUCT_ID",
+    productId: "pdt_0Ndx7o41zFEREpoPTyvR2",
   },
 };
 
