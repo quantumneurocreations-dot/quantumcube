@@ -516,7 +516,11 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   }
 });
 window.sb = sb;
+window.QC_SUPABASE_URL = SUPABASE_URL;
+window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/dodopayments-checkout@latest/dist/index.js"></script>
 
 </head>
 <body><div id="loadingScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#05050f;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s ease"><div style="text-align:center"><p style="font-family:Cinzel,serif;font-size:7px;letter-spacing:6px;color:#ffffff;text-transform:uppercase;margin-bottom:20px">Quantum Neuro Creations</p><div style="display:inline-block;text-align:center"><div style="font-family:Cinzel Decorative,serif;font-weight:900;font-size:clamp(30px,8vw,54px);line-height:1.1;animation:quantumFloat 6s linear infinite"><span style="color:#ffffff">QUANTUM</span></div><div style="font-family:Cinzel Decorative,serif;font-weight:900;font-size:clamp(30px,8vw,54px);color:#7dd4fc;filter:drop-shadow(0 0 8px rgba(125,212,252,0.8));animation:quantumFloatB 11s linear 0.8s infinite;text-align:right">CUBE</div></div><p style="font-family:Cinzel,serif;font-size:7px;letter-spacing:5px;color:#ffffff;text-transform:uppercase;margin-top:20px">Your Cosmic Profile</p></div></div>
@@ -2186,31 +2190,85 @@ return paras.map(p=>"<p>"+p+"</p>").join("");
 // ═══════════════════════════════════════════
 // PAYMENT SYSTEM
 // ─────────────────────────────────────────
-// ── Dodo Payments Integration ───────────────────────────────
-// Hosted checkout via static payment link. Customer is redirected
-// to Dodo's checkout page, completes payment, returns here with
-// ?dodo=1&status=succeeded. Webhook sets has_paid=true server-side;
-// syncUnlockFromProfile picks it up and unlocks the cube.
+// ── Dodo Payments Integration (Overlay SDK) ─────────────────
+// Frontend calls dodo-create-session Edge Function to mint a checkout
+// session URL, then opens it via the overlay SDK. User stays on
+// quantumcube.app the whole time — no cross-domain redirect, no
+// session loss. Webhook (dodo-webhook) flips has_paid server-side;
+// onEvent handler refetches profile + unlocks the cube in place.
 
 const DODO_MODE = "test"; // "test" or "live" — flip for production
 
-const DODO_CONFIG = {
-  test: {
-    base: "https://test.checkout.dodopayments.com/buy/",
-    productId: "pdt_0NdwjT5U975nxTzpogS68",
-  },
-  live: {
-    base: "https://checkout.dodopayments.com/buy/",
-    productId: "PLACEHOLDER_LIVE_PRODUCT_ID", // set when live product is created
-  },
-};
+// The jsdelivr UMD bundle attaches the API as window.DodoPaymentsCheckout.DodoPayments.
+// This helper resolves the right object regardless of how the SDK is loaded.
+function _resolveDodoSdk(){
+  const c = window.DodoPaymentsCheckout;
+  if (c && c.DodoPayments) return c.DodoPayments;
+  if (c && typeof c.Initialize === "function") return c; // legacy/alternate shape
+  if (window.DodoPayments && typeof window.DodoPayments.Initialize === "function") return window.DodoPayments;
+  return null;
+}
+
+let _dodoSdkInitialised = false;
+function ensureDodoSdk(){
+  if (_dodoSdkInitialised) return true;
+  const SDK = _resolveDodoSdk();
+  if (!SDK) {
+    console.error("Dodo SDK not loaded — globals available:", Object.keys(window).filter(k => k.toLowerCase().includes("dodo")));
+    return false;
+  }
+  SDK.Initialize({
+    mode: DODO_MODE,
+    displayType: "overlay",
+    onEvent: (event) => {
+      console.log("Dodo overlay event:", event && event.event_type);
+      handleDodoEvent(event);
+    },
+  });
+  _dodoSdkInitialised = true;
+  window._dodoSDK = SDK;
+  return true;
+}
+
+async function handleDodoEvent(event){
+  if (!event || !event.event_type) return;
+  // checkout.redirect fires on successful payment before checkout.closed.
+  // checkout.closed fires whether the user paid, cancelled, or hit X.
+  // Either way: refetch profile and let RLS-backed has_paid be the truth.
+  if (event.event_type === "checkout.redirect" || event.event_type === "checkout.closed") {
+    // Webhook may lag the overlay close by 1-2 seconds — give it a moment,
+    // then refetch profile. If has_paid is still false, the user closed
+    // without paying (or webhook hasn't landed yet). The unlock logic
+    // already handles this gracefully via syncUnlockFromProfile.
+    setTimeout(async () => {
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        if (!session || !session.user) return;
+        const { data: profile } = await sb
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
+        if (profile) {
+          if (typeof qcCurrentProfile !== "undefined") qcCurrentProfile = profile;
+          if (typeof syncUnlockFromProfile === "function") {
+            syncUnlockFromProfile(profile);
+          }
+        }
+      } catch (e) {
+        console.error("post-checkout profile sync failed:", e);
+      }
+    }, 1500);
+  } else if (event.event_type === "checkout.error") {
+    console.error("Dodo checkout error:", event);
+    alert("Payment could not be completed. Please try again.");
+  }
+}
 
 async function launchDodo(){
   try {
-    const cfg = DODO_CONFIG[DODO_MODE];
-    if (!cfg || !cfg.productId || cfg.productId.startsWith("PLACEHOLDER")) {
-      alert("Payment is not configured. Please contact support.");
-      console.error("Dodo config missing for mode:", DODO_MODE);
+    if (!ensureDodoSdk()) {
+      alert("Payment system is loading. Please try again in a moment.");
       return;
     }
 
@@ -2224,7 +2282,7 @@ async function launchDodo(){
     const email = user.email || "";
     const userId = user.id;
 
-    // Pull profile name for fullName pre-fill (best effort)
+    // Pull profile name for fullName (best effort, non-blocking)
     let fullName = "";
     try {
       const { data: profile } = await sb
@@ -2235,108 +2293,50 @@ async function launchDodo(){
       if (profile && profile.name) fullName = profile.name;
     } catch(_) { /* non-blocking */ }
 
-    const params = new URLSearchParams();
-    params.set("redirect_url", "https://quantumcube.app/app?dodo=1");
-    params.set("email", email);
-    params.set("disableEmail", "true");
-    params.set("metadata_user_id", userId);
-    params.set("metadata_email", email);
-    if (fullName) params.set("fullName", fullName);
+    // Mint a checkout session via our Edge Function
+    const supabaseUrl = sb.supabaseUrl || (sb.auth && sb.auth.url) || "";
+    const supabaseKey = sb.supabaseKey || "";
+    // Fallback: read from existing global if extracted earlier
+    const fnUrl = (window.QC_SUPABASE_URL || supabaseUrl) + "/functions/v1/dodo-create-session";
+    const fnKey = (window.QC_SUPABASE_ANON_KEY || supabaseKey);
 
-    const url = cfg.base + cfg.productId + "?" + params.toString();
-    console.log("Redirecting to Dodo:", DODO_MODE, "mode");
-    window.location.href = url;
+    const sessionRes = await fetch(fnUrl, {
+      method: "POST",
+      headers: {
+        "apikey": fnKey,
+        "Authorization": "Bearer " + fnKey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        email: email,
+        fullName: fullName,
+      }),
+    });
+
+    if (!sessionRes.ok) {
+      const errText = await sessionRes.text();
+      console.error("Session creation failed:", sessionRes.status, errText);
+      alert("Could not start checkout. Please try again.");
+      return;
+    }
+
+    const { checkout_url } = await sessionRes.json();
+    if (!checkout_url) {
+      alert("Could not start checkout. Please try again.");
+      return;
+    }
+
+    console.log("Opening Dodo overlay:", DODO_MODE, "mode");
+    const SDK = window._dodoSDK || _resolveDodoSdk();
+    if (!SDK) {
+      alert("Payment system not ready. Please refresh and try again.");
+      return;
+    }
+    SDK.Checkout.open({ checkoutUrl: checkout_url });
   } catch (e) {
     console.error("launchDodo failed:", e);
     alert("Could not start checkout. Please try again.");
-  }
-}
-
-// Banner shown after successful payment when session was lost during
-// the cross-domain return from Dodo. Tells user payment succeeded and
-// to sign in again. Auto-dismisses after 12s.
-function showPaymentSuccessBanner(){
-  try {
-    const existing = document.getElementById("qc-payment-banner");
-    if (existing) existing.remove();
-    const banner = document.createElement("div");
-    banner.id = "qc-payment-banner";
-    banner.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;"
-      + "background:linear-gradient(135deg,#0f1829 0%,#071b2e 100%);"
-      + "border-bottom:1px solid #7dd4fc;padding:18px 20px;text-align:center;"
-      + "color:#ffffff;font-family:Georgia,serif;font-size:14px;line-height:1.5;"
-      + "letter-spacing:1px;box-shadow:0 4px 16px rgba(125,212,252,0.25);"
-      + "animation:qcPayBannerSlide 0.4s ease-out;";
-    banner.innerHTML = '<div style="max-width:520px;margin:0 auto;">'
-      + '<div style="font-size:16px;color:#7dd4fc;letter-spacing:2px;margin-bottom:6px;">'
-      + 'PAYMENT RECEIVED</div>'
-      + '<div>Thank you. Sign in below to unlock your cube.</div></div>';
-    document.body.appendChild(banner);
-    if (!document.getElementById("qc-payment-banner-keyframes")) {
-      const style = document.createElement("style");
-      style.id = "qc-payment-banner-keyframes";
-      style.textContent = "@keyframes qcPayBannerSlide{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}";
-      document.head.appendChild(style);
-    }
-    setTimeout(() => {
-      const b = document.getElementById("qc-payment-banner");
-      if (b) b.style.transition = "opacity 0.4s", b.style.opacity = "0", setTimeout(() => b.remove(), 400);
-    }, 12000);
-  } catch (e) {
-    console.error("banner display failed:", e);
-  }
-}
-
-// ── Handle return from Dodo checkout ────────────────────────
-// Dodo appends ?payment_id=...&status=...&email=... to redirect_url.
-// We added our own ?dodo=1 marker so we know to interpret these.
-async function checkDodoReturn(){
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("dodo") !== "1") return;
-
-  const status = params.get("status");
-  const paymentId = params.get("payment_id");
-
-  // Strip query params from URL so refresh doesn't re-trigger
-  const cleanUrl = window.location.origin + window.location.pathname;
-  window.history.replaceState({}, "", cleanUrl);
-
-  if (status === "succeeded") {
-    console.log("Dodo payment succeeded:", paymentId);
-    // Give the webhook 1.5s to land has_paid=true server-side,
-    // then branch on whether the auth session survived the cross-domain
-    // round-trip. If alive -> in-place profile refetch + sync (best UX).
-    // If lost -> show a friendly banner so the user knows their payment
-    // was received and just needs to sign back in.
-    setTimeout(async () => {
-      try {
-        const { data: { session } } = await sb.auth.getSession();
-        if (session && session.user) {
-          // Session survived. Refetch profile and sync unlock state in place.
-          const { data: profile } = await sb
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .single();
-          if (profile) {
-            if (typeof qcCurrentProfile !== "undefined") qcCurrentProfile = profile;
-            if (typeof syncUnlockFromProfile === "function") {
-              syncUnlockFromProfile(profile);
-            }
-          }
-        } else {
-          // Session lost during redirect. Show a banner so user knows
-          // payment was received and just needs to sign back in.
-          showPaymentSuccessBanner();
-        }
-      } catch (e) {
-        console.error("post-payment profile sync failed:", e);
-        showPaymentSuccessBanner();
-      }
-    }, 1500);
-  } else if (status === "cancelled" || status === "failed") {
-    console.log("Dodo payment not completed:", status);
-    // User can tap Pay $17 again; no action needed
   }
 }
 
@@ -3262,7 +3262,6 @@ resetIdleTimer();
 // ── ON PAGE LOAD: check stored unlock and PayFast return ──
 (function(){
   checkStoredUnlock();
-  checkDodoReturn();
   // Always start on face0 unless payment just completed
   const params = new URLSearchParams(window.location.search);
   if(params.get("pf") !== "success"){
