@@ -33,6 +33,12 @@ The kickoff doc handles session startup, role split between Chat Claude and Curs
 
 ---
 
+## 📣 MARKETING — see MARKETING_PLAYBOOK.md
+
+Marketing strategy, launch sequencing, channel playbooks, tools evaluated (Vloxo, AppSumo, G2, Capterra all rejected with reasoning), and growth metrics live in the separate marketing playbook. The brief stays focused on build, infra, and architecture. When working on marketing tasks in a new chat, attach MARKETING_PLAYBOOK.md + CHAT_KICKOFF.md instead of this brief.
+
+---
+
 ## 🎉 BIGGEST WINS SINCE v28 (May 2 PM session)
 
 **1. QUANTUM CUBE IS LIVE AND ACCEPTING REAL PAYMENTS.** ← May 2, ~11 AM (first live charge) and again ~6:30 PM (second live charge after bounce-bug fix). Real $17 USD processed end-to-end. Real card. Real customer email receipt. Webhook fired, has_paid flipped, cube unlocked. **The entire 8-day waiting period for Dodo approval has now paid off — Quantum Cube can sell to real users.**
