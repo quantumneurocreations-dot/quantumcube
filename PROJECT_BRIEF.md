@@ -1,5 +1,5 @@
 # QUANTUM CUBE — MASTER PROJECT DOCUMENT
-**Version: v26 | Last Updated: April 30, 2026 (Thursday, morning)**
+**Version: v29 | Last Updated: May 2, 2026 (Saturday, evening)**
 
 ---
 
@@ -25,6 +25,54 @@ If a Cube chat drifts into any of the above, stop and ask.
 
 ## 🚦 NEW CHAT? READ CHAT_KICKOFF.md FIRST
 The kickoff doc handles session startup, role split between Chat Claude and Cursor Claude, and the golden rules. Read it first, then read this brief for project-specific context.
+
+---
+
+## 🎉 BIGGEST WINS SINCE v28 (May 2 PM session)
+
+**1. QUANTUM CUBE IS LIVE AND ACCEPTING REAL PAYMENTS.** ← May 2, ~11 AM (first live charge) and again ~6:30 PM (second live charge after bounce-bug fix). Real $17 USD processed end-to-end. Real card. Real customer email receipt. Webhook fired, has_paid flipped, cube unlocked. **The entire 8-day waiting period for Dodo approval has now paid off — Quantum Cube can sell to real users.**
+
+**2. Dodo overlay SDK migration shipped.** ← May 2 AM. Originally built integration with static payment-link redirect (commit cdefd3f). Within 30 minutes of testing, identified the cross-domain redirect was killing user sessions on return. Pivoted to Dodo's overlay SDK (`dodopayments-checkout` UMD bundle via jsdelivr). User now stays on `quantumcube.app` the entire time — overlay opens as modal over the app, payment processes, webhook fires server-side. Significantly cleaner UX architecture. New Edge Function `dodo-create-session` mints `cks_xxx` checkout session URLs server-side; metadata.user_id embedded for webhook profile matching. Overlay SDK accessed via `window.DodoPaymentsCheckout.DodoPayments.Initialize/.Checkout.open()` — exact namespace shape verified from the UMD bundle source.
+
+**3. Post-payment Face-0 bounce bug — diagnosed and killed.** ← May 2 PM. The big debug saga of the day. Multiple incorrect theories before finding the actual issue:
+   - First theory: cross-domain session loss → built session-aware banner UX (didn't help)
+   - Second theory: stale SW serving old code → multiple SW reset cycles (no smoking gun)
+   - Third theory: race condition between `checkDodoReturn` and `onAuthStateChange` calling `attemptPaymentUnlock` in parallel → added `_qcUnlockInFlight` idempotency lock (helped but didn't fix)
+   - Fourth theory: `await sb.auth.getSession()` hanging during INITIAL_SESSION restore → bypassed Supabase JS client entirely, read session straight from localStorage and queried profiles via direct REST fetch (worked — `profile fetch status: 200`, `unlock applied`, but still bounced)
+   - **Actual root cause:** the unlock data flow was working all along. Logs proved `syncUnlockFromProfile` ran successfully and `qcCurrentProfile` was set to a paid profile. But the user was sitting on Face 0 (sign-up form) because `runCalculation` had never fired to put them inside the cube view. **Unlock state was correct — the user just wasn't in the cube to see it.**
+   - **Fix (commit e85ca5c):** after applying the unlock, also call `populateFormFromProfile()` then `runCalculation()` after a 200ms DOM-settle delay. User now lands inside the cube on Face 3 with full reading visible. No bounce, no re-sign-in.
+   - **Lesson burned in:** when something looks broken, instrument the data flow before patching. Don't assume the visible symptom (bounce to Face 0) is the same as the actual bug (cube wasn't opened).
+
+**4. 17-line legal copy swap shipped.** ← May 2 AM. Replaced all PayFast (Pty) Ltd and Paddle.com Market Limited references across 9 files (`docs/app.html`, 8 legal pages) plus 1 migration comment with `Dodo Payments, Inc.` (the verified MoR legal entity). Single commit (7ff5db8). Brief v28 listed pre-OAuth-ship line numbers; re-grepped fresh after Dodo overlay ship and applied. Zero remaining references to the old processors in the codebase.
+
+**5. Live Mode E2E verified twice.** ← May 2. First live test ~11 AM with real card → payment posted, webhook fired, has_paid=true. (Hit the bounce bug — user landed on Face 0 but signing in via Google produced an unlocked cube.) Second live test ~6:30 PM after bounce-bug fix shipped → payment posted, **clean unlock in place, no bounce**. Both payments are visible in Dodo Live Mode dashboard.
+
+**6. Dodo refund flow partially verified.** ← May 2. Refund of the morning ($17 ~10 AM) charge **succeeded** in Dodo Live dashboard around 7 PM. The evening charge (~6:30 PM) hit "Insufficient funds in wallet" error when refund was attempted minutes later. **Theory confirmed: Dodo enforces a settlement-period holding window** before funds are refundable from the merchant wallet. The morning charge was old enough to clear; the evening one wasn't. No action required — second refund will go through naturally with time.
+
+**7. Dodo wallet flow understood.** ← May 2. Live Mode "Insufficient funds in wallet" is real and applies to refunds within ~hours of the original charge. Test Mode wallet is a fake balance that's always 0 (refunds always fail there). Don't treat as a bug. For real customer refunds going forward, expect a few-hour-to-multi-day settlement window before the funds become refundable.
+
+**8. API key leak caught and rotated cleanly.** ← May 2 AM. During Live Mode setup, the Live API key was accidentally pasted into chat in plain text via the `supabase secrets set` command output. Caught within minutes, rotated immediately:
+   - Deleted the leaked Live API key in Dodo dashboard FIRST
+   - Generated a fresh Live API key
+   - Re-set Supabase secret with new value (no echo this time)
+   - Verified digest hash changed
+   - **No transactions used the leaked key.** Damage zero.
+   - **Burned-in rule:** the same `NEVER paste tokens or keys into chat or Cursor` rule from v28 (around OAuth Client Secret handling) applies to ALL secrets, ALL the time. The Apr 29 lesson on JWTs was the same lesson — needed a second reinforcement.
+
+**9. Two new Supabase Edge Functions shipped.** ← May 2.
+   - **`dodo-webhook`**: receives `payment.succeeded` and `refund.succeeded` events from Dodo, verifies signature via Standard Webhooks SDK, updates `has_paid` in profiles. Source committed (commit b3386ea).
+   - **`dodo-create-session`**: mints checkout session URLs (`cks_xxx`) server-side via Dodo's Checkout Sessions API. Embeds `metadata.user_id` for webhook profile matching. Defence-in-depth checks user exists in profiles before minting. Source committed.
+   - Both run with `verify_jwt = false` and handle their own auth (anon key for `dodo-create-session`, signed webhook payload for `dodo-webhook`).
+
+**10. Dodo product created in both modes.**
+   - **Test Mode product:** `pdt_0NdwjT5U975nxTzpogS68` — `Quantum Cube`, $17 USD, single payment
+   - **Live Mode product:** `pdt_0Ndx7o41zFEREpoPTyvR2` — same details
+   - Live webhook endpoint configured pointing to `dodo-webhook` Edge Function
+   - Both signing secrets stored in Apple Passwords
+
+**11. CHAT_KICKOFF.md memory note added.** ← May 2 PM. User memory edits now persist across all Quantum Cube chats:
+   - Address user as "buddy" (not by name)
+   - Supabase CLI v2.90.0 — `functions deploy <name>` works without `--linked` flag
 
 ---
 
@@ -57,7 +105,7 @@ The kickoff doc handles session startup, role split between Chat Claude and Curs
 - `https://quantumcube.app/app` — the cube app
 - `https://quantumcube.app/privacy` — privacy policy
 - `https://quantumcube.app/terms` — terms of use
-- `https://quantumcube.app/refund` — refund policy (currently Paddle MoR — needs swap to Dodo entity)
+- `https://quantumcube.app/refund` — refund policy (now references Dodo Payments, Inc. — May 2 swap shipped)
 - `https://quantumcube.app/disclaimer` — disclaimer
 - `https://quantumcube.app/ip` — IP notice
 - `https://quantumcube.app/popia` — POPIA / data
@@ -167,9 +215,78 @@ SW: qc-v147 → qc-v149.
 - Decision: HTML text wordmarks stay in app/site (sharper, faster, accessible, selectable). PNG wordmarks reserved for contexts where text won't render (email).
 - Apr 29 brand pack (Cinzel woff2 fonts + old wordmark PNGs + Cube Sides source images) all retired — git history preserves.
 
+### May 2, 2026 (Saturday — Dodo integration + LAUNCH, 11 commits)
+
+The largest single-day technical sprint of the project. 11 commits shipped, both modes tested end-to-end, real payment processed, bounce-bug killed.
+
+| Commit | What |
+|---|---|
+| `cdefd3f` | feat(payment): migrate Dodo to overlay SDK checkout |
+| `7ff5db8` | feat(legal): swap PayFast/Paddle MoR wording for Dodo Payments, Inc. |
+| `90705bd` | feat(payment): switch Dodo to Live Mode |
+| `9db21e0` | diag: trace post-payment auth + overlay flow (Test Mode) |
+| `f1e2058` | fix(payment): detect Dodo redirect on page-load to unlock cube |
+| `bc9b1d2` | fix(payment): event-driven post-payment unlock via auth listener |
+| `be425eb` | fix(payment): pass session arg to unlock + add inflight lock |
+| `0413704` | fix(payment): bypass Supabase JS client during post-redirect unlock |
+| `e85ca5c` | fix(payment): auto-trigger runCalculation after post-payment unlock ← THE FIX |
+| `061ca8e` | chore: rip diagnostic [QC-DIAG] logs after post-payment fix shipped |
+| `f7834c3` | feat(payment): switch back to Live Mode after bounce-bug fix shipped |
+
+Also pushed earlier-in-day commits: `b3386ea` (dodo-webhook source) and `84be838` (initial PayFast→Dodo redirect-link integration, replaced by overlay later same morning).
+
+SW: qc-v154 → qc-v169 (15 bumps).
+
+**Code outcomes May 2:**
+- Two Edge Functions shipped: `dodo-webhook` + `dodo-create-session`
+- Overlay SDK integration via jsdelivr UMD bundle
+- `_readSessionFromStorage()` helper bypasses Supabase JS client
+- `_resolveDodoSdk()` helper handles UMD namespace shape
+- 17 PayFast/Paddle references replaced with Dodo Payments, Inc. across 9 files + 1 migration comment
+
+**Non-code outcomes May 2:**
+- Live Mode active in Dodo dashboard
+- Live Mode webhook endpoint configured pointing to dodo-webhook URL
+- Live Mode product created (`pdt_0Ndx7o41zFEREpoPTyvR2`, $17 USD)
+- Test Mode + Live Mode signing secrets stored in Apple Passwords
+- API key leak caught + rotated within ~2 minutes
+- Two real $17 charges processed end-to-end (morning + evening); morning's refunded successfully, evening's pending settlement
+- 11 commits on `main`, all pushed cleanly, zero rollbacks needed
+
 ---
 
 ## 💳 PAYMENT PROCESSOR — Dodo Payments
+
+### 🎉 STATUS: LIVE AND ACCEPTING REAL PAYMENTS — May 2, 2026
+
+After 8 days in review (longer than the stated 24-72hr window), Dodo enabled Live Payments. All 4 verification cards green: Product Information ✓, Identity Verification ✓, Business Verification ✓, Bank Verification ✓.
+
+### Live integration shipped May 2
+
+End-to-end overlay checkout integration. User stays on `quantumcube.app` for the entire payment flow.
+
+**Architecture:**
+1. User taps Pay $17 button on Face 3 lock card
+2. Frontend `launchDodo()` calls `dodo-create-session` Edge Function (Supabase) with auth user_id, email, name
+3. Edge Function creates Dodo Checkout Session via Dodo's API with `metadata.user_id` embedded
+4. Frontend opens overlay via `DodoPaymentsCheckout.DodoPayments.Checkout.open({ checkoutUrl: cks_xxx })`
+5. Customer pays inside the overlay (overlay redirects through Dodo's `/status/<id>/succeeded` page)
+6. Customer returns to `quantumcube.app/app?payment_id=...&status=succeeded&email=...` (cross-domain redirect)
+7. `checkDodoReturn()` detects redirect params, strips them, flags `_qcPendingPaymentUnlock = true`, calls `attemptPaymentUnlock()`
+8. `attemptPaymentUnlock()` reads session from localStorage directly (Supabase JS client hangs during auth restore), polls profiles via direct REST fetch up to 8x at 1.5s intervals
+9. When `has_paid=true` lands (webhook flipped it), `syncUnlockFromProfile()` runs, then `populateFormFromProfile()` + `runCalculation()` fires to land user inside the cube on Face 3 with reading visible
+10. Webhook (`dodo-webhook` Edge Function) verifies Standard Webhooks signature via `dodopayments@2.4.1` SDK, updates `has_paid` server-side
+
+**Mode switching:** single `DODO_MODE` constant in `docs/app.html` (line ~2200) and matching `MODE` constant in `dodo-create-session/index.ts` (line ~28). Both must flip together. Supabase secrets (`DODO_PAYMENTS_API_KEY`, `DODO_PAYMENTS_WEBHOOK_KEY`) must also be swapped to match the active mode.
+
+**Live + Test product IDs both stored in Apple Passwords + in code:**
+- Test Mode: `pdt_0NdwjT5U975nxTzpogS68`
+- Live Mode: `pdt_0Ndx7o41zFEREpoPTyvR2`
+
+**Key files:**
+- `docs/app.html` — `launchDodo()`, `checkDodoReturn()`, `attemptPaymentUnlock()`, `_readSessionFromStorage()`, `handleDodoEvent()`, `_resolveDodoSdk()`
+- `supabase/functions/dodo-webhook/index.ts` — webhook receiver
+- `supabase/functions/dodo-create-session/index.ts` — session minter
 
 ### Why Dodo
 
@@ -843,7 +960,7 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 | signInWithOtp paths | ~2379, ~2445 |
 | sb.auth.onAuthStateChange | ~2472 |
 | signOut | ~2622 |
-| **`function runCalculation`** | **~2746** (STABLE ANCHOR — verified Apr 30) |
+| **`function runCalculation`** | **~2930** (STABLE ANCHOR — verified May 2 PM) |
 | `_wipeAllLocalState` | ~2631 |
 | `exportMyData` | ~2641 |
 | `armDeleteAccount` | ~2681 |
@@ -923,16 +1040,22 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 
 ---
 
-## WHAT'S LEFT — ORDERED BY PRIORITY (Apr 30 update)
+## WHAT'S LEFT — ORDERED BY PRIORITY (May 2 PM update — POST-LAUNCH)
 
-### 🚨 LAUNCH-BLOCKING
+### ✅ LAUNCH ACHIEVED — May 2, 2026
 
-1. **Dodo Payments approval** (24-72hr pending — submitted Apr 29)
-2. **Google OAuth 2.0** (~2-3 hrs)
-3. **Social media handles claimed** across 6 platforms (~30 min — profile pic asset ready)
-4. **Dodo wiring + 26-line MoR swap** — needs #1 first
-5. **E2E payment test** → refund to self — needs #4
-6. **Delete 9+ test profile rows**
+Quantum Cube is live and accepting real payments. Real customers can buy a real $17 reading. The 8-day Dodo wait, the 17-line legal copy swap, the overlay SDK migration, the bounce-bug saga — all done. From the v28 Definition of Done list, every required-for-launch item is shipped.
+
+**Already done as of May 2:**
+- [x] Dodo Payments approved, Live Mode active, real payments processing
+- [x] `dodo-webhook` Edge Function deployed (signature verification, payment + refund event handling)
+- [x] `dodo-create-session` Edge Function deployed (server-side session minting, metadata embedding)
+- [x] Frontend `launchDodo()` overlay integration (replaces old PayFast wiring)
+- [x] Post-payment unlock flow (`checkDodoReturn` + `attemptPaymentUnlock` + auto-`runCalculation`)
+- [x] 17-line PayFast/Paddle → Dodo Payments, Inc. legal copy swap across 9 files
+- [x] E2E payment test in Test Mode (multiple cycles)
+- [x] E2E payment test in Live Mode (twice — morning and evening, both real $17 charges)
+- [x] Refund of test payment confirmed (after settlement period)
 
 ### ⚠️ HIGH-VALUE (not launch-blocker)
 - Settings discoverability fix (gear icon, ~30 min)
@@ -1032,23 +1155,70 @@ Path `/Users/qnc/Projects/qnc-academy/`. Stack: Next.js + Vercel + Supabase (Ire
 - **One logical change = one commit, even when commits are related.** Apr 30: brand pack → wire icons → round favicon = 3 separate commits. If rounded corners had looked wrong, only `78a8e00` needed reverting, not the whole brand swap.
 - **Type-as-logo can replace illustration-as-logo entirely.** The QC monogram solved both the app-icon AND brand-mark problems in one move, without a designer round. Sometimes the type IS the logo.
 
+### May 1 PM lessons (Dodo approval + recon)
+
+(LEAVE EXISTING May 1 PM LESSONS BLOCK INTACT — do not remove)
+
+### May 2 lessons (Dodo Live launch + bounce-bug debug)
+
+- **The visible symptom isn't always the bug.** When something looks broken, instrument the data flow with diagnostic logs BEFORE patching theories. Spent ~3 hours chasing "post-redirect session loss" / "race condition" / "Supabase JS client hanging" theories. The actual root cause was that `runCalculation` never fired after unlock — user was sitting on Face 0 with a correctly-unlocked but invisible cube. The unlock data flow was working perfectly the entire time. Fix was 1 function call inside the success branch.
+- **Cross-domain redirect kills queued JS state.** Even when using "in-page" overlay SDKs, if the SDK does an internal redirect at the end of payment (like Dodo's `/status/<id>/succeeded`), any `setTimeout` or pending Promise from before the redirect dies. Drive post-payment unlock from URL params on page-load, not from the overlay's `onEvent` callbacks.
+- **Supabase JS auth methods can hang during INITIAL_SESSION restore.** `await sb.auth.getSession()`, `await sb.auth.getUser()`, AND `await sb.from(...).select()` all became unresponsive during the post-redirect auth restoration window. The fix is to bypass the JS client entirely: read the session token from localStorage directly (`sb-<ref>-auth-token` key), then query via direct `fetch()` to Supabase REST API. The JS client comes back to life ~5-10 seconds later, but you can't rely on that timing in a UX-critical flow.
+- **NEVER paste secret values into chat — Cursor terminal output included.** A Live API key got into the chat transcript via a `supabase secrets set` command output. Took ~30 seconds to catch and ~2 minutes to rotate cleanly (delete old key in Dodo dashboard FIRST, generate new, re-set Supabase secret without echo, verify digest changed). Same lesson as v28 OAuth Client Secret handling — needed a second reinforcement. Going forward: paste secret commands directly in Mac Terminal (which only logs to local zsh history), never copy them to the chat. Hash digests from `supabase secrets list` are fine to paste — they're one-way.
+- **Dodo's UMD bundle attaches API as `window.DodoPaymentsCheckout.DodoPayments`** — NOT `window.DodoPayments` directly. Browser MCP recon caught this before we burned a test cycle. When the SDK is described in npm READMEs as "DodoPayments", the UMD wrapper namespace can still be different. Always verify the actual bundle's global shape via `curl` or DevTools.
+- **Test Mode wallet refunds always fail with "Insufficient funds in wallet".** Live Mode wallet refunds work but only after a settlement period (hours-to-days). Don't treat as a Dodo bug. For real customer refund support: communicate the few-day window to customers, refund within the window when ready.
+- **Cursor's terminal markdown auto-linking turns dotted strings into fake markdown links.** Output like `rkelbrickmail@gmail.com` may appear as `[rkelbrickmail@gmail.com](mailto:...)` in Cursor's chat output. The actual file/database is clean text. Apr 30 PM brief lesson confirmed: don't try to fix what isn't broken. Verify via direct file read or DB query if uncertain.
+- **Dashboard mode toggle != actual mode.** Flipping Test/Live Mode in the Dodo dashboard only changes WHAT YOU SEE. The actual integration mode is hardcoded in `DODO_MODE` (frontend) and `MODE` (Edge Function), and the secrets in Supabase. Three separate places must all flip together for a real mode switch. Mismatches cause confusing 401 errors.
+- **Pages serves the new build ~60s after push.** Don't test immediately after a `git push`. Wait. Save yourself the false-negative cycle.
+- **`window.location.reload()` after detecting payment params can wipe localStorage mid-restore.** First instinct on the bounce bug was a hard reload. Disaster — the auth session was still being restored from the redirect, and reload nuked the in-flight state. Use in-place state update via `syncUnlockFromProfile()` + `runCalculation()` instead.
+
 ---
 
-## NEXT SESSION STARTING POINT
+## NEXT SESSION STARTING POINT (May 3, 2026 — POST-LAUNCH polish + scale-up)
 
-1. Attach PROJECT_BRIEF.md (v26) + CHAT_KICKOFF.md to new chat
-2. Start a fresh Cursor chat alongside (or continue current if context clean)
-3. **Minimal health check:** confirm HEAD on `origin/main`, SW = qc-v149, all 4 live URLs return 200
-4. **Check Dodo Payments approval status** — has Michelle heard back?
-5. **If Dodo approved:** start payment integration session (webhook + launchDodo + 26-line MoR swap + E2E test)
-6. **If Dodo still pending:** parallel work options:
-   - Google OAuth 2.0 implementation (~2-3 hrs code)
-   - Social media handles claimed (Ronnie solo, ~30 min — `brand/QC - Stars.png` ready)
-   - Settings discoverability fix (~30 min code — gear ⚙️ icon)
-   - Magic-link email PNG wordmark upgrade (~10 min — copy `brand/QC Full White.png` → `docs/qc-wordmark-email.png` + update template img tag)
-7. Re-snapshot test profile rows in case list has drifted
-8. Update brief at end of session if meaningful drift
+The launch is real. From here it's polish, social pushing, app store submission, and the small tail of cleanup work.
+
+### Phase 2 — In-app polish (~2-3 hours)
+- **Music auto-play fix.** Console showed multiple 404s for `Sounds/Music/...mp3` files (e.g. `ES_Subterranean Room - Hanna Lindgren.mp3`, `bgMusic.mp3`). Music isn't auto-starting on first user tap. Diagnose: is it the autoplay policy, missing files on disk, or wrong path?
+- **Welcome narration re-record at slower pace.** Same script, slower delivery. Currently `speed: 1.15` in narrate Edge Function — drop to `0.95` or `1.00` for welcome only. Replace `Sounds/Narration/welcome.mp3` with the new render.
+- **Welcome plays once, only inside the app, not on sign-up page.** Currently fires twice (Face 1 entries 1 + 2). Reduce to a single play, only on first entry into the cube, never on Face 0.
+- **Strip "Valory" branding everywhere.** Replace all user-facing references with generic "narration" or "voice reading" or "voice guide". Voice ID stays the same in code, only user-facing copy changes. Grep across `docs/app.html`, `docs/index.html`, all 8 legal pages, brief, README.
+- **Full app walkthrough.** Test every face, every interaction, both auth paths (OAuth + magic-link), paid + unpaid states. Capture any minor changes or bugs surfacing during the walk.
+- **Minor changes batch.** Whatever surfaces during the walkthrough.
+
+### Phase 3 — Cleanup (~30 min)
+- **Refund the second Live test payment** once Dodo settlement clears (likely 24-72 hr from May 2 evening).
+- **Delete leaked Test API + Test webhook secrets in Dodo dashboard.** They were both pasted in chat earlier May 2. Lower stakes than Live (no real money), but cleanup completes the rotation discipline. Generate fresh test keys, update Supabase secrets, update Apple Passwords.
+- **Delete 9+ test profile rows** from Supabase profiles table before public launch announcement (re-snapshot first — list has drifted with all the Apr 30 + May 2 testing).
+- **Resend deliverability tested** to fresh Gmail / Outlook / Yahoo accounts.
+- **Submit Google OAuth for Verification** (currently Testing mode — only 3 test users can sign in). ~2 weeks turnaround so submit early.
+- **Replace white Google G with original colour Google logo** on sign-up button (Apr 30 carryover decision). Two options: Option A (replace cosmic button with Google standard white-bg button per Google brand guidelines) OR Option B (keep cosmic styling with multicolour G in custom container).
+- **Sentry error monitoring** (~20 min).
+- **Clean up untracked `brand/Your paragraph text.png`** in repo root — Canva default filename, either delete or rename properly.
+
+### Phase 4 — Launch announcement
+- **Cover photos for Facebook + Twitter** (820×312 + 1500×500, Canva work, ~30 min).
+- **First social posts** across all 6 handles (`@quantumcubeapp`).
+- **Public launch email** to existing list (if any).
+
+### Phase 5 — App stores
+- **Google Play submission:** $25 one-time, PWABuilder → .aab. All prerequisites are now green:
+  - [x] Dodo live (real payments)
+  - [x] Account deletion working in-app
+  - [x] Real PNG icons (192, 512, 512-maskable)
+  - [x] Privacy + Terms pages live
+- **Apple App Store submission:** $99/year, Capacitor wrap, Xcode archive. DEFERRED — revisit post-Google Play launch.
+
+### Open architectural questions for later
+- **Dodo settlement period**: how long exactly? Worth emailing Dodo support to nail down the policy so we can tell customers "refunds processed within X days" with confidence.
+- **Webhook retry policy**: if our Edge Function returns non-2xx, Dodo retries. Current behaviour is to acknowledge with 200 even on missing user identifier (prevents retry storm). Worth revisiting for genuinely-failed cases.
+
+### Recommended order at start of next session
+1. Run minimal health check (per CHAT_KICKOFF.md)
+2. Check status of evening refund (should now be clear, ~12+ hours since charge)
+3. Pick a Phase based on energy: Phase 2 polish if fresh, Phase 3 cleanup if low-energy, Phase 4 social if you want creative work
+4. Update brief to v30 at end of session
 
 ---
 
-**End of brief v26.**
+**End of brief v29.**
