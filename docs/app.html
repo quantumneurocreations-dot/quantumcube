@@ -2186,22 +2186,114 @@ return paras.map(p=>"<p>"+p+"</p>").join("");
 // ═══════════════════════════════════════════
 // PAYMENT SYSTEM
 // ─────────────────────────────────────────
-// PayFast Integration (South Africa)
-// Replace the MERCHANT values below with your
-// real PayFast merchant credentials once you
-// have registered at payfast.co.za
-// ═══════════════════════════════════════════
+// ── Dodo Payments Integration ───────────────────────────────
+// Hosted checkout via static payment link. Customer is redirected
+// to Dodo's checkout page, completes payment, returns here with
+// ?dodo=1&status=succeeded. Webhook sets has_paid=true server-side;
+// syncUnlockFromProfile picks it up and unlocks the cube.
 
-// ── CONFIG — fill in your real values ──────
-const PF_CONFIG = {
-  merchant_id:  "10000100",          // ← Your PayFast Merchant ID
-  merchant_key: "46f0cd694581a",     // ← Your PayFast Merchant Key
-  passphrase:   "",                  // ← Optional passphrase (set in PayFast dashboard)
-  sandbox:      true,                // ← Set to false for live payments
-  amount:       "88.00",
-  item_name:    "Quantum Cube – Complete Profile Unlock",
-  email_address:"",                  // ← Pre-fill buyer email (optional)
+const DODO_MODE = "test"; // "test" or "live" — flip for production
+
+const DODO_CONFIG = {
+  test: {
+    base: "https://test.checkout.dodopayments.com/buy/",
+    productId: "pdt_0NdwjT5U975nxTzpogS68",
+  },
+  live: {
+    base: "https://checkout.dodopayments.com/buy/",
+    productId: "PLACEHOLDER_LIVE_PRODUCT_ID", // set when live product is created
+  },
 };
+
+async function launchDodo(){
+  try {
+    const cfg = DODO_CONFIG[DODO_MODE];
+    if (!cfg || !cfg.productId || cfg.productId.startsWith("PLACEHOLDER")) {
+      alert("Payment is not configured. Please contact support.");
+      console.error("Dodo config missing for mode:", DODO_MODE);
+      return;
+    }
+
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session || !session.user) {
+      alert("Please sign in before purchasing.");
+      return;
+    }
+
+    const user = session.user;
+    const email = user.email || "";
+    const userId = user.id;
+
+    // Pull profile name for fullName pre-fill (best effort)
+    let fullName = "";
+    try {
+      const { data: profile } = await sb
+        .from("profiles")
+        .select("name")
+        .eq("id", userId)
+        .single();
+      if (profile && profile.name) fullName = profile.name;
+    } catch(_) { /* non-blocking */ }
+
+    const params = new URLSearchParams();
+    params.set("redirect_url", "https://quantumcube.app/app?dodo=1");
+    params.set("email", email);
+    params.set("disableEmail", "true");
+    params.set("metadata_user_id", userId);
+    params.set("metadata_email", email);
+    if (fullName) params.set("fullName", fullName);
+
+    const url = cfg.base + cfg.productId + "?" + params.toString();
+    console.log("Redirecting to Dodo:", DODO_MODE, "mode");
+    window.location.href = url;
+  } catch (e) {
+    console.error("launchDodo failed:", e);
+    alert("Could not start checkout. Please try again.");
+  }
+}
+
+// ── Handle return from Dodo checkout ────────────────────────
+// Dodo appends ?payment_id=...&status=...&email=... to redirect_url.
+// We added our own ?dodo=1 marker so we know to interpret these.
+async function checkDodoReturn(){
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("dodo") !== "1") return;
+
+  const status = params.get("status");
+  const paymentId = params.get("payment_id");
+
+  // Strip query params from URL so refresh doesn't re-trigger
+  const cleanUrl = window.location.origin + window.location.pathname;
+  window.history.replaceState({}, "", cleanUrl);
+
+  if (status === "succeeded") {
+    console.log("Dodo payment succeeded:", paymentId);
+    // Webhook flips has_paid server-side. Give it a moment to land,
+    // then refetch profile and re-sync unlock state.
+    setTimeout(async () => {
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        if (!session || !session.user) return;
+        const { data: profile } = await sb
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
+        if (profile) {
+          if (typeof qcCurrentProfile !== "undefined") qcCurrentProfile = profile;
+          if (typeof syncUnlockFromProfile === "function") {
+            syncUnlockFromProfile(profile);
+          }
+        }
+      } catch (e) {
+        console.error("post-payment profile sync failed:", e);
+      }
+    }, 1500);
+  } else if (status === "cancelled" || status === "failed") {
+    console.log("Dodo payment not completed:", status);
+    // User can tap Pay $17 again; no action needed
+  }
+}
 
 // ── VALID UNLOCK CODES ──────────────────────
 // Add promo / gift codes here. Each code maps to a
@@ -2311,65 +2403,6 @@ function afterPaySuccess(){
     showFace(3);
   } else {
     showFace(0);
-  }
-}
-
-// ── LAUNCH PAYFAST ───────────────────────────
-function launchPayFast(){
-  const base = PF_CONFIG.sandbox
-    ? "https://sandbox.payfast.co.za/eng/process"
-    : "https://www.payfast.co.za/eng/process";
-
-  // Build return URL — same page with ?pf_payment_id= appended by PayFast
-  const returnURL  = encodeURIComponent(window.location.href.split("?")[0] + "?pf=success");
-  const cancelURL  = encodeURIComponent(window.location.href.split("?")[0] + "?pf=cancel");
-  const notifyURL  = encodeURIComponent("https://YOUR-SERVER.com/payfast-notify"); // ← optional ITN
-
-  // Build form and submit — this opens PayFast in the same window
-  // PayFast redirects back to returnURL after payment
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = base;
-  form.style.display = "none";
-
-  const fields = {
-    merchant_id:   PF_CONFIG.merchant_id,
-    merchant_key:  PF_CONFIG.merchant_key,
-    return_url:    decodeURIComponent(returnURL),
-    cancel_url:    decodeURIComponent(cancelURL),
-    notify_url:    decodeURIComponent(notifyURL),
-    amount:        PF_CONFIG.amount,
-    item_name:     PF_CONFIG.item_name,
-    email_address: PF_CONFIG.email_address,
-    payment_method:"cc",
-  };
-
-  Object.entries(fields).forEach(([k,v])=>{
-    if(!v) return;
-    const inp = document.createElement("input");
-    inp.type="hidden"; inp.name=k; inp.value=v;
-    form.appendChild(inp);
-  });
-
-  document.body.appendChild(form);
-  form.submit();
-}
-
-// ── HANDLE PAYFAST RETURN URL ─────────────────
-// PayFast adds ?pf=success to your return URL.
-// We check this on page load to trigger unlock.
-function checkPayFastReturn(){
-  const params = new URLSearchParams(window.location.search);
-  if(params.get("pf") === "success"){
-    // Payment completed — store and unlock
-    applyUnlockedState(true);
-    // Clean the URL so refresh doesn't re-trigger
-    try{
-      history.replaceState({},"",window.location.pathname);
-    }catch(e){}
-  } else if(params.get("pf") === "cancel"){
-    // User cancelled — clean URL silently
-    try{history.replaceState({},"",window.location.pathname);}catch(e){}
   }
 }
 
@@ -3184,7 +3217,7 @@ resetIdleTimer();
 // ── ON PAGE LOAD: check stored unlock and PayFast return ──
 (function(){
   checkStoredUnlock();
-  checkPayFastReturn();
+  checkDodoReturn();
   // Always start on face0 unless payment just completed
   const params = new URLSearchParams(window.location.search);
   if(params.get("pf") !== "success"){
@@ -3441,7 +3474,7 @@ if("serviceWorker" in navigator){
       <div class="pay-price-line">No Subscription</div>
       <div class="pay-price-line">Yours Forever</div>
     </div>
-    <button class="unlock-btn pay-overlay-btn" onclick="haptic(&apos;medium&apos;);launchPayFast()">Pay $17</button>
+    <button class="unlock-btn pay-overlay-btn" onclick="haptic(&apos;medium&apos;);launchDodo()">Pay $17</button>
     <button class="unlock-btn pay-overlay-btn" style="background:transparent;border-color:#ffffff;color:#ffffff;box-shadow:none" onclick="haptic(&apos;medium&apos;);hidePayOverlay()">Back to Cube</button>
   </div>
   <div class="legal-footer">
