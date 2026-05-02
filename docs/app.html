@@ -2242,6 +2242,7 @@ function ensureDodoSdk(){
 // to fire SIGNED_IN, THEN run the unlock. We use a flag + a one-shot
 // listener to handle this race-free.
 let _qcPendingPaymentUnlock = false;
+let _qcUnlockInFlight = false;
 
 async function checkDodoReturn(){
   const params = new URLSearchParams(window.location.search);
@@ -2270,48 +2271,62 @@ async function checkDodoReturn(){
   attemptPaymentUnlock();
 }
 
-async function attemptPaymentUnlock(){
-  if (!_qcPendingPaymentUnlock) return;
-  console.log("[QC-DIAG] attemptPaymentUnlock starting");
+async function attemptPaymentUnlock(passedSession){
+  if (!_qcPendingPaymentUnlock) {
+    console.log("[QC-DIAG] attemptPaymentUnlock skipped — no pending unlock");
+    return;
+  }
+  if (_qcUnlockInFlight) {
+    console.log("[QC-DIAG] attemptPaymentUnlock skipped — already in flight");
+    return;
+  }
+  _qcUnlockInFlight = true;
+  console.log("[QC-DIAG] attemptPaymentUnlock starting (session arg:", passedSession ? "present" : "absent", ")");
 
   let attempts = 0;
-  const maxAttempts = 8; // ~12s total at 1.5s intervals
+  const maxAttempts = 8;
 
   const poll = async () => {
     attempts++;
     console.log("[QC-DIAG] poll attempt", attempts);
 
-    let session = null;
-    try {
-      // Use getUser instead of getSession — getUser uses the cached auth
-      // state and doesn't hang waiting for restore.
-      const { data: { user } } = await sb.auth.getUser();
-      if (user) {
-        // Get the session for the access token (fast once auth is restored)
+    // Use passedSession on first iteration; on retries fall back to
+    // querying. The await getSession should be safe by then because
+    // INITIAL_SESSION event has already fired (which is what woke us up).
+    let session = passedSession;
+    if (!session && attempts > 1) {
+      try {
         const r = await sb.auth.getSession();
         session = r?.data?.session || null;
+        console.log("[QC-DIAG] getSession returned:", session ? "session present" : "null");
+      } catch (e) {
+        console.error("[QC-DIAG] getSession threw:", e);
       }
-    } catch (e) {
-      console.error("[QC-DIAG] auth fetch error:", e);
     }
 
     if (!session || !session.user) {
       console.log("[QC-DIAG] no session yet, retry in 1.5s");
+      passedSession = null; // clear the stale arg
       if (attempts < maxAttempts) {
         setTimeout(poll, 1500);
       } else {
         console.error("[QC-DIAG] gave up — no session after", maxAttempts, "attempts");
         _qcPendingPaymentUnlock = false;
+        _qcUnlockInFlight = false;
       }
       return;
     }
 
     try {
-      const { data: profile } = await sb
+      const { data: profile, error: profErr } = await sb
         .from("profiles")
         .select("*")
         .eq("id", session.user.id)
         .single();
+
+      if (profErr) {
+        console.error("[QC-DIAG] profile query error:", profErr);
+      }
       console.log("[QC-DIAG] profile:", profile ? `has_paid=${profile.has_paid}` : "NO PROFILE");
 
       if (profile && profile.has_paid === true) {
@@ -2321,23 +2336,27 @@ async function attemptPaymentUnlock(){
           console.log("[QC-DIAG] unlock applied");
         }
         _qcPendingPaymentUnlock = false;
-        return; // done
+        _qcUnlockInFlight = false;
+        return;
       }
 
-      // has_paid still false — webhook hasn't landed yet, retry
       if (attempts < maxAttempts) {
         console.log("[QC-DIAG] has_paid still false, retry in 1.5s");
+        passedSession = null;
         setTimeout(poll, 1500);
       } else {
         console.error("[QC-DIAG] gave up waiting for has_paid after", maxAttempts, "attempts");
         _qcPendingPaymentUnlock = false;
+        _qcUnlockInFlight = false;
       }
     } catch (e) {
       console.error("[QC-DIAG] profile fetch error:", e);
+      passedSession = null;
       if (attempts < maxAttempts) {
         setTimeout(poll, 1500);
       } else {
         _qcPendingPaymentUnlock = false;
+        _qcUnlockInFlight = false;
       }
     }
   };
@@ -2897,8 +2916,8 @@ async function handleResendMagicLink(){
 sb.auth.onAuthStateChange(async (event, session) => {
   console.log("[QC-DIAG] onAuthStateChange:", event, "user:", session?.user?.email || "(no user)");
   if (_qcPendingPaymentUnlock && (event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
-    console.log("[QC-DIAG] auth event fired with pending unlock, retrying");
-    attemptPaymentUnlock();
+    console.log("[QC-DIAG] auth event fired with pending unlock, calling unlock with session");
+    attemptPaymentUnlock(session);
   }
   if(event === "SIGNED_IN" && session && session.user){
     qcCurrentUser = session.user;
