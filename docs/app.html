@@ -2197,7 +2197,7 @@ return paras.map(p=>"<p>"+p+"</p>").join("");
 // session loss. Webhook (dodo-webhook) flips has_paid server-side;
 // onEvent handler refetches profile + unlocks the cube in place.
 
-const DODO_MODE = "live"; // "test" or "live" — flip for production
+const DODO_MODE = "test"; // "test" or "live" — flip for production
 
 // The jsdelivr UMD bundle attaches the API as window.DodoPaymentsCheckout.DodoPayments.
 // This helper resolves the right object regardless of how the SDK is loaded.
@@ -2231,6 +2231,7 @@ function ensureDodoSdk(){
 }
 
 async function handleDodoEvent(event){
+  console.log("[QC-DIAG] handleDodoEvent ENTRY:", JSON.stringify(event));
   if (!event || !event.event_type) return;
   // checkout.redirect fires on successful payment before checkout.closed.
   // checkout.closed fires whether the user paid, cancelled, or hit X.
@@ -2242,17 +2243,22 @@ async function handleDodoEvent(event){
     // already handles this gracefully via syncUnlockFromProfile.
     setTimeout(async () => {
       try {
+        console.log("[QC-DIAG] post-checkout setTimeout firing");
         const { data: { session } } = await sb.auth.getSession();
+        console.log("[QC-DIAG] session check:", session ? "ALIVE" : "DEAD");
         if (!session || !session.user) return;
+        console.log("[QC-DIAG] before profile fetch");
         const { data: profile } = await sb
           .from("profiles")
           .select("*")
           .eq("id", session.user.id)
           .single();
+        console.log("[QC-DIAG] profile fetched:", profile ? `has_paid=${profile.has_paid}` : "NO PROFILE");
         if (profile) {
           if (typeof qcCurrentProfile !== "undefined") qcCurrentProfile = profile;
           if (typeof syncUnlockFromProfile === "function") {
             syncUnlockFromProfile(profile);
+            console.log("[QC-DIAG] syncUnlockFromProfile called");
           }
         }
       } catch (e) {
@@ -2774,6 +2780,7 @@ async function handleResendMagicLink(){
 }
 
 sb.auth.onAuthStateChange(async (event, session) => {
+  console.log("[QC-DIAG] onAuthStateChange:", event, "user:", session?.user?.email || "(no user)");
   if(event === "SIGNED_IN" && session && session.user){
     qcCurrentUser = session.user;
     updateSettingsLinkVisibility();
