@@ -2271,6 +2271,32 @@ async function checkDodoReturn(){
   attemptPaymentUnlock();
 }
 
+// Read Supabase auth session straight from localStorage.
+// Bypasses sb.auth.getSession() / getUser() which HANG during post-redirect
+// INITIAL_SESSION restoration. The session is already in localStorage at this
+// point — we just need to read it directly.
+function _readSessionFromStorage(){
+  try {
+    // Supabase v2 stores under sb-<project-ref>-auth-token by default.
+    // Find any key matching that pattern.
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("sb-") && key.endsWith("-auth-token")) {
+        const raw = localStorage.getItem(key);
+        if (!raw) continue;
+        const parsed = JSON.parse(raw);
+        // Shape: { access_token, refresh_token, expires_at, user: {id, email, ...} }
+        if (parsed && parsed.access_token && parsed.user && parsed.user.id) {
+          return parsed;
+        }
+      }
+    }
+  } catch (e) {
+    console.error("[QC-DIAG] _readSessionFromStorage error:", e);
+  }
+  return null;
+}
+
 async function attemptPaymentUnlock(passedSession){
   if (!_qcPendingPaymentUnlock) {
     console.log("[QC-DIAG] attemptPaymentUnlock skipped — no pending unlock");
@@ -2290,23 +2316,12 @@ async function attemptPaymentUnlock(passedSession){
     attempts++;
     console.log("[QC-DIAG] poll attempt", attempts);
 
-    // Use passedSession on first iteration; on retries fall back to
-    // querying. The await getSession should be safe by then because
-    // INITIAL_SESSION event has already fired (which is what woke us up).
-    let session = passedSession;
-    if (!session && attempts > 1) {
-      try {
-        const r = await sb.auth.getSession();
-        session = r?.data?.session || null;
-        console.log("[QC-DIAG] getSession returned:", session ? "session present" : "null");
-      } catch (e) {
-        console.error("[QC-DIAG] getSession threw:", e);
-      }
-    }
+    // Get session: prefer passed-in arg, else read localStorage directly.
+    let session = passedSession || _readSessionFromStorage();
+    passedSession = null; // only use it once
 
-    if (!session || !session.user) {
-      console.log("[QC-DIAG] no session yet, retry in 1.5s");
-      passedSession = null; // clear the stale arg
+    if (!session || !session.user || !session.access_token) {
+      console.log("[QC-DIAG] no session in storage yet, retry in 1.5s");
       if (attempts < maxAttempts) {
         setTimeout(poll, 1500);
       } else {
@@ -2317,16 +2332,32 @@ async function attemptPaymentUnlock(passedSession){
       return;
     }
 
+    // Direct REST query — bypasses Supabase JS client entirely.
     try {
-      const { data: profile, error: profErr } = await sb
-        .from("profiles")
-        .select("*")
-        .eq("id", session.user.id)
-        .single();
-
-      if (profErr) {
-        console.error("[QC-DIAG] profile query error:", profErr);
+      const url = window.QC_SUPABASE_URL + "/rest/v1/profiles?id=eq."
+        + session.user.id + "&select=*";
+      console.log("[QC-DIAG] direct profile fetch:", url);
+      const res = await fetch(url, {
+        headers: {
+          "apikey": window.QC_SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + session.access_token,
+          "Accept": "application/json",
+        },
+      });
+      console.log("[QC-DIAG] profile fetch status:", res.status);
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error("[QC-DIAG] profile fetch failed:", errText);
+        if (attempts < maxAttempts) {
+          setTimeout(poll, 1500);
+        } else {
+          _qcPendingPaymentUnlock = false;
+          _qcUnlockInFlight = false;
+        }
+        return;
       }
+      const rows = await res.json();
+      const profile = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
       console.log("[QC-DIAG] profile:", profile ? `has_paid=${profile.has_paid}` : "NO PROFILE");
 
       if (profile && profile.has_paid === true) {
@@ -2342,7 +2373,6 @@ async function attemptPaymentUnlock(passedSession){
 
       if (attempts < maxAttempts) {
         console.log("[QC-DIAG] has_paid still false, retry in 1.5s");
-        passedSession = null;
         setTimeout(poll, 1500);
       } else {
         console.error("[QC-DIAG] gave up waiting for has_paid after", maxAttempts, "attempts");
@@ -2350,8 +2380,7 @@ async function attemptPaymentUnlock(passedSession){
         _qcUnlockInFlight = false;
       }
     } catch (e) {
-      console.error("[QC-DIAG] profile fetch error:", e);
-      passedSession = null;
+      console.error("[QC-DIAG] direct profile fetch error:", e);
       if (attempts < maxAttempts) {
         setTimeout(poll, 1500);
       } else {
