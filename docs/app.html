@@ -2268,26 +2268,12 @@ async function checkDodoReturn(){
 
   if (status === "succeeded") {
     console.log("Dodo payment succeeded:", paymentId);
-    // Webhook flips has_paid server-side. Give it a moment to land,
-    // then refetch profile and re-sync unlock state.
-    setTimeout(async () => {
-      try {
-        const { data: { session } } = await sb.auth.getSession();
-        if (!session || !session.user) return;
-        const { data: profile } = await sb
-          .from("profiles")
-          .select("*")
-          .eq("id", session.user.id)
-          .single();
-        if (profile) {
-          if (typeof qcCurrentProfile !== "undefined") qcCurrentProfile = profile;
-          if (typeof syncUnlockFromProfile === "function") {
-            syncUnlockFromProfile(profile);
-          }
-        }
-      } catch (e) {
-        console.error("post-payment profile sync failed:", e);
-      }
+    // Give the webhook 1.5s to land has_paid=true server-side, then
+    // hard-reload. Reload re-runs onAuthStateChange from clean state,
+    // which fetches the freshly-flipped profile and unlocks the cube.
+    // Avoids race conditions with session restore after cross-domain return.
+    setTimeout(() => {
+      window.location.reload();
     }, 1500);
   } else if (status === "cancelled" || status === "failed") {
     console.log("Dodo payment not completed:", status);
