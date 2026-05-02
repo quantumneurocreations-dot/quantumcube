@@ -2368,6 +2368,27 @@ async function attemptPaymentUnlock(passedSession){
         }
         _qcPendingPaymentUnlock = false;
         _qcUnlockInFlight = false;
+
+        // User is on Face 0 (sign-up) because runCalculation hasn't fired.
+        // Populate the form from the profile and trigger runCalculation
+        // so the user lands inside the cube with their unlocked content.
+        if (typeof populateFormFromProfile === "function") {
+          const userObj = { id: profile.id, email: profile.email };
+          const populated = populateFormFromProfile(profile, userObj);
+          console.log("[QC-DIAG] form populated:", populated);
+          if (populated && typeof runCalculation === "function") {
+            console.log("[QC-DIAG] triggering runCalculation");
+            // Small delay so DOM updates from populate settle
+            setTimeout(() => {
+              try {
+                runCalculation();
+                console.log("[QC-DIAG] runCalculation called");
+              } catch (e) {
+                console.error("[QC-DIAG] runCalculation error:", e);
+              }
+            }, 200);
+          }
+        }
         return;
       }
 
