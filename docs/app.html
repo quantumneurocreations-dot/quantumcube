@@ -2230,6 +2230,72 @@ function ensureDodoSdk(){
   return true;
 }
 
+// On page load: detect Dodo redirect params (payment_id + status=succeeded)
+// and trigger the unlock flow. Dodo's overlay SDK ends the payment with
+// a real redirect to /status/<id>/succeeded and then back to our return_url
+// with payment_id appended — this kills any JS state from the overlay's
+// onEvent handler. So we drive unlock from URL params on the fresh load.
+async function checkDodoReturn(){
+  const params = new URLSearchParams(window.location.search);
+  const paymentId = params.get("payment_id");
+  const status = params.get("status");
+  if (!paymentId) return; // not a Dodo return
+
+  console.log("[QC-DIAG] checkDodoReturn detected payment_id=", paymentId, "status=", status);
+
+  // Strip the params so a refresh doesn't loop the unlock attempt
+  const cleanUrl = window.location.origin + window.location.pathname;
+  window.history.replaceState({}, "", cleanUrl);
+
+  if (status !== "succeeded") {
+    console.log("[QC-DIAG] payment not succeeded, no unlock");
+    return;
+  }
+
+  // Webhook may lag the redirect by 1-2 seconds. Poll the profile
+  // until has_paid is true OR we hit a max attempt count.
+  let attempts = 0;
+  const maxAttempts = 8; // ~12 seconds total at 1.5s intervals
+  const tryUnlock = async () => {
+    attempts++;
+    console.log("[QC-DIAG] tryUnlock attempt", attempts);
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session || !session.user) {
+        console.log("[QC-DIAG] no session yet, retrying...");
+        if (attempts < maxAttempts) setTimeout(tryUnlock, 1500);
+        return;
+      }
+      const { data: profile } = await sb
+        .from("profiles")
+        .select("*")
+        .eq("id", session.user.id)
+        .single();
+      console.log("[QC-DIAG] profile:", profile ? `has_paid=${profile.has_paid}` : "NO PROFILE");
+      if (profile && profile.has_paid === true) {
+        if (typeof qcCurrentProfile !== "undefined") qcCurrentProfile = profile;
+        if (typeof syncUnlockFromProfile === "function") {
+          syncUnlockFromProfile(profile);
+          console.log("[QC-DIAG] unlock applied");
+        }
+        return; // done
+      }
+      // has_paid still false — webhook hasn't landed yet, retry
+      if (attempts < maxAttempts) {
+        console.log("[QC-DIAG] has_paid still false, retrying...");
+        setTimeout(tryUnlock, 1500);
+      } else {
+        console.error("[QC-DIAG] gave up waiting for has_paid after", maxAttempts, "attempts");
+      }
+    } catch (e) {
+      console.error("[QC-DIAG] tryUnlock error:", e);
+      if (attempts < maxAttempts) setTimeout(tryUnlock, 1500);
+    }
+  };
+  // Initial delay to give webhook a head start
+  setTimeout(tryUnlock, 1000);
+}
+
 async function handleDodoEvent(event){
   console.log("[QC-DIAG] handleDodoEvent ENTRY:", JSON.stringify(event));
   if (!event || !event.event_type) return;
@@ -3269,6 +3335,7 @@ resetIdleTimer();
 // ── ON PAGE LOAD: check stored unlock ──
 (function(){
   checkStoredUnlock();
+  checkDodoReturn();
   // Always start on face0 unless payment just completed
   const params = new URLSearchParams(window.location.search);
   if(params.get("pf") !== "success"){
