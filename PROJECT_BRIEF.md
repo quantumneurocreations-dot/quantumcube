@@ -1,6 +1,6 @@
 # QUANTUM CUBE — MASTER PROJECT DOCUMENT
 
-**Version: v30 | Last Updated: May 3, 2026 (Sunday, morning)**
+**Version: v31 | Last Updated: May 3, 2026 (Sunday, afternoon)**
 
 ---
 
@@ -35,15 +35,23 @@ The kickoff doc handles session startup, role split between Chat Claude and Curs
 
 ## 📣 MARKETING — see MARKETING_PLAYBOOK.md
 
-Marketing strategy, launch sequencing, channel playbooks, tools evaluated (Vloxo, AppSumo, G2, Capterra all rejected with reasoning), and growth metrics live in the separate marketing playbook. The brief stays focused on build, infra, and architecture. When working on marketing tasks in a new chat, attach MARKETING_PLAYBOOK.md + CHAT_KICKOFF.md instead of this brief.
+Marketing strategy, launch sequencing, channel playbooks, customer positioning thesis (curious dabbler), shareable cosmic-profile card concept, SEO content strategy, email deliverability plan, tools evaluated, and growth metrics live in the separate marketing playbook. The brief stays focused on build, infra, and architecture. When working on marketing tasks in a new chat, attach MARKETING_PLAYBOOK.md + CHAT_KICKOFF.md instead of this brief.
+
+**Social channel ownership:** Michelle takes over all social media posting and interaction from May 4, 2026 (Monday). Brief stays code-focused; Michelle's content workflow lives in the playbook.
 
 ---
 
 ## STRATEGIC CONTEXT (locked May 3, 2026)
 
-Strategic decisions from the May 2 evening + May 3 morning conversation are **locked** here and mirrored in `MARKETING_PLAYBOOK.md` v2. Payment geography, Play Store phasing, and subscription roadmap below are **technical + business truth** for engineering and ops — not aspirational notes.
+Strategic decisions from the May 2 evening + May 3 morning + May 3 afternoon conversations are **locked** here and mirrored in `MARKETING_PLAYBOOK.md` v3. Payment geography, Play Store phasing, customer positioning, and product expansion roadmap below are **technical + business truth** for engineering and ops — not aspirational notes.
 
 **Team capacity:** 3 full-time partners (Ronnie + 2). Quantum Cube is **one of three QNC projects** — a launched byproduct with real revenue that can scale on its own, while **QNC Academy stays the primary focus** and the HR-screening product stays secondary.
+
+**Social channel ownership:** Michelle takes over all social posting + interaction from **May 4, 2026 (Monday)**. Detailed content workflow + SEO blog strategy + FindQuestions.com process lives in the playbook. Brief stays code-focused.
+
+**Customer thesis (locked May 3 PM):** Target is the **curious dabbler** (~70-75% of market), not the hardcore astrology enthusiast (~10-15%) or pure gift buyer (~10-15%). The wedge is **simplicity, beauty, one-shot completeness** — not depth. Co-Star wins depth; we don't compete there. Full thesis in playbook.
+
+**Product model (locked May 3 PM — supersedes subscription tier plan):** **Multi-product one-time-purchase** is the working hypothesis, NOT subscription. Each new product is its own Dodo product + own `has_paid`-style flag, $17 (Family $25). Planned product line: Quantum Cube (live) → Compatibility → Year Ahead → Tarot → Family. Subscription tier (Quantum Cube Plus, $9.99/mo) is **demoted to "evaluate at month 6 if data supports"** — see PRODUCT EXPANSION ROADMAP below.
 
 **Budget posture:** Money is **not** the limiting factor. Aggressive paid-ad testing, content-production retainers, influencer partnerships, and PR engagements are all authorized when execution-ready.
 
@@ -51,11 +59,37 @@ Strategic decisions from the May 2 evening + May 3 morning conversation are **lo
 
 **Three legitimate outcome paths** — revisit at **month 6** with real channel + revenue data:
 
-1. **Build big** — scale Quantum Cube as a durable revenue line inside QNC.
-2. **Build to flippable** — package documented growth + recurring subscription tier for acquisition by spirituality/wellness platforms (Calm-class strategics, astrology networks, etc.).
+1. **Build big** — scale Quantum Cube + sibling products as a durable revenue line inside QNC.
+2. **Build to flippable** — package documented growth + multi-product portfolio for acquisition by spirituality/wellness platforms (Calm-class strategics, astrology networks, etc.).
 3. **Build modestly** — sustain on lighter touch + organic while partner capacity stays on Academy + HR.
 
 This section stays **additive** with historical brief content — nothing above is deleted.
+
+---
+
+## 🎉 BIGGEST WINS SINCE v30 (May 3, 2026 — afternoon strategic session)
+
+**1. CUSTOMER POSITIONING THESIS LOCKED — curious dabbler, not hardcore enthusiast.** ← May 3 PM. Market roughly splits: ~10-15% hardcore (Co-Star/Pattern/Sanctuary subscribers), ~70-75% **curious dabblers** (the underserved segment we target), ~10-15% gift buyers. The dabbler wants a beautiful, quick, meaningful one-off reading without subscription fatigue, daily push notifications, or a content treadmill. Our wedge is **simplicity, beauty, one-shot completeness** — not depth. Co-Star wins depth; we don't compete there. Full thesis lives in MARKETING_PLAYBOOK.md v3.
+
+**2. PRODUCT MODEL LOCKED — multi-product one-time-purchase, NOT subscription.** ← May 3 PM. Subscription tier (Quantum Cube Plus, $9.99/mo with daily horoscopes) is the **wrong model for our customer segment**. Building daily horoscope infrastructure would solve a problem the curious dabbler doesn't have. Conversion would be ~2-3% not the 12-15% projected for general spirituality apps. Instead: lifetime value comes from **new one-time products**, not recurring revenue from one product. Planned product line: Quantum Cube (live, $17) → Quantum Compatibility ($17) → Quantum Year Ahead ($17) → Quantum Tarot ($17) → Quantum Family ($25, gifting angle). Each its own Dodo product, each its own paid flag in Supabase. Math check: 50,000 base users × 30% Compatibility + 20% Year Ahead = ~$1.275M gross vs ~$850k for Cube-only. Subscription tier demoted to "evaluate at month 6 if data supports it" — see PRODUCT EXPANSION ROADMAP below.
+
+**3. SHAREABLE COSMIC-PROFILE CARD identified as the one engagement-loop feature worth building.** ← May 3 PM. A beautiful single-image PNG summary of the user's reading they can save to phone or share to Instagram Stories / TikTok / WhatsApp. Drives three things at once: viral moment (friend asks "where'd you get this?"), returning-user moment (revisit to re-share), gifting trigger. Tentative placement: extension of Face 6 (Complete) with "Save your cosmic card" button. Server-side PNG generation from profile data. Not a launch-blocker — slot into Phase 2 polish or Phase 6 (months 3-4) depending on capacity. Spec lives in playbook.
+
+**4. RETENTION MECHANISM CLARITY — three drivers, two natural fits.** ← May 3 PM. Spirituality apps that retain over years do so through (a) life-event moments [new relationship, job, birthday, decision] → maps to Compatibility / Year Ahead / Tarot, (b) gifting → maps to Family + gift codes for any product, (c) community/sharing → maps to shareable cosmic card. We deliberately don't need the typical 4th mechanism (daily horoscope + push notifications) because our customer segment doesn't want it.
+
+**5. SOCIAL CHANNEL OWNERSHIP — Michelle takes over from May 4 (Monday).** ← May 3 PM. All social media posting + interaction handed to Michelle: TikTok, Instagram, Facebook, X, Pinterest, Threads. Detailed content workflow + SEO blog strategy (FindQuestions.com + EEAT framework) lives in playbook v3. Brief stays code-focused. Pre-handover prep needed before Monday: content guidelines doc, brand voice template, response handling templates.
+
+**6. PRE-LAUNCH SECURITY AUDIT SCOPED — OWASP-style review before Play Store submission.** ← May 3 PM. Slot between Phase 2 polish and Phase 5a Play Store submission (~1-2 weeks out). Quick-win checks: open endpoints, pagination on list endpoints, error message verbosity (currently might leak too much detail), rate limiting on `delete-account` + `export-data` (currently only `narrate` is rate-limited), Supabase RLS audit, SQL injection vectors on Edge Function inputs, JWT/auth header validation. ~1-2 hours focused work.
+
+**7. BUG REPORTER / SENTRY moved up the priority list.** ← May 3 PM. Should ship before public marketing push. Right now if a customer hits a bug we have zero visibility — we're flying blind on production errors. ~20 min implementation. Promoted from "Cleanup" to "Pre-Marketing-Push" in priority order.
+
+**8. EMAIL DELIVERABILITY PLAN — burner / warmup domain for marketing emails.** ← May 3 PM. When marketing emails start (likely month 2+ when subscriber list grows), sending from `quantumcube.app` cold = junk folder. Standard practice: warm up a secondary sending domain (e.g. `mail.quantumcube.app` or separate root domain) over 4-6 weeks before high-volume sends. Transactional emails (magic-link, payment confirmation) stay on the primary domain. Bookmark for month 1-2.
+
+**9. APPLE APP STORE PHASE 8 — Small Business Program + Restore Purchases + Sign in with Apple.** ← May 3 PM. When we ship to iOS (months 6-9), three add-ons confirmed: (a) apply for **Apple Small Business Program** (drops Apple's 30% cut to 15% if under $1M annual; free, automatic), (b) implement **Restore Purchases button** (Apple hard requirement), (c) implement **Sign in with Apple** (required if any other social login is offered). Slotted into Phase 8 details.
+
+**10. MARKETING TOOLS / DIRECTORIES TRIAGE — definitive list.** ← May 3 PM. From Ronnie's running list, the following are confirmed **rejected**: AppSumo, G2, Capterra, Vloxo, BetaList, uNeed, Fazier, Microlaunch, Peerlist, Tiny Launch, Tiny Startup, SideProjects, LaunchIgniter, PeerPush (all wrong audience — indie SaaS dev bubble). RevenueCat is "wait until/if subscription tier returns at month 6". Stitch MCP, NanoBanano, 21st.dev, UI UX Pro form library all bookmarked as dev tooling not relevant now. Sideshift (crypto) not relevant. Cooky-AI investigated, not relevant. WindsorAI bookmarked for Phase 7 paid-ads dashboard. Beehiiv bookmarked for newsletter when list grows. **Stick with the playbook's launch sequence: Product Hunt + Indie Hackers + Hacker News only.** Detailed reasoning in playbook.
+
+**11. SEO CONTENT STRATEGY ADDED — FindQuestions.com + EEAT blog framework.** ← May 3 PM. One blog post per week answering real searched questions in spirituality/numerology/astrology niche, structured with the EEAT framework Google rewards (Experience, Expertise, Authority, Trust). Pair with `quantumcube.app/blog/` subdirectory. Compounding organic traffic. Michelle owns. Full process + Claude prompt template in playbook.
 
 ---
 
@@ -405,7 +439,7 @@ End-to-end overlay checkout integration. User stays on `quantumcube.app` for the
 - **Web (PWA at `quantumcube.app`):** Current architecture — `dodo-create-session` mints checkout sessions; overlay completes payment; `dodo-webhook` flips `has_paid`. This remains the **canonical purchase path** globally.
 - **Android — United States:** Under the **Epic v. Google** injunction landscape (as of 2025–2026), Google Play must permit **alternative billing / reduced commission paths** for digital goods in the US when developers comply with program rules. Plan: **ship US Play Store build without native Play Billing** where policy allows external checkout — users complete payment via **the same Dodo overlay / web checkout** deep-linked from the app. Google collects **no 30%** on those flows when exempt.
 - **Android — EU / UK / other DMA-style markets:** Google’s **External Offers Program** and related EU rules let qualified developers steer users to **off-Play web checkout** for digital content. Same **Dodo** checkout — add jurisdiction checks + Play policy compliance layer in the Android wrapper when expanding beyond the US.
-- **Tier 3 subscriptions (future):** When Quantum Cube Plus (~\$9.99/mo) ships, **Dodo subscription APIs + webhooks** remain primary on web; **Google Play Billing** is integrated **only where Play policy mandates an in-store digital-subscription path** — dual-stack billing with entitlement sync in Supabase, not a Dodo replacement.
+- **Multi-product expansion (locked May 3 PM):** Each new product (Compatibility, Year Ahead, Tarot, Family) is **its own Dodo product** with separate session-mint flow + separate webhook event handling, sharing the same `dodo-create-session` + `dodo-webhook` Edge Function infrastructure. No subscription complexity. **Dodo subscription APIs reserve only as fallback** if the month-6 data review surfaces a real subscription opportunity our customer thesis is wrong about.
 
 **Net:** Dodo is the **long-term payments core**. Play Billing is a **compliance overlay** where the store requires it, not a strategic pivot away from Dodo.
 
@@ -455,26 +489,61 @@ Paddle's AUP explicitly prohibits: *"Digital services associated with pseudo-sci
 
 ---
 
-## 💰 SUBSCRIPTION TIER ROADMAP (planned — Quantum Cube Plus)
+## 💰 PRODUCT EXPANSION ROADMAP (multi-product one-time-purchase — locked May 3 PM)
 
-**Tier 2 (live — current product):** One-time **\$17** lifetime access to the core reading (numerology + Western astrology + Chinese zodiac + premium AI-narrated content). This tier **never goes away** — existing buyers retain lifetime access permanently.
+**Locked product model:** Lifetime value comes from **new one-time products**, not recurring revenue from one product. Subscription tier is **demoted to reserve option** — see "Subscription tier (reserve)" below.
 
-**Tier 3 (planned — working name *Quantum Cube Plus*, ~\$9.99/mo target):** Subscription add-on — daily horoscope generation, push notifications, tarot draws, compatibility logic / deeper relational readings.
+### Live product
 
-**Implementation phasing:**
+**Quantum Cube — $17 USD, one-time, lifetime access.** Numerology + Western astrology + Chinese zodiac + premium AI-narrated content. **Existing buyers retain lifetime access permanently** regardless of any future product changes.
 
-- **Months 1–3 post-launch:** Focus on growing **Tier 2**. Validate funnel. Listen to feedback. **Do not** add Tier 3 complexity yet.
-- **Month 3–4:** Start building Tier 3 features (daily horoscope generation, push notifications, tarot draws, compatibility logic) **in parallel with marketing**.
-- **Month 4–5:** **Soft launch** Tier 3 to existing Tier 2 customers (warm leads, easier conversion). Refine pricing + feature bundle.
-- **Month 5–6:** **Full public launch** of Tier 3 alongside Tier 2.
+### Planned product line
 
-**Migration safety:** Existing Tier 2 customers **keep** lifetime access forever. Tier 3 is **purely additive**. Offer upgrades **in-app** — **never** revoke Tier 2 access as a forcing function.
+Each new product is **its own Dodo product**, **its own paid flag** in Supabase profiles (or its own row in a new `entitlements` table when we add the second product), and shares the same `dodo-create-session` + `dodo-webhook` Edge Function infrastructure.
 
-**Cost considerations:**
 
-- **Daily AI narration scales quickly** — e.g. 5,000 active subscribers ⇒ up to **5,000 daily horoscope renders**. Plan to move **daily drip content** to **lower-cost TTS** (Azure Speech, Google Cloud TTS, etc.); **reserve Valory / ElevenLabs** for the premium **one-time reading** experience.
-- **Push notifications:** Firebase Cloud Messaging or OneSignal — **free** at projected scale.
-- **Churn:** model **5–10% monthly** for subscription tier; retention driven by **daily content quality**, not discounting.
+| Product                  | Price | Hook                                                            | Build complexity                                |
+| ------------------------ | ----- | --------------------------------------------------------------- | ----------------------------------------------- |
+| **Quantum Compatibility** | $17  | You + partner reading. Plays directly into "send to your S/O." | Medium — needs second profile capture + diff logic |
+| **Quantum Year Ahead**    | $17  | Annual personalised forecast. Refreshable yearly = revisit hook | Medium — needs date-anchored content generation |
+| **Quantum Tarot**         | $17  | One-off tarot session. Standalone, no birth data dependency     | Low-medium — card draw + interpretation logic    |
+| **Quantum Family**        | $25  | Family/parent/child compatibility. Gifting angle.              | Medium-high — multi-profile capture, relationship logic |
+
+
+**Math check (illustrative):** 50,000 base Cube users × 30% Compatibility attach + 20% Year Ahead attach = ~$1.275M gross vs ~$850k Cube-only. Better than subscription model without churn worry, content treadmill, or ongoing TTS narration costs.
+
+### Implementation phasing
+
+- **Months 1–3 post-launch:** Focus on growing **Quantum Cube**. Validate funnel. Listen to feedback. **Do not** build sibling products yet.
+- **Month 3–4:** Start building **Quantum Compatibility** (highest attach potential — direct gifting/sharing angle). **Soft launch** to existing Cube customers as warm leads.
+- **Month 4–5:** Soft-launch **Quantum Year Ahead** and **Quantum Tarot** in parallel.
+- **Month 5–6:** **Quantum Family** for gifting season (mid-year + Q4). Re-evaluate full portfolio at month 6.
+
+### Engagement-loop feature: shareable cosmic-profile card
+
+**Slot decision pending.** A beautiful single-image PNG summary of the user's reading they can save to phone or share to Instagram Stories / TikTok / WhatsApp. Drives viral moment + returning-user moment + gifting trigger in one move. Tentative placement: extension of Face 6 (Complete) with "Save your cosmic card" button. Server-side PNG generation from profile data. Not a launch-blocker. Detailed spec lives in MARKETING_PLAYBOOK.md v3.
+
+### Migration safety
+
+**Existing Cube customers keep lifetime access forever.** Sibling products are **purely additive**. Offer upgrades in-app and via email — **never** revoke any prior product access as a forcing function.
+
+### Subscription tier (reserve option, evaluate at month 6)
+
+The original Quantum Cube Plus concept (~$9.99/mo subscription with daily horoscope generation, push notifications, daily tarot, deeper relational readings) is **deferred and demoted**. Reasons:
+
+- Curious-dabbler customer segment doesn't want a content treadmill or daily push
+- Conversion would likely be ~2-3% not the 12-15% projected for general spirituality apps
+- Daily AI narration scales costs quickly (5,000 subscribers ⇒ up to 5,000 daily renders)
+- Multi-product approach hits similar revenue without churn or content burden
+
+**Re-evaluate at month 6** if real data surfaces a subscription opportunity our thesis is wrong about. If we revisit:
+- Move daily drip content to lower-cost TTS (Azure Speech, Google Cloud TTS)
+- Reserve Valory / ElevenLabs for premium one-time products
+- Push notifications via Firebase Cloud Messaging or OneSignal (free at projected scale)
+- Model 5–10% monthly churn; retention driven by daily content quality not discounting
+- RevenueCat as the subscription management layer (Apple IAP + Play Billing + Stripe in one SDK)
+
+This subsection stays in the brief as a documented option, not the active plan.
 
 ---
 
@@ -955,7 +1024,7 @@ Hardware + OS unchanged. Native ARM64 dev tools confirmed (Node v24.15.0, Supaba
 
 ## TECH STACK (LOCKED)
 
-- **Frontend:** Single HTML file at `docs/app.html`, vanilla JS, CSS3 3D transforms, glassmorphism. **File size: ~349 KB, ~3196 lines.** `runCalculation` at line ~2746 (Apr 30 reference; will drift)
+- **Frontend:** Single HTML file at `docs/app.html`, vanilla JS, CSS3 3D transforms, glassmorphism. **File size: ~349 KB, ~3196+ lines.** `runCalculation` at line ~3100 (May 3 reference; will drift)
 - **Public site:** static HTML pages at `docs/index.html` + 8 legal pages, shared `docs/styles.css`
 - **PWA Manifest:** static file at `docs/manifest.json`. **Real PNG icons (Apr 30):** 192/512/512-maskable.
 - **Fonts:** Cinzel Decorative, Cinzel, Cormorant Garamond — Google Fonts CDN only (self-hosted woff2 backup retired Apr 30; Google Fonts has been rock-solid for over a decade)
@@ -1151,7 +1220,7 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 | signInWithOtp paths                                     | ~2379, ~2445                                  |
 | sb.auth.onAuthStateChange                               | ~2472                                         |
 | signOut                                                 | ~2622                                         |
-| `**function runCalculation`**                           | **~2930** (STABLE ANCHOR — verified May 2 PM) |
+| `**function runCalculation`**                           | **~3100** (STABLE ANCHOR — verified May 3 PM) |
 | `_wipeAllLocalState`                                    | ~2631                                         |
 | `exportMyData`                                          | ~2641                                         |
 | `armDeleteAccount`                                      | ~2681                                         |
@@ -1238,7 +1307,66 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 
 ---
 
-## WHAT'S LEFT — ORDERED BY PRIORITY (May 2 PM update — POST-LAUNCH)
+## 🛡️ PRE-LAUNCH SECURITY AUDIT (OWASP-style) — slot before Phase 5a Play Store
+
+**Status:** Scoped May 3 PM. **Run time:** ~1-2 hours focused. **Slot between Phase 2 polish and Phase 5a Play Store submission** (~1-2 weeks out from May 3).
+
+### Why now, not earlier
+
+The web product has been live since Apr 24 with payments since May 2. A formal security audit pass before Play Store submission catches anything that public marketing volume + Google's automated security review would surface. This is a "do once, tighten once" investment — not ongoing monitoring (Sentry handles that separately).
+
+### Audit checklist
+
+**Authentication + authorization:**
+- [ ] Confirm `verify_jwt = false` Edge Functions (`narrate`, `delete-account`, `export-data`, `dodo-create-session`, `dodo-webhook`) all manually validate auth correctly. `delete-account` and `export-data` should never trust a client-supplied user_id — both already use `getUser(jwt)` per Apr 29 build. Re-verify.
+- [ ] RLS audit: confirm all 3 `profiles` policies still in place. Confirm `narrate_rate_counters` has appropriate RLS (it should, but verify).
+- [ ] Confirm the column-level `with check` clause on `has_paid` still prevents user-side mutation. This was always there per Apr 17 migration but never explicitly tested with a malicious-user PATCH attempt.
+- [ ] Webhook signature verification: re-confirm `dodo-webhook` Standard Webhooks signature check is non-bypassable (replay attack resistance).
+
+**Rate limiting + abuse:**
+- [ ] `narrate`: already rate-limited (5/min, 20/hr per IP) ✓
+- [ ] `delete-account`: NOT currently rate-limited — add per-user rate limit (e.g. 1/hour per user). Low value to attacker but defensive.
+- [ ] `export-data`: NOT currently rate-limited — add (e.g. 5/hour per user). POPIA right of access doesn't require unlimited; reasonable cap is fine.
+- [ ] `dodo-create-session`: NOT currently rate-limited — add per-user cap (e.g. 10/hour per user) to prevent a logged-in attacker from minting unlimited checkout sessions.
+
+**Information disclosure:**
+- [ ] Error message verbosity audit: grep all Edge Functions and frontend for any error response that leaks stack traces, table names, internal IDs, or JWT contents. Replace with generic "internal error" responses.
+- [ ] Confirm no debug mode on in production (e.g. `console.log` left in Edge Functions, `?debug=1` query params honoured anywhere).
+- [ ] Open endpoint check: any unauthenticated endpoint that takes user input (only `narrate` qualifies, others all require auth) — confirm input validation is strict.
+
+**Frontend security:**
+- [ ] CSP (Content Security Policy) audit: do we have one set on the Pages-served HTML? If not, add a baseline. Inline `<script>` is unavoidable in a single-file PWA but can be allowed via `'unsafe-inline'` while restricting `connect-src` to our actual backends (Supabase, Dodo, ElevenLabs).
+- [ ] XSS audit: any place we render user-supplied data (name, email) into the DOM — confirm `textContent` not `innerHTML`.
+- [ ] Magic-link redirect audit: confirm Supabase redirect allow-list is tight enough (no wildcard subdomain leaks).
+
+**Pagination + list endpoints:**
+- We don't actually have any list endpoints exposed to client (no `GET /users`, `GET /payments`, etc.) — only single-record fetches via Supabase REST with RLS. Confirm this stays true with each new product addition.
+
+**Operational hygiene:**
+- [ ] Sentry shipped (~20 min — see WHAT'S LEFT)
+- [ ] Confirm zsh history sanitised of any leaked secrets (May 2 leak was cleaned, but worth one final sweep)
+- [ ] Apple Passwords / 1Password contains: Dodo Live + Test API keys, webhook secrets, Supabase service role key, Resend API key, Google Cloud service account, ElevenLabs API key. No plaintext anywhere else.
+- [ ] Burner / warmup domain registered for marketing emails (~month 1-2, not blocking Play Store) — see WHAT'S LEFT
+
+**Supply chain:**
+- [ ] CDN-loaded scripts inventory: Supabase JS UMD, Dodo overlay SDK UMD, Cinzel/Cinzel Decorative/Cormorant fonts. All from reputable hosts (cdn.jsdelivr.net, fonts.googleapis.com). Optionally pin SRI (Subresource Integrity) hashes for Supabase + Dodo SDKs.
+- [ ] Supabase Edge Function runtime: Deno auto-updates. Acceptable for our scale.
+
+### What this is NOT
+
+- Not a penetration test. We're not paying for an outside firm pre-launch.
+- Not ongoing security monitoring — that's Sentry's job + Supabase dashboard's job.
+- Not iOS-specific (Apple App Store has its own review and we're months from that anyway).
+
+### Output of this audit
+
+A single follow-up commit: `chore(security): pre-launch hardening pass`. Expected diff: rate-limit additions to 3 Edge Functions, error message tightening, CSP header if missing, any RLS gap fixes. Probably <100 LOC across 5-6 files.
+
+---
+
+
+
+## WHAT'S LEFT — ORDERED BY PRIORITY (May 3 PM update — POST-LAUNCH)
 
 ### ✅ LAUNCH ACHIEVED — May 2, 2026
 
@@ -1256,12 +1384,18 @@ Quantum Cube is live and accepting real payments. Real customers can buy a real 
 - E2E payment test in Live Mode (twice — morning and evening, both real $17 charges)
 - Refund of test payment confirmed (after settlement period)
 
-### ⚠️ HIGH-VALUE (not launch-blocker)
+### 🟥 PRE-MARKETING-PUSH (must ship before Phase 4 social launch)
+
+- **Phase 2 in-app polish** (~2-3 hours) — music auto-play 404 fix, welcome narration re-record at slower pace + plays once only inside cube, strip "Valory" branding from user-facing copy, full app walkthrough, magic-link payment E2E test, minor changes batch.
+- **Sentry error monitoring** (~20 min) — promoted from Cleanup. Right now we have zero production error visibility. Must ship before public marketing volume hits.
+- **OWASP-style pre-launch security audit** (~1-2 hours) — see PRE-LAUNCH SECURITY AUDIT section above. Slot between Phase 2 polish and Phase 5a Play Store submission.
+
+### ⚠️ HIGH-VALUE (not launch-blocker, ideally before Phase 5a Play Store)
 
 - Settings discoverability fix (gear icon, ~30 min)
-- Sentry error monitoring (~20 min)
 - Email re-verification UX — same-email resubmit detection
 - Magic-link email PNG wordmark upgrade (~10 min — copy file + update template img tag)
+- **Burner / warmup domain for marketing emails** (~30 min setup + 4-6 weeks warmup) — register `mail.quantumcube.app` or separate domain, configure SPF/DKIM/DMARC, warm up via gradual sending volume. Transactional emails (magic-link, payment confirmation) stay on primary domain. Not needed until marketing email list grows (month 1-2).
 
 ### 🧹 POST-LAUNCH CLEANUP
 
@@ -1307,7 +1441,11 @@ Quantum Cube is live and accepting real payments. Real customers can buy a real 
 - **LATAM + Brazil** heavy-up (spirituality content over-indexes)
 - **Dual billing** only in regions that **mandate** in-store digital payments — keep **Dodo** everywhere the law and Play policy allow off-store checkout
 
-**Apple App Store (months 6–9, deferred):** Capacitor + Xcode archive; Apple IAP rules for **digital subscriptions** may require in-app purchase for Tier 3 — legal + product review before ship.
+**Apple App Store (Phase 8 — months 6–9, deferred):** Capacitor + Xcode archive. Three Apple-specific add-ons confirmed May 3 PM:
+- **Apply for Apple Small Business Program** — drops Apple's commission from 30% to 15% if annual proceeds under $1M. Free, automatic enrolment. No-brainer.
+- **Implement Restore Purchases button** — Apple hard requirement. Required even for one-time products (lets customers restore on a new device or after reinstall). Maps to our existing `has_paid` flag check on auth restore.
+- **Implement Sign in with Apple** — required if any other social login is offered (we have Google OAuth). Add as a third sign-in option alongside Google and magic-link.
+- **Apple IAP politics for digital content** — Apple's stricter than Google about external payments. For one-time products under our multi-product roadmap, the Reader Rule + News Publisher Program don't apply. Most likely: implement Apple IAP alongside Dodo, with entitlement sync via webhooks. Legal + product review before ship.
 
 ---
 
@@ -1400,9 +1538,20 @@ Path `/Users/qnc/Projects/qnc-academy/`. Stack: Next.js + Vercel + Supabase (Ire
 
 ---
 
-## NEXT SESSION STARTING POINT (Updated May 3, 2026 — strategic context locked)
+### May 3 PM lessons (multi-product strategy lock)
 
-The launch is real. Strategic decisions are now locked from the May 2 evening + May 3 morning conversation. From here it's polish, payments-flow validation, marketing channel-by-channel attack planning, and Play Store submission prep.
+- **Wrong-model decisions are expensive to discover late.** Subscription tier (Quantum Cube Plus, $9.99/mo) was the working assumption from v25 through v30. Three weeks of brief space + planning energy went to it. May 3 PM realisation: customer thesis (curious dabbler) and product model (subscription) were misaligned — daily horoscope content treadmill solves a problem our segment doesn't have. Multi-product one-time-purchase is the correct model. Cost of catching this in week 6 vs week 26 is enormous. **Always sanity-check that the product model matches the customer profile, not just the revenue spreadsheet.**
+- **"Curious dabbler" beats "broad spirituality user" as a positioning frame.** Specificity sharpens every downstream decision: pricing (one-time wins), feature scope (less is more), retention design (life-event triggers + gifting + sharing, not daily push), competitive stance (Co-Star wins depth — we don't fight them there).
+- **Pre-launch tool/directory lists are 90% noise.** Of ~15 indie launch directories Ronnie's contacts had collected, zero are right for our product (all built for indie-dev SaaS). The signal is: Product Hunt + Indie Hackers + Hacker News only. The rest is "looks productive, isn't." Same lesson applied earlier to Vloxo, AppSumo, G2, Capterra. Keep saying no.
+- **Document role handovers explicitly.** Michelle taking social media from May 4 is a real ownership transfer — not "she helps sometimes." Brief now reflects this. Without explicit ownership, content goes nowhere or three people redo each other's work.
+- **Security audits before public marketing volume, not after.** Once the marketing flywheel turns, attack surface attention turns with it. OWASP-style pass scoped now, slot between Phase 2 polish and Phase 5a Play Store. Quick wins (rate limits on remaining Edge Functions, error message tightening, CSP) — not penetration testing.
+- **Sentry is critical infrastructure, not "nice to have."** Right now if a paying customer hits a bug we have zero visibility. ~20 min implementation. Promoting from Cleanup to Pre-Marketing-Push priority.
+
+---
+
+## NEXT SESSION STARTING POINT (Updated May 3, 2026 PM — multi-product roadmap locked)
+
+The launch is real. Strategic decisions are now locked from the May 2 evening + May 3 morning + May 3 afternoon conversations. From here it's polish, payments-flow validation, security audit, marketing channel-by-channel attack planning (Michelle leads from May 4), and Play Store submission prep.
 
 ### Phase 2 — In-app polish (~2-3 hours)
 
@@ -1445,14 +1594,17 @@ The launch is real. Strategic decisions are now locked from the May 2 evening + 
 - Submit to Production with US-only distribution
 - Initial review: 7-14 days
 
-### Phase 6 — Subscription tier infrastructure (parallel with Phase 5, months 3-5)
+### Phase 6 — Multi-product expansion (parallel with Phase 5, months 3-6)
 
-- See SUBSCRIPTION TIER ROADMAP section above
-- DB schema migration
-- Daily horoscope generation logic
-- Push notifications setup
-- Tarot draw + compatibility reading features
-- Subscription webhook handlers (Dodo + future Play Billing)
+- See PRODUCT EXPANSION ROADMAP section above for full detail
+- DB schema: introduce `entitlements` table when 2nd product ships (or expand `profiles` columns for first sibling — judgment call when we get there)
+- **Quantum Compatibility** ($17) — second profile capture, partner birth-data form, compatibility logic. Soft launch to existing Cube buyers as warm leads.
+- **Quantum Year Ahead** ($17) — annual personalised forecast, date-anchored content
+- **Quantum Tarot** ($17) — card-draw + interpretation, no birth-data dependency
+- **Quantum Family** ($25) — multi-profile family/parent/child compatibility, gifting angle
+- **Shareable cosmic-profile card** — extension of Face 6, server-side PNG generation, share-intent integration. Slot decision pending (Phase 2 polish or Phase 6).
+- Each product reuses existing `dodo-create-session` + `dodo-webhook` Edge Functions with new product IDs in Dodo dashboard
+- Subscription tier (Quantum Cube Plus) reserved as fallback if month-6 review surfaces a real subscription opportunity
 
 ### Phase 7 — Geographic expansion (months 2-6)
 
@@ -1462,16 +1614,21 @@ The launch is real. Strategic decisions are now locked from the May 2 evening + 
 ### Phase 8 — Apple App Store (months 6-9, deferred)
 
 - Capacitor wrap, Xcode archive
-- Apple IAP politics for digital content (may route subscriptions through web)
+- Apply for **Apple Small Business Program** (15% commission, automatic, free)
+- Implement **Restore Purchases button** (Apple hard requirement)
+- Implement **Sign in with Apple** (required when any social login is offered)
+- Apple IAP integration alongside Dodo, with entitlement sync via webhooks
 
 ### Recommended order at start of next session
 
 1. Run minimal health check (per CHAT_KICKOFF.md)
 2. Check status of evening refund (should now be clear, ~12+ hours since charge)
-3. Phase 2 in-app polish (focus task — get the polish ironed before public marketing push)
+3. **Phase 2 in-app polish** (focus task — get the polish ironed before Michelle's social push)
 4. Magic-link payment flow E2E test
-5. Update brief to v31 at end of session
+5. Sentry shipping (~20 min — moved up to pre-marketing-push priority)
+6. OWASP-style pre-launch security audit (~1-2 hours, before Phase 5a Play Store)
+7. Update brief to v32 at end of session
 
 ---
 
-**End of brief v30.**
+**End of brief v31.**
