@@ -1534,10 +1534,12 @@ function onFaceShown(n){
         var s = await sb.auth.getSession();
         uid = (s && s.data && s.data.session && s.data.session.user) ? s.data.session.user.id : "";
       }catch(e){}
-      var key = uid ? ("qc_greet_count_" + uid) : "qc_greet_count";
+      // Only play welcome greeting when signed in (i.e. inside the cube, not on signup Face 0).
+      if(!uid) return;
+      var key = "qc_greet_count_" + uid;
       var count = 0;
       try{ count = parseInt(localStorage.getItem(key)||"0",10)||0; }catch(e){}
-      if(count < 2){
+      if(count < 1){
         try{ localStorage.setItem(key, String(count+1)); }catch(e){}
         setTimeout(function(){ if(typeof playWelcomeGreeting==="function") playWelcomeGreeting(); }, 400);
       }
