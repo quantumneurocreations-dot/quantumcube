@@ -1,6 +1,6 @@
 # QUANTUM CUBE — MASTER PROJECT DOCUMENT
 
-**Version: v29 | Last Updated: May 2, 2026 (Saturday, evening)**
+**Version: v30 | Last Updated: May 3, 2026 (Sunday, morning)**
 
 ---
 
@@ -36,6 +36,26 @@ The kickoff doc handles session startup, role split between Chat Claude and Curs
 ## 📣 MARKETING — see MARKETING_PLAYBOOK.md
 
 Marketing strategy, launch sequencing, channel playbooks, tools evaluated (Vloxo, AppSumo, G2, Capterra all rejected with reasoning), and growth metrics live in the separate marketing playbook. The brief stays focused on build, infra, and architecture. When working on marketing tasks in a new chat, attach MARKETING_PLAYBOOK.md + CHAT_KICKOFF.md instead of this brief.
+
+---
+
+## STRATEGIC CONTEXT (locked May 3, 2026)
+
+Strategic decisions from the May 2 evening + May 3 morning conversation are **locked** here and mirrored in `MARKETING_PLAYBOOK.md` v2. Payment geography, Play Store phasing, and subscription roadmap below are **technical + business truth** for engineering and ops — not aspirational notes.
+
+**Team capacity:** 3 full-time partners (Ronnie + 2). Quantum Cube is **one of three QNC projects** — a launched byproduct with real revenue that can scale on its own, while **QNC Academy stays the primary focus** and the HR-screening product stays secondary.
+
+**Budget posture:** Money is **not** the limiting factor. Aggressive paid-ad testing, content-production retainers, influencer partnerships, and PR engagements are all authorized when execution-ready.
+
+**Timeline posture:** **Aggressive** — meaningful traction on the order of **months**, not quarters (closer to a small-funded startup launch than a hobby indie timeline).
+
+**Three legitimate outcome paths** — revisit at **month 6** with real channel + revenue data:
+
+1. **Build big** — scale Quantum Cube as a durable revenue line inside QNC.
+2. **Build to flippable** — package documented growth + recurring subscription tier for acquisition by spirituality/wellness platforms (Calm-class strategics, astrology networks, etc.).
+3. **Build modestly** — sustain on lighter touch + organic while partner capacity stays on Academy + HR.
+
+This section stays **additive** with historical brief content — nothing above is deleted.
 
 ---
 
@@ -378,6 +398,17 @@ End-to-end overlay checkout integration. User stays on `quantumcube.app` for the
 - `supabase/functions/dodo-webhook/index.ts` — webhook receiver
 - `supabase/functions/dodo-create-session/index.ts` — session minter
 
+### Dodo's permanent strategic role (web + Android)
+
+**Dodo stays the Merchant of Record for Quantum Cube across surfaces** — not an interim PayFast replacement. The integration path is **hosted checkout (overlay / payment links)** + server-verified webhooks, not a giant native SDK rewrite.
+
+- **Web (PWA at `quantumcube.app`):** Current architecture — `dodo-create-session` mints checkout sessions; overlay completes payment; `dodo-webhook` flips `has_paid`. This remains the **canonical purchase path** globally.
+- **Android — United States:** Under the **Epic v. Google** injunction landscape (as of 2025–2026), Google Play must permit **alternative billing / reduced commission paths** for digital goods in the US when developers comply with program rules. Plan: **ship US Play Store build without native Play Billing** where policy allows external checkout — users complete payment via **the same Dodo overlay / web checkout** deep-linked from the app. Google collects **no 30%** on those flows when exempt.
+- **Android — EU / UK / other DMA-style markets:** Google’s **External Offers Program** and related EU rules let qualified developers steer users to **off-Play web checkout** for digital content. Same **Dodo** checkout — add jurisdiction checks + Play policy compliance layer in the Android wrapper when expanding beyond the US.
+- **Tier 3 subscriptions (future):** When Quantum Cube Plus (~\$9.99/mo) ships, **Dodo subscription APIs + webhooks** remain primary on web; **Google Play Billing** is integrated **only where Play policy mandates an in-store digital-subscription path** — dual-stack billing with entitlement sync in Supabase, not a Dodo replacement.
+
+**Net:** Dodo is the **long-term payments core**. Play Billing is a **compliance overlay** where the store requires it, not a strategic pivot away from Dodo.
+
 ### Why Dodo
 
 
@@ -421,6 +452,29 @@ All support international payouts to FNB via SWIFT/wire.
 ### Why Paddle was ruled out (verified Apr 29)
 
 Paddle's AUP explicitly prohibits: *"Digital services associated with pseudo-science, including but not limited to clairvoyance, horoscopes, fortune-telling"*. Quantum Cube includes Western astrology + Chinese zodiac + numerology = textbook fortune-telling per their own definition. Also prohibits products *"where there is no bona fide software or service sold"* — covers our one-time digital reading model. Paddle's signup form errors out at the product-category step if you select anything other than SaaS or digital download. Don't waste time reapplying.
+
+---
+
+## 💰 SUBSCRIPTION TIER ROADMAP (planned — Quantum Cube Plus)
+
+**Tier 2 (live — current product):** One-time **\$17** lifetime access to the core reading (numerology + Western astrology + Chinese zodiac + premium AI-narrated content). This tier **never goes away** — existing buyers retain lifetime access permanently.
+
+**Tier 3 (planned — working name *Quantum Cube Plus*, ~\$9.99/mo target):** Subscription add-on — daily horoscope generation, push notifications, tarot draws, compatibility logic / deeper relational readings.
+
+**Implementation phasing:**
+
+- **Months 1–3 post-launch:** Focus on growing **Tier 2**. Validate funnel. Listen to feedback. **Do not** add Tier 3 complexity yet.
+- **Month 3–4:** Start building Tier 3 features (daily horoscope generation, push notifications, tarot draws, compatibility logic) **in parallel with marketing**.
+- **Month 4–5:** **Soft launch** Tier 3 to existing Tier 2 customers (warm leads, easier conversion). Refine pricing + feature bundle.
+- **Month 5–6:** **Full public launch** of Tier 3 alongside Tier 2.
+
+**Migration safety:** Existing Tier 2 customers **keep** lifetime access forever. Tier 3 is **purely additive**. Offer upgrades **in-app** — **never** revoke Tier 2 access as a forcing function.
+
+**Cost considerations:**
+
+- **Daily AI narration scales quickly** — e.g. 5,000 active subscribers ⇒ up to **5,000 daily horoscope renders**. Plan to move **daily drip content** to **lower-cost TTS** (Azure Speech, Google Cloud TTS, etc.); **reserve Valory / ElevenLabs** for the premium **one-time reading** experience.
+- **Push notifications:** Firebase Cloud Messaging or OneSignal — **free** at projected scale.
+- **Churn:** model **5–10% monthly** for subscription tier; retention driven by **daily content quality**, not discounting.
 
 ---
 
@@ -1232,8 +1286,28 @@ Quantum Cube is live and accepting real payments. Real customers can buy a real 
 
 ### 🏪 APP STORE SUBMISSIONS
 
-- **Google Play:** $25 one-time, PWABuilder → .aab (after Dodo live + account deletion ✓ + real PNG icons ✓)
-- **Apple App Store:** $99/year, Capacitor wrap, Xcode archive (DEFERRED — revisit post-Google-Play launch, tackle iOS payment politics then)
+**Phase 5a — US-only launch with Dodo billing (months 1–2)**
+
+- Google Play Developer account ($25 one-time)
+- PWABuilder / Bubblewrap `.aab` — **no native Google Play Billing required for initial US rollout** where Epic v Google–era policies allow developers to complete digital purchases via **Dodo (same MoR as web)** through in-app web checkout / external payment flow
+- Store listing: feature graphic (1024×500), phone screenshots, full description (4000 chars) + short description (80 chars), content rating questionnaire, **Data Safety** form
+- **Internal Testing** track first (1–2 weeks: rkelbrick, carl, michelle)
+- **Production: US-only** distribution to start — reviews and ranks compound in one market; partners target **10–15 TikToks/week** US-focused
+- Initial Google review: **7–14 days** typical
+
+**Phase 5b — English-speaking markets (months 2–3)**
+
+- Expand Play listing to **UK, Canada, Australia, New Zealand** (same app binary, no translation cost)
+- **Web + Dodo** already handle these users globally; Play expansion is **discoverability + trust**
+- Per-territory billing: add **Play Billing** or **External Offers / web-checkout routing** only where Google policy **requires** it — follow **Dodo** as MoR on web; mirror entitlements in Supabase
+
+**Phase 5c — Global + localised (months 4–6)**
+
+- **Spanish, Portuguese, French, German** — app UI + store listings + key marketing assets
+- **LATAM + Brazil** heavy-up (spirituality content over-indexes)
+- **Dual billing** only in regions that **mandate** in-store digital payments — keep **Dodo** everywhere the law and Play policy allow off-store checkout
+
+**Apple App Store (months 6–9, deferred):** Capacitor + Xcode archive; Apple IAP rules for **digital subscriptions** may require in-app purchase for Tier 3 — legal + product review before ship.
 
 ---
 
@@ -1326,57 +1400,78 @@ Path `/Users/qnc/Projects/qnc-academy/`. Stack: Next.js + Vercel + Supabase (Ire
 
 ---
 
-## NEXT SESSION STARTING POINT (May 3, 2026 — POST-LAUNCH polish + scale-up)
+## NEXT SESSION STARTING POINT (Updated May 3, 2026 — strategic context locked)
 
-The launch is real. From here it's polish, social pushing, app store submission, and the small tail of cleanup work.
+The launch is real. Strategic decisions are now locked from the May 2 evening + May 3 morning conversation. From here it's polish, payments-flow validation, marketing channel-by-channel attack planning, and Play Store submission prep.
 
 ### Phase 2 — In-app polish (~2-3 hours)
 
-- **Music auto-play fix.** Console showed multiple 404s for `Sounds/Music/...mp3` files (e.g. `ES_Subterranean Room - Hanna Lindgren.mp3`, `bgMusic.mp3`). Music isn't auto-starting on first user tap. Diagnose: is it the autoplay policy, missing files on disk, or wrong path?
-- **Welcome narration re-record at slower pace.** Same script, slower delivery. Currently `speed: 1.15` in narrate Edge Function — drop to `0.95` or `1.00` for welcome only. Replace `Sounds/Narration/welcome.mp3` with the new render.
-- **Welcome plays once, only inside the app, not on sign-up page.** Currently fires twice (Face 1 entries 1 + 2). Reduce to a single play, only on first entry into the cube, never on Face 0.
-- **Strip "Valory" branding everywhere.** Replace all user-facing references with generic "narration" or "voice reading" or "voice guide". Voice ID stays the same in code, only user-facing copy changes. Grep across `docs/app.html`, `docs/index.html`, all 8 legal pages, brief, README.
-- **Full app walkthrough.** Test every face, every interaction, both auth paths (OAuth + magic-link), paid + unpaid states. Capture any minor changes or bugs surfacing during the walk.
-- **Minor changes batch.** Whatever surfaces during the walkthrough.
+- **Music auto-play fix.** Console showed multiple 404s for `Sounds/Music/...mp3` files. Diagnose: autoplay policy, missing files, or wrong path?
+- **Welcome narration re-record at slower pace.** Drop from `speed: 1.15` to `0.95-1.00` for welcome only. Replace `Sounds/Narration/welcome.mp3`.
+- **Welcome plays once, only inside the app, not on sign-up page.** Currently fires twice. Single play, only first cube entry, never on Face 0.
+- **Strip "Valory" branding everywhere user-facing.** Replace with "narration" / "voice reading" / "voice guide". Voice ID stays in code, only UI copy changes. Grep across `docs/app.html`, `docs/index.html`, all 8 legal pages, brief, README.
+- **Full app walkthrough.** Test every face, every interaction, OAuth + magic-link, paid + unpaid states.
+- **Magic-link payment flow E2E test** (carryover from May 2 — three scenarios: signed-in user pays, session expired during payment, brand-new magic-link user pays). Fix architecture is auth-method-agnostic but untested for non-OAuth flow.
+- **Minor changes batch.** Whatever surfaces during walkthrough.
 
 ### Phase 3 — Cleanup (~30 min)
 
-- **Refund the second Live test payment** once Dodo settlement clears (likely 24-72 hr from May 2 evening).
-- **Delete leaked Test API + Test webhook secrets in Dodo dashboard.** They were both pasted in chat earlier May 2. Lower stakes than Live (no real money), but cleanup completes the rotation discipline. Generate fresh test keys, update Supabase secrets, update Apple Passwords.
-- **Delete 9+ test profile rows** from Supabase profiles table before public launch announcement (re-snapshot first — list has drifted with all the Apr 30 + May 2 testing).
+- **Refund the second Live test payment** once Dodo settlement clears (~24-72 hr from May 2 evening — should be eligible by May 3-5).
+- **Rotate leaked Test API + Test webhook secrets in Dodo dashboard.** Both pasted in chat earlier May 2. Lower stakes than Live (no real money), but cleanup completes the rotation discipline.
+- **Delete 9+ test profile rows** from Supabase profiles table before public launch (re-snapshot first — list has drifted).
 - **Resend deliverability tested** to fresh Gmail / Outlook / Yahoo accounts.
-- **Submit Google OAuth for Verification** (currently Testing mode — only 3 test users can sign in). ~2 weeks turnaround so submit early.
-- **Replace white Google G with original colour Google logo** on sign-up button (Apr 30 carryover decision). Two options: Option A (replace cosmic button with Google standard white-bg button per Google brand guidelines) OR Option B (keep cosmic styling with multicolour G in custom container).
+- **Submit Google OAuth for Verification** (currently Testing mode — only 3 test users).
+- **Replace white Google G with original colour Google logo** on sign-up button (Apr 30 carryover decision).
 - **Sentry error monitoring** (~20 min).
-- **Clean up untracked `brand/Your paragraph text.png`** in repo root — Canva default filename, either delete or rename properly.
+- **Clean zsh history of leaked secrets** (`history | grep -n "DODO_PAYMENTS"` then `history -d <line>`).
+- **Clean up untracked `brand/Your paragraph text.png`** in repo root.
 
-### Phase 4 — Launch announcement
+### Phase 4 — Marketing channel-by-channel attack planning (new chat, marketing playbook attached)
 
-- **Cover photos for Facebook + Twitter** (820×312 + 1500×500, Canva work, ~30 min).
-- **First social posts** across all 6 handles (`@quantumcubeapp`).
-- **Public launch email** to existing list (if any).
+- TikTok content production cadence + roles (3 partners, who does what)
+- Influencer outreach list (target 30 creators in astrology/numerology niche, mix of $5/sale affiliate and flat-fee)
+- PR pitch list (Bustle, Refinery29, Cosmopolitan, Allure, Well+Good, MindBodyGreen)
+- Paid ads brief (Meta + Google starting budgets, creative variants)
+- Cover photos for Facebook + Twitter (820×312 + 1500×500 in Canva)
+- First post calendar across all 6 social platforms
+- Localisation prep (Spanish, Portuguese translation vendors)
 
-### Phase 5 — App stores
+### Phase 5 — Play Store submission (US-only with Dodo billing, ~2-3 weeks)
 
-- **Google Play submission:** $25 one-time, PWABuilder → .aab. All prerequisites are now green:
-  - Dodo live (real payments)
-  - Account deletion working in-app
-  - Real PNG icons (192, 512, 512-maskable)
-  - Privacy + Terms pages live
-- **Apple App Store submission:** $99/year, Capacitor wrap, Xcode archive. DEFERRED — revisit post-Google Play launch.
+- Google Play Developer account ($25)
+- PWABuilder/Bubblewrap wrap (no Play Billing integration needed for US)
+- Store listing assets: feature graphic (1024×500), phone screenshots, full description (4000 chars), short description (80 chars), content rating questionnaire, Data Safety form
+- Internal Testing track first (1-2 weeks with rkelbrick + carl + michelle)
+- Submit to Production with US-only distribution
+- Initial review: 7-14 days
 
-### Open architectural questions for later
+### Phase 6 — Subscription tier infrastructure (parallel with Phase 5, months 3-5)
 
-- **Dodo settlement period**: how long exactly? Worth emailing Dodo support to nail down the policy so we can tell customers "refunds processed within X days" with confidence.
-- **Webhook retry policy**: if our Edge Function returns non-2xx, Dodo retries. Current behaviour is to acknowledge with 200 even on missing user identifier (prevents retry storm). Worth revisiting for genuinely-failed cases.
+- See SUBSCRIPTION TIER ROADMAP section above
+- DB schema migration
+- Daily horoscope generation logic
+- Push notifications setup
+- Tarot draw + compatibility reading features
+- Subscription webhook handlers (Dodo + future Play Billing)
+
+### Phase 7 — Geographic expansion (months 2-6)
+
+- See updated APP STORE SUBMISSIONS section
+- US Phase 5a → English markets Phase 5b → EU + global Phase 5c
+
+### Phase 8 — Apple App Store (months 6-9, deferred)
+
+- Capacitor wrap, Xcode archive
+- Apple IAP politics for digital content (may route subscriptions through web)
 
 ### Recommended order at start of next session
 
 1. Run minimal health check (per CHAT_KICKOFF.md)
 2. Check status of evening refund (should now be clear, ~12+ hours since charge)
-3. Pick a Phase based on energy: Phase 2 polish if fresh, Phase 3 cleanup if low-energy, Phase 4 social if you want creative work
-4. Update brief to v30 at end of session
+3. Phase 2 in-app polish (focus task — get the polish ironed before public marketing push)
+4. Magic-link payment flow E2E test
+5. Update brief to v31 at end of session
 
 ---
 
-**End of brief v29.**
+**End of brief v30.**

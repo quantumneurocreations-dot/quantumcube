@@ -1,5 +1,5 @@
 # QUANTUM CUBE — MARKETING PLAYBOOK
-**Version: v1 | Last Updated: May 2, 2026 (Saturday, evening — launch day)**
+**Version: v2 | Last Updated: May 3, 2026 (Sunday, morning)**
 
 ---
 
@@ -8,6 +8,41 @@
 This playbook lives separate from PROJECT_BRIEF.md to keep build context and marketing context cleanly separated. The brief is for code, infra, architecture. This is for distribution, growth, and getting the cube in front of real customers.
 
 **For new chats:** attach this playbook + CHAT_KICKOFF.md when working on marketing/growth tasks. Attach PROJECT_BRIEF.md + CHAT_KICKOFF.md when working on build/code tasks.
+
+---
+
+## 🎯 EXECUTION CONTEXT (added v2 — May 3 morning)
+
+**Team capacity:** 3 full-time partners (Ronnie + 2). Quantum Cube is one of three QNC projects, a launched byproduct that has revenue potential on its own merits but isn't the team's primary focus (Academy is the main priority, HR screening product is secondary).
+
+**Budget posture:** Money is not the constraint. Aggressive paid ad spend, content production retainers, influencer partnerships, and PR engagements are all on the table.
+
+**Timeline:** Aggressive — goal is meaningful traction within months not quarters. Closer to a funded small-startup launch than a typical indie launch.
+
+**Three legitimate outcome paths (revisit month 6 with data):**
+1. **Build big.** Scale to meaningful revenue, hold long-term as QNC product line.
+2. **Build to flippable.** Sell to spirituality/wellness platform (Calm, Headspace, Co-Star, MindValley, Hay House, etc.) at month 6-12. Realistic exit ranges: $25k-$60k at month 3, $80k-$200k at month 6, $300k-$1M+ at month 12 if subscription tier added and growth is strong.
+3. **Build modestly.** Sustain on light touch, organic growth, while focus stays on Academy + HR product.
+
+**Honest year-one trajectory ranges:**
+
+*Realistic with aggressive execution + budget:*
+- 35% chance: 5,000-15,000 paid users, $85k-$255k gross
+- 30% chance: 15,000-50,000 paid users via mix of paid + viral + influencer + ASO, $255k-$850k gross
+- 20% chance: 1,500-5,000 paid users, $25k-$85k gross (slow but real)
+- 10% chance: under 1,500 (execution issues or category counterpunch)
+- 5% chance: 100k+ users (press break, celebrity endorsement, perfect-timing viral)
+- **Median expectation: 5,000-12,000 paid users in year one, $85k-$200k gross**
+
+*Optimistic but grounded — what "everything goes right" looks like:*
+- Months 1-2: 3k-5k paid users via TikTok algorithm pickup + early influencer affiliates
+- Months 3-4: viral moment (8-15M view TikTok) + press pickup + Play Store featuring → 30k-50k paid users
+- Months 5-6: subscription tier launches, 12-15% conversion of base → 8k-12k active subscribers
+- Months 7-12: international expansion + celebrity organic endorsement + ASO compounding
+- **Year 1 ceiling: 300k-500k paid users, 30k-50k subscribers, $4M-$7M ARR**
+- Acquisition offer range at that scale: **$16M-$42M** from strategic acquirer
+
+**Documentation + transferability discipline:** Every marketing experiment, channel result, conversion rate, retention number gets logged. Buyers pay 30-50% more for apps with documented growth analytics. Build accounts and credentials as company-owned, not founder-owned, from day one.
 
 ---
 
@@ -72,6 +107,34 @@ For a B2C visual/lifestyle product in the spirituality/self-discovery niche, the
 10. **Influencer affiliates** — partner with astrology/numerology Instagram or YouTube creators. Affiliate model: $5/sale to creator, $12 net to you. Even 10k-50k follower creators move real units.
 11. **Meta Ads (Facebook + Instagram)** — only AFTER organic validates funnel. ~3 months post-launch, $10-20/day test budgets. Connect Meta Ads MCP to Claude when ready (`mcp.facebook.com/ads`).
 12. **Google Ads** — same timing as Meta. Search ads on "numerology reading", "astrology app" keywords.
+
+### Geographic phasing — concentrate firepower
+
+**Months 1-2: US ONLY** — concentrate all marketing on US audience.
+- US Play Store, US TikTok algorithm, US influencers, US press
+- Dodo handles in-app billing under Epic v Google injunction (zero Google fees)
+- Reviews compound in one country, ranks faster
+- Single timezone band for support and engagement
+- Partners post 10-15 TikToks/week US-targeted
+
+**Months 2-3: English markets expansion** — UK, Canada, Australia, New Zealand
+- Same content, no localisation needed
+- Web (Dodo) handles them globally regardless
+- Selectively expand Play Store to UK (External Offers Program for DMA-compliant Dodo billing) + AU/CA/NZ (Play Billing or web-only routing)
+- Influencer outreach expands to Commonwealth astrology creators
+
+**Months 4-6: Localised expansion** — Spanish, Portuguese, French, German
+- Translation of app + Play Store listing + key marketing assets
+- Spanish: Mexico, Spain, Argentina, Chile, Colombia (LATAM heavy)
+- Portuguese: Brazil (massive astrology market) + Portugal
+- French: France, Belgium, Quebec
+- German: DACH region
+- LOCAL influencer partnerships in each language
+- LATAM/Brazil specifically over-index on spirituality content vs English markets
+
+**Months 6-12: Full global rollout** — remaining markets
+- Italian, Polish, Dutch, Japanese, Korean if early data supports
+- Apple App Store launches alongside (US first, then global per same phasing)
 
 ### Channels REJECTED for Quantum Cube
 
@@ -302,4 +365,4 @@ For a B2C visual/lifestyle product in the spirituality/self-discovery niche, the
 
 ---
 
-**End of marketing playbook v1.**
+**End of marketing playbook v2.**
