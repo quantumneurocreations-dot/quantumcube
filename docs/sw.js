@@ -1,5 +1,5 @@
-const CACHE='qc-v172';
-const NARR_CACHE='qc-narration-v2';
+const CACHE='qc-v173';
+const NARR_CACHE='qc-narration-v3';
 
 self.addEventListener('install', e => {
   e.waitUntil((async () => {

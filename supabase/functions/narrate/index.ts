@@ -103,7 +103,8 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voice_id } = await req.json();
+    const body = await req.json() as { text?: string; voice_id?: string; speed?: number };
+    const { text, voice_id, speed: speedRaw } = body;
     if (!text || !voice_id) {
       return new Response(JSON.stringify({ error: "missing text or voice_id" }), {
         status: 400,
@@ -117,13 +118,18 @@ serve(async (req) => {
       });
     }
 
+    let speed = 1.15;
+    if (typeof speedRaw === "number" && Number.isFinite(speedRaw)) {
+      speed = Math.min(1.5, Math.max(0.25, speedRaw));
+    }
+
     const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`, {
       method: "POST",
       headers: { "xi-api-key": KEY, "Content-Type": "application/json", "Accept": "audio/mpeg" },
       body: JSON.stringify({
         text,
         model_id: MODEL,
-        voice_settings: { stability: 0.5, similarity_boost: 0.75, speed: 1.15 },
+        voice_settings: { stability: 0.5, similarity_boost: 0.75, speed },
       }),
     });
     if (!r.ok) {
