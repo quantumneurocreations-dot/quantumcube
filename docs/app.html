@@ -205,6 +205,11 @@ input[type="number"]{-moz-appearance:textfield}
 .sb-item{text-align:center;padding:14px 6px;border:1px solid var(--border);background:var(--glass);position:relative;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 1px 0 0 0 rgba(125,212,252,0.15),inset -1px 0 0 0 rgba(125,212,252,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;overflow:hidden}
 .sb-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1.5px;color:#ffffff;text-transform:uppercase;display:block;margin-bottom:8px}
 .sb-num{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,9vw,36px);font-weight:700;color:#ffffff;line-height:1;display:block;max-width:100%;word-break:keep-all;white-space:nowrap}
+.sb-num.sb-num-count-3{font-size:clamp(22px,8vw,32px)}
+.sb-num.sb-num-count-4{font-size:clamp(19px,7vw,28px)}
+.sb-num.sb-num-count-5{font-size:clamp(16px,6vw,24px)}
+.sb-num.sb-num-count-6{font-size:clamp(14px,5vw,22px)}
+.sb-num.sb-num-count-7,.sb-num.sb-num-count-8,.sb-num.sb-num-count-9{font-size:clamp(13px,4.5vw,20px)}
 .sb-wide{}
 
 .matrix-wrap{padding:4px 0;margin-bottom:16px}
@@ -3222,9 +3227,9 @@ document.getElementById("sbGrid").innerHTML=
 "<div class='sb-item'><span class='sb-label'>Soul Urge</span><span class='sb-num'>"+d.soulUrge+"</span></div>"+
 "<div class='sb-item'><span class='sb-label'>Personality</span><span class='sb-num'>"+d.personality+"</span></div>"+
 "<div class='sb-item'><span class='sb-label'>Personal Year</span><span class='sb-num'>"+d.personalYr+"</span></div>"+
-"<div class='sb-item'><span class='sb-label'>Hidden Passion</span><span class='sb-num'>"+d.passions.join(" \u00B7 ")+"</span></div>"+
-"<div class='sb-item'><span class='sb-label'>Life Phases</span><span class='sb-num'>"+d.cycles.f+" \u00B7 "+d.cycles.s+" \u00B7 "+d.cycles.t+"</span></div>"+
-"<div class='sb-item'><span class='sb-label'>Karmic Lessons</span><span class='sb-num'>"+(d.lessons.length?d.lessons.join(" \u00B7 "):"None")+"</span></div>";
+"<div class='sb-item'><span class='sb-label'>Hidden Passion</span><span class='sb-num sb-num-count-"+d.passions.length+"'>"+d.passions.join(", ")+"</span></div>"+
+"<div class='sb-item'><span class='sb-label'>Life Phases</span><span class='sb-num sb-num-count-3'>"+d.cycles.f+", "+d.cycles.s+", "+d.cycles.t+"</span></div>"+
+"<div class='sb-item'><span class='sb-label'>Karmic Lessons</span><span class='sb-num sb-num-count-"+(d.lessons.length||1)+"'>"+(d.lessons.length?d.lessons.join(", "):"None")+"</span></div>";
 
 const mg=document.getElementById("matGrid");mg.innerHTML="";
 for(let i=1;i<=9;i++){
