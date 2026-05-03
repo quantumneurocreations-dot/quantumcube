@@ -3222,9 +3222,9 @@ document.getElementById("sbGrid").innerHTML=
 "<div class='sb-item'><span class='sb-label'>Soul Urge</span><span class='sb-num'>"+d.soulUrge+"</span></div>"+
 "<div class='sb-item'><span class='sb-label'>Personality</span><span class='sb-num'>"+d.personality+"</span></div>"+
 "<div class='sb-item'><span class='sb-label'>Personal Year</span><span class='sb-num'>"+d.personalYr+"</span></div>"+
-"<div class='sb-item'><span class='sb-label'>Hidden Passion</span><span class='sb-num'>"+d.passions.join(" &amp; ")+"</span></div>"+
-"<div class='sb-item'><span class='sb-label'>Life Phases</span><span class='sb-num'>"+d.cycles.f+" \u2192 "+d.cycles.s+" \u2192 "+d.cycles.t+"</span></div>"+
-"<div class='sb-item'><span class='sb-label'>Karmic Lessons</span><span class='sb-num'>"+(d.lessons.length?d.lessons.join(", "):"None")+"</span></div>";
+"<div class='sb-item'><span class='sb-label'>Hidden Passion</span><span class='sb-num'>"+d.passions.join(" \u00B7 ")+"</span></div>"+
+"<div class='sb-item'><span class='sb-label'>Life Phases</span><span class='sb-num'>"+d.cycles.f+" \u00B7 "+d.cycles.s+" \u00B7 "+d.cycles.t+"</span></div>"+
+"<div class='sb-item'><span class='sb-label'>Karmic Lessons</span><span class='sb-num'>"+(d.lessons.length?d.lessons.join(" \u00B7 "):"None")+"</span></div>";
 
 const mg=document.getElementById("matGrid");mg.innerHTML="";
 for(let i=1;i<=9;i++){
