@@ -509,9 +509,49 @@ input[type="number"]{-moz-appearance:textfield}
 
 <!-- Supabase JS SDK + client init -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://browser.sentry-cdn.com/8.50.0/bundle.min.js" crossorigin="anonymous"></script>
 <script>
 const SUPABASE_URL = "https://fqqdldvnxupzxvvbyvjm.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
+// === Sentry error monitoring (production-only) ===
+(function initSentry(){
+  try {
+    if (typeof Sentry === "undefined") return;
+    if (location.hostname !== "quantumcube.app") return; // skip on local/test
+    Sentry.init({
+      dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
+      release: "quantum-cube@qc-v192",
+      environment: "production",
+      sampleRate: 1.0,
+      tracesSampleRate: 0,
+      replaysSessionSampleRate: 0,
+      replaysOnErrorSampleRate: 0,
+      sendDefaultPii: false,
+      beforeSend: function(event, hint){
+        // Drop common browser-extension noise
+        try {
+          var msg = (event && event.message) || (hint && hint.originalException && hint.originalException.message) || "";
+          if (/extension|chrome-extension|moz-extension|safari-extension/i.test(msg)) return null;
+          if (/ResizeObserver loop limit exceeded/i.test(msg)) return null;
+          if (/Non-Error promise rejection captured/i.test(msg)) return null;
+          if (/Script error\.?/i.test(msg)) return null; // cross-origin script errors with no detail
+        } catch(_){}
+        // Defence-in-depth: scrub anything that looks like a JWT or email from error payload
+        try {
+          var s = JSON.stringify(event);
+          s = s.replace(/eyJ[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+/g, "[redacted-jwt]");
+          s = s.replace(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g, "[redacted-email]");
+          event = JSON.parse(s);
+        } catch(_){}
+        return event;
+      }
+    });
+    console.log("[QC] Sentry initialised");
+  } catch(e) {
+    console.warn("[QC] Sentry init failed:", e);
+  }
+})();
+
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     persistSession: true,
