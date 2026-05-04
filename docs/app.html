@@ -520,7 +520,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v193",
+      release: "quantum-cube@qc-v194",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1574,6 +1574,18 @@ window.qcNarrateCard = function(card, faceNum){
         playSequence(urls, card);
       }catch(e){}
       return;
+    }
+    // Multi-number cards (Hidden Passion, Karmic Lessons) — sequential narration, one MP3 per number
+    if(card.dataset.multi){
+      try{
+        const nums = JSON.parse(card.dataset.multi);
+        if(Array.isArray(nums) && nums.length > 1){
+          const urls = nums.map(n => "Sounds/Narration/num_" + cat + "_" + n + "_v1.mp3");
+          playSequence(urls, card);
+          return;
+        }
+      }catch(e){}
+      // Fall through to single-URL path if data-multi was malformed or had only 1 entry
     }
     const num = card.dataset.first || card.dataset.num;
     if(!num) return;
@@ -3301,7 +3313,7 @@ else if(s.cycleAll){
 }
 else if(s.multi&&s.multi.length>0){body=s.multi.map(k=>{const txt=NUM[s.k]&&NUM[s.k][k]?NUM[s.k][k]:"Content for "+k+" coming soon.";return s.multi.length>1?"<span class='icard-sub'>Number "+k+"</span>"+textToParas(txt):textToParas(txt)}).join("");}
 else{const ln=s.nk!==undefined?s.nk:s.n;body=textToParas(getNumText(s.k,ln));}
-return"<div class='icard' data-cat='"+s.k+"' data-num='"+s.n+"' data-first='"+(s.multi?s.multi[0]:s.n)+"' data-variant='"+((s.multi||s.cycleAll||s.none)?1:(getNumIdx(s.k,s.n)+1))+"' data-phases='"+(s.phases?JSON.stringify(s.phases):'')+"' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,3)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.n+"</span></div><div class='icard-body'>"+body+"</div></div>";
+return"<div class='icard' data-cat='"+s.k+"' data-num='"+s.n+"' data-first='"+(s.multi?s.multi[0]:s.n)+"' data-variant='"+((s.multi||s.cycleAll||s.none)?1:(getNumIdx(s.k,s.n)+1))+"' data-phases='"+(s.phases?JSON.stringify(s.phases):'')+"' data-multi='"+(s.multi&&s.multi.length>1?JSON.stringify(s.multi):'')+"' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,3)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.n+"</span></div><div class='icard-body'>"+body+"</div></div>";
 }).join("");
 
 if(isUnlocked){
