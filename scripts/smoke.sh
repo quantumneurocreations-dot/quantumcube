@@ -4,7 +4,7 @@
 # Run after every push to confirm:
 #   1. SW version on Pages matches what's in repo (Pages rebuilt successfully)
 #   2. Sentry release tag on live HTML matches SW version (no version drift)
-#   3. Sentry init log present in live app.html (Sentry block intact)
+#   3. Sentry DSN present in live app.html (Sentry block intact)
 #   4. All 10 public pages return HTTP 200
 #   5. Supabase reachable (any HTTP response = up; timeout/refused = down)
 #
@@ -63,13 +63,16 @@ else
 fi
 echo ""
 
-# === 3. Sentry init log present (confirms Sentry block intact) ===
-# Buffered (no pipe to curl) — avoids SIGPIPE under pipefail.
-echo "[3/5] Sentry init code present in live app.html..."
-if echo "$LIVE_APP_HTML" | grep -qF "[QC] Sentry initialised"; then
-  ok '"[QC] Sentry initialised" found'
+# === 3. Sentry DSN present (confirms Sentry block intact) ===
+# Greps for the DSN host — uniquely identifies the Sentry init block.
+# More reliable than grepping a console.log string that might or might
+# not exist depending on production guards. If the Sentry block is
+# accidentally removed, the DSN goes with it.
+echo "[3/5] Sentry DSN present in live app.html..."
+if echo "$LIVE_APP_HTML" | grep -qF "o4511330222604288.ingest.de.sentry.io"; then
+  ok "Sentry DSN found"
 else
-  bad "Sentry init log not found — Sentry block may have been accidentally removed"
+  bad "Sentry DSN not found — Sentry block may have been accidentally removed"
 fi
 echo ""
 
