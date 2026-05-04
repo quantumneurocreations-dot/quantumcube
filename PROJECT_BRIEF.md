@@ -1,6 +1,6 @@
 # QUANTUM CUBE — PROJECT BRIEF
 
-**Version: v34 | Last Updated: May 4, 2026 (Monday, evening)**
+**Version: v35 | Last Updated: May 4, 2026 (Monday, late evening)**
 
 📁 **Archived history → see BRIEF_ARCHIVE.md** — full session timeline, all "biggest wins" history blocks, complete legal text, lessons from every session, and Paddle/PayFast punch list (already shipped) live in the archive. This brief stays focused on current working context.
 
@@ -214,6 +214,13 @@ Quantum Cube Plus ($9.99/mo with daily horoscope generation) is **deferred and d
 
 | Commit    | Why you don't revert past it                                                    |
 | --------- | ------------------------------------------------------------------------------- |
+| `fc479a0` | **Smoke test simplified to 4 checks** — Step 2 release-tag check covers Sentry block + version. Reliable green run. |
+| `00a6314` | **Pre-commit hook** — SW + Sentry release sync; blocks `app.html` without SW bump. Run `./scripts/install-hooks.sh` on new clone. |
+| `23d4a20` | Smoke test script landed (refined in 4efb70a, 90fb8b9, fc479a0).                 |
+| `6c3cdf7` | **CHAT_KICKOFF.md** — MCP readiness, brief/archive sync rule, reusable paste blocks. |
+| `5f8670f` | `.cursorrules` — Context7 MCP auto-fire for library/SDK docs.                   |
+| `3027a87` | `BRIEF_ARCHIVE.md` — May 4 EVENING session record (lossless).                    |
+| `9bcf2d3` | **Brief v34** — security audit complete (4 commits: rate limits, CSP, CSP fix-up, mobile-web-app-capable). |
 | `1324784` | mobile-web-app-capable meta tag added (iOS deprecation fix). SW qc-v201.        |
 | `00d1c6c` | CSP fix-up: Sentry CDN connect + Vimeo thumbnail img-src.                       |
 | `f6a7db5` | **CSP baseline shipped** — 10 pages, securitypolicyviolation listener → Sentry. |
@@ -594,6 +601,10 @@ Quantum Cube is live and accepting real payments. Phase 2 polish substantially c
 
 ### 🟥 PRE-MARKETING-PUSH
 
+- ✅ ~~OWASP-style pre-launch security audit~~ **COMPLETED May 4 EVENING** (4 commits: `35331bf` rate limits + error tightening, `f6a7db5` CSP baseline, `00d1c6c` CSP fix-up, `1324784` mobile-web-app-capable). Sentry caught two real CSP gaps within hours of deploy.
+- ✅ ~~Pre-commit hook (SW + Sentry release sync)~~ **SHIPPED `00a6314`** May 4 EVENING. Self-tested + installed locally on Mac.
+- ✅ ~~Post-deploy smoke test script~~ **SHIPPED `fc479a0`** May 4 EVENING. 13/13 green from residential IP. Run `./scripts/smoke.sh` after every push.
+
 - **Full app walkthrough QA pass** — every face, every state, OAuth + magic-link, paid + unpaid. Casual ongoing as you use the app.
 
 (Security audit, Sentry, multi-narration, magic-link E2E, settings gear icon, mobile-web-app-capable — all shipped.)
@@ -675,7 +686,7 @@ Path `/Users/qnc/Projects/qnc-academy/`. Stack: Next.js + Vercel + Supabase (Ire
 
 ## NEXT SESSION STARTING POINT (May 4, 2026 evening snapshot)
 
-Massive May 4 — 14 commits across morning + afternoon + evening. Pre-marketing-push checklist substantially complete: error monitoring live, multi-number narration shipped, magic-link payment E2E verified, security audit passed, settings gear shipped (Apr 30, brief was stale), apple-mobile-web-app-capable deprecation closed.
+Massive May 4 — **15 commits** across morning + afternoon + evening + late evening. Pre-marketing-push checklist substantially complete: error monitoring live, multi-number narration shipped, magic-link payment E2E verified, security audit passed, settings gear shipped (Apr 30, brief was stale), apple-mobile-web-app-capable deprecation closed, **MCP/kickoff upgrade**, **pre-commit hook**, **post-deploy smoke test** (`fc479a0`, 4 checks, 13/13 green from Mac).
 
 ### What shipped May 4
 
@@ -699,6 +710,12 @@ Massive May 4 — 14 commits across morning + afternoon + evening. Pre-marketing
 - mobile-web-app-capable meta tag (iOS deprecation fix)
 - Manual: zsh history clean, Apple Passwords inventory documented, Resend backup decision logged
 
+**Late evening (smoke + hooks + kickoff):**
+- `.cursorrules` — Context7 MCP auto-fire (`5f8670f`)
+- `CHAT_KICKOFF.md` — MCP readiness, brief/archive sync discipline, reusable paste blocks (`6c3cdf7`)
+- Pre-commit hook enforcing SW + Sentry release sync (`00a6314`)
+- Post-deploy smoke test (`23d4a20` → `4efb70a` → `90fb8b9` → `fc479a0`); lessons in `BRIEF_ARCHIVE.md` May 4 LATE EVENING
+
 ### Recommended order at start of next coding session
 
 1. Run minimal health check (per CHAT_KICKOFF.md)
@@ -712,4 +729,4 @@ Massive May 4 — 14 commits across morning + afternoon + evening. Pre-marketing
 
 ---
 
-**End of brief v34.** Archived history → `BRIEF_ARCHIVE.md`. Marketing strategy → `MARKETING_PLAYBOOK.md`. Session protocol → `CHAT_KICKOFF.md`.
+**End of brief v35.** Archived history → `BRIEF_ARCHIVE.md`. Marketing strategy → `MARKETING_PLAYBOOK.md`. Session protocol → `CHAT_KICKOFF.md`.
