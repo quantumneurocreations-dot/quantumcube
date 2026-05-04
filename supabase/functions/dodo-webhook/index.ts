@@ -117,7 +117,7 @@ serve(async (req) => {
     });
   } catch (e) {
     console.error("webhook handler error:", String(e));
-    return new Response(JSON.stringify({ error: String(e) }), {
+    return new Response(JSON.stringify({ error: "internal_error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });

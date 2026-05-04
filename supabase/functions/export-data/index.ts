@@ -40,6 +40,39 @@ serve(async (req) => {
     });
   }
 
+  // ── Rate limit (reuses narrate's general-purpose RPC) ──
+  const _now = Date.now();
+  const _minEnd = new Date(Math.floor(_now / 60000) * 60000 + 60000).toISOString();
+  const _hourEnd = new Date(Math.floor(_now / 3600000) * 3600000 + 3600000).toISOString();
+  const { data: _rl, error: _rlErr } = await sb.rpc("narrate_rate_limit_try", {
+    p_min_key: `export:${user.id}:m`,
+    p_hour_key: `export:${user.id}:h`,
+    p_min_cap: 5,
+    p_hour_cap: 20,
+    p_min_window_end: _minEnd,
+    p_hour_window_end: _hourEnd,
+  });
+  if (_rlErr) {
+    console.error(`export-data rate_limit error:`, _rlErr);
+    return new Response(JSON.stringify({ error: "rate_limit_unavailable" }), {
+      status: 503,
+      headers: { ...CORS, "Content-Type": "application/json" },
+    });
+  }
+  if (!_rl?.ok) {
+    return new Response(
+      JSON.stringify({ error: "rate_limited", retry_after_seconds: _rl?.retry_after ?? 60 }),
+      {
+        status: 429,
+        headers: {
+          ...CORS,
+          "Content-Type": "application/json",
+          "Retry-After": String(_rl?.retry_after ?? 60),
+        },
+      },
+    );
+  }
+
   const { data: profile, error: profileErr } = await sb
     .from("profiles")
     .select("id, email, has_paid, marketing_consent, created_at")

@@ -12,11 +12,16 @@
 //   verify_jwt = false   (we manually verify via apikey header)
 
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
 const API_KEY = Deno.env.get("DODO_PAYMENTS_API_KEY") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+const sb = createClient(SUPABASE_URL, SERVICE_ROLE, {
+  auth: { autoRefreshToken: false, persistSession: false },
+});
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -50,6 +55,43 @@ serve(async (req) => {
       status: 401,
       headers: { ...CORS, "Content-Type": "application/json" },
     });
+  }
+
+  const _ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("cf-connecting-ip") ||
+    "unknown";
+
+  // ── Rate limit (reuses narrate's general-purpose RPC) ──
+  const _now = Date.now();
+  const _minEnd = new Date(Math.floor(_now / 60000) * 60000 + 60000).toISOString();
+  const _hourEnd = new Date(Math.floor(_now / 3600000) * 3600000 + 3600000).toISOString();
+  const { data: _rl, error: _rlErr } = await sb.rpc("narrate_rate_limit_try", {
+    p_min_key: `dodo-session:${_ip}:m`,
+    p_hour_key: `dodo-session:${_ip}:h`,
+    p_min_cap: 5,
+    p_hour_cap: 20,
+    p_min_window_end: _minEnd,
+    p_hour_window_end: _hourEnd,
+  });
+  if (_rlErr) {
+    console.error(`dodo-create-session rate_limit error:`, _rlErr);
+    return new Response(JSON.stringify({ error: "rate_limit_unavailable" }), {
+      status: 503,
+      headers: { ...CORS, "Content-Type": "application/json" },
+    });
+  }
+  if (!_rl?.ok) {
+    return new Response(
+      JSON.stringify({ error: "rate_limited", retry_after_seconds: _rl?.retry_after ?? 60 }),
+      {
+        status: 429,
+        headers: {
+          ...CORS,
+          "Content-Type": "application/json",
+          "Retry-After": String(_rl?.retry_after ?? 60),
+        },
+      },
+    );
   }
 
   try {
@@ -117,7 +159,7 @@ serve(async (req) => {
       const errText = await sessionRes.text();
       console.error("Dodo session creation failed:", sessionRes.status, errText);
       return new Response(
-        JSON.stringify({ error: "session creation failed", status: sessionRes.status, detail: errText }),
+        JSON.stringify({ error: "session_creation_failed" }),
         {
           status: 502,
           headers: { ...CORS, "Content-Type": "application/json" },
@@ -140,7 +182,7 @@ serve(async (req) => {
     );
   } catch (e) {
     console.error("dodo-create-session error:", e);
-    return new Response(JSON.stringify({ error: String(e) }), {
+    return new Response(JSON.stringify({ error: "internal_error" }), {
       status: 500,
       headers: { ...CORS, "Content-Type": "application/json" },
     });

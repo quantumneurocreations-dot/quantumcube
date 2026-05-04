@@ -85,7 +85,7 @@ serve(async (req) => {
     rl = await checkRateLimit(ip);
   } catch (e) {
     console.error("narrate rate_limit error:", e);
-    return new Response(JSON.stringify({ error: "rate_limit_unavailable", detail: String(e) }), {
+    return new Response(JSON.stringify({ error: "rate_limit_unavailable" }), {
       status: 503,
       headers: { ...CORS, "Content-Type": "application/json" },
     });
@@ -134,14 +134,16 @@ serve(async (req) => {
     });
     if (!r.ok) {
       const err = await r.text();
-      return new Response(JSON.stringify({ error: "elevenlabs failed", detail: err }), {
+      console.error("narrate elevenlabs error:", r.status, err);
+      return new Response(JSON.stringify({ error: "elevenlabs_failed" }), {
         status: r.status,
         headers: { ...CORS, "Content-Type": "application/json" },
       });
     }
     return new Response(r.body, { status: 200, headers: { ...CORS, "Content-Type": "audio/mpeg" } });
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e) }), {
+    console.error("narrate handler error:", e);
+    return new Response(JSON.stringify({ error: "internal_error" }), {
       status: 500,
       headers: { ...CORS, "Content-Type": "application/json" },
     });
