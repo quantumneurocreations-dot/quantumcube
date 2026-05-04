@@ -250,10 +250,152 @@ SW: qc-v169 → qc-v191 (22 bumps).
 Started with `.supabase-envx` cleanup (stray nano artifact containing all secrets — Cursor caught data-loss risk in the script and self-corrected to merge unique key into canonical file before delete). Brief restructured: split into lean active brief + lossless archive (this document).
 
 - `804856a` chore(gitignore): tighten .supabase-env to .supabase-env* glob
+- `e804ab4` docs: brief v32 + new BRIEF_ARCHIVE.md (lossless history split)
+- `3f7f297` feat(brand): refresh cyan color across all logo variants
+
+### May 4, 2026 PM (Monday — observability + feature completion + E2E verification, 7 commits)
+
+Major afternoon. Three big themes shipped: production observability (Sentry), feature completion (multi-narration), and critical infrastructure verification (magic-link E2E test).
+
+| Commit    | What                                                                          |
+| --------- | ----------------------------------------------------------------------------- |
+| `730d4d8` | feat(monitoring): add Sentry error monitoring (production-only)               |
+| `649bb60` | fix(narration): multi-number cards narrate ALL numbers via playSequence (NEAR-MISS — Cursor stale buffer dropped narration code, only SW + Sentry release bumped) |
+| `4b6bdf9` | fix(narration): actually wire hp/kl multi playSequence (follow-up — corrective for 649bb60) |
+| `03eff84` | chore(test): flip to Test Mode for magic-link E2E verification                |
+| `b99b807` | fix(sw): skip caching of 206 partial-content responses                        |
+| `9062eef` | fix(test): re-apply DODO_MODE=test flip lost in b99b807 stale buffer          |
+| `1b15ece` | chore: revert to Live Mode after magic-link E2E test pass                     |
+
+SW: qc-v191 → qc-v198 (7 bumps).
+
+**Sentry shipped (`730d4d8`):**
+
+- Browser SDK 8.50.0 via explicit CDN (NOT loader script — keeps configuration auditable in code)
+- EU region (`o4511330222604288.ingest.de.sentry.io`) for GDPR alignment with Supabase Frankfurt + Resend eu-west-1
+- Production-only gate (`location.hostname !== "quantumcube.app"` skips init)
+- Error monitoring ONLY — Tracing/Session Replay/Application Metrics all `sampleRate: 0`
+- Release tagged with current SW version per deploy
+- `sendDefaultPii: false` + `beforeSend` regex scrubs JWT/email
+- Noise filters: drops browser-extension errors, ResizeObserver loops, generic "Script error.", non-Error promise rejections
+- Smoke test confirmed working: email alert fired within seconds
+- DSN (public-facing): `https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176`
+
+**Sentry's first real catch (`b99b807`):**
+
+Within ~2 hours of going live, Sentry caught a real production bug. The SW was unconditionally caching every successful response, but Cache API rejects HTTP 206 partial-content responses (used by audio Range requests for seeking within MP3s). Every audio file load threw `TypeError: Failed to execute 'put' on 'Cache': Partial response (status code 206) is unsupported` — silent until Sentry exposed it. Fix: tighten `cache.put()` condition from `resp.ok` to `resp.ok && resp.status !== 206`.
+
+**Multi-number narration shipped (`4b6bdf9` corrective for `649bb60`):**
+
+Hidden Passion + Karmic Lessons cards previously narrated only the first number even when multiple values existed. Fix mirrors the Life Phases pattern: icard template now serializes multi-array to `data-multi` attribute, qcNarrateCard adds a multi-handler before the single-URL fallback that builds URL array of `num_{cat}_{n}_v1.mp3` per number and calls playSequence. Inventory verified: 27 hp + 27 kl files on disk (1-9 × v1/v2/v3); v1 always present for the locked-variant approach.
+
+**`649bb60` near-miss:** First narration commit reported success + verification grep showed new code, but `git commit` only recorded the SW + Sentry release bumps. Cursor's IDE buffer race silently dropped the narration code between Python edit and git stage. Cursor's own post-commit verification caught the miss → corrective `4b6bdf9` shipped. Same failure mode struck again later in `b99b807` (DODO_MODE silently reverted from "test" to "live").
+
+**Magic-link payment E2E test PASSED:**
+
+Three-place mode flip: `DODO_MODE` in app.html + `MODE` in dodo-create-session + Supabase secrets `DODO_PAYMENTS_API_KEY` / `DODO_PAYMENTS_WEBHOOK_KEY` (swapped via Mac Terminal, never via Cursor). Test profile `rkelbrickmail+e2etest@gmail.com` used Gmail "+" alias to avoid collision with existing Google OAuth identity on `rkelbrickmail@gmail.com`.
+
+Test sequence:
+1. Form fill in fresh Chrome incognito → REVEAL MY CUBE
+2. Magic link delivered to inbox within seconds
+3. Click VERIFY in Gmail → opens in default Chrome profile (NOT incognito session — known browser behavior, doesn't break flow)
+4. Auto-detect session, navigate into cube past Face 0
+5. Face 3 → Pay $17 → Dodo overlay opens
+6. Test card `4242 4242 4242 4242` → payment processes
+7. **Lands directly on Face 3 with full reading visible — NO bounce to Face 0**
+
+Bounce-bug fix from May 2 (`e85ca5c`) confirmed working for BOTH OAuth and magic-link auth paths.
+
+**Pre-stage verification guard adopted (from `9062eef`):**
+
+After the b99b807 stale buffer almost shipped a 3-place mismatch, every subsequent mode-flip commit included an explicit guard:
+
+```bash
+if [both vars match expected mode]; then
+  echo "✓ Both in sync at TARGET — safe to ship"
+else
+  echo "✗ MISMATCH — ABORTING"
+  exit 1
+fi
+```
+
+This pattern is now standard for any 3-place flip operation. Caught no further mismatches in the rest of the session.
+
+**Outcomes May 4 PM:**
+
+- 7 commits, all pushed to origin/main
+- SW v191 → v198 (each commit bumped)
+- Sentry release tag tracking SW version
+- Live Mode active end-of-session (verified via curl: DODO_MODE = "live", const CACHE='qc-v198', quantum-cube@qc-v198)
+- Test profile rkelbrickmail+e2etest@gmail.com left at has_paid=false (Test Mode charge cleaned up)
+- Pages serving fully reverted Live Mode build
+- Supabase secrets digest hashes confirmed matching original Live values (9b76... and 65e7...)
+
+### May 4, 2026 EVENING (Monday — pre-launch security audit + 5 commits)
+
+Pre-marketing-push security audit run end-to-end and shipped. 5 commits across hardening, CSP, iOS compliance, and brief sync. Pre-launch security checklist closed.
+
+| Commit    | What                                                                          |
+| --------- | ----------------------------------------------------------------------------- |
+| `35331bf` | chore(security): rate-limit unprotected Edge Functions + tighten error responses |
+| `f6a7db5` | chore(security): add CSP baseline + securitypolicyviolation listener         |
+| `00d1c6c` | fix(security): allow Sentry CDN connect + Vimeo thumbnail img-src in CSP    |
+| `1324784` | chore(meta): add mobile-web-app-capable alongside apple- variant            |
+| `9bcf2d3` | docs: brief v34 — security audit complete + 4 commits shipped May 4 PM      |
+
+SW: qc-v198 → qc-v201 (`f6a7db5`, `00d1c6c`, `1324784` each bumped; `35331bf` was Edge Function only — no SW bump needed).
+
+**Code outcomes May 4 EVENING:**
+
+- **Edge Function rate limits added** to `delete-account` (per-user 2/min, 5/hr), `export-data` (per-user 5/min, 20/hr), `dodo-create-session` (per-IP 5/min, 20/hr). All three reuse the existing `narrate_rate_limit_try` Postgres RPC with namespaced bucket keys (`delete:USER_ID`, `export:USER_ID`, `dodo-session:IP`) — no new migration. `dodo-create-session` newly imports `@supabase/supabase-js` to gain RPC access.
+- **Error responses tightened across all 5 Edge Functions.** No more `String(e)`, `detail: errText`, or `deleteErr.message` flowing back to the browser. Full error context preserved server-side via `console.error` for log-trail debugging. Generic codes only client-side.
+- **CSP applied to all 10 HTML pages** via `<meta http-equiv>`. Two policies:
+  - `docs/app.html`: permissive — keeps `'unsafe-inline'` for scripts (existing inline event handlers + style attrs would need multi-hour refactor) and styles. Allow-list: `player.vimeo.com`, `cdn.jsdelivr.net`, `browser.sentry-cdn.com`, `fonts.googleapis.com`, `fonts.gstatic.com`, Supabase project domain, `*.ingest.de.sentry.io`, `*.dodopayments.com`, `*.vimeocdn.com`. `frame-src` restricts iframes to vimeo + dodo. `object-src 'none'`.
+  - 9 public pages (index + 8 legal): strict — no inline scripts, no external scripts at all, fonts via Google Fonts only.
+- **`securitypolicyviolation` event listener** added to `app.html`, forwards CSP violations to Sentry as warnings. Same observability mechanism that caught the SW 206 bug — paid off within hours of CSP deploy by surfacing two CDN gaps that needed allow-listing (`browser.sentry-cdn.com` for Sentry's runtime self-fetch + `i.vimeocdn.com` for video thumbnail loads).
+- **`mobile-web-app-capable` meta tag** added alongside the deprecated `apple-mobile-web-app-capable` form. iOS 16+ deprecation warning seen in DevTools console — both kept for back-compat with older iOS.
+- **Brief v33 → v34** restructure. Security audit checklist condensed from "TO-DO list" form to "completed results" form. WHAT'S-LEFT bucket trimmed (settings gear, Sentry, multi-narration, magic-link E2E, mobile-web-app-capable, security audit all crossed off). Rollback table pruned of 8 older anchors (all preserved in this archive's rollback table).
+
+**Non-code outcomes May 4 EVENING:**
+
+- **zsh history sanitisation scan** ran against `~/.zsh_history` (3969 lines) with patterns covering `supabase secrets set` echo leaks, export-style assignments, Bearer/JWT tokens, Stripe/Dodo `sk_test_`/`whsec_` prefixes, ElevenLabs `sk_<hex40>` shape. Total matches: 0. Heuristic scan can miss exotic shapes but the May 2 leak pattern is fully covered.
+- **Apple Passwords inventory documented.** Already-stored: Dodo Test+Live API keys, Test+Live webhook signing secrets, Test+Live product IDs, Google account credentials (admin@qncacademy.com + quantumneurocreations@gmail.com), Mac recovery key. Not stored locally: ElevenLabs API key, Resend API key — both live server-side as Supabase secrets, can be regenerated from upstream dashboards if ever needed.
+- **Resend API key backup decision.** Resend hides API key values after creation by design (only metadata + prefix visible after first display). Two options: (A) leave alone, rotate-to-capture if ever needed locally (~5 min rotation job), (B) rotate now to capture and store. Chose **(A)** — low-stakes secret, the rotate-to-capture path is well understood, and the SMTP value already lives in Supabase Auth → SMTP config which is the only place it actually needs to be.
+- **Notepad audit.** Some legacy passwords/usernames for social media accounts and dormant services (Paddle, LemonSqueezy, FastSpring). Low risk, no rotation needed. Stays as-is.
+- **Supabase secrets confirmed (10 names):** DODO_PAYMENTS_API_KEY, DODO_PAYMENTS_WEBHOOK_KEY, ELEVENLABS_API_KEY, SUPABASE_ANON_KEY, SUPABASE_DB_URL, SUPABASE_JWKS, SUPABASE_PUBLISHABLE_KEYS, SUPABASE_SECRET_KEYS, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_URL. CLI prints SHA-256 digests, never values.
+
+**Items intentionally deferred (logged so they don't get re-raised):**
+
+- **`dodo-create-session` JWT verification of body's `user_id`.** Currently the function trusts the `user_id` field from the request body, validated only by checking the user exists in `profiles`. Theoretical risk: an attacker could pay $17 and unlock someone else's account — financially the attacker loses $17, the target gets free access. Real-world risk near zero (no upside for the attacker). Deferred until a use case forces the fix.
+- **innerHTML refactor (7 spots in `app.html`).** Audited each: all source from internal data tables (NUM, WSIGN, CSIGN) or computed numeric values — never raw form input. `fullName` always goes via `textContent`. No user-input → innerHTML flow exists. No XSS surface. No refactor needed.
+- **Inline script removal in `app.html`.** Would require multi-hour refactor of every inline event handler (`onclick=`, etc.) into `addEventListener` calls. CSP allows `'unsafe-inline'` for `app.html` only; the 9 public pages stay strict. Acceptable tradeoff for now.
+
+**Calendar reminders set:**
+
+- **May 18, 2026** — Sentry 14-day Business trial expires. Verify auto-downgrade to free tier (5k errors/month). Watch for surprise billing.
+- **May 4, 2027** — Annual key rotation review (ElevenLabs + Resend + Dodo + Supabase service role).
+
+(Michelle to set in shared calendar.)
 
 ---
 
 ## 🎉 BIGGEST WINS — HISTORICAL BLOCKS
+
+### Wins since v33 (May 4 PM/EVENING session)
+
+**1. PRE-LAUNCH SECURITY AUDIT COMPLETE.** ← May 4 EVENING. Four commits closed every actionable item from the audit checklist. Site is hardened (rate limits, generic error responses, CSP, iOS compliance) before any marketing-volume traffic hits.
+
+**2. CSP LIVE ON ALL 10 HTML PAGES.** ← May 4 EVENING (`f6a7db5`, `00d1c6c`). Two policies (permissive for app, strict for public pages), `securitypolicyviolation` listener forwarding to Sentry. The listener proved value within hours by catching two real CDN allow-list gaps that escaped static planning.
+
+**3. EDGE FUNCTION RATE LIMITS + ERROR HARDENING.** ← May 4 EVENING (`35331bf`). Three previously unprotected functions (delete-account, export-data, dodo-create-session) now rate-limited per-user or per-IP. All 5 functions return generic error codes only — no raw error strings, no stack traces, no upstream service details flowing to the client. Recipe documented in fragile-areas: "reuse `narrate_rate_limit_try` RPC with namespaced bucket key" — no new migration needed.
+
+**4. SECRETS POSTURE DOCUMENTED.** ← May 4 EVENING. zsh history clean (0 matches across 5 secret-shape patterns). Apple Passwords inventory listed: Dodo + Google + Mac recovery key all backed up. ElevenLabs + Resend intentionally not held locally (regenerate from upstream if ever needed). 10 Supabase secrets confirmed by name. Operational rule reinforced: never paste secret values into terminal output, ever.
+
+**5. iOS DEPRECATION FIX.** ← May 4 EVENING (`1324784`). `mobile-web-app-capable` meta tag added alongside the deprecated `apple-mobile-web-app-capable`. Both kept for back-compat. Sentry warning class for this on iOS 16+ users will stop appearing.
+
+**6. SESSION HYGIENE: ARCHIVE UPDATED ALONGSIDE BRIEF.** ← May 4 EVENING. Caught a near-miss where the v34 brief condensation could have lost planning context (the original audit checklist with its bucket structure and intentional-deferral logic). Ronnie spotted the line-count drop and flagged before commit, prompting this archive update. Lesson burned in: when a brief section condenses because work shipped, the archive captures BOTH the planning context and the results record. Lossless transfer is the principle.
+
+**7. PRE-MARKETING-PUSH CHECKLIST SUBSTANTIALLY CLEAR.** ← May 4 EVENING. Items remaining: full app walkthrough QA pass (casual ongoing). Items shipped (across May 4 morning + afternoon + evening): Sentry, multi-number narration, magic-link E2E test, security audit, mobile-web-app-capable. Settings gear icon was correctly noted as already shipped (Apr 30 — brief was stale, fixed in v34). **Phase 5a Play Store prep is now the next big rock.**
 
 ### Wins since v30 (May 3 PM session)
 
@@ -710,6 +852,31 @@ Third-party attributions in IP tab + public IP page: Epidemic Sound, Google Font
 - **Brief size matters for session cognitive load.** At 1633 lines, even Claude has to skim. Lean active brief (~800 lines) + lossless archive is the right architecture. Active doc = current state of truth, archive = full historical record.
 - **The archive isn't just for sentimentality.** It's the knowledge transfer asset for QNC Academy and any future project. Every lesson, decision, dead-end is portable IP. Lossless preservation is the goal.
 
+### May 4 PM lessons (Sentry + multi-narration + E2E test)
+
+- **Cursor IDE buffer can silently race with shell-side Python edits.** Hit twice in one afternoon. First: narration commit `649bb60` reported success + grep verified new code in file, but `git commit` only staged the SW + Sentry release bump — narration code was missing. Cursor's own post-commit verification caught it. Second: `b99b807` SW fix silently reverted `DODO_MODE` from "test" back to "live" mid-commit. Caught by the new pre-stage verification guard. **Mitigation pattern (now standard for mode-flip commits):** explicit `if both in sync → ship; else → exit 1` check immediately before `git add`. Don't trust grep verification alone — verify again at the commit boundary.
+- **Sentry pays for itself within hours.** Within ~2 hours of going live, Sentry surfaced an unhandled SW exception (HTTP 206 partial-content responses can't be cached via Cache API — every audio Range request was throwing). Bug had been silent for who-knows-how-long. Sentry exposed it. Worth the ~20 minutes of integration setup just for that one catch.
+- **The visible symptom isn't always the bug — second time this lesson burned.** Initially diagnosed the magic-link Reveal stall as "SW 206 errors flooding the JS event loop, choking the auth click handler." The 206 fix was real and worth shipping, but it WASN'T blocking the auth flow. Real cause: leftover Supabase auth token in incognito localStorage from earlier test attempts was making `handleRevealClick` short-circuit incorrectly. Lesson reapplied: instrument the data flow before patching theories. (Same lesson hit on May 2 bounce-bug debug — three-hour theory-chase before "user wasn't in the cube to see correct unlock" was the actual answer.)
+- **Incognito Chrome localStorage persists across same-session windows.** Only quitting ALL incognito windows clears it. Caused the magic-link Reveal stall. **Mitigation:** for clean-slate testing, quit all incognito windows + reopen, OR verify `localStorage` keys are empty in console before starting auth tests.
+- **Gmail "+" aliases bypass Google OAuth identity collisions.** `rkelbrickmail+e2etest@gmail.com` routes to `rkelbrickmail@gmail.com` inbox but Supabase treats it as a completely different user. Critical for testing magic-link flow when the base email already has a Google OAuth identity attached. Lesson learned the hard way after wasted attempts on the base email.
+- **Magic-link from Gmail opens in user's default Chrome profile, not the incognito session it was triggered from.** Real-user behavior — Cursor caught this expectation mismatch during the test. Doesn't break the flow (verified May 4 E2E), but worth flagging in user-facing docs eventually if testers report confusion.
+- **Three-place mode flips are high-stakes operations.** `DODO_MODE` (frontend) + `MODE` (Edge Function) + Supabase secrets MUST stay in sync. The brief warned about this before, but May 4 confirmed the consequences: a 5-minute window where origin/main had mismatched mode (frontend live + Edge test + Test secrets) due to stale-buffer revert. No customer hit it (low traffic), but real risk if anyone had clicked Pay. **Pre-flight + post-flight curl verification is non-negotiable.**
+- **Don't paste literal multi-line shell commands from chat into Mac Terminal.** zsh interprets `\n` literally → parse error → command silently fails. Type manually OR confirm clean paste before hitting Enter. Hit this on `secrets set` step.
+- **Sentry trial auto-downgrade requires a calendar reminder.** Default new account starts on 14-day Business plan trial → auto-drops to free tier. Set explicit reminder for trial expiry to verify no surprise billing. (May 18, 2026 for this account.)
+- **Use the explicit Sentry SDK, not the loader script.** Loader script auto-applies whatever's toggled in the Sentry dashboard at runtime — including features you didn't intend. Explicit SDK + locked `Sentry.init()` config = auditable in code, no surprises from UI toggles.
+- **EU region for error/data services is the right default for SA-based businesses serving global customers.** GDPR is the strictest bar; aligning with it gives clean data-residency story across Supabase Frankfurt + Resend eu-west-1 + Sentry EU. Locked-in choice (region can't be changed once project created on Sentry).
+
+### May 4 EVENING lessons (security audit + CSP rollout)
+
+- **CSP rollout produces noisy, helpful first-deploy feedback.** Within minutes of CSP going live, the `securitypolicyviolation` listener forwarded two real gaps to Sentry: Sentry's own runtime self-fetch from `browser.sentry-cdn.com` (the bundle CDN does a follow-up connect after initial load), and Vimeo's thumbnail loads from `i.vimeocdn.com`. Both invisible-until-blocked in dev. **Lesson:** ship CSP with the violation→Sentry listener wired BEFORE the policy itself goes strict. The listener is the safety net that catches what static analysis misses.
+- **Two CSPs for two trust levels is the right pattern.** `app.html` keeps `'unsafe-inline'` because dropping it would require refactoring every inline `onclick=`/`onchange=` handler — multi-hour, low-payoff. Public pages stay strict (no inline anything, fonts only) because they have no inline scripts to begin with. **Don't homogenise the policy where the requirement differs.**
+- **Edge Function rate limits don't need new infrastructure.** The existing `narrate_rate_limit_try` Postgres RPC already does general-purpose token-bucket logic with two windows (minute + hour). Three new functions got rate-limited by reusing it with namespaced bucket keys (`delete:USER_ID`, `export:USER_ID`, `dodo-session:IP`). Zero new migrations. **Lesson:** when adding similar capability across multiple endpoints, look for already-deployed primitives before designing a new system.
+- **Generic error responses preserve debuggability while protecting the client.** Pattern that's now standard: `console.error("function-name error:", e)` server-side (full context for Supabase log access), `return { error: "specific_code" }` client-side (no stack traces, no upstream service details). Burns nothing in operational visibility, removes a small information-disclosure surface.
+- **Heuristic secret scans are necessary but not sufficient.** zsh history scan with 5 patterns covered the leak shapes we'd actually used (the May 2 `supabase secrets set` echo, plus standard JWT/Bearer/Stripe-Dodo prefixes). 0 matches. But "0 matches on heuristic patterns" ≠ "no secrets in history" — exotic shapes (raw hex blobs, custom token formats) wouldn't trigger any pattern. **Lesson:** treat scan as one layer, also rely on the operational rule "never paste secret values into terminal in the first place" as the primary defence.
+- **Brief condensation requires lossless archive update — caught only on read-back.** Brief v34 condensed the security audit checklist from its planning form (TO-DO buckets) to its results form (4 commits + manual checks). Active brief got cleaner. But the planning version contained design decisions (which directives to set, which directives to skip, which deferrals were intentional) that are valuable historical record. Ronnie spotted the line-count drop and asked before committing. **Lesson:** when condensing a brief section because work shipped, archive the planning context ALONGSIDE the results record. Don't trust that "git show <commit>:PROJECT_BRIEF.md" is sufficient — the archive is the project's working memory; what's not in the archive is effectively forgotten in 6 months.
+- **Resend API key backup is a non-issue when you understand the upstream model.** Resend hides values after creation. So does GitHub for PATs, Cloudflare for some API tokens, Stripe for restricted keys, Apple for App-specific passwords. The pattern is: assume you can never read the value again, design for rotate-to-recover. Local backups are useful but not critical for this class of secret.
+- **The brief is for current state, the archive is for memory.** Brief v33 had ~50 lines of "to-do" security audit checklist. v34 has ~30 lines of "what we shipped + what we deferred." That's a healthy ratio: brief shrinks as plans become reality. The archive grows as the real work accumulates. The trick is doing both in the same session — defer the archive update and you lose the planning context within a few sessions.
+
 ---
 
 ## 🎙️ ELEVENLABS NARRATOR — full configuration history
@@ -816,6 +983,19 @@ Three Apple-specific add-ons confirmed May 3 PM:
 | `c3d3e57` | **Music ducking** during narration.                                                                          |
 | `a06ca3e` | **Matrix card overflow re-applied** after c3d3e57 regression.                                                |
 | `92bd75b` | **Splash colors synced** to #05050f cosmic black.                                                            |
+| `804856a` | gitignore tightened for .supabase-env* glob (May 4 cleanup).                                                  |
+| `e804ab4` | **Brief v32 + new BRIEF_ARCHIVE.md** — lossless history split.                                                |
+| `3f7f297` | Brand cyan refresh across logo variants.                                                                      |
+| `730d4d8` | **Sentry error monitoring shipped** — production-only, EU region.                                             |
+| `4b6bdf9` | **Multi-number narration shipped** (corrective for 649bb60 near-miss).                                        |
+| `b99b807` | **SW 206 cache-skip fix** — Sentry's first real catch.                                                        |
+| `9062eef` | DODO_MODE re-flip + pre-stage verification guard pattern adopted.                                             |
+| `1b15ece` | **Live Mode active after magic-link E2E test PASS** (May 4 PM).
+| `35331bf` | **Edge Function rate limits + error tightening** — delete-account, export-data, dodo-create-session rate-limited (May 4 EVENING). |
+| `f6a7db5` | **CSP baseline shipped** across all 10 HTML pages + securitypolicyviolation listener wired to Sentry.                              |
+| `00d1c6c` | CSP fix-up — Sentry CDN connect + Vimeo thumbnail img-src (caught by violation listener within hours of deploy).                    |
+| `1324784` | mobile-web-app-capable meta tag — iOS 16+ deprecation fix.                                                                          |
+| `9bcf2d3` | **Brief v34** — security audit completion documented, archive updated with May 4 EVENING session record.                            |                                               |
 
 ---
 
