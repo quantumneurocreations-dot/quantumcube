@@ -25,7 +25,7 @@ const CORS = {
 };
 
 // Mode + product config — kept in sync with frontend DODO_MODE
-const MODE = "live"; // flip to "live" for production
+const MODE = "test"; // flip to "live" for production
 const CONFIG = {
   test: {
     apiBase: "https://test.dodopayments.com",
