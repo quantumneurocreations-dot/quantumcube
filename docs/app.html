@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src 'self' https://fqqdldvnxupzxvvbyvjm.supabase.co https://*.ingest.de.sentry.io https://*.dodopayments.com; frame-src https://player.vimeo.com https://*.dodopayments.com; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vimeocdn.com; media-src 'self'; connect-src 'self' https://fqqdldvnxupzxvvbyvjm.supabase.co https://*.ingest.de.sentry.io https://browser.sentry-cdn.com https://*.dodopayments.com; frame-src https://player.vimeo.com https://*.dodopayments.com; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#05050f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -521,7 +521,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v199",
+      release: "quantum-cube@qc-v200",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
