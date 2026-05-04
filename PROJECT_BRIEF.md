@@ -1,6 +1,8 @@
-# QUANTUM CUBE — MASTER PROJECT DOCUMENT
+# QUANTUM CUBE — PROJECT BRIEF
 
-**Version: v31 | Last Updated: May 3, 2026 (Sunday, afternoon)**
+**Version: v32 | Last Updated: May 4, 2026 (Monday, morning)**
+
+📁 **Archived history → see BRIEF_ARCHIVE.md** — full session timeline, all "biggest wins" history blocks, complete legal text, lessons from every session, and Paddle/PayFast punch list (already shipped) live in the archive. This brief stays focused on current working context.
 
 ---
 
@@ -35,396 +37,80 @@ The kickoff doc handles session startup, role split between Chat Claude and Curs
 
 ## 📣 MARKETING — see MARKETING_PLAYBOOK.md
 
-Marketing strategy, launch sequencing, channel playbooks, customer positioning thesis (curious dabbler), shareable cosmic-profile card concept, SEO content strategy, email deliverability plan, tools evaluated, and growth metrics live in the separate marketing playbook. The brief stays focused on build, infra, and architecture. When working on marketing tasks in a new chat, attach MARKETING_PLAYBOOK.md + CHAT_KICKOFF.md instead of this brief.
+Marketing strategy, launch sequencing, channel playbooks, customer positioning thesis (curious dabbler), shareable cosmic-profile card concept, SEO content strategy, email deliverability plan, tools evaluated, and growth metrics live in the separate marketing playbook.
 
-**Social channel ownership:** Michelle takes over all social media posting and interaction from May 4, 2026 (Monday). Brief stays code-focused; Michelle's content workflow lives in the playbook.
+**Social channel ownership:** Michelle owns all social media posting and interaction from May 4, 2026 (Monday). Brief stays code-focused; Michelle's content workflow lives in the playbook.
 
 ---
 
 ## STRATEGIC CONTEXT (locked May 3, 2026)
 
-Strategic decisions from the May 2 evening + May 3 morning + May 3 afternoon conversations are **locked** here and mirrored in `MARKETING_PLAYBOOK.md` v3. Payment geography, Play Store phasing, customer positioning, and product expansion roadmap below are **technical + business truth** for engineering and ops — not aspirational notes.
+**Team capacity:** 3 full-time partners. Quantum Cube is one of three QNC projects — a launched byproduct with real revenue that can scale on its own, while QNC Academy stays the primary focus and the HR-screening product stays secondary.
 
-**Team capacity:** 3 full-time partners (Ronnie + 2). Quantum Cube is **one of three QNC projects** — a launched byproduct with real revenue that can scale on its own, while **QNC Academy stays the primary focus** and the HR-screening product stays secondary.
+**Customer thesis (locked):** Target is the **curious dabbler** (~70-75% of market), not the hardcore astrology enthusiast (~10-15%) or pure gift buyer (~10-15%). The wedge is **simplicity, beauty, one-shot completeness** — not depth. Co-Star wins depth; we don't compete there.
 
-**Social channel ownership:** Michelle takes over all social posting + interaction from **May 4, 2026 (Monday)**. Detailed content workflow + SEO blog strategy + FindQuestions.com process lives in the playbook. Brief stays code-focused.
+**Product model (locked — supersedes subscription tier plan):** **Multi-product one-time-purchase**. Each new product is its own Dodo product + own `has_paid`-style flag, $17 (Family $25). Planned product line: Quantum Cube (live) → Compatibility → Year Ahead → Tarot → Family. Subscription tier (Quantum Cube Plus, $9.99/mo) is **demoted to "evaluate at month 6 if data supports"**.
 
-**Customer thesis (locked May 3 PM):** Target is the **curious dabbler** (~70-75% of market), not the hardcore astrology enthusiast (~10-15%) or pure gift buyer (~10-15%). The wedge is **simplicity, beauty, one-shot completeness** — not depth. Co-Star wins depth; we don't compete there. Full thesis in playbook.
+**Budget posture:** Money is **not** the limiting factor.
 
-**Product model (locked May 3 PM — supersedes subscription tier plan):** **Multi-product one-time-purchase** is the working hypothesis, NOT subscription. Each new product is its own Dodo product + own `has_paid`-style flag, $17 (Family $25). Planned product line: Quantum Cube (live) → Compatibility → Year Ahead → Tarot → Family. Subscription tier (Quantum Cube Plus, $9.99/mo) is **demoted to "evaluate at month 6 if data supports"** — see PRODUCT EXPANSION ROADMAP below.
+**Timeline posture:** **Aggressive** — meaningful traction on the order of months, not quarters.
 
-**Budget posture:** Money is **not** the limiting factor. Aggressive paid-ad testing, content-production retainers, influencer partnerships, and PR engagements are all authorized when execution-ready.
+**Three legitimate outcome paths** — revisit at month 6 with real channel + revenue data:
 
-**Timeline posture:** **Aggressive** — meaningful traction on the order of **months**, not quarters (closer to a small-funded startup launch than a hobby indie timeline).
-
-**Three legitimate outcome paths** — revisit at **month 6** with real channel + revenue data:
-
-1. **Build big** — scale Quantum Cube + sibling products as a durable revenue line inside QNC.
-2. **Build to flippable** — package documented growth + multi-product portfolio for acquisition by spirituality/wellness platforms (Calm-class strategics, astrology networks, etc.).
+1. **Build big** — scale Quantum Cube + sibling products as durable revenue line inside QNC.
+2. **Build to flippable** — package documented growth + multi-product portfolio for acquisition.
 3. **Build modestly** — sustain on lighter touch + organic while partner capacity stays on Academy + HR.
-
-This section stays **additive** with historical brief content — nothing above is deleted.
-
----
-
-## 🎉 BIGGEST WINS SINCE v30 (May 3, 2026 — afternoon strategic session)
-
-**1. CUSTOMER POSITIONING THESIS LOCKED — curious dabbler, not hardcore enthusiast.** ← May 3 PM. Market roughly splits: ~10-15% hardcore (Co-Star/Pattern/Sanctuary subscribers), ~70-75% **curious dabblers** (the underserved segment we target), ~10-15% gift buyers. The dabbler wants a beautiful, quick, meaningful one-off reading without subscription fatigue, daily push notifications, or a content treadmill. Our wedge is **simplicity, beauty, one-shot completeness** — not depth. Co-Star wins depth; we don't compete there. Full thesis lives in MARKETING_PLAYBOOK.md v3.
-
-**2. PRODUCT MODEL LOCKED — multi-product one-time-purchase, NOT subscription.** ← May 3 PM. Subscription tier (Quantum Cube Plus, $9.99/mo with daily horoscopes) is the **wrong model for our customer segment**. Building daily horoscope infrastructure would solve a problem the curious dabbler doesn't have. Conversion would be ~2-3% not the 12-15% projected for general spirituality apps. Instead: lifetime value comes from **new one-time products**, not recurring revenue from one product. Planned product line: Quantum Cube (live, $17) → Quantum Compatibility ($17) → Quantum Year Ahead ($17) → Quantum Tarot ($17) → Quantum Family ($25, gifting angle). Each its own Dodo product, each its own paid flag in Supabase. Math check: 50,000 base users × 30% Compatibility + 20% Year Ahead = ~$1.275M gross vs ~$850k for Cube-only. Subscription tier demoted to "evaluate at month 6 if data supports it" — see PRODUCT EXPANSION ROADMAP below.
-
-**3. SHAREABLE COSMIC-PROFILE CARD identified as the one engagement-loop feature worth building.** ← May 3 PM. A beautiful single-image PNG summary of the user's reading they can save to phone or share to Instagram Stories / TikTok / WhatsApp. Drives three things at once: viral moment (friend asks "where'd you get this?"), returning-user moment (revisit to re-share), gifting trigger. Tentative placement: extension of Face 6 (Complete) with "Save your cosmic card" button. Server-side PNG generation from profile data. Not a launch-blocker — slot into Phase 2 polish or Phase 6 (months 3-4) depending on capacity. Spec lives in playbook.
-
-**4. RETENTION MECHANISM CLARITY — three drivers, two natural fits.** ← May 3 PM. Spirituality apps that retain over years do so through (a) life-event moments [new relationship, job, birthday, decision] → maps to Compatibility / Year Ahead / Tarot, (b) gifting → maps to Family + gift codes for any product, (c) community/sharing → maps to shareable cosmic card. We deliberately don't need the typical 4th mechanism (daily horoscope + push notifications) because our customer segment doesn't want it.
-
-**5. SOCIAL CHANNEL OWNERSHIP — Michelle takes over from May 4 (Monday).** ← May 3 PM. All social media posting + interaction handed to Michelle: TikTok, Instagram, Facebook, X, Pinterest, Threads. Detailed content workflow + SEO blog strategy (FindQuestions.com + EEAT framework) lives in playbook v3. Brief stays code-focused. Pre-handover prep needed before Monday: content guidelines doc, brand voice template, response handling templates.
-
-**6. PRE-LAUNCH SECURITY AUDIT SCOPED — OWASP-style review before Play Store submission.** ← May 3 PM. Slot between Phase 2 polish and Phase 5a Play Store submission (~1-2 weeks out). Quick-win checks: open endpoints, pagination on list endpoints, error message verbosity (currently might leak too much detail), rate limiting on `delete-account` + `export-data` (currently only `narrate` is rate-limited), Supabase RLS audit, SQL injection vectors on Edge Function inputs, JWT/auth header validation. ~1-2 hours focused work.
-
-**7. BUG REPORTER / SENTRY moved up the priority list.** ← May 3 PM. Should ship before public marketing push. Right now if a customer hits a bug we have zero visibility — we're flying blind on production errors. ~20 min implementation. Promoted from "Cleanup" to "Pre-Marketing-Push" in priority order.
-
-**8. EMAIL DELIVERABILITY PLAN — burner / warmup domain for marketing emails.** ← May 3 PM. When marketing emails start (likely month 2+ when subscriber list grows), sending from `quantumcube.app` cold = junk folder. Standard practice: warm up a secondary sending domain (e.g. `mail.quantumcube.app` or separate root domain) over 4-6 weeks before high-volume sends. Transactional emails (magic-link, payment confirmation) stay on the primary domain. Bookmark for month 1-2.
-
-**9. APPLE APP STORE PHASE 8 — Small Business Program + Restore Purchases + Sign in with Apple.** ← May 3 PM. When we ship to iOS (months 6-9), three add-ons confirmed: (a) apply for **Apple Small Business Program** (drops Apple's 30% cut to 15% if under $1M annual; free, automatic), (b) implement **Restore Purchases button** (Apple hard requirement), (c) implement **Sign in with Apple** (required if any other social login is offered). Slotted into Phase 8 details.
-
-**10. MARKETING TOOLS / DIRECTORIES TRIAGE — definitive list.** ← May 3 PM. From Ronnie's running list, the following are confirmed **rejected**: AppSumo, G2, Capterra, Vloxo, BetaList, uNeed, Fazier, Microlaunch, Peerlist, Tiny Launch, Tiny Startup, SideProjects, LaunchIgniter, PeerPush (all wrong audience — indie SaaS dev bubble). RevenueCat is "wait until/if subscription tier returns at month 6". Stitch MCP, NanoBanano, 21st.dev, UI UX Pro form library all bookmarked as dev tooling not relevant now. Sideshift (crypto) not relevant. Cooky-AI investigated, not relevant. WindsorAI bookmarked for Phase 7 paid-ads dashboard. Beehiiv bookmarked for newsletter when list grows. **Stick with the playbook's launch sequence: Product Hunt + Indie Hackers + Hacker News only.** Detailed reasoning in playbook.
-
-**11. SEO CONTENT STRATEGY ADDED — FindQuestions.com + EEAT blog framework.** ← May 3 PM. One blog post per week answering real searched questions in spirituality/numerology/astrology niche, structured with the EEAT framework Google rewards (Experience, Expertise, Authority, Trust). Pair with `quantumcube.app/blog/` subdirectory. Compounding organic traffic. Michelle owns. Full process + Claude prompt template in playbook.
-
----
-
-## 🎉 BIGGEST WINS SINCE v28 (May 2 PM session)
-
-**1. QUANTUM CUBE IS LIVE AND ACCEPTING REAL PAYMENTS.** ← May 2, ~11 AM (first live charge) and again ~6:30 PM (second live charge after bounce-bug fix). Real $17 USD processed end-to-end. Real card. Real customer email receipt. Webhook fired, has_paid flipped, cube unlocked. **The entire 8-day waiting period for Dodo approval has now paid off — Quantum Cube can sell to real users.**
-
-**2. Dodo overlay SDK migration shipped.** ← May 2 AM. Originally built integration with static payment-link redirect (commit cdefd3f). Within 30 minutes of testing, identified the cross-domain redirect was killing user sessions on return. Pivoted to Dodo's overlay SDK (`dodopayments-checkout` UMD bundle via jsdelivr). User now stays on `quantumcube.app` the entire time — overlay opens as modal over the app, payment processes, webhook fires server-side. Significantly cleaner UX architecture. New Edge Function `dodo-create-session` mints `cks_xxx` checkout session URLs server-side; metadata.user_id embedded for webhook profile matching. Overlay SDK accessed via `window.DodoPaymentsCheckout.DodoPayments.Initialize/.Checkout.open()` — exact namespace shape verified from the UMD bundle source.
-
-**3. Post-payment Face-0 bounce bug — diagnosed and killed.** ← May 2 PM. The big debug saga of the day. Multiple incorrect theories before finding the actual issue:
-
-- First theory: cross-domain session loss → built session-aware banner UX (didn't help)
-- Second theory: stale SW serving old code → multiple SW reset cycles (no smoking gun)
-- Third theory: race condition between `checkDodoReturn` and `onAuthStateChange` calling `attemptPaymentUnlock` in parallel → added `_qcUnlockInFlight` idempotency lock (helped but didn't fix)
-- Fourth theory: `await sb.auth.getSession()` hanging during INITIAL_SESSION restore → bypassed Supabase JS client entirely, read session straight from localStorage and queried profiles via direct REST fetch (worked — `profile fetch status: 200`, `unlock applied`, but still bounced)
-- **Actual root cause:** the unlock data flow was working all along. Logs proved `syncUnlockFromProfile` ran successfully and `qcCurrentProfile` was set to a paid profile. But the user was sitting on Face 0 (sign-up form) because `runCalculation` had never fired to put them inside the cube view. **Unlock state was correct — the user just wasn't in the cube to see it.**
-- **Fix (commit e85ca5c):** after applying the unlock, also call `populateFormFromProfile()` then `runCalculation()` after a 200ms DOM-settle delay. User now lands inside the cube on Face 3 with full reading visible. No bounce, no re-sign-in.
-- **Lesson burned in:** when something looks broken, instrument the data flow before patching. Don't assume the visible symptom (bounce to Face 0) is the same as the actual bug (cube wasn't opened).
-
-**4. 17-line legal copy swap shipped.** ← May 2 AM. Replaced all PayFast (Pty) Ltd and Paddle.com Market Limited references across 9 files (`docs/app.html`, 8 legal pages) plus 1 migration comment with `Dodo Payments, Inc.` (the verified MoR legal entity). Single commit (7ff5db8). Brief v28 listed pre-OAuth-ship line numbers; re-grepped fresh after Dodo overlay ship and applied. Zero remaining references to the old processors in the codebase.
-
-**5. Live Mode E2E verified twice.** ← May 2. First live test ~11 AM with real card → payment posted, webhook fired, has_paid=true. (Hit the bounce bug — user landed on Face 0 but signing in via Google produced an unlocked cube.) Second live test ~6:30 PM after bounce-bug fix shipped → payment posted, **clean unlock in place, no bounce**. Both payments are visible in Dodo Live Mode dashboard.
-
-**6. Dodo refund flow partially verified.** ← May 2. Refund of the morning ($17 ~~10 AM) charge **succeeded** in Dodo Live dashboard around 7 PM. The evening charge (~~6:30 PM) hit "Insufficient funds in wallet" error when refund was attempted minutes later. **Theory confirmed: Dodo enforces a settlement-period holding window** before funds are refundable from the merchant wallet. The morning charge was old enough to clear; the evening one wasn't. No action required — second refund will go through naturally with time.
-
-**7. Dodo wallet flow understood.** ← May 2. Live Mode "Insufficient funds in wallet" is real and applies to refunds within ~hours of the original charge. Test Mode wallet is a fake balance that's always 0 (refunds always fail there). Don't treat as a bug. For real customer refunds going forward, expect a few-hour-to-multi-day settlement window before the funds become refundable.
-
-**8. API key leak caught and rotated cleanly.** ← May 2 AM. During Live Mode setup, the Live API key was accidentally pasted into chat in plain text via the `supabase secrets set` command output. Caught within minutes, rotated immediately:
-
-- Deleted the leaked Live API key in Dodo dashboard FIRST
-- Generated a fresh Live API key
-- Re-set Supabase secret with new value (no echo this time)
-- Verified digest hash changed
-- **No transactions used the leaked key.** Damage zero.
-- **Burned-in rule:** the same `NEVER paste tokens or keys into chat or Cursor` rule from v28 (around OAuth Client Secret handling) applies to ALL secrets, ALL the time. The Apr 29 lesson on JWTs was the same lesson — needed a second reinforcement.
-
-**9. Two new Supabase Edge Functions shipped.** ← May 2.
-
-- `**dodo-webhook`**: receives `payment.succeeded` and `refund.succeeded` events from Dodo, verifies signature via Standard Webhooks SDK, updates `has_paid` in profiles. Source committed (commit b3386ea).
-- `**dodo-create-session**`: mints checkout session URLs (`cks_xxx`) server-side via Dodo's Checkout Sessions API. Embeds `metadata.user_id` for webhook profile matching. Defence-in-depth checks user exists in profiles before minting. Source committed.
-- Both run with `verify_jwt = false` and handle their own auth (anon key for `dodo-create-session`, signed webhook payload for `dodo-webhook`).
-
-**10. Dodo product created in both modes.**
-
-- **Test Mode product:** `pdt_0NdwjT5U975nxTzpogS68` — `Quantum Cube`, $17 USD, single payment
-- **Live Mode product:** `pdt_0Ndx7o41zFEREpoPTyvR2` — same details
-- Live webhook endpoint configured pointing to `dodo-webhook` Edge Function
-- Both signing secrets stored in Apple Passwords
-
-**11. CHAT_KICKOFF.md memory note added.** ← May 2 PM. User memory edits now persist across all Quantum Cube chats:
-
-- Address user as "buddy" (not by name)
-- Supabase CLI v2.90.0 — `functions deploy <name>` works without `--linked` flag
-
----
-
-## 🎉 BIGGEST WINS SINCE v27 (May 1 PM session)
-
-**1. DODO PAYMENTS APPROVED.** ← May 1, ~7 PM. The last launch-blocker dropped. Email "Live Payments Are Now Enabled" arrived after 8 days in review (longer than the stated 24-72hr window — escalation was being prepared but not needed). Live Payments status confirmed in dashboard with all 4 verification cards green: Product Information, Identity Verification, Business Verification, Bank Verification.
-
-**2. Dodo MoR legal entity name confirmed.** ← May 1 PM. Verified via Cursor Browser MCP recon of Dodo's own Master Service Agreement at `dodopayments.com/legal/terms-of-use`:
-
-- **Registered legal entity:** `Dodo Payments, Inc.` (Delaware-incorporated US entity)
-- **Trade name (shows on customer credit card statements):** `Dodo Payments`
-- This is the value to plug into the 26-line legal copy swap (replacing "PayFast (Pty) Ltd" / "Paddle.com Market Limited")
-
-**3. Dodo dashboard recon complete.** ← May 1 PM. Captured for tomorrow's integration session:
-
-- Business ID: `bus_0NdjpSYtT1ZAbRN6l15dg`
-- Adaptive Currency: ON (customers see local currency)
-- Visa Rapid Dispute Resolution: ON, $100 threshold (good defensive default)
-- Webhooks docs URL: `docs.dodopayments.com/developer-resources/webhooks`
-- Webhook event we'll subscribe to: `payment.succeeded` (also `refund.succeeded` for completeness)
-- Integration path locked: **Hosted checkout** (Payment Links / Overlay) — NOT full SDK
-- 3D Secure currently OFF — flagged for review post-launch (low-priority for $17 product)
-
-**4. Dodo Test Mode active for tomorrow.** ← May 1 PM. Switched from Live Mode to Test Mode for sandbox integration work. **No live charges possible until we explicitly switch back.**
-
-**5. LemonSqueezy + FastSpring fallback chain unchanged but now redundant.** ← May 1 PM. With Dodo live, fallback applications stay parked but no longer urgent. LemonSqueezy still on SA tax form delay (a week now). FastSpring still dormant. Both can be cleaned up post-launch.
-
-**6. Coda Payments evaluated and rejected.** ← May 1 PM. Researched as a possible alternative — they're a gaming-focused MoR (Codashop, EA / Activision / Roblox clients). Wrong scale and wrong industry for a $17 one-time digital reading. Don't pursue.
-
----
-
-## 🎉 BIGGEST WINS SINCE v26 (Apr 30 PM session)
-
-**1. Google OAuth 2.0 fully shipped end-to-end.** ← Apr 30 PM. The biggest launch-blocker after Dodo is now gone. Three-commit implementation:
-
-- DB migration: `dob` + `name` columns added to `profiles`, `handle_new_user()` trigger updated to capture both from `raw_user_meta_data`, RLS update policy refreshed
-- Frontend: cosmic-themed "Continue with Google" button on Face 0 above email field, italic "or sign up with email" divider below
-- Profile persistence: `saveProfileFromForm()` writes name+DOB to profile after successful runCalculation; `populateFormFromProfile()` auto-fills form on return for any user (OAuth or magic-link); `onAuthStateChange` refactored to fetch profile FIRST, populate form, then decide whether to fire runCalculation
-- **Tested all 3 paths end-to-end:** brand-new OAuth user (email pre-filled+locked, name pre-filled, DOB blank → user fills, Reveal works, profile saved), returning OAuth user (full auto-fill, runs straight into cube), magic-link path unchanged (still works as fallback)
-
-**2. Settings gear icon shipped.** ← Apr 30 PM. Closed the Face 7 discoverability gap. 40×40 fixed bottom-left, glass-cyan styling with safe-area insets for iOS notches, visibility wired through existing `updateSettingsLinkVisibility()` auth-state hook. Originally placed top-right, moved to bottom-left after live testing.
-
-**3. Magic-link email PNG wordmark deployed.** ← Apr 30 PM. The Cinzel-Decorative wordmark text fallback is gone — Supabase email template now uses hosted PNG at `https://quantumcube.app/qc-wordmark-email.png` (600×385, white QUANTUM + cyan CUBE on transparent bg). Resized from 2800px source via `sips` for fast email load.
-
-**4. Icon family regenerated with proper safe-zone padding.** ← Apr 30 PM. Earlier Apr 30 icons had letters touching the edges. New `brand/QC - Solid Spaced.png` master regenerated all 5 icons (192/512/512-maskable/apple-touch-180/favicon-32) with breathing room inside the inner 80% — survives Android maskable cropping and iOS squircle treatment.
-
-**5. Social media handles claimed across all 6 platforms.** ← Apr 30 PM. `@quantumcubeapp` locked on YouTube, Facebook, Instagram, X/Twitter, TikTok, Threads. Unified bio + profile pic (`brand/QC - Stars.png`) on every platform. **No posts yet — claim-and-hold mode until launch.** Twitter `@QuantumCube` was preexisting; rebranded to match.
-
-**6. Brand tagline locked: "Your cosmic profile, simplified."** ← Apr 30 PM. Distills the core differentiator (curation, not overwhelm) into a usable phrase. Lives in social bios now, will surface in landing page hero, app store listings, video intros.
-
-**7. Google Cloud project created and configured.** ← Apr 30 PM. New project `quantum-cube-494914` (NOT under any organization — kept separate from Academy Workspace per backend isolation rule). OAuth consent screen branded with QC logo + privacy/terms URLs + 3 test users. Web Client OAuth credentials generated and pasted into Supabase Google provider. Old orphan "QuantumCubeApp" Firebase/GCP project (the one flagged for deletion in v26) is now SHUT DOWN — auto-deletes in 30 days.
-
-**8. Supabase Google provider enabled + URL config tightened.** ← Apr 30 PM. Site URL corrected from `https://quantumcube.app/app.html` to `https://quantumcube.app/app` (drops the `.html` to match canonical URL). Redirect allow-list includes wildcard for safety.
-
----
-
-## 🎉 BIGGEST WINS SINCE v24
-
-**1. Payment processor decision FINAL: Dodo Payments.** Application submitted April 29, in 24-72hr review. Dodo actively markets to astrology brands (dedicated blog post on it). LemonSqueezy and FastSpring parked as fallbacks. Paddle definitively ruled out (their AUP explicitly prohibits "fortune-telling/horoscopes/clairvoyance").
-
-**2. Account deletion + data export shipped and VERIFIED end-to-end.** Two new Edge Functions, two-tap confirmation pattern with 5-second arm window, full localStorage wipe, signOut Promise.race timeout, cascade FK from auth.users → public.profiles. Smoke-tested Apr 29 — deletion fully works, fresh signup with same email works, no orphan state.
-
-**3. narrate Edge Function rate-limited.** Postgres RPC-based (5/min, 20/hr per IP). Closes the ElevenLabs credit-burn vulnerability that was a launch-blocker.
-
-**4. Real PNG icon family wired across the entire site.** ← Apr 30. The SVG cube placeholder is gone. Manifest now references actual PNGs (192, 512, 512-maskable). Apple-touch-icon, favicon, and manifest links added to landing page + all 8 legal pages (which previously had ZERO icon refs). Favicon corners rounded for bookmark consistency. Single biggest visual upgrade since the public site shipped.
-
-**5. Brand identity rebuilt — QC monogram chosen over cube icon.** ← Apr 30. After exploring cube illustrations in Canva (glass cube, wireframe, outline) the team voted for a Cinzel Decorative "QC" monogram (white Q + cyan C with cyan glow + curved underline tail). It's the app icon AND the brand mark. Plus full wordmark pack rebuilt in Canva — 9 variants total covering full-layout/stacked, white/black text, off-right/centred CUBE, and on cosmic/transparent backgrounds.
-
-**6. Magic-link email rebranded.** Dark cosmic Quantum Cube template applied via Supabase dashboard, preview confirmed.
-
-**7. Database migration history reconciled.** The `profiles` table + RLS + handle_new_user trigger migration that had been applied directly to remote without a committed file is now properly tracked. `db push` works again.
-
-**8. Static manifest.json replaces blob URL.** ← Apr 29 + Apr 30. Apr 29 made it static with SVG data-URI icon. Apr 30 swapped to real PNG icons. Google Play submission prerequisite fully met.
 
 ---
 
 ## 🌐 LIVE SITE
 
-`quantumcube.app` is LIVE. Domain pointed at GitHub Pages, SSL active, public landing page + 8 legal pages all responding HTTP 200.
+`quantumcube.app` is LIVE and accepting real payments since May 2, 2026. Domain pointed at GitHub Pages, SSL active, public landing page + 8 legal pages all responding HTTP 200.
 
 **Live URLs:**
 
-- `https://quantumcube.app/` — public landing page (hero, features, $17 pricing, entertainment disclaimer, "Begin" CTA)
+- `https://quantumcube.app/` — public landing page
 - `https://quantumcube.app/app` — the cube app
 - `https://quantumcube.app/privacy` — privacy policy
 - `https://quantumcube.app/terms` — terms of use
-- `https://quantumcube.app/refund` — refund policy (now references Dodo Payments, Inc. — May 2 swap shipped)
+- `https://quantumcube.app/refund` — refund policy
 - `https://quantumcube.app/disclaimer` — disclaimer
 - `https://quantumcube.app/ip` — IP notice
 - `https://quantumcube.app/popia` — POPIA / data
 - `https://quantumcube.app/security` — security
-- `https://quantumcube.app/contact` — contact info with full company details from CIPC
+- `https://quantumcube.app/contact` — contact info
 
 ---
 
-## 📅 SESSION TIMELINE
+## 💳 PAYMENT PROCESSOR — Dodo Payments (LIVE since May 2, 2026)
 
-### April 19, 2026 (Saturday, marathon — SW qc-v42 → qc-v99)
-
-56 commits. Auth/unlock architecture fixes, cube orientation, music/voice redesign, card widening, square matrix, marketing consent, mobile lock-screen width fix, payment button parity. ElevenLabs narrator foundation wired.
-
-### April 20, 2026 (Monday, launch-prep — SW qc-v107 → qc-v114)
-
-- `57dd972` Remove 10.8MB base64 AUDIO (11MB → 356KB)
-- `fd41b68` **CRITICAL paywall fix #1: STORE_KEY user-scoped**
-- `2403ca7` **CRITICAL paywall fix #2: unconditional lock enforcement**
-- `94af122` Legal additions: entertainment opener + Original Works + AI-Assisted
-
-### April 21, 2026 (Tuesday, Mac + Cursor hardening)
-
-- `e1070fb` FileVault enabled, Cursor allowlist tightened, `.cursorrules` at repo root, `.cursorignore` deleted.
-
-### April 21-22, 2026 (Tuesday evening → Wednesday morning — narration phase 1 struggle)
-
-Scaffolded pipeline, generated 256 numerology MP3s. Hash-based lookup failed on Android Chrome. Multiple debug rounds.
-
-### April 22, 2026 (Wednesday — narration phase 1 lock + phase 2 ship + SW rebuild)
-
-- `c2e3c80`, `4d51c0d`, `639bd09`, `2ba2a1e`, `e83b152`, `37f19fd`, `b0b87c5` (morning, SW v127→v136)
-- `636e3d8`, `be9f385`, `0546755` (afternoon, 129 new MP3s, ~$13 overage)
-
-### April 23, 2026 (Thursday — polish pass + CRITICAL paywall fix #3)
-
-- `0bd5a54` Paywall fix #3 — gate face-reveal blocks on isUnlocked
-- `231803e` UX: face-name label card + auto-scroll
-- `2d38560` Audio: music refresh + randomisation + cube-touch SFX ripped
-- `546363b` Welcome greeting auto-plays first 2 Face 1 entries
-- (revert + reset back to `546363b` due to Cursor display glitch)
-
-SW: qc-v138 → qc-v142.
-
-Non-code: refund policy drafted+approved, magic-link email HTML drafted, Paddle + Google Play full requirements audits.
-
-### April 24, 2026 (Friday — public site SHIPPED)
-
-**Massive day.** Public site went live.
-
-- `2e888d2` **Public site: landing page + 9 legal pages + /app route.** Restructured app into `/docs/`. Created landing page, 8 standalone legal pages, shared CSS, CNAME, .nojekyll. Deployed.
-- `e8bfbc4` `/docs` restructure for Pages source
-- `32a23f0` `.nojekyll` + `/privacy/` redirect
-- `cc63d90` `/app/` trailing-slash redirect
-
-GitHub Pages source switched. Cloudflare CNAME propagated. Cloudflare email routing set up. `quantumcube.app` LIVE.
-
-### April 24-27, 2026 (additional fix)
-
-- `7a9b7ac` Music randomisation per session + user-scope welcome counter
-
-### April 28, 2026 (Tuesday — sync + brief update)
-
-Cross-chat sync. Identified gap between Claude chat A (April 23 polish) and Claude chat B (April 24 public site). Re-aligned context. v24 brief generated. Identified untracked `brand/` folder.
-
-### April 29, 2026 (Wednesday — single-day sprint, 12 commits)
-
-The biggest single-day technical sprint of the project. 12 commits shipped:
-
-
-| Commit    | What                                                                           |
-| --------- | ------------------------------------------------------------------------------ |
-| `7016cb1` | feat(narrate): per-IP rate limiting (Postgres RPC, 5/min + 20/hr)              |
-| `f9a3df3` | chore(db): commit existing remote migration to repo (profiles + RLS + trigger) |
-| `43e397e` | feat(pwa): static manifest.json replaces blob URL                              |
-| `0fcbdb9` | feat(account): data export + account deletion (POPIA/GDPR)                     |
-| `dddb84e` | debug(delete): diagnostic logs + signOut timeout race                          |
-| `21b9c99` | fix(delete): rip diagnostic logs, keep timeout race                            |
-| `9c35570` | feat(brand): commit Quantum Cube wordmark pack                                 |
-| `49ea172` | docs: brief v25 (subsequently expanded to v25.1)                               |
-
-
-SW: qc-v142 → qc-v147.
-
-**Non-code outcomes Apr 29:**
-
-- Paddle definitively ruled out (verified directly against their AUP)
-- LemonSqueezy: SA tax form delay, application paused
-- FastSpring: Michelle started KYB, account dormant as fallback
-- Dodo Payments signup submitted, in 24-72hr review
-- Magic-link email HTML pasted to Supabase dashboard, preview confirmed
-- Security audit complete: 3 items checked (rate limit, input validation, key handling) — only narrate rate limit needed fixing
-- Paddle/PayFast 26-line punch list captured for post-Dodo cleanup
-- Cube icon priority surfaced (needed for app icons + social profile pics — single dependency for two work items)
-- Lesson on JWT-handling: tokens never go through Cursor or chat; debug via DevTools Console + Promise.race timeouts instead
-
-### April 30, 2026 (Thursday — brand identity sprint, 3 commits)
-
-Full morning of brand work. Three commits shipped:
-
-
-| Commit    | What                                                                |
-| --------- | ------------------------------------------------------------------- |
-| `4fb2e40` | feat(brand): replace Apr 29 brand pack with QC monogram + wordmarks |
-| `039b0c1` | feat(icons): wire QC monogram PNG icon family across site           |
-| `78a8e00` | feat(icons): round favicon corners (18% radius, medium)             |
-
-
-SW: qc-v147 → qc-v149.
-
-**Outcomes Apr 30:**
-
-- Confirmed orphan Firebase project ("QuantumCubeApp") was never used by either Cube or Academy. Cleared for deletion. (Lesson: Firebase ≠ Supabase — verify before action.)
-- Built full wordmark pack in Canva Pro (Cinzel Decorative). 9 PNG variants exported transparent at 2800×1800.
-- Cube icon path explored (glass cube, wireframe, outline) but team voted for **QC monogram** instead — a Cinzel-Decorative type-as-logo mark. Stronger silhouette, scales clean to favicon, brand-coherent with wordmarks.
-- App icon family generated via macOS native `sips` (no homebrew/imagemagick needed) from `brand/QC - Solid.png` master.
-- Favicon corners rounded via Python PIL (18% radius, medium — matches Claude/YouTube/Vimeo bookmark style).
-- Landing page + 8 legal pages were missing all icon refs (favicon, apple-touch, manifest) — fixed in same commit as app.html SVG → PNG swap.
-- Two C-only monogram variants created as bonus (could become a secondary mark later, like Mickey ears vs full Disney logo).
-- Decision: HTML text wordmarks stay in app/site (sharper, faster, accessible, selectable). PNG wordmarks reserved for contexts where text won't render (email).
-- Apr 29 brand pack (Cinzel woff2 fonts + old wordmark PNGs + Cube Sides source images) all retired — git history preserves.
-
-### May 2, 2026 (Saturday — Dodo integration + LAUNCH, 11 commits)
-
-The largest single-day technical sprint of the project. 11 commits shipped, both modes tested end-to-end, real payment processed, bounce-bug killed.
-
-
-| Commit    | What                                                                          |
-| --------- | ----------------------------------------------------------------------------- |
-| `cdefd3f` | feat(payment): migrate Dodo to overlay SDK checkout                           |
-| `7ff5db8` | feat(legal): swap PayFast/Paddle MoR wording for Dodo Payments, Inc.          |
-| `90705bd` | feat(payment): switch Dodo to Live Mode                                       |
-| `9db21e0` | diag: trace post-payment auth + overlay flow (Test Mode)                      |
-| `f1e2058` | fix(payment): detect Dodo redirect on page-load to unlock cube                |
-| `bc9b1d2` | fix(payment): event-driven post-payment unlock via auth listener              |
-| `be425eb` | fix(payment): pass session arg to unlock + add inflight lock                  |
-| `0413704` | fix(payment): bypass Supabase JS client during post-redirect unlock           |
-| `e85ca5c` | fix(payment): auto-trigger runCalculation after post-payment unlock ← THE FIX |
-| `061ca8e` | chore: rip diagnostic [QC-DIAG] logs after post-payment fix shipped           |
-| `f7834c3` | feat(payment): switch back to Live Mode after bounce-bug fix shipped          |
-
-
-Also pushed earlier-in-day commits: `b3386ea` (dodo-webhook source) and `84be838` (initial PayFast→Dodo redirect-link integration, replaced by overlay later same morning).
-
-SW: qc-v154 → qc-v169 (15 bumps).
-
-**Code outcomes May 2:**
-
-- Two Edge Functions shipped: `dodo-webhook` + `dodo-create-session`
-- Overlay SDK integration via jsdelivr UMD bundle
-- `_readSessionFromStorage()` helper bypasses Supabase JS client
-- `_resolveDodoSdk()` helper handles UMD namespace shape
-- 17 PayFast/Paddle references replaced with Dodo Payments, Inc. across 9 files + 1 migration comment
-
-**Non-code outcomes May 2:**
-
-- Live Mode active in Dodo dashboard
-- Live Mode webhook endpoint configured pointing to dodo-webhook URL
-- Live Mode product created (`pdt_0Ndx7o41zFEREpoPTyvR2`, $17 USD)
-- Test Mode + Live Mode signing secrets stored in Apple Passwords
-- API key leak caught + rotated within ~2 minutes
-- Two real $17 charges processed end-to-end (morning + evening); morning's refunded successfully, evening's pending settlement
-- 11 commits on `main`, all pushed cleanly, zero rollbacks needed
-
----
-
-## 💳 PAYMENT PROCESSOR — Dodo Payments
-
-### 🎉 STATUS: LIVE AND ACCEPTING REAL PAYMENTS — May 2, 2026
-
-After 8 days in review (longer than the stated 24-72hr window), Dodo enabled Live Payments. All 4 verification cards green: Product Information ✓, Identity Verification ✓, Business Verification ✓, Bank Verification ✓.
-
-### Live integration shipped May 2
+### Architecture
 
 End-to-end overlay checkout integration. User stays on `quantumcube.app` for the entire payment flow.
 
-**Architecture:**
-
 1. User taps Pay $17 button on Face 3 lock card
-2. Frontend `launchDodo()` calls `dodo-create-session` Edge Function (Supabase) with auth user_id, email, name
+2. Frontend `launchDodo()` calls `dodo-create-session` Edge Function with auth user_id, email, name
 3. Edge Function creates Dodo Checkout Session via Dodo's API with `metadata.user_id` embedded
 4. Frontend opens overlay via `DodoPaymentsCheckout.DodoPayments.Checkout.open({ checkoutUrl: cks_xxx })`
 5. Customer pays inside the overlay (overlay redirects through Dodo's `/status/<id>/succeeded` page)
-6. Customer returns to `quantumcube.app/app?payment_id=...&status=succeeded&email=...` (cross-domain redirect)
+6. Customer returns to `quantumcube.app/app?payment_id=...&status=succeeded&email=...`
 7. `checkDodoReturn()` detects redirect params, strips them, flags `_qcPendingPaymentUnlock = true`, calls `attemptPaymentUnlock()`
 8. `attemptPaymentUnlock()` reads session from localStorage directly (Supabase JS client hangs during auth restore), polls profiles via direct REST fetch up to 8x at 1.5s intervals
-9. When `has_paid=true` lands (webhook flipped it), `syncUnlockFromProfile()` runs, then `populateFormFromProfile()` + `runCalculation()` fires to land user inside the cube on Face 3 with reading visible
+9. When `has_paid=true` lands (webhook flipped it), `syncUnlockFromProfile()` runs, then `populateFormFromProfile()` + `runCalculation()` fires to land user inside the cube on Face 3
 10. Webhook (`dodo-webhook` Edge Function) verifies Standard Webhooks signature via `dodopayments@2.4.1` SDK, updates `has_paid` server-side
 
-**Mode switching:** single `DODO_MODE` constant in `docs/app.html` (line ~2200) and matching `MODE` constant in `dodo-create-session/index.ts` (line ~28). Both must flip together. Supabase secrets (`DODO_PAYMENTS_API_KEY`, `DODO_PAYMENTS_WEBHOOK_KEY`) must also be swapped to match the active mode.
+### Mode switching
 
-**Live + Test product IDs both stored in Apple Passwords + in code:**
+Single `DODO_MODE` constant in `docs/app.html` (~line 2200) and matching `MODE` constant in `dodo-create-session/index.ts` (~line 28). Both must flip together. Supabase secrets (`DODO_PAYMENTS_API_KEY`, `DODO_PAYMENTS_WEBHOOK_KEY`) must also be swapped to match.
+
+**Live + Test product IDs (in Apple Passwords + in code):**
 
 - Test Mode: `pdt_0NdwjT5U975nxTzpogS68`
 - Live Mode: `pdt_0Ndx7o41zFEREpoPTyvR2`
+
+**Business ID:** `bus_0NdjpSYtT1ZAbRN6l15dg`
+
+**MoR legal entity:** `Dodo Payments, Inc.` (Delaware-incorporated). Trade name on customer credit card statements: `Dodo Payments`.
 
 **Key files:**
 
@@ -432,469 +118,112 @@ End-to-end overlay checkout integration. User stays on `quantumcube.app` for the
 - `supabase/functions/dodo-webhook/index.ts` — webhook receiver
 - `supabase/functions/dodo-create-session/index.ts` — session minter
 
-### Dodo's permanent strategic role (web + Android)
+### Dodo's permanent strategic role
 
-**Dodo stays the Merchant of Record for Quantum Cube across surfaces** — not an interim PayFast replacement. The integration path is **hosted checkout (overlay / payment links)** + server-verified webhooks, not a giant native SDK rewrite.
-
-- **Web (PWA at `quantumcube.app`):** Current architecture — `dodo-create-session` mints checkout sessions; overlay completes payment; `dodo-webhook` flips `has_paid`. This remains the **canonical purchase path** globally.
-- **Android — United States:** Under the **Epic v. Google** injunction landscape (as of 2025–2026), Google Play must permit **alternative billing / reduced commission paths** for digital goods in the US when developers comply with program rules. Plan: **ship US Play Store build without native Play Billing** where policy allows external checkout — users complete payment via **the same Dodo overlay / web checkout** deep-linked from the app. Google collects **no 30%** on those flows when exempt.
-- **Android — EU / UK / other DMA-style markets:** Google’s **External Offers Program** and related EU rules let qualified developers steer users to **off-Play web checkout** for digital content. Same **Dodo** checkout — add jurisdiction checks + Play policy compliance layer in the Android wrapper when expanding beyond the US.
-- **Multi-product expansion (locked May 3 PM):** Each new product (Compatibility, Year Ahead, Tarot, Family) is **its own Dodo product** with separate session-mint flow + separate webhook event handling, sharing the same `dodo-create-session` + `dodo-webhook` Edge Function infrastructure. No subscription complexity. **Dodo subscription APIs reserve only as fallback** if the month-6 data review surfaces a real subscription opportunity our customer thesis is wrong about.
-
-**Net:** Dodo is the **long-term payments core**. Play Billing is a **compliance overlay** where the store requires it, not a strategic pivot away from Dodo.
-
-### Why Dodo
-
-
-| Factor                     | Dodo                                  | LemonSqueezy               | FastSpring               | Paddle              |
-| -------------------------- | ------------------------------------- | -------------------------- | ------------------------ | ------------------- |
-| Astrology/esoteric content | **Actively markets to it**            | Allowed (silent)           | Allowed (silent)         | **PROHIBITED**      |
-| Pricing                    | 4% + 40¢ (+1.5% non-US ~= 5.5% + 40¢) | 5% + 50¢                   | ~8.9%                    | 5% + 50¢            |
-| MoR + global tax           | ✓                                     | ✓                          | ✓                        | ✓                   |
-| Founded                    | 2023                                  | 2021                       | 2005                     | 2012                |
-| SA seller accepted         | ✓                                     | ✓                          | ✓                        | N/A                 |
-| Current status             | **Application pending 24-72hr**       | Parked (SA tax form delay) | Parked (account dormant) | Out (AUP exclusion) |
-
-
-### Dodo AUP — relevant categories for Quantum Cube
-
-- **Spiritual & Astrology services** → "Categories That Often Require Review" (entertainment only, no claims/predictions). We comply ✓ (entertainment opener live since `94af122`)
-- **Religious/spiritual *services*** → prohibited, but this targets paid prayer/ritual/spiritual-authority access, not personalized digital readings ✓
-- **AI Content Generation tools** → review category if we sold the tool itself; we use AI voice as part of product, not selling generation. Disclosed as "AI-Assisted" in IP page ✓
-
-### Account details
-
-- **Account name:** Quantum Neuro Creations (registering as business, CIPC Pty Ltd)
-- **Account owner (operator):** Michelle Booyens
-- **Status (Apr 29):** Submitted via dodopayments.com/login, awaiting review (24-72hr)
-
-### Fallback chain (if Dodo rejects)
-
-1. **Dodo** ← we are here
-2. **FastSpring** — Michelle has registered, account dormant, can be reactivated. Subdomain `quantumneurocreations_store` already provisioned.
-3. **LemonSqueezy** — application open from Apr 28, on SA tax form hold. Stripe-acquired, stable.
-4. **Polar.sh** — open-source MoR, Stripe-backed, developer-first
-5. **Creem** — newer (2024), indie-hacker focus, lowest fees, less proven
-6. **Gumroad** — last resort, 10% flat fee, accepts almost anything digital
-
-All support international payouts to FNB via SWIFT/wire.
-
-### Dodo MoR legal entity name
-
-**TBD** — confirm exact entity name from Dodo dashboard once approved. Likely "Dodo Payments, Inc." but verify before swapping legal copy in 26 places.
-
-### Why Paddle was ruled out (verified Apr 29)
-
-Paddle's AUP explicitly prohibits: *"Digital services associated with pseudo-science, including but not limited to clairvoyance, horoscopes, fortune-telling"*. Quantum Cube includes Western astrology + Chinese zodiac + numerology = textbook fortune-telling per their own definition. Also prohibits products *"where there is no bona fide software or service sold"* — covers our one-time digital reading model. Paddle's signup form errors out at the product-category step if you select anything other than SaaS or digital download. Don't waste time reapplying.
+**Dodo stays the Merchant of Record across surfaces** (web + Android + future iOS where policy allows external checkout). Multi-product expansion: each new product is its own Dodo product, sharing the same Edge Function infrastructure.
 
 ---
 
-## 💰 PRODUCT EXPANSION ROADMAP (multi-product one-time-purchase — locked May 3 PM)
+## 💰 PRODUCT EXPANSION ROADMAP
 
-**Locked product model:** Lifetime value comes from **new one-time products**, not recurring revenue from one product. Subscription tier is **demoted to reserve option** — see "Subscription tier (reserve)" below.
+**Live product:** Quantum Cube — $17 USD, one-time, lifetime access. Numerology + Western astrology + Chinese zodiac + premium AI-narrated content. **Existing buyers retain lifetime access permanently.**
 
-### Live product
-
-**Quantum Cube — $17 USD, one-time, lifetime access.** Numerology + Western astrology + Chinese zodiac + premium AI-narrated content. **Existing buyers retain lifetime access permanently** regardless of any future product changes.
-
-### Planned product line
-
-Each new product is **its own Dodo product**, **its own paid flag** in Supabase profiles (or its own row in a new `entitlements` table when we add the second product), and shares the same `dodo-create-session` + `dodo-webhook` Edge Function infrastructure.
-
+**Planned product line:**
 
 | Product                  | Price | Hook                                                            | Build complexity                                |
 | ------------------------ | ----- | --------------------------------------------------------------- | ----------------------------------------------- |
-| **Quantum Compatibility** | $17  | You + partner reading. Plays directly into "send to your S/O." | Medium — needs second profile capture + diff logic |
-| **Quantum Year Ahead**    | $17  | Annual personalised forecast. Refreshable yearly = revisit hook | Medium — needs date-anchored content generation |
-| **Quantum Tarot**         | $17  | One-off tarot session. Standalone, no birth data dependency     | Low-medium — card draw + interpretation logic    |
-| **Quantum Family**        | $25  | Family/parent/child compatibility. Gifting angle.              | Medium-high — multi-profile capture, relationship logic |
+| **Quantum Compatibility**| $17  | You + partner reading. "Send to your S/O" angle.                 | Medium — needs second profile capture + diff logic |
+| **Quantum Year Ahead**   | $17  | Annual personalised forecast. Refreshable yearly = revisit hook | Medium — needs date-anchored content generation |
+| **Quantum Tarot**        | $17  | One-off tarot session. Standalone, no birth data dependency     | Low-medium — card draw + interpretation logic    |
+| **Quantum Family**       | $25  | Family/parent/child compatibility. Gifting angle.               | Medium-high — multi-profile capture, relationship logic |
 
-
-**Math check (illustrative):** 50,000 base Cube users × 30% Compatibility attach + 20% Year Ahead attach = ~$1.275M gross vs ~$850k Cube-only. Better than subscription model without churn worry, content treadmill, or ongoing TTS narration costs.
+**Math check:** 50,000 base Cube users × 30% Compatibility attach + 20% Year Ahead attach = ~$1.275M gross vs ~$850k Cube-only.
 
 ### Implementation phasing
 
-- **Months 1–3 post-launch:** Focus on growing **Quantum Cube**. Validate funnel. Listen to feedback. **Do not** build sibling products yet.
-- **Month 3–4:** Start building **Quantum Compatibility** (highest attach potential — direct gifting/sharing angle). **Soft launch** to existing Cube customers as warm leads.
-- **Month 4–5:** Soft-launch **Quantum Year Ahead** and **Quantum Tarot** in parallel.
-- **Month 5–6:** **Quantum Family** for gifting season (mid-year + Q4). Re-evaluate full portfolio at month 6.
+- **Months 1–3 post-launch:** Focus on growing Quantum Cube. Validate funnel.
+- **Month 3–4:** Build Quantum Compatibility (highest attach potential). Soft launch to existing Cube customers.
+- **Month 4–5:** Soft-launch Quantum Year Ahead and Quantum Tarot in parallel.
+- **Month 5–6:** Quantum Family for gifting season. Re-evaluate full portfolio at month 6.
 
 ### Engagement-loop feature: shareable cosmic-profile card
 
-**Slot decision pending.** A beautiful single-image PNG summary of the user's reading they can save to phone or share to Instagram Stories / TikTok / WhatsApp. Drives viral moment + returning-user moment + gifting trigger in one move. Tentative placement: extension of Face 6 (Complete) with "Save your cosmic card" button. Server-side PNG generation from profile data. Not a launch-blocker. Detailed spec lives in MARKETING_PLAYBOOK.md v3.
+Beautiful single-image PNG summary of the user's reading they can save to phone or share. Drives viral moment + returning-user moment + gifting trigger. Tentative placement: extension of Face 6 with "Save your cosmic card" button. **Slot decision pending** — Phase 2 polish or Phase 6 (months 3-4). Detailed spec lives in MARKETING_PLAYBOOK.md.
 
 ### Migration safety
 
-**Existing Cube customers keep lifetime access forever.** Sibling products are **purely additive**. Offer upgrades in-app and via email — **never** revoke any prior product access as a forcing function.
+**Existing Cube customers keep lifetime access forever.** Sibling products are purely additive.
 
 ### Subscription tier (reserve option, evaluate at month 6)
 
-The original Quantum Cube Plus concept (~$9.99/mo subscription with daily horoscope generation, push notifications, daily tarot, deeper relational readings) is **deferred and demoted**. Reasons:
-
-- Curious-dabbler customer segment doesn't want a content treadmill or daily push
-- Conversion would likely be ~2-3% not the 12-15% projected for general spirituality apps
-- Daily AI narration scales costs quickly (5,000 subscribers ⇒ up to 5,000 daily renders)
-- Multi-product approach hits similar revenue without churn or content burden
-
-**Re-evaluate at month 6** if real data surfaces a subscription opportunity our thesis is wrong about. If we revisit:
-- Move daily drip content to lower-cost TTS (Azure Speech, Google Cloud TTS)
-- Reserve Valory / ElevenLabs for premium one-time products
-- Push notifications via Firebase Cloud Messaging or OneSignal (free at projected scale)
-- Model 5–10% monthly churn; retention driven by daily content quality not discounting
-- RevenueCat as the subscription management layer (Apple IAP + Play Billing + Stripe in one SDK)
-
-This subsection stays in the brief as a documented option, not the active plan.
-
----
-
-## 📋 PADDLE/PAYFAST PUNCH LIST — 26 lines to swap when Dodo approves
-
-### `docs/app.html` — 17 lines
-
-- L2178-2188: PayFast integration block + sandbox credentials
-- L2306-2347: `launchPayFast()` function definition
-- L2348-2350: `checkPayFastReturn()` function definition
-- L2964-2967: page-load handler calling `checkPayFastReturn()`
-- L3223: button onclick="launchPayFast()"
-- L3027, 3038, 3128, 3153, 3180: 5 in-app legal copy mentions
-
-### `docs/*.html` (8 public pages, 9 occurrences)
-
-- contact.html:31 — billing contact line
-- index.html:54 — landing page price note
-- ip.html:45 — third-party attribution list
-- popia.html:26 — POPIA disclosure
-- privacy.html:21 + privacy.html:42 — privacy policy (2 mentions)
-- refund.html:48 — refund policy MoR disclosure
-- security.html:27 — security page
-- terms.html:34 — terms of use
-
-### Migrations
-
-- `supabase/migrations/20260417104424_create_profiles_table_and_rls.sql:31` — `has_paid` column comment mentions PayFast
-
-### Code rename
-
-- `launchPayFast()` → `launchDodo()`
-- `checkPayFastReturn()` → `checkDodoReturn()` (or remove entirely if Dodo handles return differently)
-- New: Dodo webhook Edge Function at `supabase/functions/dodo-webhook/`
-
-### MoR text swap
-
-- "PayFast (Pty) Ltd" → "Dodo Payments, Inc." (or actual entity name once confirmed)
-- "Paddle.com Market Limited" → "Dodo Payments, Inc."
-
----
-
-## 📜 REFUND POLICY (LIVE — needs Dodo MoR swap)
-
-Currently published at `quantumcube.app/refund` with **Paddle wording**. Update conditions when Dodo approved:
-
-- Replace: "Paddle.com Market Limited" → Dodo legal entity
-- Replace: "contact Paddle support" → "contact Dodo Payments support"
-- Effective date: bump to swap day
-
-Otherwise wording stands as approved by Ronnie on April 23.
-
-**Full approved wording (kept inline so this brief stays self-contained):**
-
-> # Refund Policy
->
-> **Effective date: [TO INSERT]**
->
-> Quantum Cube provides instant access to digital content. Because your personalized reading, numerology calculations, astrological interpretations, and voice narrations are delivered immediately upon payment and cannot be returned or un-accessed, **all sales are final and non-refundable.**
->
-> Before purchasing, please make sure you understand what Quantum Cube offers:
->
-> - A personalized numerology, Western astrology, and Chinese zodiac reading based on the name and date of birth you provide
-> - Written interpretations and AI-assisted voice narration (Valory) for each category
-> - Content provided for **entertainment and self-reflection purposes only** — Quantum Cube makes no claims of accuracy, predictive power, or scientific validity
-> - One-time payment of $17 USD for lifetime access to your personal reading
->
-> **No refunds will be issued** for any of the following:
->
-> - Change of mind after purchase
-> - Dissatisfaction with the content or interpretations
-> - Technical issues on your device that did not prevent delivery
-> - Accidental purchases (please review carefully before confirming)
-> - Failure to read or listen to content after purchase
->
-> **Limited exceptions.** We may, at our sole discretion, consider a refund in the following cases:
->
-> - Duplicate charges for the same account caused by a technical error on our side
-> - Proven inability to access the product due to a verified fault in our systems that we cannot resolve within a reasonable time
-> - Any refund required under applicable consumer protection law in your jurisdiction
->
-> To request a refund under one of the limited exceptions above, contact **[admin@qncacademy.com](mailto:admin@qncacademy.com)** within **7 days** of purchase with your email address, date of purchase, and a description of the issue. We will respond within 5 business days.
->
-> **Chargebacks.** Initiating a chargeback without first contacting us may result in suspension of your account. We prefer to resolve issues directly with customers.
->
-> **Changes to this policy.** We may update this refund policy from time to time. The version in effect on the date of your purchase governs your transaction.
->
-> Payments are processed by [Dodo Payments / Sold Through Link, LLC / FastSpring entity — confirm at swap], who acts as the Merchant of Record for all purchases. For payment-related questions, contact support directly or us.
-
-**Rationale notes:**
-
-- "No refunds ever, period" sometimes fails MoR review and is unenforceable under EU/SA/CA consumer law. Limited exceptions clause is narrow but legally sound.
-- Chargebacks language is industry-recommended for MoR products.
-- Merchant-of-Record disclosure is required under all major MoR ToS.
-
----
-
-## 📧 MAGIC-LINK EMAIL TEMPLATE (APPLIED Apr 29)
-
-Pasted to Supabase dashboard (Authentication → Email Templates → Magic Link). Preview confirmed.
-
-**Config:**
-
-- Subject: `Verify Your Email`
-- Sender name: `Quantum Cube` ✓
-- Sender email: `noreply@quantumcube.app` ✓
-
-**Full HTML body (kept inline for re-paste if needed):**
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Verify Your Email</title>
-</head>
-<body style="margin:0;padding:0;background:#0a0e1a;font-family:Georgia,'Times New Roman',serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0a0e1a;">
-    <tr>
-      <td align="center" style="padding:60px 20px;">
-        <table role="presentation" width="480" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;width:100%;">
-          <tr>
-            <td align="center" style="padding:0 0 40px 0;">
-              <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;letter-spacing:6px;color:#ffffff;text-transform:uppercase;font-weight:normal;">
-                Quantum Cube
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td align="center" style="padding:0 20px 40px 20px;">
-              <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.6;color:#c8d0e0;letter-spacing:1px;">
-                Tap below to sign in.
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td align="center" style="padding:0 0 40px 0;">
-              <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:16px 48px;background:#0f1829;border:1px solid #7dd4fc;border-radius:999px;color:#ffffff;text-decoration:none;font-family:Georgia,'Times New Roman',serif;font-size:14px;letter-spacing:4px;text-transform:uppercase;box-shadow:0 0 20px rgba(125,212,252,0.25);">
-                Verify
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td align="center" style="padding:0 20px;">
-              <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:11px;line-height:1.6;color:#6a7388;letter-spacing:1px;">
-                Didn't request this? You can safely ignore this email.
-              </p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
-```
-
-Leave `{{ .ConfirmationURL }}` exactly as written — Supabase replaces it at send time.
-
-**Visual:** dark navy background, "QUANTUM CUBE" wordmark in spaced caps (system font fallback — see note below), single rounded-pill "VERIFY" button with sky-blue glow border, small grey "didn't request this?" footer.
-
-**Pending upgrade:** swap inline text wordmark for hosted PNG. The new wordmark pack lives in `/brand/` (NOT publicly served — it's outside `/docs/` which is the GitHub Pages source). To enable in the email template: copy a wordmark variant — likely `brand/QC Full White.png` (transparent, white text + cyan CUBE works on the dark email bg) — to `docs/qc-wordmark-email.png`. Then reference `https://quantumcube.app/qc-wordmark-email.png` in the email template's `<img src>`. Email clients don't render Cinzel Decorative reliably (no web fonts in email), so a hosted PNG is the only way to get true on-brand wordmark.
-
----
-
-## 🎨 BRAND IDENTITY
-
-### Brand pack — committed Apr 30 in `brand/` folder
-
-**Master files:**
-
-- `QC - Solid.png` — QC monogram (white Q + cyan glowing C with curved underline tail) on solid dark cosmic bg. **APP ICON MASTER** — 2048×2048.
-- `QC - Stars.png` — same QC monogram on cosmic Milky Way bg. **SOCIAL PROFILE PIC MASTER** — 2048×2048.
-- `QC - White.png` — QC monogram on solid dark bg, alternate (similar to Solid).
-
-**Standalone variants:**
-
-- `QC - Black.png` — C-only mark (cyan C with cyan glow, no Q) on dark bg
-- `QC - Black & Light.png` — C-only mark (white C with cyan glow) on dark bg
-
-**Wordmark variants** (2800×1800, transparent PNGs):
-
-- `QC Full White.png` — full layout: "QUANTUM NEURO CREATIONS / QUANTUM / CUBE / YOUR COSMIC PROFILE" with white QUANTUM + cyan glowing CUBE off-right
-- `QC Full Black.png` — same layout, black text
-- `QC White.png` — minimal: just QUANTUM + CUBE, white + cyan
-- `QC Black.png` — minimal: just QUANTUM + CUBE, black text
-
-⚠️ **Filename note:** wordmark filenames have spaces (e.g. `QC Full White.png`). Works on macOS but in HTML/CSS code, spaces must be URL-encoded as `%20`. For example: `<img src="brand/QC%20Full%20White.png">`. Eventually worth a `git mv` rename to lowercase-with-hyphens, but not blocking.
-
-### App icon family — committed Apr 30 in `docs/` folder
-
-Generated from `brand/QC - Solid.png` master via macOS `sips` (high-quality LANCZOS resampling):
-
-- `qc-icon-192.png` — manifest, 192×192
-- `qc-icon-512.png` — manifest, 512×512
-- `qc-icon-512-maskable.png` — Android maskable, 512×512 (currently same as icon-512; QC monogram has enough padding to survive any launcher's mask shape)
-- `qc-apple-touch-180.png` — iOS home screen, 180×180 (square; iOS applies its own squircle mask)
-- `qc-favicon-32.png` — browser tab/bookmark, 32×32, **18% rounded corners baked in** (Python PIL with rounded-rect mask). Browsers don't auto-round favicons; Apple/Android auto-round their respective icons.
-
-### Visual language — locked
-
-- **Primary typeface:** Cinzel Decorative (wordmarks, QC monogram)
-- **Secondary typeface:** Cinzel (subtitles, smaller text — e.g. "QUANTUM NEURO CREATIONS", "YOUR COSMIC PROFILE")
-- **Tertiary typeface:** Cormorant Garamond (body, italic)
-- **Colour pattern:** white-as-base + ONE cyan accent word/letter as keyword highlight (e.g. CUBE, the C in QC)
-- **Background:** dark cosmic / black (#05050f primary, #071b2e secondary, #0a0e1a magic-link email)
-- **Accent glow:** cyan (#7dd4fc) for cube and interactive elements
-- **Style:** ornate serif, premium, mystical-but-clean
-
-### Logo work — status
-
-
-| Asset                                 | Purpose                                        | Status                                                                                         |
-| ------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| QC monogram master                    | App icon, social profile, brand mark           | ✅ DONE Apr 30                                                                                  |
-| Wordmark PNG pack (9 variants)        | Email, video overlays, marketing, merch        | ✅ DONE Apr 30                                                                                  |
-| Manifest PNG icons (192/512/maskable) | PWA, Google Play                               | ✅ DONE Apr 30                                                                                  |
-| Apple touch icon (180×180)            | iOS home screen                                | ✅ DONE Apr 30                                                                                  |
-| Favicon (32×32, rounded)              | Browser tab                                    | ✅ DONE Apr 30                                                                                  |
-| Magic-link email PNG wordmark         | Replace inline text in Supabase email template | ⏳ Pending — copy `QC Full White.png` to `docs/qc-wordmark-email.png` to make publicly hostable |
-| Brain + CPU chip half/half icon       | Brand family conceptual badge                  | Optional, post-launch                                                                          |
-
-
-### Why QC monogram instead of cube icon
-
-Cube icon was the original plan (per Apr 29 brief). On Apr 30, after exploring three Canva options (glass cube — too photorealistic, wireframe impossible cube — too busy at small sizes, simple outline cube — closest fit but Canva couldn't add cyan glow to graphics), the team voted for the **QC monogram** instead. Reasons:
-
-- Type-as-logo: like Netflix's red N, Disney's D, the QC mark IS the brand
-- Better separation: cube lives **in the app** (rotating, alive, hero element); QC monogram lives **outside** (icon, profile pic, favicon). Different jobs, both consistent.
-- Scales clean: works at favicon size and full app icon size with same silhouette
-- Brand coherence: shares Cinzel Decorative + cyan accent with the wordmark
-- Faster delivery: no Fiverr round needed
-
----
-
-## 📱 SOCIAL MEDIA — handles to claim (NOT YET CREATED)
-
-Decided April 28, confirmed April 29. Claim now, **post nothing until launch announcement.**
-
-
-| Platform    | Preferred    | Fallback        |
-| ----------- | ------------ | --------------- |
-| YouTube     | @quantumcube | @quantumcubeapp |
-| Facebook    | /quantumcube | /quantumcubeapp |
-| X / Twitter | @quantumcube | @quantumcubeapp |
-| Instagram   | @quantumcube | @quantumcubeapp |
-| TikTok      | @quantumcube | @quantumcubeapp |
-| Threads     | @quantumcube | @quantumcubeapp |
-
-
-**Steps:**
-
-1. namechk.com to verify availability across all 6
-2. If `@quantumcube` not available everywhere → fall back to a single consistent alternative across all
-3. Set up profiles with consistent display name "Quantum Cube" + same bio + same logo + same banner
-4. **Don't post anything** until launch — prevents impersonation, locks brand consistency
-
-**Profile pic asset ready:** `brand/QC - Stars.png` (2048×2048, QC monogram on cosmic Milky Way bg). Drop into each platform's profile pic field. Some platforms auto-crop to circle — the QC mark is centred enough to survive any crop.
+Quantum Cube Plus ($9.99/mo with daily horoscope generation) is **deferred and demoted**. Reasons: curious-dabbler segment doesn't want a content treadmill; conversion would likely be ~2-3% not 12-15%; daily AI narration scales costs quickly; multi-product approach hits similar revenue without churn.
 
 ---
 
 ## 📂 FILE LOCATIONS
 
+```
 /Users/qnc/Projects/quantumcube/              <- MAIN PROJECT FOLDER
 |- docs/                                       <- GITHUB PAGES SOURCE
 |   |- index.html                              <- public landing page
-|   |- app.html                                <- THE CUBE APP
+|   |- app.html                                <- THE CUBE APP (~349KB, ~3138 lines)
 |   |- styles.css                              <- shared Cinzel + Cormorant dark cosmic styling
-|   |- manifest.json                           <- static PWA manifest (Apr 30: real PNG icon entries)
+|   |- manifest.json                           <- static PWA manifest
 |   |- privacy.html / terms.html / refund.html
 |   |- disclaimer.html / ip.html / popia.html
 |   |- security.html / contact.html
-|   |- sw.js                                   <- Service worker (qc-v149 + qc-narration-v2)
+|   |- sw.js                                   <- Service worker (current: qc-v191)
 |   |- CNAME                                   <- quantumcube.app
 |   |- .nojekyll
-|   |- qc-icon-192.png                         <- PWA manifest icon (Apr 30)
-|   |- qc-icon-512.png                         <- PWA manifest icon (Apr 30)
-|   |- qc-icon-512-maskable.png                <- PWA manifest maskable icon (Apr 30)
-|   |- qc-apple-touch-180.png                  <- iOS home screen icon (Apr 30)
-|   |- qc-favicon-32.png                       <- favicon, 18% rounded (Apr 30)
-|   |- Sounds/                                 <- audio assets (385 narration MP3s + 5 music tracks)
-|   - cube-background.jpg                     <- Milky Way background
-|- brand/                                      <- QC monogram + wordmark pack (Apr 30 rebuild)
-|   |- QC - Solid.png                          <- APP ICON MASTER (2048×2048)
-|   |- QC - Stars.png                          <- SOCIAL PROFILE PIC MASTER (2048×2048)
-|   |- QC - White.png                          <- alt monogram
-|   |- QC - Black.png / QC - Black & Light.png <- C-only marks
-|   - QC Full White.png / QC Full Black.png   <- full wordmarks
-|     QC White.png / QC Black.png              <- minimal wordmarks (QUANTUM + CUBE only)
+|   |- qc-icon-192.png / qc-icon-512.png / qc-icon-512-maskable.png
+|   |- qc-apple-touch-180.png / qc-favicon-32.png
+|   |- Sounds/                                 <- 385 narration MP3s + 5 music tracks
+|   - cube-background.jpg                      <- Milky Way background
+|- brand/                                      <- QC monogram + wordmark pack
 |- supabase/
-|   |- config.toml                             <- function-level flags (3 functions: narrate, delete-account, export-data)
+|   |- config.toml                             <- 5 functions: narrate, delete-account, export-data, dodo-create-session, dodo-webhook
 |   |- migrations/
 |   |   |- 20260417104424_create_profiles_table_and_rls.sql
 |   |   - 20250429140000_narrate_rate_limit.sql
 |   - functions/
 |       |- narrate/index.ts                    <- ElevenLabs proxy with rate limit
-|       |- delete-account/index.ts             <- Auth admin delete (Apr 29)
-|       - export-data/index.ts                <- Profile JSON export (Apr 29)
+|       |- delete-account/index.ts             <- Auth admin delete
+|       |- export-data/index.ts                <- Profile JSON export
+|       |- dodo-create-session/index.ts        <- Dodo session minter
+|       - dodo-webhook/index.ts                <- Dodo webhook receiver
 |- scripts/                                    <- Narration pipeline scripts
 |- narration-manifest.json                     <- 385 entries
-|- PROJECT_BRIEF.md                            <- This document (v26)
+|- PROJECT_BRIEF.md                            <- This document (v32, lean active brief)
+|- BRIEF_ARCHIVE.md                            <- Lossless reference archive
+|- MARKETING_PLAYBOOK.md                       <- Marketing strategy + Michelle's playbook
 |- CHAT_KICKOFF.md                             <- Chat operating protocol
-|- .supabase-env                               <- creds (gitignored)
+|- .supabase-env                               <- creds (gitignored, glob pattern .supabase-env*)
 |- .cursorrules                                <- Cursor project rules
-
 - .gitignore
+```
 
-**GitHub Repo:** [https://github.com/quantumneurocreations-dot/quantumcube](https://github.com/quantumneurocreations-dot/quantumcube)
-**Live URLs:** see "LIVE SITE" section above
+**GitHub Repo:** `https://github.com/quantumneurocreations-dot/quantumcube`
 **Pages source:** `/docs` directory on `main` branch
 
 ---
 
-## 🧭 CANONICAL SAFE ROLLBACK POINTS
+## 🧭 RECENT SAFE ROLLBACK POINTS
 
-**Do not revert past these without conscious decision.**
+(Older anchors live in BRIEF_ARCHIVE.md.)
 
-
-| Commit    | Why you don't revert past it                                                                                                                                                                                                            |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `78a8e00` | Favicon 18% rounded corners. Reverting = sharp-cornered favicon (cosmetic, but visible regression).                                                                                                                                     |
-| `039b0c1` | **QC PNG icon family wired across site.** Reverting = SVG cube placeholder returns in app.html + manifest.json, AND landing + 8 legal pages lose all icon refs (favicon, apple-touch, manifest link). Visible regression on every page. |
-| `4fb2e40` | **QC monogram + wordmark brand pack.** Reverting = Apr 29 brand assets return (old wordmark PNGs + Cinzel woff2 + Cube Sides). Note: the Apr 30 commits depend on this; revert in reverse order if needed.                              |
-| `21b9c99` | **Account deletion + export production-ready.** Reverting = stuck "Deleting..." bug returns + Google Play hard-requirement fails. CRITICAL                                                                                              |
-| `0fcbdb9` | Account deletion + export shipped. Reverting = no in-app deletion, Google Play submission blocked. CRITICAL                                                                                                                             |
-| `43e397e` | Static manifest.json. Reverting = blob URL returns, PWABuilder broken, Google Play submission blocked                                                                                                                                   |
-| `f9a3df3` | Migration reconciliation. Reverting = `db push` fails, unable to deploy new migrations                                                                                                                                                  |
-| `7016cb1` | narrate rate limit. Reverting = ElevenLabs credit-burn vulnerability returns                                                                                                                                                            |
-| `cc63d90` | `/app/` trailing-slash redirect — without this `quantumcube.app/app/` 404s                                                                                                                                                              |
-| `32a23f0` | `.nojekyll` for static HTML + privacy redirect — without this Pages mangles HTML                                                                                                                                                        |
-| `e8bfbc4` | `/docs` restructure — reverting breaks Pages deployment                                                                                                                                                                                 |
-| `2e888d2` | **Public site landing + legal pages.** Reverting kills MoR/Google Play readiness. CRITICAL.                                                                                                                                             |
-| `7a9b7ac` | Music randomisation per session + user-scoped welcome counter                                                                                                                                                                           |
-| `546363b` | Welcome greeting auto-play from local MP3. Reverting re-adds button + live-TTS credit burn                                                                                                                                              |
-| `2d38560` | Music refresh + randomisation + cube-touch SFX rip                                                                                                                                                                                      |
-| `231803e` | Face-name label card + auto-scroll. Reverting removes "you are here" UX                                                                                                                                                                 |
-| `0bd5a54` | **Paywall fix #3 — renderAllContent gating.** Reverting = unpaid users see full content on page refresh. CRITICAL                                                                                                                       |
-| `0546755` | Narration phase 2 wiring — Life Phases sequential + Face 4 astro/chinese narration + SW cleanup                                                                                                                                         |
-| `be9f385` | 129 phase 2 MP3s committed to repo                                                                                                                                                                                                      |
-| `636e3d8` | Narration phase 2 prep — strip dead 11/22 from NUM.pc                                                                                                                                                                                   |
-| `b0b87c5` | SW diagnostics rip + ASSETS fix                                                                                                                                                                                                         |
-| `37f19fd` | Real sw.js file replaces blob URL — Android Chrome 117+ fix                                                                                                                                                                             |
-| `4d51c0d` | data-variant alignment — voice matches text                                                                                                                                                                                             |
-| `c2e3c80` | Numerology direct MP3 path — ripped sha256 manifest                                                                                                                                                                                     |
-| `e1070fb` | Cursor hardening — `.cursorrules` + allowlist + gitignore                                                                                                                                                                               |
-| `94af122` | Legal additions — entertainment opener, Original Works, AI-Assisted                                                                                                                                                                     |
-| `2403ca7` | **Paywall fix #2** — unconditional lock enforcement in `syncUnlockFromProfile`                                                                                                                                                          |
-| `fd41b68` | **Paywall fix #1** — STORE_KEY user-scoped                                                                                                                                                                                              |
-| `57dd972` | 10.8MB cleanup — reverting blows file back up to 11MB                                                                                                                                                                                   |
-
+| Commit    | Why you don't revert past it                                                  |
+| --------- | ----------------------------------------------------------------------------- |
+| `804856a` | gitignore tightening for .supabase-env* glob (May 4 cleanup).                  |
+| `63684ef` | sb-num font scales by value count — multi-number cards lock in size.          |
+| `42d3094` | Astrology profile cards lock to grid columns regardless of sign name length. |
+| `a06ca3e` | **Re-applied matrix card overflow fix** lost in c3d3e57 — DO NOT lose again. |
+| `c3d3e57` | Music ducks during narration.                                                 |
+| `1020df5` | Matrix card overflow fix (original).                                          |
+| `4c210b3` | Google sign-in button compliant with verification spec.                       |
+| `0748a57` | Music files actually deployed (had been silently `.gitignore`d).              |
+| `e85ca5c` | **Post-payment auto-runCalculation** — bounce-bug fix. CRITICAL.              |
+| `7ff5db8` | **17-line Paddle/PayFast → Dodo legal copy swap.**                            |
+| `b3386ea` | **dodo-webhook Edge Function source.**                                        |
 
 When in doubt, `git revert <commit>` a specific bad change rather than resetting through these anchors.
 
@@ -902,218 +231,108 @@ When in doubt, `git revert <commit>` a specific bad change rather than resetting
 
 ## ✅ PAYWALL VERIFICATION PROTOCOL — 4-LAYER DEFENCE
 
-**Four-layer defence:**
-
-1. `STORE_KEY` is user-scoped (fix #1 — `fd41b68`)
-2. `syncUnlockFromProfile` unconditionally enforces lock branch for unpaid (fix #2 — `2403ca7`)
-3. `renderAllContent` gates all 4 face-reveal blocks on `isUnlocked` (fix #3 — `0bd5a54`)
-4. **Database-level RLS lock on `has_paid` column** (in migration `20260417104424` — `with check` clause prevents user from updating their own `has_paid`. Surfaced to brief Apr 29 — was always there but undocumented)
+1. `STORE_KEY` is user-scoped (commit `fd41b68`)
+2. `syncUnlockFromProfile` unconditionally enforces lock branch for unpaid (commit `2403ca7`)
+3. `renderAllContent` gates all 4 face-reveal blocks on `isUnlocked` (commit `0bd5a54`)
+4. **Database-level RLS lock on `has_paid` column** (in migration `20260417104424` — `with check` clause prevents user from updating their own `has_paid`)
 
 ### Test sequence (run on live `quantumcube.app/app`)
 
-- Two test profiles in `public.profiles`:
-  - `quantumneurocreations@gmail.com` — `has_paid=true`
-  - `carlkelbrick@gmail.com` — `has_paid=false`
-- Use **regular Chrome** (not PWA) with **DevTools open** for storage inspection
+Two test profiles in `public.profiles`:
+- `quantumneurocreations@gmail.com` — `has_paid=true`
+- `carlkelbrick@gmail.com` — `has_paid=false`
 
-1. **Clean start:** Chrome DevTools → Application → Storage → Clear site data. Hard-refresh.
-2. **Unpaid test:** Sign in as carl. Face 3 must show Lock card with $17 button, NO numerology visible. **Refresh page — lock card must STAY** (this is the fix #3 check).
-3. **Switch to paid:** Sign Out → sign in as quantumneurocreations. Full content visible, Valory narrates.
-4. **Tab close + reopen (paid):** Should auto-advance, unlocked, no magic link re-verify.
-5. **Switch back to unpaid:** Sign Out → sign in as carl. Lock card must appear again.
+Use **regular Chrome** (not PWA) with **DevTools open**.
 
-**Paywall verified working both directions on April 23.**
-
----
-
-## 🏁 DEFINITION OF DONE — LAUNCH GATE
-
-### ✅ DONE
-
-- Narration phase 1 verified (256 numerology MP3s, offline-capable)
-- Narration phase 2 shipped (9 Life Phases + 60 Western Astro + 60 Chinese MP3s, offline-capable)
-- Service worker rebuilt (qc-v149, two-cache architecture)
-- Paywall fix #3 (renderAllContent gated)
-- Music refresh + randomisation
-- Welcome greeting auto-plays
-- Face name label card + auto-scroll
-- Public landing page + 8 legal pages live
-- quantumcube.app domain HTTPS verified
-- Paywall verified both directions (Apr 23)
-- Accessibility trio (user-scalable=no removed, labels on 12 inputs)
-- Legal copy final (entertainment opener, Original Works, AI-Assisted)
-- **narrate Edge Function rate-limited (5/min + 20/hr per IP)** ← Apr 29
-- **Static manifest.json (replaces blob URL)** ← Apr 29
-- **Account deletion mechanism (in-app, working, end-to-end verified)** ← Apr 29
-- **Data export mechanism (POPIA/GDPR right of access)** ← Apr 29
-- **Magic-link email redesigned + applied** ← Apr 29
-- **Migration history reconciled** ← Apr 29
-- **Brand wordmark pack v1 committed** ← Apr 29 (subsequently replaced Apr 30)
-- **Brand identity rebuilt — QC monogram + 9-variant wordmark pack** ← Apr 30
-- **Real PNG icon family wired across site (favicon, apple-touch, manifest 192/512/maskable)** ← Apr 30
-- **Favicon corners rounded (18%, baked in)** ← Apr 30
-- **Landing page + 8 legal pages: favicon + apple-touch + manifest links added** (previously had ZERO icon refs) ← Apr 30
-
-### ⏳ TO DO — pre-launch
-
-**Code:**
-
-- **Google OAuth 2.0** (~2-3 hrs) — Google Cloud Console OAuth credentials, Supabase provider config, frontend "Continue with Google" button + callback handling, DOB-only follow-up form. Reasoning: removes magic-link-on-mobile fragility (Gmail internal browser issue), brand trust signal.
-- **Dodo webhook Edge Function** (~1 hr after Dodo approval) — receives payment confirmation, sets `has_paid=true`
-- `**launchDodo()` swap** (~30 min after Dodo approval) — replaces `launchPayFast()`
-- **26-line Paddle/PayFast wording swap** (after Dodo approved + entity name confirmed)
-- **E2E payment test** → refund to self
-
-**Non-code (Ronnie solo):**
-
-- **Social media handles claimed** across 6 platforms (~30 min) — profile pic asset ready: `brand/QC - Stars.png`
-- **Magic-link email PNG wordmark upgrade** (~10 min) — copy `brand/QC Full White.png` → `docs/qc-wordmark-email.png`, then update email template `<img src>` in Supabase dashboard
-
-**Backend cleanup:**
-
-- **Delete 9+ test profile rows** from Supabase profiles table before launch (re-snapshot pending)
-- **Resend deliverability tested** to fresh Gmail, Outlook, Yahoo accounts
-
-### ⏳ TO DO — UX polish (not launch-blocker)
-
-- **Settings discoverability** — currently the Settings link is only on the signup screen. Add a settings gear ⚙️ icon visible to signed-in users so they can reach Delete Account / Sign Out without first signing out. ~30 min, slot into Google OAuth session or post-launch.
-- Sentry error monitoring (~20 min)
-- At least 5 smoke tests against live site
-
-### Not required for launch but strongly recommended
-
-- Brain + CPU chip icon (designer, post-launch)
-- `git mv` rename brand wordmark filenames to lowercase-with-hyphens (avoids `%20` URL encoding)
-
----
-
-## 💰 SUBSCRIPTION AUDIT — OUTCOMES (carried forward from v23/v24)
-
-### ✅ Keep as-is
-
-Claude Max, Claude Console (API), Cursor Pro, Epidemic Sound, CapCut Pro, ElevenLabs Creator (usage-based enabled April 22), Google Workspace, GitHub, Canva Pro (added Apr 29).
-
-### ⬇️ Downgrade / switch (parked pending team discussion)
-
-- Vercel Pro → Hobby (~$20/mo savings)
-- Vimeo Starter → annual billing (~$65/yr savings)
-
-### ❌ Confirmed deprecated
-
-- HeyGen — canceled. Academy codebase cleanup pending (not a Cube task).
-- PayFast — replaced by Dodo Payments (pending approval). Code references to be removed via 26-line punch list.
-- Paddle — never used, definitively excluded by AUP.
-
----
-
-## 📜 CONTENT LICENSING — RESOLVED
-
-Numerology/astrology concepts public domain; written interpretations original expression. Three legal additions shipped April 20 (commit `94af122`). Content licensing not a launch-blocker.
-
-Third-party attributions in IP tab + public IP page: Epidemic Sound, Google Fonts. **PayFast reference must be swapped to Dodo entity post-approval** (part of the 26-line punch list).
-
----
-
-## 💻 DEV ENVIRONMENT (M4 Mac Mini)
-
-Hardware + OS unchanged. Native ARM64 dev tools confirmed (Node v24.15.0, Supabase CLI v2.90.0). Cursor setup unchanged (Privacy Mode ON, `.cursorignore` deleted, Browser MCP verified working).
-
-**CLI version note:** Supabase CLI v2.95+ has `functions logs` subcommand we don't have at v2.90.0. For Edge Function logs, use the dashboard (Project → Edge Functions → function name → Logs). Worth upgrading the CLI when convenient.
+1. Clean start: Application → Storage → Clear site data. Hard-refresh.
+2. Unpaid test: Sign in as carl. Face 3 must show Lock card with $17 button. Refresh — lock card must STAY.
+3. Switch to paid: Sign Out → sign in as quantumneurocreations. Full content visible.
+4. Tab close + reopen (paid): Should auto-advance, unlocked.
+5. Switch back to unpaid: Lock card must appear again.
 
 ---
 
 ## TECH STACK (LOCKED)
 
-- **Frontend:** Single HTML file at `docs/app.html`, vanilla JS, CSS3 3D transforms, glassmorphism. **File size: ~349 KB, ~3196+ lines.** `runCalculation` at line ~3100 (May 3 reference; will drift)
+- **Frontend:** Single HTML file at `docs/app.html`, vanilla JS, CSS3 3D transforms, glassmorphism. **File size: ~349 KB, ~3138 lines.** `runCalculation` at line ~3138.
 - **Public site:** static HTML pages at `docs/index.html` + 8 legal pages, shared `docs/styles.css`
-- **PWA Manifest:** static file at `docs/manifest.json`. **Real PNG icons (Apr 30):** 192/512/512-maskable.
-- **Fonts:** Cinzel Decorative, Cinzel, Cormorant Garamond — Google Fonts CDN only (self-hosted woff2 backup retired Apr 30; Google Fonts has been rock-solid for over a decade)
-- **Auth:** Supabase magic-link (email OTP), SDK v2.45.4 UMD. Google OAuth pending.
-- **Database:** Supabase Postgres (Frankfurt) — `public.profiles` with RLS, `public.narrate_rate_counters` (Apr 29)
-- **Email:** Resend via custom SMTP on Supabase. Magic-link template applied Apr 29.
-- **Payment:** PayFast sandbox currently wired — **Dodo Payments swap pending approval** (Paddle ruled out, LemonSqueezy + FastSpring as fallbacks)
+- **PWA Manifest:** static file at `docs/manifest.json`. Real PNG icons (192/512/512-maskable). Background + theme color: `#05050f`.
+- **Fonts:** Cinzel Decorative, Cinzel, Cormorant Garamond — Google Fonts CDN only
+- **Auth:** Supabase magic-link (email OTP) + Google OAuth, SDK v2.45.4 UMD
+- **Database:** Supabase Postgres (Frankfurt) — `public.profiles` with RLS, `public.narrate_rate_counters`
+- **Email:** Resend via custom SMTP on Supabase
+- **Payment:** Dodo Payments overlay SDK (LIVE). MoR. Adaptive Currency ON. Visa Rapid Dispute Resolution ON.
 - **Videos:** Vimeo Player API
 - **Audio:**
-  - **Music:** 5 tracks in `Sounds/Music/` — randomised playback, no-immediate-repeat
-  - **SFX:** 5 active (reveal_my_cube, select_side, reveal_result ×3, payment, back_to_signup). cube_touch removed April 23.
+  - **Music:** 5 tracks in `Sounds/Music/` — randomised playback, no-immediate-repeat, ducks to 6% during narration
+  - **SFX:** 5 active (reveal_my_cube, select_side, reveal_result ×3, payment, back_to_signup)
   - **Narration:** 385 pre-recorded Valory MP3s — all Face 3/4 narration + welcome greeting; live Edge Function fallback for Face 5 ONLY
 - **Haptics:** 3× strength
 - **Hosting:** GitHub Pages (source: `/docs` directory on `main`)
 - **Custom domain:** `quantumcube.app` via Cloudflare CNAME → `quantumneurocreations-dot.github.io`
-- **Email routing:** Cloudflare `*@quantumcube.app` → `admin@qncacademy.com` (incl. `support@quantumcube.app`)
+- **Email routing:** Cloudflare `*@quantumcube.app` → `admin@qncacademy.com`
 - **PWA:** Real `sw.js` file + static `manifest.json` with PNG icons. Two-cache architecture:
-  - `qc-v149` — HTML + root assets (Apr 30)
-  - `qc-narration-v2` — 385 MP3s (precached on install + on-demand fallback)
+  - `qc-v191` — HTML + root assets
+  - `qc-narration-v2` — 385 MP3s
 
 ---
 
 ## 🎙️ ELEVENLABS NARRATOR
 
 - **Voice:** Valory (voice ID `VhxAIIZM8IRmnl5fyeyk`)
-- **Model:** `eleven_turbo_v2_5` — `{stability:0.5, similarity_boost:0.75, speed:1.15}`
-- **Edge Function:** `supabase/functions/narrate/index.ts` (now ~100 lines with rate limit, `verify_jwt=false`, manual apikey-header check, Postgres RPC for rate counter)
-- **Rate limit:** 5/min + 20/hr per IP (Apr 29). Returns HTTP 429 with `Retry-After` header.
-- **Narration inventory on disk:** 385 MP3s
-- **Frontend narration paths:**
-  - Welcome: `playWelcomeGreeting()` → `startNarrationFromUrl('Sounds/Narration/welcome.mp3')` on first 2 Face 1 entries (counter `qc_greet_count_<uid>`)
-  - Face 3 numerology categories → `startNarrationFromUrl` → `Sounds/Narration/num_<cat>_<num>_v<variant>.mp3`
-  - Face 3 Life Phases → `playSequence` → 3× `Sounds/Narration/num_pc_<n>_v1.mp3` sequential
-  - Face 4 western → `Sounds/Narration/west_<sign>_<slot>.mp3`
-  - Face 4 chinese → `Sounds/Narration/chin_<animal>_<slot>.mp3`
-  - Face 5 combined → `fetchNarration` → live Edge Function (ONLY credit-burn path at runtime)
+- **Production model:** `eleven_turbo_v2_5`, speed 1.15
+- **Welcome greeting:** speed 1.00 (slower) — re-rendered May 3
+- **Edge Function:** `supabase/functions/narrate/index.ts` (rate-limited, `verify_jwt=false`)
+- **Rate limit:** 5/min + 20/hr per IP. Returns HTTP 429 with `Retry-After`.
+- **Inventory:** 385 MP3s on disk
+- **Live Edge Function only fires for Face 5** (combined results) — ONLY credit-burn path at runtime
+
+Full narration paths + generation pipeline detail in BRIEF_ARCHIVE.md.
 
 ---
 
-## 🔧 EDGE FUNCTIONS — current state (Apr 29)
+## 🔧 EDGE FUNCTIONS — current state
 
-### `narrate` (rate-limited Apr 29)
+### `narrate` (rate-limited)
 
-- Voice: Valory, model `eleven_turbo_v2_5`
-- Rate limit: per-IP via Postgres RPC (`narrate_rate_limit_try`), 5/min + 20/hr, atomic check-and-increment with `FOR UPDATE` row lock
-- 2500-char input cap, JWT validation (manual via apikey header check)
-- ONLY credit-burn path at runtime (Face 5 only)
+- ElevenLabs proxy, Postgres-RPC rate limit (5/min + 20/hr per IP)
 - Returns 503 + `rate_limit_unavailable` if RPC fails (fail-closed)
+- ONLY credit-burn path at runtime (Face 5 only)
 
-### `delete-account` (NEW Apr 29)
+### `delete-account`
 
 - Verifies user JWT via `getUser(jwt)` — never trusts client-supplied user id
-- Calls `auth.admin.deleteUser(userId)` server-side using service-role key
+- Calls `auth.admin.deleteUser(userId)` server-side
 - Cascades to `public.profiles` via `on delete cascade` FK
-- Logs deletion server-side (id + timestamp, no email)
 - Frontend wraps signOut in `Promise.race([signOut, 3000ms])` to prevent hang
 
-### `export-data` (NEW Apr 29)
+### `export-data`
 
 - Verifies user JWT
-- Returns profile JSON with `Content-Disposition: attachment` header for browser download
-- POPIA Section 23 / GDPR Article 15 compliance (right of access)
-- Includes explanatory note: "Reading content is generated deterministically from your inputs at runtime and is not stored."
+- Returns profile JSON with `Content-Disposition: attachment` header
+- POPIA Section 23 / GDPR Article 15 compliance
 
-**All three:** `verify_jwt = false` in `supabase/config.toml` + manual JWT handling + CORS headers + service-role key from Edge Function env vars.
+### `dodo-create-session`
 
-**Pending:** `dodo-webhook` Edge Function (after Dodo approval) — receives payment confirmation, sets `has_paid=true`.
+- Mints Dodo Checkout Session URLs (`cks_xxx`) server-side
+- Embeds `metadata.user_id` for webhook profile matching
+- Defence-in-depth check: confirms user exists in profiles before minting
+
+### `dodo-webhook`
+
+- Receives `payment.succeeded` and `refund.succeeded` events
+- Verifies signature via Standard Webhooks SDK
+- Updates `has_paid` in profiles
+
+**All five:** `verify_jwt = false` in `supabase/config.toml` + manual JWT/signature handling + CORS headers + service-role key from Edge Function env vars.
 
 ---
 
 ## 🔊 AUDIO SYSTEM — QC_AUDIO
 
-**Music:** 5-track rotation in `docs/Sounds/Music/`:
+**Music:** 5-track rotation in `docs/Sounds/Music/`. Randomised on first play AND on each track-end, avoiding immediate repeat. **0.20 baseline volume, ducks to 0.06 during narration** (commit c3d3e57). 300ms duck-down, 600ms duck-up. First-tap auto-start, fades, Vimeo pause-on-play.
 
-- `ES_Across the Meadow - Hanna Lindgren.mp3`
-- `ES_Subterranean Room - Hanna Lindgren.mp3`
-- `ES_Tranquil Dawn - Amber Glow.mp3`
-- `ambient.mp3`
-- `bgMusic.mp3`
-
-Playback: randomised on first play AND on each track-end, avoiding immediate repeat. 0.20 volume, first-tap auto-start, fades, Vimeo pause-on-play. Index persisted in `localStorage.qc_musicIdx`.
-
-**SFX:** 5 files at 0.30 vol, wired to 5 triggers:
-
-- `reveal_my_cube` (`Reveal my cube.mp3`)
-- `select_side` (`Select cube side.mp3`)
-- `reveal_result` (`Reveal Result 1/2/3.mp3` — random per call)
-- `payment` (`Payment.mp3`)
-- `back_to_signup` (`Back to signup.wav`)
+**SFX:** 5 files at 0.30 vol, wired to 5 triggers: `reveal_my_cube`, `select_side`, `reveal_result` (random per call), `payment`, `back_to_signup`.
 
 **Haptics:** 3× strength.
 
@@ -1121,26 +340,23 @@ Playback: randomised on first play AND on each track-end, avoiding immediate rep
 
 ## 📧 EMAIL INFRASTRUCTURE — Resend
 
-- Resend [admin@qncacademy.com](mailto:admin@qncacademy.com), domain `quantumcube.app` verified
+- Resend `admin@qncacademy.com`, domain `quantumcube.app` verified
 - eu-west-1, free tier 3000/mo, 100/day
 - DNS: DKIM, SPF, DMARC (p=none), MX send subdomain
 - Supabase SMTP: `noreply@quantumcube.app`, `smtp.resend.com:465`, 60s min interval
-- **Magic-link HTML applied Apr 29** ✓
+- Magic-link HTML template applied. Full template in BRIEF_ARCHIVE.md.
 
-`support@quantumcube.app` → `admin@qncacademy.com` via Cloudflare email routing. Used in all public legal pages.
-
-**Pending:** PNG wordmark upgrade for magic-link email (post brand-folder-deployed).
+`support@quantumcube.app` → `admin@qncacademy.com` via Cloudflare email routing.
 
 ---
 
 ## APP STRUCTURE — 7 FACES + INTERSTITIAL
 
-
 | Face           | Name                                  | Card label          | Notes                                            |
 | -------------- | ------------------------------------- | ------------------- | ------------------------------------------------ |
 | Face 0         | Entry / Sign Up Form                  | —                   | Settings link visible here in legal footer       |
 | faceCheckEmail | "Check Your Email" interstitial       | —                   |                                                  |
-| Face 1         | Introduction video + Welcome greeting | **Introduction**    | Welcome auto-plays first 2 entries               |
+| Face 1         | Introduction video + Welcome greeting | **Introduction**    | Welcome plays once on first signed-in entry      |
 | Face 2         | Results Explained videos              | **Videos**          |                                                  |
 | Face 3         | Numerology Results                    | **Your Numbers**    | Locked unless paid                               |
 | Face 4         | Astrology & Horoscope                 | **Stars and Signs** | Locked unless paid                               |
@@ -1148,8 +364,7 @@ Playback: randomised on first play AND on each track-end, avoiding immediate rep
 | Face 6         | Complete / Outro video                | **Complete**        |                                                  |
 | Face 7         | Settings                              | —                   | Sign Out, Download My Data, Delete Account, Back |
 
-
-**Settings discoverability gap:** the Settings link is currently only visible from Face 0 (signup screen) via the legal footer. Once a user is signed in and using the cube, there is no obvious in-app navigation to Face 7 — they'd need to sign out first to find Settings, OR call `openFace(7)` from DevTools console. Not a Google Play violation (deletion *exists in-app*) but a real UX gap. Fix is ~30 min — add a gear ⚙️ icon visible on signed-in faces, or surface the Settings link in the legal footer of every face. Slot into Google OAuth session or post-launch.
+**Settings discoverability gap:** Settings link currently visible only from Face 0 footer. Once signed in, no obvious in-app navigation to Face 7. Fix is ~30 min — add a gear icon visible on signed-in faces. Slot post-launch.
 
 ---
 
@@ -1157,77 +372,59 @@ Playback: randomised on first play AND on each track-end, avoiding immediate rep
 
 - **Project:** quantum-cube (ref `fqqdldvnxupzxvvbyvjm`)
 - **Region:** Central EU (Frankfurt)
-- **Schema (migrated and committed):**
-  - `public.profiles` (id, email, has_paid, marketing_consent, created_at) — migration `20260417104424_create_profiles_table_and_rls.sql`
-  - `public.narrate_rate_counters` + `narrate_rate_limit_try` RPC — migration `20250429140000_narrate_rate_limit.sql`
+- **Schema:**
+  - `public.profiles` (id, email, name, dob, has_paid, marketing_consent, created_at)
+  - `public.narrate_rate_counters` + `narrate_rate_limit_try` RPC
 - **RLS:** Enabled. 3 profiles policies, `has_paid` locked from client via column-level `with check` clause
-- **Trigger:** `on_auth_user_created` → `handle_new_user()` auto-creates profile on auth signup
-- **Cascade FK:** `profiles.id` → `auth.users.id` `on delete cascade` (powers account deletion)
-- **Edge Functions (deployed):** `narrate` ✓, `delete-account` ✓, `export-data` ✓
-- **Pending:** `dodo-webhook` (after Dodo approval)
+- **Trigger:** `on_auth_user_created` → `handle_new_user()` auto-creates profile on auth signup, captures dob + name from `raw_user_meta_data`
+- **Cascade FK:** `profiles.id` → `auth.users.id` `on delete cascade`
+- **Edge Functions deployed:** narrate ✓, delete-account ✓, export-data ✓, dodo-create-session ✓, dodo-webhook ✓
 
-### Test / team data in profiles (DELETE BEFORE LAUNCH)
-
-Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has drifted:
-
-- `admin@qncacademy.com` (team, unpaid)
-- `charlheyns1@gmail.com` (unpaid)
-- `booyens.michelle@gmail.com` (Michelle, unpaid)
-- `keyzer@xtremeprop24.com` (Keyzer, unpaid)
-- `quantumneurocreations@gmail.comcom` ← **typo, delete anytime**
-- `test+chunk5b@qncacademy.com` (unpaid)
-- `carlkelbrick+test@gmail.com` (unpaid)
-- `rkelbrickmail@gmail.com` (unpaid)
-- `carlkelbrick@gmail.com` (paywall test profile — keep until E2E payment test done)
-- `quantumneurocreations@gmail.com` (paid test — keep for paywall testing)
+**Test/team data to delete pre-public-launch:** snapshot list in BRIEF_ARCHIVE.md (re-snapshot before deletion).
 
 ---
 
 ## FRONTEND WIRING — KEY LINE REFS
 
-**Numbers float — use grep, anchor by function/const name not line number.** Snapshot from Apr 30:
-
+**Numbers float — anchor by function/const name not line number when possible.** Snapshot from May 4:
 
 | What                                                    | Approx line in `docs/app.html`                |
 | ------------------------------------------------------- | --------------------------------------------- |
+| `function runCalculation`                               | **~3138** (STABLE ANCHOR — verified May 4)    |
 | const sb = window.supabase.createClient                 | ~500                                          |
 | Static manifest link                                    | ~18                                           |
 | Favicon link (qc-favicon-32.png)                        | ~25                                           |
 | Apple touch icon (qc-apple-touch-180.png)               | ~26                                           |
 | `#faceLabelCard` HTML                                   | ~570                                          |
-| `.face-label-card` CSS                                  | ~419                                          |
+| `.face-label-text` CSS (Cinzel, weight 400)             | ~426                                          |
 | `.export-btn` / `.delete-btn` CSS                       | ~290-297                                      |
-| `updateFaceLabel` + `FACE_NAMES` + MutationObserver     | ~1311+                                        |
-| `scrollBelowCube()`                                     | ~1301+                                        |
-| `openFace()` (calls scrollBelowCube)                    | ~1291+                                        |
-| window.haptic + QC_AUDIO init                           | ~1005 / ~1008                                 |
+| `.scoreboard` / `.sb-grid` / `.sb-item` / `.sb-num` CSS | ~202-213 (DUPLICATE blocks — see Fragile)     |
+| `.sb-num.sb-num-count-N` CSS scaling rules              | ~210-215                                      |
+| `.astro-grid` / `.astro-item` / `.astro-sign` CSS       | ~221-226                                      |
+| `.mc` / `.mc-d` matrix card CSS                         | ~212-216                                      |
+| QC_AUDIO with duckMusic / unduckMusic                   | ~1008+                                        |
 | `_musicTracks` array (5 entries, randomised)            | ~1012                                         |
 | `fetchNarration` (Edge Function, Face 5 only)           | ~1350                                         |
-| `startNarration`                                        | ~1381                                         |
-| `startNarrationFromUrl`                                 | ~1389                                         |
+| `startNarration` / `startNarrationFromUrl`              | ~1381 / ~1389                                 |
 | `playSequence` (Life Phases sequential)                 | ~1405                                         |
-| `window.qcNarrateCard` (Face 3 + Face 4 dispatch)       | ~1421                                         |
+| `qcNarrateCard` (Face 3 + Face 4 dispatch)              | ~1421                                         |
 | `playWelcomeGreeting`                                   | ~1502                                         |
 | voiceState defaults                                     | ~1362                                         |
-| `showFace(n){`                                          | ~1535                                         |
-| `onFaceShown` (Face 1 counter-based auto-play)          | ~1511                                         |
+| `showFace(n)`                                           | ~1535                                         |
 | NUM data                                                | ~1551+                                        |
 | STORE_KEY const                                         | ~2162                                         |
 | `async function checkStoredUnlock`                      | ~2166                                         |
 | `syncUnlockFromProfile`                                 | ~2188                                         |
 | applyUnlockedState                                      | ~2219                                         |
+| Dodo overlay SDK constants (`DODO_MODE` etc)            | ~2200                                         |
 | handleRevealClick                                       | ~2324                                         |
 | signInWithOtp paths                                     | ~2379, ~2445                                  |
 | sb.auth.onAuthStateChange                               | ~2472                                         |
 | signOut                                                 | ~2622                                         |
-| `**function runCalculation`**                           | **~3100** (STABLE ANCHOR — verified May 3 PM) |
 | `_wipeAllLocalState`                                    | ~2631                                         |
-| `exportMyData`                                          | ~2641                                         |
-| `armDeleteAccount`                                      | ~2681                                         |
-| `confirmDeleteAccount`                                  | ~2701                                         |
+| `exportMyData` / `armDeleteAccount` / `confirmDeleteAccount` | ~2641 / ~2681 / ~2701                    |
 | `renderAllContent` + 4× `if(isUnlocked){}` reveal gates | ~2801+                                        |
 | SW registration                                         | ~2996                                         |
-
 
 ---
 
@@ -1240,28 +437,24 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 - Closing tab + reopening → auto-advances into app
 - Magic-link short-circuit: if session email matches form email → skip magic link
 - Mismatched email → signs out session first, fires new magic link
+- **Google OAuth path:** brand-new user has email pre-filled+locked + name pre-filled, fills DOB. Returning user auto-fills + runs into cube directly.
 
 ### Unlock state — 4-layer defence
 
-1. **STORE_KEY user-scoped** — stores `session.user.id`
-2. **checkStoredUnlock** — only applies unlocked state if stored id matches session user id
-3. **syncUnlockFromProfile** — authoritative from DB. Unpaid branch unconditionally enforces locks.
-4. **renderAllContent** — 4× face-reveal blocks gated on `if(isUnlocked){}`
-5. **DB-level RLS** prevents user from updating own `has_paid` (in migration `20260417104424`)
+(See PAYWALL VERIFICATION PROTOCOL above.)
 
 `applyUnlockedState` hides .lock-screen, reveals face-content — only callable after paid confirmed.
 
-### Account deletion (NEW Apr 29)
+### Account deletion
 
 - Two-tap confirmation pattern (5-second arm window)
 - Edge Function admin-deletes user via service-role key
 - Cascade FK wipes profile row automatically
 - Frontend wipes 6 localStorage keys (STORE_KEY, QC_PENDING_KEY, qc_musicIdx, qc_rotIdx, qc_greet_count, qc_greet_count_)
-- `Promise.race(signOut, 3000ms)` prevents hang from post-deletion signOut
+- `Promise.race(signOut, 3000ms)` prevents hang
 - Redirects to `/` (landing) on completion
-- Verified working end-to-end Apr 29
 
-### Data export (NEW Apr 29)
+### Data export
 
 - Single-tap from Settings (Face 7)
 - Returns JSON with email, has_paid, marketing_consent, timestamps
@@ -1271,7 +464,8 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 ### Known remaining UX issues (not launch-blocker)
 
 - Sign out + sign back in as same email same device still fires magic-link. Post-launch polish.
-- Settings link only visible from Face 0 footer. Need gear icon in cube UI for signed-in users.
+- Settings link only visible from Face 0 footer.
+- **Multi-number narration** (Hidden Passion + Karmic Lessons) currently narrates only first number — needs `playSequence` refactor like Life Phases. ~30-45 min.
 
 ---
 
@@ -1279,25 +473,32 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 
 - **Service worker is a real file** (`sw.js`). Do NOT revert to blob URL — Android Chrome 117+ rejects blob SW silently.
 - **Static manifest.json is a real file** (`docs/manifest.json`). Do NOT revert to blob URL — PWABuilder cannot read blob URLs.
-- `**@media (min-width:600px)` rules** are desktop-only on mobile — any CSS change inside those media queries is invisible on Ronnie's phone. Base rules apply to mobile.
+- **`@media (min-width:600px)` rules** are desktop-only on mobile — any CSS change inside those media queries is invisible on Ronnie's phone. Base rules apply to mobile.
+- **CSS Grid items default to `min-width:auto`** — children can blow out the cell. Add `min-width:0` on grid item CSS to defeat. Recipe burned in: `.mc`, `.astro-item`, `.sb-item` all use this pattern.
+- **`.scoreboard` / `.sb-item` / `.sb-num` CSS is DUPLICATED** at lines ~202-207 AND ~208-213 in app.html. Any edit to these rules MUST hit both copies (or use a Python script that counts both). Phase 3 cleanup target.
 - **BSD sed can't do multi-line replacements** — use Python one-shot. Never iterate.
-- `**grep -c` returns exit 1 on zero matches** — kills pipelines silently. Use `|| true`.
-- `**head -N` piped after `git log` can trigger SIGPIPE (exit 141)** on macOS. Use `|| true`.
+- **Python anchor strings MUST be re-grepped against current file state** before each script run — never reuse anchors from earlier recon output. Cost both `c3d3e57` and `63684ef` corrections. Cursor self-correction welcomed.
+- **Diff-then-delete logic must have explicit branches** — `if identical → delete; else → halt and ask`. Never let "diff returned different" fall through to delete (would have lost ElevenLabs key in May 4 cleanup).
+- **`grep -c` returns exit 1 on zero matches** — kills pipelines silently. Use `|| true`.
+- **`head -N` piped after `git log` can trigger SIGPIPE (exit 141)** on macOS. Use `|| true`.
+- **`grep` with `\|` alternation unreliable on BSD grep.** Use `grep -E` with `|` for extended regex.
 - **Service worker cache bump is mandatory** every commit that changes `docs/app.html` or `docs/manifest.json`.
-- **PWA cache stickiness:** "it's not working on my phone" is usually cache or SW install timing, not code. Triage in this order: (1) regular Chrome tab not PWA, (2) Force-stop PWA / Clear storage on Android, (3) Test in regular Chrome to bypass PWA, (4) Uninstall + reinstall PWA.
-- **Magic-link must open in main Chrome**, not Gmail's internal browser. Session won't match otherwise.
+- **PWA cache stickiness:** "it's not working on my phone" is usually cache or SW install timing, not code. Triage: (1) regular Chrome tab not PWA, (2) Force-stop PWA / Clear storage on Android, (3) Test in regular Chrome to bypass PWA, (4) Uninstall + reinstall PWA.
+- **Magic-link must open in main Chrome**, not Gmail's internal browser. Session won't match.
 - **Never reintroduce base64 assets** — 10.8MB cleanup reduced file from 11MB to ~349KB.
 - **Life Phases is sequential playback** via `playSequence`. Do not convert to 3 separate cards without product approval.
 - **Master numbers in NUM.pc are stripped** (commit `636e3d8`). Do not re-add.
 - **renderAllContent reveal blocks MUST stay gated on `if(isUnlocked){}`** — removing the gate re-introduces paywall bypass.
 - **GitHub Pages source is `/docs` directory.** Do NOT add HTML to repo root expecting it to be served.
-- `**docs/CNAME` binds the custom domain.** Removing it breaks `quantumcube.app`.
-- **Cursor's verbatim grep output can occasionally glitch.** Verify via fresh `grep` OR `git cat-file` before reverting.
-- **Cursor sessions can stall mid-output when context is full.** Start fresh Cursor chat alongside fresh Claude chat for clean cross-tool sync.
-- **JWTs / bearer tokens NEVER paste into Cursor or chat** — debug via DevTools console + Promise.race timeout patterns instead. Cursor's refusal on Apr 29 was correct.
-- `**auth.admin.deleteUser` can hang the calling session's `signOut`** — always wrap signOut in `Promise.race(signOut, 3000ms)` when calling delete from the user's own session.
+- **`docs/CNAME` binds the custom domain.** Removing it breaks `quantumcube.app`.
+- **Files can be silently `.gitignore`d for weeks.** Run `git ls-files <path>` to verify deployment, not local presence.
+- **JWTs / bearer tokens NEVER paste into Cursor or chat** — debug via DevTools console + Promise.race timeouts. Cursor's refusals on this are correct.
+- **NEVER paste secret values into chat — Cursor terminal output included.** A `supabase secrets set` echo leaked the Live API key on May 2. Rotate FIRST in dashboard, then re-set without echo.
 - **Edge Functions need `verify_jwt = false` in `supabase/config.toml`** if they handle JWT manually — otherwise Supabase returns 401 before the function runs.
 - **Supabase Edge Functions don't expose `Deno.openKv()`.** Use Postgres RPC for state instead.
+- **Supabase JS auth methods can hang during INITIAL_SESSION restore.** For UX-critical post-redirect flows, bypass the JS client: read session from localStorage directly + query via REST fetch.
+- **Cross-domain redirect kills queued JS state.** Drive post-payment unlock from URL params on page-load, not from overlay callbacks.
+- **`window.location.reload()` after detecting payment params can wipe localStorage mid-restore.** Use in-place state update instead.
 
 ### Supabase CLI gotchas
 
@@ -1307,98 +508,72 @@ Snapshot from April 23 sweep. **Re-snapshot in next session** in case list has d
 
 ---
 
-## 🛡️ PRE-LAUNCH SECURITY AUDIT (OWASP-style) — slot before Phase 5a Play Store
+## 🛡️ PRE-LAUNCH SECURITY AUDIT (OWASP-style)
 
-**Status:** Scoped May 3 PM. **Run time:** ~1-2 hours focused. **Slot between Phase 2 polish and Phase 5a Play Store submission** (~1-2 weeks out from May 3).
-
-### Why now, not earlier
-
-The web product has been live since Apr 24 with payments since May 2. A formal security audit pass before Play Store submission catches anything that public marketing volume + Google's automated security review would surface. This is a "do once, tighten once" investment — not ongoing monitoring (Sentry handles that separately).
+**Status:** Scoped May 3 PM. **Run time:** ~1-2 hours focused. **Slot between Phase 2 polish and Phase 5a Play Store submission.**
 
 ### Audit checklist
 
 **Authentication + authorization:**
-- [ ] Confirm `verify_jwt = false` Edge Functions (`narrate`, `delete-account`, `export-data`, `dodo-create-session`, `dodo-webhook`) all manually validate auth correctly. `delete-account` and `export-data` should never trust a client-supplied user_id — both already use `getUser(jwt)` per Apr 29 build. Re-verify.
-- [ ] RLS audit: confirm all 3 `profiles` policies still in place. Confirm `narrate_rate_counters` has appropriate RLS (it should, but verify).
-- [ ] Confirm the column-level `with check` clause on `has_paid` still prevents user-side mutation. This was always there per Apr 17 migration but never explicitly tested with a malicious-user PATCH attempt.
+- [ ] Confirm `verify_jwt = false` Edge Functions all manually validate auth correctly. `delete-account` and `export-data` should never trust a client-supplied user_id — both already use `getUser(jwt)`. Re-verify.
+- [ ] RLS audit: confirm all 3 `profiles` policies still in place. Confirm `narrate_rate_counters` has appropriate RLS.
+- [ ] Confirm column-level `with check` clause on `has_paid` still prevents user-side mutation. Test with malicious-user PATCH attempt.
 - [ ] Webhook signature verification: re-confirm `dodo-webhook` Standard Webhooks signature check is non-bypassable (replay attack resistance).
 
 **Rate limiting + abuse:**
 - [ ] `narrate`: already rate-limited (5/min, 20/hr per IP) ✓
-- [ ] `delete-account`: NOT currently rate-limited — add per-user rate limit (e.g. 1/hour per user). Low value to attacker but defensive.
-- [ ] `export-data`: NOT currently rate-limited — add (e.g. 5/hour per user). POPIA right of access doesn't require unlimited; reasonable cap is fine.
-- [ ] `dodo-create-session`: NOT currently rate-limited — add per-user cap (e.g. 10/hour per user) to prevent a logged-in attacker from minting unlimited checkout sessions.
+- [ ] `delete-account`: NOT currently rate-limited — add per-user rate limit (e.g. 1/hour per user).
+- [ ] `export-data`: NOT currently rate-limited — add (e.g. 5/hour per user).
+- [ ] `dodo-create-session`: NOT currently rate-limited — add per-user cap (e.g. 10/hour per user).
 
 **Information disclosure:**
-- [ ] Error message verbosity audit: grep all Edge Functions and frontend for any error response that leaks stack traces, table names, internal IDs, or JWT contents. Replace with generic "internal error" responses.
-- [ ] Confirm no debug mode on in production (e.g. `console.log` left in Edge Functions, `?debug=1` query params honoured anywhere).
-- [ ] Open endpoint check: any unauthenticated endpoint that takes user input (only `narrate` qualifies, others all require auth) — confirm input validation is strict.
+- [ ] Error message verbosity audit: grep all Edge Functions and frontend for error responses that leak stack traces, table names, internal IDs, or JWT contents.
+- [ ] Confirm no debug mode on in production.
+- [ ] Open endpoint check: any unauthenticated endpoint that takes user input — confirm input validation is strict.
 
 **Frontend security:**
-- [ ] CSP (Content Security Policy) audit: do we have one set on the Pages-served HTML? If not, add a baseline. Inline `<script>` is unavoidable in a single-file PWA but can be allowed via `'unsafe-inline'` while restricting `connect-src` to our actual backends (Supabase, Dodo, ElevenLabs).
-- [ ] XSS audit: any place we render user-supplied data (name, email) into the DOM — confirm `textContent` not `innerHTML`.
-- [ ] Magic-link redirect audit: confirm Supabase redirect allow-list is tight enough (no wildcard subdomain leaks).
-
-**Pagination + list endpoints:**
-- We don't actually have any list endpoints exposed to client (no `GET /users`, `GET /payments`, etc.) — only single-record fetches via Supabase REST with RLS. Confirm this stays true with each new product addition.
+- [ ] CSP audit: do we have one set on the Pages-served HTML? If not, add a baseline.
+- [ ] XSS audit: any place we render user-supplied data into the DOM — confirm `textContent` not `innerHTML`.
+- [ ] Magic-link redirect audit: confirm Supabase redirect allow-list is tight enough.
 
 **Operational hygiene:**
 - [ ] Sentry shipped (~20 min — see WHAT'S LEFT)
-- [ ] Confirm zsh history sanitised of any leaked secrets (May 2 leak was cleaned, but worth one final sweep)
-- [ ] Apple Passwords / 1Password contains: Dodo Live + Test API keys, webhook secrets, Supabase service role key, Resend API key, Google Cloud service account, ElevenLabs API key. No plaintext anywhere else.
-- [ ] Burner / warmup domain registered for marketing emails (~month 1-2, not blocking Play Store) — see WHAT'S LEFT
+- [ ] Confirm zsh history sanitised of any leaked secrets
+- [ ] Apple Passwords / 1Password contains: Dodo Live + Test API keys, webhook secrets, Supabase service role key, Resend API key, ElevenLabs API key. No plaintext anywhere else.
 
 **Supply chain:**
-- [ ] CDN-loaded scripts inventory: Supabase JS UMD, Dodo overlay SDK UMD, Cinzel/Cinzel Decorative/Cormorant fonts. All from reputable hosts (cdn.jsdelivr.net, fonts.googleapis.com). Optionally pin SRI (Subresource Integrity) hashes for Supabase + Dodo SDKs.
-- [ ] Supabase Edge Function runtime: Deno auto-updates. Acceptable for our scale.
+- [ ] CDN-loaded scripts inventory: Supabase JS UMD, Dodo overlay SDK UMD, Cinzel/Cinzel Decorative/Cormorant fonts. Optionally pin SRI hashes for Supabase + Dodo SDKs.
 
-### What this is NOT
+### Output
 
-- Not a penetration test. We're not paying for an outside firm pre-launch.
-- Not ongoing security monitoring — that's Sentry's job + Supabase dashboard's job.
-- Not iOS-specific (Apple App Store has its own review and we're months from that anyway).
-
-### Output of this audit
-
-A single follow-up commit: `chore(security): pre-launch hardening pass`. Expected diff: rate-limit additions to 3 Edge Functions, error message tightening, CSP header if missing, any RLS gap fixes. Probably <100 LOC across 5-6 files.
+A single follow-up commit: `chore(security): pre-launch hardening pass`. Expected diff: rate-limit additions to 3 Edge Functions, error message tightening, CSP header if missing. Probably <100 LOC across 5-6 files.
 
 ---
 
-
-
-## WHAT'S LEFT — ORDERED BY PRIORITY (May 3 PM update — POST-LAUNCH)
+## WHAT'S LEFT — ORDERED BY PRIORITY
 
 ### ✅ LAUNCH ACHIEVED — May 2, 2026
 
-Quantum Cube is live and accepting real payments. Real customers can buy a real $17 reading. The 8-day Dodo wait, the 17-line legal copy swap, the overlay SDK migration, the bounce-bug saga — all done. From the v28 Definition of Done list, every required-for-launch item is shipped.
-
-**Already done as of May 2:**
-
-- Dodo Payments approved, Live Mode active, real payments processing
-- `dodo-webhook` Edge Function deployed (signature verification, payment + refund event handling)
-- `dodo-create-session` Edge Function deployed (server-side session minting, metadata embedding)
-- Frontend `launchDodo()` overlay integration (replaces old PayFast wiring)
-- Post-payment unlock flow (`checkDodoReturn` + `attemptPaymentUnlock` + auto-`runCalculation`)
-- 17-line PayFast/Paddle → Dodo Payments, Inc. legal copy swap across 9 files
-- E2E payment test in Test Mode (multiple cycles)
-- E2E payment test in Live Mode (twice — morning and evening, both real $17 charges)
-- Refund of test payment confirmed (after settlement period)
+Quantum Cube is live and accepting real payments. From the v28 Definition of Done list, every required-for-launch item is shipped. Phase 2 polish substantially advanced May 3 evening (23 commits — see archive).
 
 ### 🟥 PRE-MARKETING-PUSH (must ship before Phase 4 social launch)
 
-- **Phase 2 in-app polish** (~2-3 hours) — music auto-play 404 fix, welcome narration re-record at slower pace + plays once only inside cube, strip "Valory" branding from user-facing copy, full app walkthrough, magic-link payment E2E test, minor changes batch.
-- **Sentry error monitoring** (~20 min) — promoted from Cleanup. Right now we have zero production error visibility. Must ship before public marketing volume hits.
-- **OWASP-style pre-launch security audit** (~1-2 hours) — see PRE-LAUNCH SECURITY AUDIT section above. Slot between Phase 2 polish and Phase 5a Play Store submission.
+- **Multi-number narration** (~30-45 min) — Hidden Passion + Karmic Lessons should narrate ALL their numbers via `playSequence`, not just the first. Same pattern as Life Phases. Refactor `qcNarrateCard` dispatch logic.
+- **Magic-link payment E2E test** — bounce-bug fix from May 2 was tested with OAuth path only. Magic-link path through `attemptPaymentUnlock` untested.
+- **Full app walkthrough** — every face, every state, OAuth + magic-link, paid + unpaid.
+- **Sentry error monitoring** (~20 min) — pre-marketing-push priority. Right now zero production error visibility.
+- **OWASP-style pre-launch security audit** (~1-2 hours) — see PRE-LAUNCH SECURITY AUDIT section above.
 
 ### ⚠️ HIGH-VALUE (not launch-blocker, ideally before Phase 5a Play Store)
 
 - Settings discoverability fix (gear icon, ~30 min)
 - Email re-verification UX — same-email resubmit detection
 - Magic-link email PNG wordmark upgrade (~10 min — copy file + update template img tag)
-- **Burner / warmup domain for marketing emails** (~30 min setup + 4-6 weeks warmup) — register `mail.quantumcube.app` or separate domain, configure SPF/DKIM/DMARC, warm up via gradual sending volume. Transactional emails (magic-link, payment confirmation) stay on primary domain. Not needed until marketing email list grows (month 1-2).
+- **Burner / warmup domain for marketing emails** (~30 min setup + 4-6 weeks warmup) — register `mail.quantumcube.app` or separate domain. Not needed until marketing email list grows.
 
 ### 🧹 POST-LAUNCH CLEANUP
 
+- **Dedupe `.scoreboard` / `.sb-item` / `.sb-num` duplicate CSS blocks** in app.html — currently lines ~202-207 AND ~208-213 are identical. Single-source.
 - Split `docs/app.html` into .js + .css files
 - `git gc --aggressive` — .git folder is 1.2 GB
 - Login loop fix (same-email resign triggers new magic link)
@@ -1406,6 +581,12 @@ Quantum Cube is live and accepting real payments. Real customers can buy a real 
 - Fine-comb audit pass — duplicate CSS selectors, dead code
 - Brain + CPU chip icon (designer)
 - `git mv` rename brand wordmark filenames to lowercase-with-hyphens
+- **Refund the second Live test payment** once Dodo settlement clears
+- **Rotate leaked Test API + Test webhook secrets** in Dodo dashboard
+- **Delete 9+ test profile rows** from Supabase profiles table before public launch (re-snapshot first)
+- **Submit Google OAuth for Verification** (currently Testing mode — only 3 test users)
+- **Replace white Google G with original colour Google logo** on sign-up button (now using Light Rectangular spec — verify final visual)
+- **Clean zsh history** of leaked secrets
 
 ### 📝 POST-LAUNCH FOLLOW-UPS (weeks-months)
 
@@ -1420,215 +601,82 @@ Quantum Cube is live and accepting real payments. Real customers can buy a real 
 
 ### 🏪 APP STORE SUBMISSIONS
 
-**Phase 5a — US-only launch with Dodo billing (months 1–2)**
-
-- Google Play Developer account ($25 one-time)
-- PWABuilder / Bubblewrap `.aab` — **no native Google Play Billing required for initial US rollout** where Epic v Google–era policies allow developers to complete digital purchases via **Dodo (same MoR as web)** through in-app web checkout / external payment flow
-- Store listing: feature graphic (1024×500), phone screenshots, full description (4000 chars) + short description (80 chars), content rating questionnaire, **Data Safety** form
-- **Internal Testing** track first (1–2 weeks: rkelbrick, carl, michelle)
-- **Production: US-only** distribution to start — reviews and ranks compound in one market; partners target **10–15 TikToks/week** US-focused
-- Initial Google review: **7–14 days** typical
-
-**Phase 5b — English-speaking markets (months 2–3)**
-
-- Expand Play listing to **UK, Canada, Australia, New Zealand** (same app binary, no translation cost)
-- **Web + Dodo** already handle these users globally; Play expansion is **discoverability + trust**
-- Per-territory billing: add **Play Billing** or **External Offers / web-checkout routing** only where Google policy **requires** it — follow **Dodo** as MoR on web; mirror entitlements in Supabase
-
-**Phase 5c — Global + localised (months 4–6)**
-
-- **Spanish, Portuguese, French, German** — app UI + store listings + key marketing assets
-- **LATAM + Brazil** heavy-up (spirituality content over-indexes)
-- **Dual billing** only in regions that **mandate** in-store digital payments — keep **Dodo** everywhere the law and Play policy allow off-store checkout
-
-**Apple App Store (Phase 8 — months 6–9, deferred):** Capacitor + Xcode archive. Three Apple-specific add-ons confirmed May 3 PM:
-- **Apply for Apple Small Business Program** — drops Apple's commission from 30% to 15% if annual proceeds under $1M. Free, automatic enrolment. No-brainer.
-- **Implement Restore Purchases button** — Apple hard requirement. Required even for one-time products (lets customers restore on a new device or after reinstall). Maps to our existing `has_paid` flag check on auth restore.
-- **Implement Sign in with Apple** — required if any other social login is offered (we have Google OAuth). Add as a third sign-in option alongside Google and magic-link.
-- **Apple IAP politics for digital content** — Apple's stricter than Google about external payments. For one-time products under our multi-product roadmap, the Reader Rule + News Publisher Program don't apply. Most likely: implement Apple IAP alongside Dodo, with entitlement sync via webhooks. Legal + product review before ship.
+Phase 5a (US-only with Dodo billing, months 1-2) → Phase 5b (English markets, months 2-3) → Phase 5c (global+localised, months 4-6) → Phase 8 (Apple, months 6-9). Full roadmap detail in BRIEF_ARCHIVE.md.
 
 ---
 
 ## INFRASTRUCTURE LIVE
 
-
 | System                   | State                                                                                                                       |
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| GitHub Pages             | Live (source: `/docs` on `main`. SW **qc-v149**, narration **qc-narration-v2**)                                             |
+| GitHub Pages             | Live (source: `/docs` on `main`. SW **qc-v191**, narration **qc-narration-v2**)                                             |
 | **quantumcube.app**      | **LIVE** — landing + 8 legal + /app, all HTTP 200 ✓                                                                         |
 | qncacademy.com           | Full email stack live                                                                                                       |
-| Google Workspace         | [admin@qncacademy.com](mailto:admin@qncacademy.com) + 5 aliases                                                             |
-| Cloudflare Email Routing | *@quantumcube.app → [admin@qncacademy.com](mailto:admin@qncacademy.com) (incl. support@)                                    |
+| Google Workspace         | admin@qncacademy.com + 5 aliases                                                                                            |
+| Cloudflare Email Routing | *@quantumcube.app → admin@qncacademy.com (incl. support@)                                                                   |
 | Cloudflare DNS           | CNAME quantumcube.app → quantumneurocreations-dot.github.io ✓                                                               |
 | Resend                   | Verified, SMTP in Supabase, magic-link template applied                                                                     |
 | ElevenLabs               | Valory, narrate deployed + rate-limited, usage-based billing enabled (250k cap)                                             |
-| Supabase                 | Frankfurt, free tier, RLS verified, 3 Edge Functions deployed (narrate / delete-account / export-data), 2 migrations synced |
-| **Dodo Payments**        | **Application pending — 24-72hr review (submitted Apr 29)**                                                                 |
+| Supabase                 | Frankfurt, free tier, RLS verified, 5 Edge Functions deployed, 2 migrations synced                                          |
+| **Dodo Payments**        | **LIVE — accepting real payments since May 2, 2026**                                                                        |
 | FastSpring               | Account dormant (registered Apr 29, no products live)                                                                       |
 | LemonSqueezy             | Application paused (SA tax form delay)                                                                                      |
 
-
 ---
 
-## ANNUAL RUNNING COST — unchanged from v23
+## 💻 DEV ENVIRONMENT (M4 Mac Mini)
 
-Same subscription footprint plus Canva Pro added Apr 29. No major changes to running costs.
+Hardware + OS unchanged. Native ARM64 dev tools confirmed (Node v24.15.0, Supabase CLI v2.90.0). Cursor setup unchanged (Privacy Mode ON, `.cursorignore` deleted, Browser MCP verified working).
+
+**CLI version note:** Supabase CLI v2.95+ has `functions logs` subcommand we don't have at v2.90.0. For Edge Function logs, use the dashboard.
 
 ---
 
 ## SEPARATE PROJECT — QNC ACADEMY (context only)
 
-Path `/Users/qnc/Projects/qnc-academy/`. Stack: Next.js + Vercel + Supabase (Ireland, ref `bevaepokvavzmykjmhda`) + Anthropic (Claude Haiku 4.5) + ElevenLabs + GitHub. QI = Academy's branded AI (cognitive framework, sine-wave, Claude Haiku 4.5). HeyGen deprecated — Academy has its own cleanup task. **Never mix backends.**
+Path `/Users/qnc/Projects/qnc-academy/`. Stack: Next.js + Vercel + Supabase (Ireland, ref `bevaepokvavzmykjmhda`) + Anthropic (Claude Haiku 4.5) + ElevenLabs + GitHub. QI = Academy's branded AI. HeyGen deprecated — Academy has its own cleanup task. **Never mix backends.**
 
 ---
 
-## Lessons learned (running, updated Apr 30)
+## NEXT SESSION STARTING POINT (May 4, 2026 morning)
 
-- **SW diagnosis via phone screenshots is a trap.** Use Cursor Browser MCP with DevTools access OR diagnose via console.log on a fresh deploy.
-- **Blob-URL service workers fail silently on Android Chrome 117+.** Use real files at origin scope.
-- **Cursor's verbatim grep output can occasionally glitch.** Verify via fresh `grep` OR `git cat-file` before reverting based on Cursor's reported output.
-- **Cursor sessions can stall mid-output when context is full.** Start fresh Cursor chat alongside fresh Claude chat.
-- `**renderAllContent` had unconditional reveal logic** that predated the April 20 paywall fixes. Lesson: when patching paywall, grep ALL call sites that touch `display='block'` on `.lock-screen` or face-content IDs.
-- **Python anchor strings for multi-block replacements must account for blank lines and indentation.** Cursor's repeated self-corrections on Apr 29 caught indentation mismatches and stale anchor text. Welcome the corrections.
-- **Compression risk is real at multi-hour sessions.** Respect stop signals, update brief, start fresh.
-- **Every brief version must be self-contained.** No "See vN for detail" — info loss on aging. v25 violated this; v25.1 + v26 fix.
-- **Public legal pages + landing page unlock BOTH payment processor AND Google Play in one go.** Build it once, satisfy two reviewers.
-- **Paddle is NOT a fit for esoteric / non-SaaS digital content.** Their AUP is restrictive. Verified directly Apr 29.
-- **Dodo Payments actively markets to astrology brands.** Better category fit than the more general MoRs.
-- **Cross-chat context drift is real.** When work happens across multiple Claude sessions, do an end-of-week sync check before assuming brief is current.
-- **Logo wordmarks are buildable in Canva** with Cinzel + Cinzel Decorative built-in. Logo icons (cube, brain/CPU) need a real designer — AI image generators can't reliably produce specific stylised brand icons.
-- **PWA cache stickiness is the #1 false alarm.** Always check live site in regular Chrome before debugging code.
-- **JWTs / bearer tokens NEVER go through Cursor or chat.** Cursor's refusal Apr 29 was correct. Diagnose via DevTools console + defensive timeouts (Promise.race) instead of curl tests with real tokens.
-- `**auth.admin.deleteUser` can hang the calling session's `signOut`.** Wrap signOut in Promise.race(3000ms) when calling delete from the user's own session.
-- **Diagnostic console.logs are scaffolding, not production code.** Always rip them in a follow-up commit.
-- **Edge Functions need `verify_jwt = false` if they handle JWT manually.** Otherwise Supabase 401s before the function runs.
-- **Supabase Edge Functions don't expose `Deno.openKv()`.** Use Postgres RPC for state instead.
-- **Today's wins compound: each launch-blocker shipped tightens the path to revenue.** April 29 took us from 4 hard blockers to 2 (Dodo + cube icon). April 30 took us to 1 (Dodo only) by killing the cube-icon dependency entirely.
+23-commit Phase 2 polish marathon shipped May 3 evening. Brief restructured May 4 morning into lean active brief (this doc) + lossless `BRIEF_ARCHIVE.md` for Academy knowledge transfer.
 
-### Apr 30 lessons
+### Remaining Phase 2 polish
 
-- **Firebase ≠ Supabase.** They're different backend services. When something Firebase-related shows up, run `grep -ril "firebase\|firestore"` across both Cube and Academy before acting. The orphan "QuantumCubeApp" Firebase project from a previous IT person was never used by either project.
-- **Canva Pro page-background colour bakes into PNG export EVEN when "Transparent background" is ticked.** The transparent toggle only strips the default empty canvas, not custom page bg colours. Workaround: use a rectangle layer as design scaffolding (locked, easy to delete pre-export) instead of a page bg colour. OR explicitly set page bg to "no fill" before exporting.
-- **Claude chat upload pipeline strips alpha channels from PNGs.** When verifying transparency, check the file in Preview on the user's Mac (look for grey-and-white checkered pattern) — Claude's image preview cannot be trusted for alpha.
-- **HTML text wordmarks > PNG wordmarks for in-app/web use.** Sharper at all sizes, faster (50 bytes vs 600KB), accessible to screen readers, selectable for copy-paste, easier to edit. Only use PNG wordmarks where text won't render reliably (email clients without web fonts).
-- **Favicon "blurriness" at 32×32 viewed in macOS Preview is normal.** Preview upscales the 32px file to ~200px on a Retina display, antialiasing softens. Inside an actual browser tab the favicon renders at 16-32px native and looks like every other favicon. Don't redesign for that.
-- **iOS auto-rounds apple-touch-icon (squircle mask).** Android launchers auto-mask manifest icons (shape varies by phone). Browsers do NOT round favicons. So only the favicon needs baked-in rounding. Pre-rounding apple-touch or manifest icons risks "double rounding" artifacts.
-- **macOS Finder folder paste** into an existing same-named folder defaults to "Replace" — wipes existing contents entirely. To preserve existing files, either choose "Merge" in the dialog OR paste files individually. Always run `git status` after a folder paste to catch unintended deletions before committing.
-- **macOS native `sips` is enough for image resizing.** No homebrew/imagemagick needed. `sips -Z 192 source.png --out dest.png` for high-quality LANCZOS resampling.
-- **PIL/Pillow may need a one-time `pip3 install Pillow`** when first used for image manipulation on the Mac. Cursor handled this autonomously on Apr 30 — that's the right behaviour for a standard, safe library.
-- **One logical change = one commit, even when commits are related.** Apr 30: brand pack → wire icons → round favicon = 3 separate commits. If rounded corners had looked wrong, only `78a8e00` needed reverting, not the whole brand swap.
-- **Type-as-logo can replace illustration-as-logo entirely.** The QC monogram solved both the app-icon AND brand-mark problems in one move, without a designer round. Sometimes the type IS the logo.
-
-### May 1 PM lessons (Dodo approval + recon)
-
-(LEAVE EXISTING May 1 PM LESSONS BLOCK INTACT — do not remove)
-
-### May 2 lessons (Dodo Live launch + bounce-bug debug)
-
-- **The visible symptom isn't always the bug.** When something looks broken, instrument the data flow with diagnostic logs BEFORE patching theories. Spent ~3 hours chasing "post-redirect session loss" / "race condition" / "Supabase JS client hanging" theories. The actual root cause was that `runCalculation` never fired after unlock — user was sitting on Face 0 with a correctly-unlocked but invisible cube. The unlock data flow was working perfectly the entire time. Fix was 1 function call inside the success branch.
-- **Cross-domain redirect kills queued JS state.** Even when using "in-page" overlay SDKs, if the SDK does an internal redirect at the end of payment (like Dodo's `/status/<id>/succeeded`), any `setTimeout` or pending Promise from before the redirect dies. Drive post-payment unlock from URL params on page-load, not from the overlay's `onEvent` callbacks.
-- **Supabase JS auth methods can hang during INITIAL_SESSION restore.** `await sb.auth.getSession()`, `await sb.auth.getUser()`, AND `await sb.from(...).select()` all became unresponsive during the post-redirect auth restoration window. The fix is to bypass the JS client entirely: read the session token from localStorage directly (`sb-<ref>-auth-token` key), then query via direct `fetch()` to Supabase REST API. The JS client comes back to life ~5-10 seconds later, but you can't rely on that timing in a UX-critical flow.
-- **NEVER paste secret values into chat — Cursor terminal output included.** A Live API key got into the chat transcript via a `supabase secrets set` command output. Took ~30 seconds to catch and ~2 minutes to rotate cleanly (delete old key in Dodo dashboard FIRST, generate new, re-set Supabase secret without echo, verify digest changed). Same lesson as v28 OAuth Client Secret handling — needed a second reinforcement. Going forward: paste secret commands directly in Mac Terminal (which only logs to local zsh history), never copy them to the chat. Hash digests from `supabase secrets list` are fine to paste — they're one-way.
-- **Dodo's UMD bundle attaches API as `window.DodoPaymentsCheckout.DodoPayments`** — NOT `window.DodoPayments` directly. Browser MCP recon caught this before we burned a test cycle. When the SDK is described in npm READMEs as "DodoPayments", the UMD wrapper namespace can still be different. Always verify the actual bundle's global shape via `curl` or DevTools.
-- **Test Mode wallet refunds always fail with "Insufficient funds in wallet".** Live Mode wallet refunds work but only after a settlement period (hours-to-days). Don't treat as a Dodo bug. For real customer refund support: communicate the few-day window to customers, refund within the window when ready.
-- **Cursor's terminal markdown auto-linking turns dotted strings into fake markdown links.** Output like `rkelbrickmail@gmail.com` may appear as `[rkelbrickmail@gmail.com](mailto:...)` in Cursor's chat output. The actual file/database is clean text. Apr 30 PM brief lesson confirmed: don't try to fix what isn't broken. Verify via direct file read or DB query if uncertain.
-- **Dashboard mode toggle != actual mode.** Flipping Test/Live Mode in the Dodo dashboard only changes WHAT YOU SEE. The actual integration mode is hardcoded in `DODO_MODE` (frontend) and `MODE` (Edge Function), and the secrets in Supabase. Three separate places must all flip together for a real mode switch. Mismatches cause confusing 401 errors.
-- **Pages serves the new build ~60s after push.** Don't test immediately after a `git push`. Wait. Save yourself the false-negative cycle.
-- `**window.location.reload()` after detecting payment params can wipe localStorage mid-restore.** First instinct on the bounce bug was a hard reload. Disaster — the auth session was still being restored from the redirect, and reload nuked the in-flight state. Use in-place state update via `syncUnlockFromProfile()` + `runCalculation()` instead.
-
----
-
-### May 3 PM lessons (multi-product strategy lock)
-
-- **Wrong-model decisions are expensive to discover late.** Subscription tier (Quantum Cube Plus, $9.99/mo) was the working assumption from v25 through v30. Three weeks of brief space + planning energy went to it. May 3 PM realisation: customer thesis (curious dabbler) and product model (subscription) were misaligned — daily horoscope content treadmill solves a problem our segment doesn't have. Multi-product one-time-purchase is the correct model. Cost of catching this in week 6 vs week 26 is enormous. **Always sanity-check that the product model matches the customer profile, not just the revenue spreadsheet.**
-- **"Curious dabbler" beats "broad spirituality user" as a positioning frame.** Specificity sharpens every downstream decision: pricing (one-time wins), feature scope (less is more), retention design (life-event triggers + gifting + sharing, not daily push), competitive stance (Co-Star wins depth — we don't fight them there).
-- **Pre-launch tool/directory lists are 90% noise.** Of ~15 indie launch directories Ronnie's contacts had collected, zero are right for our product (all built for indie-dev SaaS). The signal is: Product Hunt + Indie Hackers + Hacker News only. The rest is "looks productive, isn't." Same lesson applied earlier to Vloxo, AppSumo, G2, Capterra. Keep saying no.
-- **Document role handovers explicitly.** Michelle taking social media from May 4 is a real ownership transfer — not "she helps sometimes." Brief now reflects this. Without explicit ownership, content goes nowhere or three people redo each other's work.
-- **Security audits before public marketing volume, not after.** Once the marketing flywheel turns, attack surface attention turns with it. OWASP-style pass scoped now, slot between Phase 2 polish and Phase 5a Play Store. Quick wins (rate limits on remaining Edge Functions, error message tightening, CSP) — not penetration testing.
-- **Sentry is critical infrastructure, not "nice to have."** Right now if a paying customer hits a bug we have zero visibility. ~20 min implementation. Promoting from Cleanup to Pre-Marketing-Push priority.
-
----
-
-## NEXT SESSION STARTING POINT (Updated May 3, 2026 PM — multi-product roadmap locked)
-
-The launch is real. Strategic decisions are now locked from the May 2 evening + May 3 morning + May 3 afternoon conversations. From here it's polish, payments-flow validation, security audit, marketing channel-by-channel attack planning (Michelle leads from May 4), and Play Store submission prep.
-
-### Phase 2 — In-app polish (~2-3 hours)
-
-- **Music auto-play fix.** Console showed multiple 404s for `Sounds/Music/...mp3` files. Diagnose: autoplay policy, missing files, or wrong path?
-- **Welcome narration re-record at slower pace.** Drop from `speed: 1.15` to `0.95-1.00` for welcome only. Replace `Sounds/Narration/welcome.mp3`.
-- **Welcome plays once, only inside the app, not on sign-up page.** Currently fires twice. Single play, only first cube entry, never on Face 0.
-- **Strip "Valory" branding everywhere user-facing.** Replace with "narration" / "voice reading" / "voice guide". Voice ID stays in code, only UI copy changes. Grep across `docs/app.html`, `docs/index.html`, all 8 legal pages, brief, README.
-- **Full app walkthrough.** Test every face, every interaction, OAuth + magic-link, paid + unpaid states.
-- **Magic-link payment flow E2E test** (carryover from May 2 — three scenarios: signed-in user pays, session expired during payment, brand-new magic-link user pays). Fix architecture is auth-method-agnostic but untested for non-OAuth flow.
-- **Minor changes batch.** Whatever surfaces during walkthrough.
+- **Multi-number narration** (Hidden Passion + Karmic Lessons via `playSequence`)
+- **Magic-link payment E2E test** (architecture is auth-method-agnostic but untested for non-OAuth flow)
+- **Full app walkthrough** — every face, every state
 
 ### Phase 3 — Cleanup (~30 min)
 
-- **Refund the second Live test payment** once Dodo settlement clears (~24-72 hr from May 2 evening — should be eligible by May 3-5).
-- **Rotate leaked Test API + Test webhook secrets in Dodo dashboard.** Both pasted in chat earlier May 2. Lower stakes than Live (no real money), but cleanup completes the rotation discipline.
-- **Delete 9+ test profile rows** from Supabase profiles table before public launch (re-snapshot first — list has drifted).
-- **Resend deliverability tested** to fresh Gmail / Outlook / Yahoo accounts.
-- **Submit Google OAuth for Verification** (currently Testing mode — only 3 test users).
-- **Replace white Google G with original colour Google logo** on sign-up button (Apr 30 carryover decision).
-- **Sentry error monitoring** (~20 min).
-- **Clean zsh history of leaked secrets** (`history | grep -n "DODO_PAYMENTS"` then `history -d <line>`).
-- **Clean up untracked `brand/Your paragraph text.png`** in repo root.
+- Refund the second Live test payment once Dodo settlement clears
+- Rotate leaked Test API + Test webhook secrets in Dodo dashboard
+- Delete test profile rows from Supabase
+- Resend deliverability tested to fresh Gmail / Outlook / Yahoo accounts
+- Submit Google OAuth for Verification
+- Sentry error monitoring (~20 min)
 
-### Phase 4 — Marketing channel-by-channel attack planning (new chat, marketing playbook attached)
+### Phase 4 — Marketing channel-by-channel attack planning
 
-- TikTok content production cadence + roles (3 partners, who does what)
-- Influencer outreach list (target 30 creators in astrology/numerology niche, mix of $5/sale affiliate and flat-fee)
-- PR pitch list (Bustle, Refinery29, Cosmopolitan, Allure, Well+Good, MindBodyGreen)
-- Paid ads brief (Meta + Google starting budgets, creative variants)
-- Cover photos for Facebook + Twitter (820×312 + 1500×500 in Canva)
-- First post calendar across all 6 social platforms
-- Localisation prep (Spanish, Portuguese translation vendors)
+(New chat, marketing playbook attached. Michelle leads from May 4.)
 
 ### Phase 5 — Play Store submission (US-only with Dodo billing, ~2-3 weeks)
 
-- Google Play Developer account ($25)
-- PWABuilder/Bubblewrap wrap (no Play Billing integration needed for US)
-- Store listing assets: feature graphic (1024×500), phone screenshots, full description (4000 chars), short description (80 chars), content rating questionnaire, Data Safety form
-- Internal Testing track first (1-2 weeks with rkelbrick + carl + michelle)
-- Submit to Production with US-only distribution
-- Initial review: 7-14 days
-
-### Phase 6 — Multi-product expansion (parallel with Phase 5, months 3-6)
-
-- See PRODUCT EXPANSION ROADMAP section above for full detail
-- DB schema: introduce `entitlements` table when 2nd product ships (or expand `profiles` columns for first sibling — judgment call when we get there)
-- **Quantum Compatibility** ($17) — second profile capture, partner birth-data form, compatibility logic. Soft launch to existing Cube buyers as warm leads.
-- **Quantum Year Ahead** ($17) — annual personalised forecast, date-anchored content
-- **Quantum Tarot** ($17) — card-draw + interpretation, no birth-data dependency
-- **Quantum Family** ($25) — multi-profile family/parent/child compatibility, gifting angle
-- **Shareable cosmic-profile card** — extension of Face 6, server-side PNG generation, share-intent integration. Slot decision pending (Phase 2 polish or Phase 6).
-- Each product reuses existing `dodo-create-session` + `dodo-webhook` Edge Functions with new product IDs in Dodo dashboard
-- Subscription tier (Quantum Cube Plus) reserved as fallback if month-6 review surfaces a real subscription opportunity
+### Phase 6 — Multi-product expansion (parallel, months 3-6)
 
 ### Phase 7 — Geographic expansion (months 2-6)
 
-- See updated APP STORE SUBMISSIONS section
-- US Phase 5a → English markets Phase 5b → EU + global Phase 5c
-
 ### Phase 8 — Apple App Store (months 6-9, deferred)
 
-- Capacitor wrap, Xcode archive
-- Apply for **Apple Small Business Program** (15% commission, automatic, free)
-- Implement **Restore Purchases button** (Apple hard requirement)
-- Implement **Sign in with Apple** (required when any social login is offered)
-- Apple IAP integration alongside Dodo, with entitlement sync via webhooks
-
-### Recommended order at start of next session
+### Recommended order at start of next coding session
 
 1. Run minimal health check (per CHAT_KICKOFF.md)
-2. Check status of evening refund (should now be clear, ~12+ hours since charge)
-3. **Phase 2 in-app polish** (focus task — get the polish ironed before Michelle's social push)
-4. Magic-link payment flow E2E test
-5. Sentry shipping (~20 min — moved up to pre-marketing-push priority)
-6. OWASP-style pre-launch security audit (~1-2 hours, before Phase 5a Play Store)
-7. Update brief to v32 at end of session
+2. Multi-number narration fix (Hidden Passion + Karmic Lessons)
+3. Magic-link payment E2E test
+4. Sentry shipping (~20 min)
+5. OWASP-style pre-launch security audit (~1-2 hours, before Phase 5a Play Store)
 
 ---
 
-**End of brief v31.**
+**End of brief v32.** Archived history → `BRIEF_ARCHIVE.md`. Marketing strategy → `MARKETING_PLAYBOOK.md`. Session protocol → `CHAT_KICKOFF.md`.
