@@ -31,3 +31,5 @@
 ## Tone
 - **Tone in code:** Match the existing code's comment density — don't add tutorial comments, but preserve any existing section headers or version bump comments.
 - **Tone in chat:** Concise. Plan → confirm → execute for non-trivial work. No restating the request back to me.
+
+# Use Context7 MCP automatically for any question about library/SDK/API documentation, version-specific syntax, or external service integration. Do not rely on training-data memory for: Supabase, Dodo Payments, ElevenLabs, Sentry, Vimeo Player API, Cloudflare, Resend, dodopayments npm package, @supabase/supabase-js, capacitor, PWABuilder, react, deno std.
