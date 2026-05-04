@@ -520,7 +520,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v196",
+      release: "quantum-cube@qc-v197",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2287,7 +2287,7 @@ return paras.map(p=>"<p>"+p+"</p>").join("");
 // session loss. Webhook (dodo-webhook) flips has_paid server-side;
 // onEvent handler refetches profile + unlocks the cube in place.
 
-const DODO_MODE = "live"; // "test" or "live" — flip for production
+const DODO_MODE = "test"; // "test" or "live" — flip for production
 
 // The jsdelivr UMD bundle attaches the API as window.DodoPaymentsCheckout.DodoPayments.
 // This helper resolves the right object regardless of how the SDK is loaded.
