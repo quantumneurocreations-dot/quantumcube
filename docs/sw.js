@@ -1,4 +1,4 @@
-const CACHE='qc-v195';
+const CACHE='qc-v196';
 const NARR_CACHE='qc-narration-v3';
 
 self.addEventListener('install', e => {
@@ -39,7 +39,9 @@ self.addEventListener('fetch', e => {
       caches.open(NARR_CACHE).then(c =>
         c.match(e.request).then(r =>
           r || fetch(e.request).then(resp => {
-            if (resp.ok) c.put(e.request, resp.clone());
+            // Never cache 206 Partial Content — Range requests would store a slice
+            // that won't satisfy full-file fetches and can break narration playback.
+            if (resp.ok && resp.status !== 206) c.put(e.request, resp.clone());
             return resp;
           }).catch(() => new Response('', { status: 504 }))
         )
