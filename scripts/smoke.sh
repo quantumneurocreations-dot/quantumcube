@@ -4,16 +4,20 @@
 # Run after every push to confirm:
 #   1. SW version on Pages matches what's in repo (Pages rebuilt successfully)
 #   2. Sentry release tag on live HTML matches SW version (no version drift)
-#   3. All listed public URLs return HTTP 200 (10 paths)
-#   4. Auth endpoint at Supabase reachable
-#   5. Sentry init log present in live app.html
+#   3. Sentry init log present in live app.html (Sentry block intact)
+#   4. All 10 public pages return HTTP 200
+#   5. Supabase reachable (any HTTP response = up; timeout/refused = down)
 #
 # Usage:
 #   ./scripts/smoke.sh              # full check
-#   ./scripts/smoke.sh --quick      # skip the 9-page HTTP 200 sweep
+#   ./scripts/smoke.sh --quick      # skip the 10-page HTTP 200 sweep
 #
 # If Pages hasn't rebuilt yet (~60s after push), the SW version check will
 # show a mismatch — wait and re-run.
+#
+# NOTE: Run this from your Mac (residential IP). Cloudflare blocks
+# datacenter curl with HTTP 403; if running from a sandboxed agent, expect
+# 403 across the board — that's not a real deploy issue.
 set -uo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
@@ -33,10 +37,15 @@ warn() { echo "  ⚠ $1"; WARN=$((WARN+1)); }
 echo "=== Quantum Cube smoke test ==="
 echo ""
 
+# Buffer live responses ONCE — avoids SIGPIPE issues with grep -q on pipes
+# under set -o pipefail. Re-used by checks 1, 2, 3.
+LIVE_APP_HTML=$(curl -fsS --max-time 15 https://quantumcube.app/app 2>/dev/null || echo "")
+LIVE_SW_JS=$(curl -fsS --max-time 15 https://quantumcube.app/sw.js 2>/dev/null || echo "")
+
 # === 1. SW version sync (repo vs live) ===
 echo "[1/5] SW version sync (repo vs Pages)..."
 REPO_SW=$(grep -oE "qc-v[0-9]+" docs/sw.js | head -1 || echo "MISSING")
-LIVE_SW=$(curl -fsS --max-time 10 https://quantumcube.app/sw.js 2>/dev/null | grep -oE "qc-v[0-9]+" | head -1 || echo "MISSING")
+LIVE_SW=$(echo "$LIVE_SW_JS" | grep -oE "qc-v[0-9]+" | head -1 || echo "MISSING")
 if [ "$REPO_SW" = "$LIVE_SW" ] && [ "$REPO_SW" != "MISSING" ]; then
   ok "repo $REPO_SW = live $LIVE_SW"
 else
@@ -46,7 +55,7 @@ echo ""
 
 # === 2. Sentry release tag in live app.html matches SW version ===
 echo "[2/5] Sentry release tag in live app.html..."
-LIVE_RELEASE=$(curl -fsS --max-time 10 https://quantumcube.app/app | grep -oE 'release: "quantum-cube@qc-v[0-9]+"' | head -1 | grep -oE 'qc-v[0-9]+' || echo "MISSING")
+LIVE_RELEASE=$(echo "$LIVE_APP_HTML" | grep -oE 'release: "quantum-cube@qc-v[0-9]+"' | head -1 | grep -oE 'qc-v[0-9]+' || echo "MISSING")
 if [ "$LIVE_RELEASE" = "$LIVE_SW" ] && [ "$LIVE_RELEASE" != "MISSING" ]; then
   ok "Sentry release $LIVE_RELEASE matches SW $LIVE_SW"
 else
@@ -55,9 +64,10 @@ fi
 echo ""
 
 # === 3. Sentry init log present (confirms Sentry block intact) ===
+# Buffered (no pipe to curl) — avoids SIGPIPE under pipefail.
 echo "[3/5] Sentry init code present in live app.html..."
-if curl -fsS --max-time 10 https://quantumcube.app/app | grep -qF '[QC] Sentry initialised'; then
-  ok 'console.log "[QC] Sentry initialised" found'
+if echo "$LIVE_APP_HTML" | grep -qF "[QC] Sentry initialised"; then
+  ok '"[QC] Sentry initialised" found'
 else
   bad "Sentry init log not found — Sentry block may have been accidentally removed"
 fi
@@ -67,7 +77,7 @@ echo ""
 if [ "$QUICK" = "0" ]; then
   echo "[4/5] Public pages HTTP 200 sweep..."
   for path in / /app /privacy /terms /refund /disclaimer /ip /popia /security /contact; do
-    CODE=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 10 "https://quantumcube.app${path}" 2>/dev/null || echo "ERR")
+    CODE=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 10 "https://quantumcube.app${path}" 2>/dev/null || echo "ERR")
     if [ "$CODE" = "200" ]; then
       ok "${path} → 200"
     else
@@ -79,16 +89,17 @@ else
 fi
 echo ""
 
-# === 5. Supabase auth endpoint reachable ===
-echo "[5/5] Supabase auth endpoint reachable..."
-SB_CODE=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 10 \
-  https://fqqdldvnxupzxvvbyvjm.supabase.co/auth/v1/health 2>/dev/null || echo "ERR")
-# Supabase /auth/v1/health returns 200 with empty body when up
-if [ "$SB_CODE" = "200" ] || [ "$SB_CODE" = "404" ]; then
-  # 404 also acceptable — endpoint may not exist but server is responding (not network down)
+# === 5. Supabase reachable (any HTTP response = up) ===
+# /auth/v1/health requires apikey header to return 200; without it returns
+# 401. Either way, the server is up. Only timeout / connection refused /
+# DNS failure (curl returns empty body, exit non-zero) means it's down.
+echo "[5/5] Supabase reachable..."
+SB_CODE=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 10 \
+  https://fqqdldvnxupzxvvbyvjm.supabase.co/auth/v1/health 2>/dev/null || echo "")
+if [ -n "$SB_CODE" ] && [ "$SB_CODE" != "000" ]; then
   ok "Supabase reachable (HTTP $SB_CODE)"
 else
-  bad "Supabase auth endpoint returned $SB_CODE"
+  bad "Supabase unreachable (timeout, DNS, or connection refused)"
 fi
 echo ""
 
