@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Pre-commit hook for Quantum Cube.
+#
+# Enforces invariants from PROJECT_BRIEF.md fragile areas:
+#   1. SW version (docs/sw.js qc-vNNN) must match Sentry release tag
+#      (docs/app.html release: "quantum-cube@qc-vNNN")
+#   2. If docs/app.html is being committed, SW version MUST be different
+#      from the version on origin/main (i.e. version was bumped)
+#
+# Caught failure class: May 4 near-misses 649bb60 (narration code dropped,
+# only SW+release bumped) and b99b807 (DODO_MODE silently reverted, SW
+# bumped but app.html mode constant didn't get committed).
+#
+# To bypass in genuine emergencies: git commit --no-verify
+# (Don't make a habit of it. The brief lists this hook as a fragile invariant.)
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+# Only check if docs/app.html or docs/sw.js are staged
+STAGED=$(git diff --cached --name-only --diff-filter=AM)
+if ! echo "$STAGED" | grep -qE "^docs/(app\.html|sw\.js)$"; then
+  exit 0
+fi
+
+# Extract current versions from staged content (not working tree)
+SW_VER=$(git show :docs/sw.js | grep -oE "qc-v[0-9]+" | head -1 || true)
+APP_VER=$(git show :docs/app.html | grep -oE 'quantum-cube@qc-v[0-9]+' | head -1 | sed 's/quantum-cube@//' || true)
+
+if [ -z "$SW_VER" ] || [ -z "$APP_VER" ]; then
+  echo "✗ pre-commit: could not extract SW or release version from staged content"
+  echo "  SW_VER=$SW_VER  APP_VER=$APP_VER"
+  exit 1
+fi
+
+# Check 1: SW + Sentry release in sync
+if [ "$SW_VER" != "$APP_VER" ]; then
+  echo "✗ pre-commit: SW + Sentry release MISMATCH"
+  echo "  docs/sw.js     SW_VER  = $SW_VER"
+  echo "  docs/app.html  APP_VER = $APP_VER"
+  echo ""
+  echo "  Both must match (e.g. both qc-v202). See PROJECT_BRIEF.md fragile-areas."
+  echo "  Bypass only if you genuinely know what you're doing: git commit --no-verify"
+  exit 1
+fi
+
+# Check 2: if docs/app.html staged, ensure SW was bumped vs origin/main
+if echo "$STAGED" | grep -qE "^docs/app\.html$"; then
+  ORIGIN_SW=$(git show origin/main:docs/sw.js 2>/dev/null | grep -oE "qc-v[0-9]+" | head -1 || echo "")
+  if [ -n "$ORIGIN_SW" ] && [ "$SW_VER" = "$ORIGIN_SW" ]; then
+    echo "✗ pre-commit: docs/app.html is changing but SW version was NOT bumped"
+    echo "  current = $SW_VER  origin/main = $ORIGIN_SW"
+    echo ""
+    echo "  Every commit that changes docs/app.html MUST bump qc-vNNN in docs/sw.js"
+    echo "  (cache-stickiness rule — see PROJECT_BRIEF.md fragile-areas)."
+    echo "  Bypass only if you genuinely know what you're doing: git commit --no-verify"
+    exit 1
+  fi
+fi
+
+echo "✓ pre-commit: SW + Sentry release in sync at $SW_VER, bump verified"
+exit 0
