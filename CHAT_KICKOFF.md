@@ -26,6 +26,10 @@ Start fast. One minimal check, trust the result, build. Full audits only when so
 
 **The user (Ronnie) is the bridge.** He copies paste blocks from Chat Claude to Cursor Claude, and copies output back. That's how we communicate.
 
+**MCP tool readiness — verify before relying.** Cursor only loads MCP servers from `~/.cursor/mcp.json` on full Cmd+Q restart (closing the window isn't enough). Already-open Cursor sessions also don't pick up newly-attached MCPs — a NEW chat is required after MCP changes. If Chat Claude expects a tool (Sentry, Supabase, Context7, etc.) and Cursor reports "tool not found" or returns empty, the cause is almost always: (a) edited mcp.json without restarting, OR (b) reusing an old Cursor chat session. The health check block above includes an MCP listing step — use it. If a needed MCP isn't listed, STOP, restart Cursor, open a new chat, retry.
+
+**Brief + archive synchronization.** When condensing PROJECT_BRIEF.md because work shipped (e.g. moving a TO-DO checklist to a "completed" summary), update BRIEF_ARCHIVE.md IN THE SAME COMMIT. The archive is the project's lossless working memory — what's not in the archive is effectively forgotten in 6 months. Don't trust git history alone; the archive should be readable as a single document. Caught as a near-miss on May 4 PM (v33 → v34 brief condensation almost lost planning context — Ronnie spotted the line drop and asked before commit).
+
 ---
 
 ## FIRST MESSAGE TEMPLATE
@@ -41,6 +45,11 @@ git branch --show-current
 git status
 git log --oneline -3
 dig +short TXT _dmarc.quantumcube.app
+echo '--- MCP servers loaded in THIS Cursor session: ---'
+echo '(Cursor only loads MCP servers from ~/.cursor/mcp.json on full Cmd+Q restart.'
+echo ' Old chat sessions also do not pick up newly-attached MCPs — open a NEW chat after MCP changes.)'
+echo '(Expected: context7, sentry, supabase. dodopayments may be disabled — known 500 issue with Dodo MCP server.'
+echo ' If any expected MCP is missing in current session, STOP — restart Cursor and start new chat.)'
 Report verbatim.
 
 3. Wait for output. If output shows runCalculation present + on `main` + working tree clean + DNS working, we're green. Start on whatever he asks for.
@@ -178,6 +187,71 @@ Before the chat gets too long (and Claude starts compressing context):
 ## IF THINGS FEEL OFF
 
 If the user says "this feels messy" or "we're going down rabbit holes" — **stop and listen.** Don't try to finish the current thing. Ask what they want. Their instinct is usually right.
+
+---
+
+## REUSABLE PASTE BLOCKS
+
+Copy any of these into a Cursor paste block. Adapt as needed.
+
+### Health check (already in FIRST MESSAGE TEMPLATE above)
+
+See FIRST MESSAGE TEMPLATE section.
+
+### Mode-flip pre-stage verification guard
+
+Use immediately before `git add` on any commit that flips DODO_MODE or bumps SW version. Substitute the expected version.
+
+```bash
+EXPECTED=qc-v202
+SW_VER=$(grep -oE "qc-v[0-9]+" docs/sw.js | head -1)
+APP_VER=$(grep -oE "quantum-cube@qc-v[0-9]+" docs/app.html | head -1 | sed 's/quantum-cube@//')
+if [ "$SW_VER" = "$EXPECTED" ] && [ "$APP_VER" = "$EXPECTED" ]; then
+  echo "✓ in sync at $EXPECTED — safe to ship"
+else
+  echo "✗ MISMATCH: SW=$SW_VER APP=$APP_VER expected=$EXPECTED — ABORTING"
+  exit 1
+fi
+```
+
+### runCalculation anchor verification
+
+Use before AND after any edit to `docs/app.html` to confirm the file isn't broken.
+
+```bash
+cd /Users/qnc/Projects/quantumcube
+grep -n "function runCalculation" docs/app.html | head -2
+```
+
+### Live deploy verification (catches stale Pages cache)
+
+Use after `git push` to confirm the live site is serving what you just shipped. Run after waiting ~60s for Pages to rebuild.
+
+```bash
+cd /Users/qnc/Projects/quantumcube
+echo "--- repo SW version ---"
+grep -oE "qc-v[0-9]+" docs/sw.js | head -1
+echo "--- live SW version (Pages) ---"
+curl -s https://quantumcube.app/sw.js | grep -oE "qc-v[0-9]+" | head -1
+echo "(if different, Pages still rebuilding — wait 60s and re-run.)"
+```
+
+### Read-only recon (use BEFORE any write that touches >2 files)
+
+Sets up situational awareness without modifying anything. Always start non-trivial work with this pattern.
+
+```bash
+cd /Users/qnc/Projects/quantumcube
+git branch --show-current
+git status
+grep -n "function runCalculation" docs/app.html | head -2
+```
+
+Add file-specific recon here based on what you're about to edit:
+
+- For HTML edits: `grep -nE "<anchor pattern>" docs/app.html | head -10`
+- For Edge Function edits: `cat supabase/functions/<name>/index.ts | head -30`
+- For migrations: `ls supabase/migrations/`
 
 ---
 
