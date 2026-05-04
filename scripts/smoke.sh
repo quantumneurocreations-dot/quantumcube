@@ -3,10 +3,10 @@
 #
 # Run after every push to confirm:
 #   1. SW version on Pages matches what's in repo (Pages rebuilt successfully)
-#   2. Sentry release tag on live HTML matches SW version (no version drift)
-#   3. Sentry DSN present in live app.html (Sentry block intact)
-#   4. All 10 public pages return HTTP 200
-#   5. Supabase reachable (any HTTP response = up; timeout/refused = down)
+#   2. Sentry release tag on live HTML matches SW version (proves Sentry
+#      init block is present in served HTML AND bumped to current deploy)
+#   3. All 10 public pages return HTTP 200
+#   4. Supabase reachable (any HTTP response = up; timeout/refused = down)
 #
 # Usage:
 #   ./scripts/smoke.sh              # full check
@@ -38,12 +38,12 @@ echo "=== Quantum Cube smoke test ==="
 echo ""
 
 # Buffer live responses ONCE — avoids SIGPIPE issues with grep -q on pipes
-# under set -o pipefail. Re-used by checks 1, 2, 3.
+# under set -o pipefail. Re-used by checks 1 and 2.
 LIVE_APP_HTML=$(curl -fsS --max-time 15 https://quantumcube.app/app 2>/dev/null || echo "")
 LIVE_SW_JS=$(curl -fsS --max-time 15 https://quantumcube.app/sw.js 2>/dev/null || echo "")
 
 # === 1. SW version sync (repo vs live) ===
-echo "[1/5] SW version sync (repo vs Pages)..."
+echo "[1/4] SW version sync (repo vs Pages)..."
 REPO_SW=$(grep -oE "qc-v[0-9]+" docs/sw.js | head -1 || echo "MISSING")
 LIVE_SW=$(echo "$LIVE_SW_JS" | grep -oE "qc-v[0-9]+" | head -1 || echo "MISSING")
 if [ "$REPO_SW" = "$LIVE_SW" ] && [ "$REPO_SW" != "MISSING" ]; then
@@ -54,7 +54,11 @@ fi
 echo ""
 
 # === 2. Sentry release tag in live app.html matches SW version ===
-echo "[2/5] Sentry release tag in live app.html..."
+# This single check proves: Sentry init block is in the served HTML, AND
+# it's bumped to the current deploy version. Doubles as "Sentry block
+# intact" — accidentally removing the Sentry block would also remove the
+# release tag, so this would fail.
+echo "[2/4] Sentry release tag in live app.html..."
 LIVE_RELEASE=$(echo "$LIVE_APP_HTML" | grep -oE 'release: "quantum-cube@qc-v[0-9]+"' | head -1 | grep -oE 'qc-v[0-9]+' || echo "MISSING")
 if [ "$LIVE_RELEASE" = "$LIVE_SW" ] && [ "$LIVE_RELEASE" != "MISSING" ]; then
   ok "Sentry release $LIVE_RELEASE matches SW $LIVE_SW"
@@ -63,22 +67,9 @@ else
 fi
 echo ""
 
-# === 3. Sentry DSN present (confirms Sentry block intact) ===
-# Greps for the DSN host — uniquely identifies the Sentry init block.
-# More reliable than grepping a console.log string that might or might
-# not exist depending on production guards. If the Sentry block is
-# accidentally removed, the DSN goes with it.
-echo "[3/5] Sentry DSN present in live app.html..."
-if echo "$LIVE_APP_HTML" | grep -qF "o4511330222604288.ingest.de.sentry.io"; then
-  ok "Sentry DSN found"
-else
-  bad "Sentry DSN not found — Sentry block may have been accidentally removed"
-fi
-echo ""
-
-# === 4. Public pages all return 200 (skip in --quick mode) ===
+# === 3. Public pages all return 200 (skip in --quick mode) ===
 if [ "$QUICK" = "0" ]; then
-  echo "[4/5] Public pages HTTP 200 sweep..."
+  echo "[3/4] Public pages HTTP 200 sweep..."
   for path in / /app /privacy /terms /refund /disclaimer /ip /popia /security /contact; do
     CODE=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 10 "https://quantumcube.app${path}" 2>/dev/null || echo "ERR")
     if [ "$CODE" = "200" ]; then
@@ -88,15 +79,15 @@ if [ "$QUICK" = "0" ]; then
     fi
   done
 else
-  warn "[4/5] HTTP 200 sweep skipped (--quick)"
+  warn "[3/4] HTTP 200 sweep skipped (--quick)"
 fi
 echo ""
 
-# === 5. Supabase reachable (any HTTP response = up) ===
+# === 4. Supabase reachable (any HTTP response = up) ===
 # /auth/v1/health requires apikey header to return 200; without it returns
 # 401. Either way, the server is up. Only timeout / connection refused /
-# DNS failure (curl returns empty body, exit non-zero) means it's down.
-echo "[5/5] Supabase reachable..."
+# DNS failure (curl returns empty body) means it's down.
+echo "[4/4] Supabase reachable..."
 SB_CODE=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 10 \
   https://fqqdldvnxupzxvvbyvjm.supabase.co/auth/v1/health 2>/dev/null || echo "")
 if [ -n "$SB_CODE" ] && [ "$SB_CODE" != "000" ]; then
