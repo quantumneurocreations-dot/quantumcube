@@ -1,6 +1,8 @@
 # QUANTUM CUBE — PROJECT BRIEF
 
-**Version: v38 | Last Updated: May 5, 2026 (Tuesday, late afternoon)**
+**Version: v39 | Last Updated: May 5, 2026 (Tuesday, evening)**
+
+> **v39 update note (May 5 evening, DevX + analytics + security sprint):** 5 commits shipped (b0d2d92 → d70255b). PostHog product analytics wired (EU project 172921, host `eu.i.posthog.com`, production-only gate, post-Sentry init in app.html). CSP extended: vimeo.com (frame-src), blob: (media-src), eu.posthog.com + eu-assets.i.posthog.com (script-src + connect-src). New DevX foundation: `CLAUDE.md` root pointer, `.claude/skills/` codified workflows (4 skills), `.github/workflows/verify-versions.yml` pre-deploy CI. Tier 1 security audit auto-fixes shipped: GitHub vulnerability-alerts + automated-security-fixes ENABLED; DMARC ramped from `p=none` to `p=quarantine; pct=25; rua=mailto:dmarc@quantumcube.app` (see ADR-012, supersedes ADR-010); branch protection on `main` ENFORCED via gh API (see ADR-014). Doc drift fixed (Cloudflare Pages → GitHub Pages everywhere). Sentry issues JAVASCRIPT-2/4/5 resolved. Supabase MCP capability expanded mid-session: `deploy_edge_function`, `get_logs`, `get_edge_function`, `list_edge_functions`, `merge_branch` now available — chat-side edge function deploys possible without `supabase functions deploy` CLI. Confirmed via app.html audit: app uses passwordless auth exclusively (magic-link + Google OAuth, zero `<input type="password">` exists), so Supabase advisor's leaked-password warning is moot — re-affirms ADR-005. SW: qc-v201 → qc-v202.
 
 > **v38 update note (May 5 PM):** Browser-tab audit pass confirmed system is clean. No new code changes — decisions codified as ADR-009 (Cloudflare orange cloud KEEP OFF, GH Pages cert renewal compat), ADR-010 (DMARC p=none for 30-60 days observation), ADR-011 (Microsoft Clarity project found to be Mobile-platform-only — needs new Website project, deferred to post-launch). UR Supabase REST monitor confirmed paused (free-tier keyword monitoring still requires HTTP 2xx). Auth.users state verified clean (8 legitimate users, no test cleanup needed). See "v37-v38 CONSOLIDATED UPDATES" section.
 
@@ -176,7 +178,7 @@ Quantum Cube Plus ($9.99/mo with daily horoscope generation) is **deferred and d
 |   |- privacy.html / terms.html / refund.html         (CSP applied)
 |   |- disclaimer.html / ip.html / popia.html          (CSP applied)
 |   |- security.html / contact.html                    (CSP applied)
-|   |- sw.js                                   <- Service worker (current: qc-v201)
+|   |- sw.js                                   <- Service worker (current: qc-v202)
 |   |- CNAME                                   <- quantumcube.app
 |   |- .nojekyll
 |   |- qc-icon-192.png / qc-icon-512.png / qc-icon-512-maskable.png
@@ -198,7 +200,7 @@ Quantum Cube Plus ($9.99/mo with daily horoscope generation) is **deferred and d
 |       - dodo-webhook/index.ts                <- Dodo webhook receiver
 |- scripts/                                    <- Narration pipeline scripts
 |- narration-manifest.json                     <- 385 entries
-|- PROJECT_BRIEF.md                            <- This document (v34, lean active brief)
+|- PROJECT_BRIEF.md                            <- This document (v39, lean active brief)
 |- BRIEF_ARCHIVE.md                            <- Lossless reference archive
 |- MARKETING_PLAYBOOK.md                       <- Marketing strategy + Michelle's playbook
 |- CHAT_KICKOFF.md                             <- Chat operating protocol
@@ -218,6 +220,11 @@ Quantum Cube Plus ($9.99/mo with daily horoscope generation) is **deferred and d
 
 | Commit    | Why you don't revert past it                                                    |
 | --------- | ------------------------------------------------------------------------------- |
+| `d70255b` | smoke.sh exec bit restored after doc commit lost it.                              |
+| `d7ee696` | **Doc drift fix** — "Cloudflare Pages" → "GitHub Pages" across CLAUDE.md, skills, verify-versions.yml, smoke.sh. |
+| `059542c` | **PostHog wired + CSP fixes** (qc-v202). Vimeo, blob: media, PostHog hosts added to CSP. |
+| `b0d2d92` | **DevX foundation** — CLAUDE.md, .claude/skills/, pre-deploy verify-versions.yml CI. |
+| `7fb5a73` | **CHAT_KICKOFF v4.0.0** — mandatory boot sequence + First Response Template + hardened handoff (now v4.1 with expanded MCP). |
 | `fc479a0` | **Smoke test simplified to 4 checks** — Step 2 release-tag check covers Sentry block + version. Reliable green run. |
 | `00a6314` | **Pre-commit hook** — SW + Sentry release sync; blocks `app.html` without SW bump. Run `./scripts/install-hooks.sh` on new clone. |
 | `23d4a20` | Smoke test script landed (refined in 4efb70a, 90fb8b9, fc479a0).                 |
@@ -286,9 +293,10 @@ Use **regular Chrome** (not PWA) with **DevTools open**.
 - **Custom domain:** `quantumcube.app` via Cloudflare CNAME → `quantumneurocreations-dot.github.io`
 - **Email routing:** Cloudflare `*@quantumcube.app` → `admin@qncacademy.com`
 - **Error monitoring:** Sentry browser SDK 8.50.0, EU region (`o4511330222604288.ingest.de.sentry.io`), production-only gate, error monitoring only (no Session Replay/Tracing/Application Metrics), JWT/email scrubbing in `beforeSend`, release tagged per SW version. Free tier (5k errors/month). CSP violation listener wired to forward as Sentry warnings.
-- **Content Security Policy:** applied to all 10 HTML pages via `<meta http-equiv>`. App page allows inline scripts (existing inline handlers); public pages strict (no inline, no external scripts). Allow-list covers Vimeo, jsdelivr, Sentry CDN + ingest, Supabase, Dodo, Google Fonts.
+- **Product analytics:** PostHog EU (project 172921, host `https://eu.i.posthog.com`, asset host `eu-assets.i.posthog.com`). Production-only gate (`location.hostname !== "quantumcube.app"` short-circuits init). Wired in `app.html` AFTER Sentry init, BEFORE Supabase client. Public client API key (safe to commit, by design): `phc_sXjrkSUy6SAFddX69V53HGEegVKPUpRjpUEsERF6wcVk`. Autocapture ON. Person ID anonymized until `posthog.identify(user_id)` wired (deferred — paid users only).
+- **Content Security Policy:** applied to all 10 HTML pages via `<meta http-equiv>`. App page allows inline scripts (existing inline handlers); public pages strict (no inline, no external scripts). Allow-list covers Vimeo (player.vimeo.com + vimeo.com), jsdelivr, Sentry CDN + ingest, Supabase, Dodo, Google Fonts, PostHog (eu.i.posthog.com + eu-assets.i.posthog.com), blob: (media-src for narration).
 - **PWA:** Real `sw.js` file + static `manifest.json` with PNG icons. Two-cache architecture:
-  - `qc-v201` — HTML + root assets (skips caching of HTTP 206 partial-content responses since `b99b807`)
+  - `qc-v202` — HTML + root assets (skips caching of HTTP 206 partial-content responses since `b99b807`)
   - `qc-narration-v3` — 385 MP3s
 
 ---
@@ -658,7 +666,7 @@ Phase 5a (US-only with Dodo billing, months 1-2) → Phase 5b (English markets, 
 
 | System                   | State                                                                                                                       |
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| GitHub Pages             | Live (source: `/docs` on `main`. SW **qc-v201**, narration **qc-narration-v3**)                                             |
+| GitHub Pages             | Live (source: `/docs` on `main`. SW **qc-v202**, narration **qc-narration-v3**)                                             |
 | **quantumcube.app**      | **LIVE** — landing + 8 legal + /app, all HTTP 200, all CSP-protected ✓                                                      |
 | qncacademy.com           | Full email stack live                                                                                                       |
 | Google Workspace         | admin@qncacademy.com + 5 aliases                                                                                            |
@@ -735,7 +743,74 @@ Massive May 4 — **15 commits** across morning + afternoon + evening + late eve
 
 ---
 
-## v37-v38 CONSOLIDATED UPDATES (May 5, 2026)
+## v37-v39 CONSOLIDATED UPDATES (May 5, 2026)
+
+### v39 — DevX foundation + PostHog + Tier 1 audit fixes (evening, May 5)
+
+Long session, 5 commits shipped to `origin/main`:
+
+| Commit    | What                                                                                                |
+| --------- | --------------------------------------------------------------------------------------------------- |
+| `b0d2d92` | **DevX foundation** — root `CLAUDE.md` (Anthropic standard pointer doc), `.claude/skills/` folder with 4 codified workflows (qc-version-bump, qc-release-procedure, qc-smoke-test, qc-incident-response), `.github/workflows/verify-versions.yml` pre-deploy CI gate. |
+| `059542c` | **PostHog wired + CSP fixes** (qc-v201 → qc-v202). PostHog snippet inserted in app.html after Sentry IIFE close, before Supabase client. Production-only gate. CSP additions: vimeo.com to frame-src (fixed JAVASCRIPT-4 from Sentry), `blob:` to media-src (fixed JAVASCRIPT-5), eu.posthog.com + eu-assets.i.posthog.com to script-src + connect-src. Smoke test 13/13 post-deploy. |
+| `d7ee696` | **Doc drift fix** — today's earlier docs (CLAUDE.md, skills, verify-versions.yml, smoke.sh) all said "Cloudflare Pages" but DNS reality is GitHub Pages (CNAME → quantumneurocreations-dot.github.io, no orange cloud, traffic bypasses Cloudflare proxy entirely). Fixed everywhere. DECISIONS.md line 227 confirms historical decision was always GitHub Pages — drift was self-introduced today. |
+| `d70255b` | smoke.sh executable bit restored (lost in d7ee696's mode change).                                    |
+
+### PostHog setup detail (live, capturing events)
+
+- Project 172921, EU region, host `https://eu.i.posthog.com`, asset host `eu-assets.i.posthog.com`.
+- Public client API key (safe in code, by design): `phc_sXjrkSUy6SAFddX69V53HGEegVKPUpRjpUEsERF6wcVk`.
+- 11+ events captured live during setup verification — pageviews + autocapture click events from `/app`. Person ID anonymized as `019df970-22b0-...` until we wire `posthog.identify(user_id)` for paid users.
+- Defaults version: `'2025-05-24'`.
+- Identify-call wiring deferred to next session — want clean attribution but not blocking.
+
+### Sentry issues resolved this session
+
+- **JAVASCRIPT-2** (CSP block of vimeo.com) — resolved via frame-src extension in 059542c.
+- **JAVASCRIPT-4** (CSP block of vimeo.com frame) — resolved same.
+- **JAVASCRIPT-5** (CSP block of blob: media for narration) — resolved via media-src extension.
+- **JAVASCRIPT-1** (Ronnie's manual smoke test "Sentry test") — was already resolved earlier today.
+
+### Tier 1 security audit — actions completed
+
+Auto-fixed in session via gh API + Cloudflare API + Supabase MCP:
+
+- ✅ **GitHub vulnerability alerts + Dependabot automated security updates ENABLED.** Two PUT calls to `/repos/.../vulnerability-alerts` and `/repos/.../automated-security-fixes`. Now auto-PRs for vulnerable dependencies will appear.
+- ✅ **DMARC ramped from `p=none` to `p=quarantine; pct=25; rua=mailto:dmarc@quantumcube.app`** via Cloudflare DNS PATCH on record `e4c164849cbe1153783624c130d44223`. Aggregate reports flow to admin@ via catch-all. Conservative ramp — next step is pct=100 then consider p=reject after 2 weeks of clean reports. **Supersedes ADR-010 — see new ADR-012.**
+- ✅ **Branch protection on `main` ENFORCED via gh API.** Block force-push, block deletion, require linear history, enforce_admins=true. Solo-dev workflow preserved (no PR requirement). **See new ADR-014.**
+- ✅ **Doc drift fix shipped** (commit d7ee696) — 5 files corrected. The Pages reality everywhere now reads "GitHub Pages".
+- ✅ **smoke.sh executable bit restored** (commit d70255b).
+
+Deferred / N/A items:
+
+- ⚫ **Supabase leaked password protection** — N/A. Confirmed via app.html grep: app uses `signInWithOtp` + `signInWithOAuth` exclusively. Zero `<input type="password">` exists. Feature is also Pro-plan only. Not needed regardless of plan tier. Re-affirms ADR-005.
+- ⏭ **Resend webhooks** — still none configured. Carry-forward to next session if/when bounce/complaint signals matter (will at scale).
+- ⏭ **Cloudflare zone settings audit** (SSL mode, HSTS, Bot Fight Mode) — MCP token scope (DNS:Read + Email Routing:Read) doesn't expose these. Deferred to dashboard walkthrough.
+- ⏭ **Dodo Payments audit** (webhook signing config, test/live mode) — Dodo MCP exposes only `sleep` tool. Browser walkthrough required.
+
+### Supabase MCP capability expansion
+
+Mid-session, Ronnie activated additional MCP feature groups in Supabase dashboard (URL `?showConnect=true&connectTab=mcp`). New tools confirmed available now:
+
+- `Supabase:get_logs` (services: api, branch-action, postgres, edge-function, auth, storage, realtime — 24hr window)
+- `Supabase:get_edge_function` (read deployed function source remotely)
+- `Supabase:deploy_edge_function` (deploy from chat without `supabase functions deploy` CLI)
+- `Supabase:list_edge_functions`
+- `Supabase:merge_branch`
+
+**Workflow implication:** previous edge function deploys required Mac surface; now end-to-end from chat. Kickoff updated to v4.1 to reflect.
+
+### Big realization: passwordless auth confirmed (re-affirms ADR-005)
+
+While preparing to implement client-side HaveIBeenPwned check (option B for the Pro-tier-locked Supabase leaked password feature), grepped app.html and discovered: **no `signUp()` calls anywhere, no `<input type="password">` field, only `signInWithOtp` (magic link) and `signInWithOAuth` (Google).** Quantum Cube has zero passwords. The audit was about to ship a feature with no relevance. Caught and skipped. ADR-005 already documented this; just re-affirmed.
+
+### Calibration / lessons May 5 evening
+
+- **Always grep for actual code patterns before implementing security features triggered by advisor warnings.** The Supabase advisor flags features that may not apply to your auth model. ADR-005 was already in DECISIONS.md but I almost shipped a 15-line HIBP check that would have done nothing.
+- **Self-introduced doc drift is sneaky.** Today's CLAUDE.md and skill files were written before I confirmed Pages reality — used "Cloudflare Pages" as natural framing. Caught only when DNS audit forced a check.
+- **Solo-dev branch protection means: block force-push + delete + linear history, NO PR/checks requirement.** Anything stricter blocks the solo direct-push workflow that's the core operating mode. Documented as ADR-014.
+- **DMARC ramp to `pct=25` first** before pct=100 lets you observe failures at lower stakes. Reports flowing to dmarc@ via catch-all = no new mailbox needed.
+- **Compaction during a long session is real** — the user explicitly flagged it on wrap-up. Always factor it into end-of-session protocol; don't trust visible chat as the full record. Read transcript if any doubt.
 
 ### v38 — Browser-tab audit (afternoon, May 5)
 
@@ -815,7 +890,7 @@ DNS for `quantumcube.app` (11 records):
 - Resend MX (`feedback-smtp.eu-west-1.amazonses.com`) on `send.quantumcube.app` for outbound
 - DKIM keys for both Cloudflare and Resend in TXT records
 - SPF on root and on `send` subdomain
-- DMARC at `p=none` (observation only — consider strengthening to `p=quarantine` post-launch once nothing legit is failing)
+- DMARC was `p=none`, **bumped May 5 evening to `p=quarantine; pct=25; rua=mailto:dmarc@quantumcube.app`** (partial enforcement + aggregate reports flowing to admin@ via catch-all). Ramp to pct=100 / consider p=reject after 2-week monitoring window. **See ADR-012 (supersedes ADR-010).**
 
 Email Routing rules (both enabled):
 - `support@quantumcube.app` → forward to `admin@qncacademy.com`
@@ -861,7 +936,7 @@ User action required:
 ### Pending action items (carry forward)
 
 **User-side (you click):**
-1. **Branch protection** — GitHub repo Settings → Branches → add ruleset for `main`: "Require linear history" + "Restrict deletions". 2 minutes.
+1. ✅ ~~**Branch protection**~~ — **DONE May 5 evening via gh API**. Settings: `enforce_admins=true`, `force_pushes=false`, `deletions=false`, `required_linear_history=true`. See ADR-014.
 2. **Old test user delete approval** — auth user `a72a753e-90a3-48d7-a75b-422b8b9512bf` (April 18, never confirmed, 17 days stale). Pending yes/no.
 3. **Anthropic API key** — defer until we ship Claude-in-loop scheduled tasks (we currently don't).
 4. **Apple Passwords inventory + Google 2FA + domain registrar audits** — eyeball checks for Stage 6.
@@ -889,4 +964,4 @@ Still missing in claude.ai surface: GitHub Integration (use `gh` CLI via Desktop
 
 ---
 
-**End of brief v37.** Archived history → `BRIEF_ARCHIVE.md`. Marketing strategy → `MARKETING_PLAYBOOK.md`. Session protocol → `CHAT_KICKOFF.md`. Decision log → `DECISIONS.md`.
+**End of brief v39.** Archived history → `BRIEF_ARCHIVE.md`. Marketing strategy → `MARKETING_PLAYBOOK.md`. Session protocol → `CHAT_KICKOFF.md`. Decision log → `DECISIONS.md`.

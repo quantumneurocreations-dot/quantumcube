@@ -279,6 +279,123 @@ Defer Clarity entirely until post-launch traffic justifies the analytics spend. 
 
 ---
 
+## ADR-012 — DMARC ramped to `p=quarantine; pct=25` with aggregate reporting
+
+**Date:** 2026-05-05
+**Status:** Accepted
+**Supersedes:** ADR-010
+
+### Context
+ADR-010 (May 5 morning) decided to keep DMARC at `p=none` for 30-60 days observation post-launch. By May 5 evening, however, the Tier 1 security audit revealed:
+- ADR-010's noted optional improvement ("add `rua=` to start collecting reports") was not yet done, so we'd been getting zero observation data despite being in observation mode.
+- We can ramp via `pct=25` (partial enforcement) without committing to full enforcement, getting most of the benefit while preserving safety net.
+- Cloudflare email routing catch-all (`*@quantumcube.app` → `admin@qncacademy.com`) means a `dmarc@quantumcube.app` rua address requires no new mailbox — reports will route to admin@ automatically.
+
+Receivers report DMARC alignment failures via aggregate reports if `rua=` is set. Without a rua, we'd be enforcing blind.
+
+### Decision
+Update `_dmarc.quantumcube.app` TXT record from `v=DMARC1; p=none;` to:
+
+```
+v=DMARC1; p=quarantine; pct=25; rua=mailto:dmarc@quantumcube.app
+```
+
+Applied via Cloudflare DNS PATCH on record id `e4c164849cbe1153783624c130d44223` on May 5 evening.
+
+### Consequences
+- **Partial enforcement live:** 25% of failing mail will be quarantined by receivers. 75% still gets a pass while we monitor.
+- **Aggregate reports flow:** receivers now send daily XML reports to `dmarc@quantumcube.app`, which the Cloudflare catch-all forwards to `admin@qncacademy.com`. Reports show legit senders + alignment failures.
+- **Ramp path:** after 2 weeks of clean reports, bump `pct=100`. After another 2 weeks clean at `p=quarantine; pct=100`, evaluate `p=reject`.
+- **Risk:** if a legit forwarder has SPF misalignment, 25% of forwarded mail gets quarantined at receiver. Mitigated by partial pct.
+- **Supersedes ADR-010:** the 30-60 day observation timeline is shortened because we're using partial-pct enforcement as the observation mode rather than zero-enforcement.
+
+### Alternatives considered
+- Add `rua=` only, keep `p=none` — collects reports but provides no actual protection. Rejected: we have data + low risk.
+- Jump straight to `p=quarantine; pct=100` — risk of quarantining legit forwarded mail at scale. Rejected: pct=25 is safer.
+- Jump to `p=reject` — too aggressive for a domain still building reputation. Rejected.
+
+---
+
+## ADR-013 — PostHog adopted as product analytics layer
+
+**Date:** 2026-05-05
+**Status:** Accepted
+
+### Context
+ADR-011 (May 5 PM) deferred Microsoft Clarity due to project-type mismatch (Mobile-only, can't use for web), and noted "deferred along with Clarity decision; revisit together at scale" for PostHog/Plausible/Fathom alternatives. By May 5 evening, the deferred decision was revisited and resolved.
+
+The team needs **product analytics** (funnel + autocapture click events + person-level identification) separately from **error monitoring** (Sentry, already live) and **uptime monitoring** (UptimeRobot, already live). Without product analytics, we have zero data on user behavior (face-by-face dropoff, button clicks, payment funnel friction).
+
+Options reconsidered:
+- **PostHog:** open-core, EU residency available, free tier 1M events/month, autocapture + custom events + funnels + session replay (paid), API rich enough to identify paid users by Supabase user_id.
+- **Plausible:** privacy-first, pageviews + UTM only, no person-level events, no funnels.
+- **Fathom:** similar to Plausible.
+- **Microsoft Clarity (for web):** session replay strong, but requires creating a new Website-typed Clarity project (existing Mobile project locked).
+- **Mixpanel / Amplitude:** mature but heavier integration, more expensive past free tier.
+
+### Decision
+Adopt **PostHog EU** (project 172921, host `https://eu.i.posthog.com`). Wire client-side snippet into `docs/app.html` AFTER Sentry init, BEFORE Supabase client. Production-only gate (`location.hostname !== "quantumcube.app"` short-circuits init). Public client API key embedded in code (safe by design — client-side token).
+
+### Consequences
+- Free tier: 1M events/month, easily covers our scale for 12+ months.
+- EU residency keeps data co-located with Supabase EU + Sentry EU + Resend EU — simpler GDPR/POPIA story.
+- Autocapture is on — click events on every interactive element captured automatically without per-element instrumentation.
+- Person ID currently anonymized (e.g., `019df970-22b0-...`). `posthog.identify(user_id)` wiring deferred to next session — will gate on `has_paid=true` to focus signal on real customers.
+- CSP allow-list updated: `eu.posthog.com` and `eu-assets.i.posthog.com` added to script-src + connect-src.
+- Re-evaluation: at scale or if we want session replay, evaluate PostHog Cloud paid tier vs Microsoft Clarity Website project (would need to create a new one per ADR-011).
+
+### Alternatives considered
+- **Plausible / Fathom:** rejected — no person-level events, no funnels.
+- **Microsoft Clarity Website project:** deferred (ADR-011 keeps Clarity on the back burner; if we want session replay, revisit then).
+- **No analytics layer:** rejected — we need behavior data before scaling spend.
+
+---
+
+## ADR-014 — GitHub branch protection on `main` (solo-dev tier)
+
+**Date:** 2026-05-05
+**Status:** Accepted
+
+### Context
+Until May 5 evening, `main` had zero branch protection. GitHub UI confirmed via `gh api repos/.../branches/main/protection` returning HTTP 404 ("Branch not protected"). Risks:
+- Accidental `git push --force` rewriting history (most realistic threat for solo dev pushing on a tired Friday).
+- Accidental branch deletion via UI fat-finger.
+- Non-linear merges introducing merge commits we'd have to chase down.
+
+Standard branch-protection "best practices" assume team workflows with PRs and required status checks. Our workflow is **direct push to main, multiple times per day, solo**. Requiring PRs would break the operating model.
+
+### Decision
+Apply minimum-viable branch protection via gh API `PUT /repos/.../branches/main/protection`:
+
+```json
+{
+  "required_status_checks": null,
+  "enforce_admins": true,
+  "required_pull_request_reviews": null,
+  "restrictions": null,
+  "required_linear_history": true,
+  "allow_force_pushes": false,
+  "allow_deletions": false
+}
+```
+
+### Consequences
+- **Force-push to main: BLOCKED.** Even by repo owner. The forcing function is the feature.
+- **Branch deletion of main: BLOCKED.** Even by repo owner.
+- **Linear history required.** Direct pushes are inherently linear, so no friction added.
+- **`enforce_admins=true`:** rules apply to Ronnie too. If a real emergency requires force-push, the path is: temporarily disable protection in repo Settings → Branches, do the force-push, re-enable. Friction is intentional.
+- **No PR requirement:** direct `git push origin main` continues to work exactly as before.
+- **No required status checks:** these enforce only on PR merges anyway, and we don't use PRs. CI workflows still run on every push and email on failure.
+- Verified post-application: `git push origin main` from this session worked without any change in flow.
+
+### Alternatives considered
+- **Heavy protection (require PR + reviews + status checks):** would block direct push to main, breaking solo workflow. Rejected.
+- **Light protection (only block force-push, no enforce_admins):** owner can still force-push. Rejected — the forcing function applies to owner too or it's theatre.
+- **Use GitHub Rulesets (newer mechanism):** more flexibility but classic branch protection covers what we need with simpler API. Defer rulesets until we need their extra features.
+- **No protection (status quo):** rejected — no cost to enabling force-push block, real downside to leaving it off.
+
+---
+
 ## ADR template — copy this for new entries
 
 ```markdown

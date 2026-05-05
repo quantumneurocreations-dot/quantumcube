@@ -1,8 +1,8 @@
 # QUANTUM CUBE — CHAT KICKOFF PROTOCOL
 
 ```
-KICKOFF-VERSION: 4.0.0
-LAST-UPDATED:   2026-05-05 PM
+KICKOFF-VERSION: 4.1.0
+LAST-UPDATED:   2026-05-05 evening
 INTEGRITY:      If you cannot see this version stamp in the kickoff doc, you
                 are reading a stale cached copy. Stop and ask the user to
                 re-upload CHAT_KICKOFF.md to project knowledge.
@@ -59,7 +59,7 @@ grep -n "function runCalculation" docs/app.html | head -1
 Your very first message back to the user MUST follow this template. The user is trained to recognize it and will know boot was skipped if it's missing or different. Skipping the template = failure.
 
 ```
-Read brief + kickoff v4.0. Running boot sequence.
+Read brief + kickoff v4.1. Running boot sequence.
 
 🔍 Tool discovery:
 • Filesystem: [loaded N tools | not available]
@@ -82,7 +82,7 @@ Status: [READY for full repo work | CLOUD-ONLY surface | BLOCKED: explain why]
 What's the focus, buddy?
 ```
 
-If you are about to type ANY response that does not start with "Read brief + kickoff v4.0. Running boot sequence." — stop. You are about to skip the boot. Restart.
+If you are about to type ANY response that does not start with "Read brief + kickoff v4.1. Running boot sequence." — stop. You are about to skip the boot. Restart.
 
 ### Why this is non-negotiable
 
@@ -251,12 +251,25 @@ MARKETING_PLAYBOOK.md  — separate marketing/launch strategy doc
 - **`grep` with `\|` alternation unreliable** on BSD grep. Use `grep -E` with `|`
 - **Python regex across the 350KB HTML is dangerous** — global replacements like `re.sub(r' +', ' ', src)` can collapse spaces project-wide. Only use regex anchored to a narrow context
 
-### Supabase CLI v2.90.0 quirks
+### Supabase CLI vs MCP — prefer MCP for read+deploy
+
+As of May 5 evening (kickoff v4.1), the Supabase MCP server in this project exposes deploy + log + read-source tools, eliminating most need for the local CLI:
+
+- `Supabase:list_edge_functions` — list deployed functions, names, versions, slugs
+- `Supabase:get_edge_function` — read deployed function source from chat
+- `Supabase:deploy_edge_function` — deploy a new version from chat (preferred over `supabase functions deploy <name>` from Mac CLI)
+- `Supabase:get_logs` — fetch logs for any service (api, postgres, edge-function, auth, storage, realtime, branch-action) within 24h window
+- `Supabase:merge_branch` — merge dev branch to production
+- `Supabase:execute_sql`, `apply_migration`, `list_migrations`, `list_extensions`, `get_advisors`, `create_branch` — already available
+
+**Use the MCP first.** Local CLI fallback only for things MCP doesn't expose (e.g., `supabase secrets set` to manage env vars).
+
+### Supabase CLI v2.90.0 quirks (when CLI is needed)
 
 - **NOT** `supabase db execute --project-ref X "SQL"` — doesn't exist
 - **YES** `supabase db query --linked "SQL"` — from linked project directory
-- **`supabase functions deploy <name>`** works without `--linked` flag (project pre-linked in repo). v2.95+ would need `--linked`
-- **`supabase functions logs`** requires CLI v2.95+. We're at v2.90.0 — use dashboard for logs
+- **`supabase functions deploy <name>`** still works without `--linked` flag (project pre-linked in repo). v2.95+ would need `--linked`. **But prefer the MCP `deploy_edge_function` tool over CLI deploy** — chat-side, no Mac dependency, version tracked.
+- **`supabase functions logs`** requires CLI v2.95+. We're at v2.90.0 — **use the MCP `get_logs` tool instead.**
 - For CSV output: `-o csv`, NOT `--csv`
 
 ### Branch awareness
