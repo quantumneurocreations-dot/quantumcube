@@ -11,6 +11,25 @@ Start fast. One minimal health check, trust the result, build. Full audits only 
 
 ---
 
+## TOOL DISCOVERY — CRITICAL FIRST STEP
+
+**The visible tool list at chat start is PARTIAL by design.** Many tools — including Filesystem, Desktop Commander, Claude in Chrome, and several cloud connectors — are deferred behind `tool_search` and must be loaded explicitly before they appear available.
+
+**Before declaring ANY tool unavailable or any surface limitation, ALWAYS run `tool_search` first.** A tool not appearing in the initial list does NOT mean it's unavailable — it usually means it's deferred and needs loading.
+
+At chat start, proactively run these tool_searches to load the typical Quantum Cube toolset:
+
+- `tool_search("filesystem files local mac")` — loads Filesystem MCP
+- `tool_search("bash shell desktop commander")` — loads Desktop Commander
+- `tool_search("chrome browser automation")` — loads Claude in Chrome
+- `tool_search("git commit push repository")` — if not loaded by the bash search
+
+If a search returns matching tools ("Loaded N tools: ..."), the surface HAS them — they're now available for use. Only declare a genuine surface limitation AFTER tool_search confirms the tools are not available on this surface.
+
+**Lesson burned in May 5 PM:** new chat reported "surface check failed, no local Mac access" without running tool_search first. The tools were actually available the whole time — just deferred. Cost the user a confused round-trip.
+
+---
+
 ## OPERATING MODEL — MAY 2026
 
 **Chat Claude (me) drives directly via MCP tools.** No copy-paste bridge to Cursor required for normal operations.
@@ -37,18 +56,20 @@ The old "Chat Claude + Cursor Claude + user-as-bridge" model is RETIRED. Referen
 
 ## SURFACE BOUNDARIES — WHICH TOOLS WHERE
 
+**Important:** Surface boundaries describe potential tool availability. Actual availability per chat depends on TOOL DISCOVERY — always run `tool_search` to confirm before assuming a tool is missing.
+
 **claude.ai web/mobile** (default surface):
-- Cloud connectors: Sentry, Supabase, Cloudflare, Context7, Dodo, Resend, Google Drive, Vercel, GitHub
-- Web search/fetch + image search
-- May have local extensions if user explicitly authorizes them as Custom Connectors (current setup as of May 5 2026 has Filesystem + Desktop Commander + Claude in Chrome wired in here too)
+- Cloud connectors (loaded via tool_search): Sentry, Supabase, Cloudflare, Context7, Dodo, Resend, Google Drive, Vercel, GitHub, ElevenLabs
+- Web search/fetch + image search (visible by default)
+- May have local extensions if user has authorized them: Filesystem, Desktop Commander, Claude in Chrome (loaded via tool_search). Current setup as of May 5 2026 has these wired in
 
 **Claude Desktop on Mac** (when user is at desk):
-- All of the above PLUS local extensions:
-- Filesystem (full Mac access), Desktop Commander (bash + processes), Claude in Chrome, Control Your Mac, Apple Notes, iMessages, Figma, MS Clarity, Cloudinary
+- All of the above PLUS additional local extensions:
+- Apple Notes, iMessages, Control Your Mac, Figma, MS Clarity, Cloudinary (loaded via tool_search)
 
-**Surface check at chat start:** scan the available tools list at the top of the session. If a tool you expect is missing, it's almost always a surface mismatch — don't retry, switch surfaces or fall back to Cursor.
+**Surface check at chat start:** scan the available tools list at the top of the session, BUT also run tool_search for any expected tool not visible. If a tool you expect comes back from tool_search as available, the surface has it.
 
-**The 4-minute timeout rule:** if Filesystem or Desktop Commander hangs for 4+ minutes with no response, you're on a surface that doesn't have local-tool access. Switch surfaces, don't keep retrying.
+**The 4-minute timeout rule:** if Filesystem or Desktop Commander hangs for 4+ minutes with no response after a successful tool_search load, you're on a surface that doesn't have local-tool access despite the tool appearing available. Switch surfaces, don't keep retrying.
 
 ---
 
@@ -57,17 +78,18 @@ The old "Chat Claude + Cursor Claude + user-as-bridge" model is RETIRED. Referen
 When user opens a new chat with brief + kickoff attached:
 
 1. **Acknowledge briefly** — "Read the brief + kickoff, ready to go." That's enough.
-2. **Run minimal health check directly** (no paste block to user). Steps:
+2. **Run TOOL DISCOVERY first** (see Tool Discovery section above). Load Filesystem, Desktop Commander, Chrome via tool_search. This is non-optional — skip it and you will misdiagnose surface availability.
+3. **THEN run minimal health check directly** (no paste block to user):
    - `git status` + `git branch --show-current` + `git log --oneline -3`
    - Grep `runCalculation` in `docs/app.html` (fragile-area canary)
    - Confirm `docs/sw.js` cache version matches Sentry release tag in `docs/app.html`
    - Optional: DNS check only if today's work touches email/domain
    - Optional: connector ping only if relying on a specific cloud service
-3. **Report 1-2 sentences** of status — "On main, clean tree, qc-v201 synced, ready" — and ask what's needed.
+4. **Report 1-2 sentences** of status — "On main, clean tree, qc-v201 synced, ready" — and ask what's needed.
 
 **No multi-screen audit at startup.** Trust the result. Burn time only when something looks suspect.
 
-If the surface lacks local tools (no Filesystem / Desktop Commander), say so and ask user to either switch to Claude Desktop or paste a recon block via Cursor.
+If tool_search confirms a surface genuinely lacks local tools (e.g. running on an unauthenticated mobile session), say so and ask user to either switch to Claude Desktop or paste a recon block via Cursor.
 
 ---
 
