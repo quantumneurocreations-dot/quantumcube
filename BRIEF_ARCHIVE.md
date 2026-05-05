@@ -1087,4 +1087,153 @@ upgrade, pre-commit hook, and smoke test.
 
 ---
 
+---
+
+## May 5, 2026 — Tuesday — SYSTEM HARDENING DAY (two chat sessions)
+
+Full-day system-hardening pass before resuming product work. Spanning two chat sessions on claude.ai web (mobile + Mac). The morning chat hit Max plan session limit before completion (95% used, 40-min reset); afternoon chat continued post-reset and unblocked previously-stuck connectors after user re-authorized them in claude.ai.
+
+### Morning chat (08:30–11:10 SAST)
+
+**Document reconciliation pass** — diff'd uploaded docs vs project knowledge folder. PROJECT_BRIEF.md differed (v33 in project knowledge vs v35 in upload). Built v36 drafts but those were never committed; afternoon chat skipped v36 and went straight to v37.
+
+**Connector probe at chat start:** Cloudflare, Resend, GitHub Integration tools were NOT surfacing via tool_search despite being listed as available. User disconnect/reconnect didn't immediately resolve it within the active chat session. Hypothesized eventually-consistent backend at Anthropic.
+
+**Sentry production sweep** — organization slug `quantum-neuro-creations`, project slug `javascript`. Two unresolved CSP issues (JAVASCRIPT-2, JAVASCRIPT-3) both fired only on qc-v199, fix shipped qc-v200/v201, 0 errors in 24h. **Resolved both** via `update_issue` tool.
+
+**Supabase audit + 3 migrations applied** — see PROJECT_BRIEF v37 "v36-v37 CONSOLIDATED UPDATES" section for migration details. Security advisor 6→1, perf 3→0.
+
+**Vercel shadow deployment found** — `prj_WKo5JwtJ02CGBVsyqbDAORQbQpDy` auto-deploying every commit as a parallel chain to `quantumcube.vercel.app` and 2 other URLs. Decision deferred (Academy use TBD).
+
+**Memory edits added (4 stable facts):**
+1. Sentry org/project slugs
+2. Supabase project_id + schema invariants
+3. Surface boundary rule (claude.ai vs Claude Desktop)
+4. Auto-run discipline (do reversible writes, ask only for destructive/financial/secret/external-comms)
+
+**Telegram pivoting** — mid-chat, user paused on a R25 charge prompt while setting up Telegram. Confirmed: R25 = Telegram **Premium** (optional), basic Telegram + bots is completely free. But pragmatic re-evaluation: at our current scale (~2 errors/month), email push via Gmail mobile is just as effective as Telegram. **Pivoted to email-only alerting** (codified later as ADR-008). Cloudflare Worker code drafted (`sentry-telegram-worker.js`) and parked for future use.
+
+### Afternoon chat (11:10–13:00 SAST) — same chat ID, post Max-plan reset
+
+Initially treated the 95% Max-plan warning as chat-context exhaustion and rushed a SESSION_HANDOFF document. Then realized the warning was Max plan session usage (resets in 40 min), not chat context. False alarm — continued in same chat after the reset.
+
+**User re-authorized claude.ai connectors** — afterward, full tool surface unlocked: Cloudflare, Resend, Filesystem, Desktop Commander, Apple Notes, iMessages, Control your Mac, Claude in Chrome, Control Chrome all surfaced. GitHub Integration STILL missing (workaround: `gh` CLI via Desktop Commander).
+
+**UptimeRobot LIVE** — user signed up via Google OAuth (`quantumneurocreations@gmail.com`). 4 monitors configured (landing, app page, sw.js keyword, Supabase REST keyword). Email alert contact only — no Telegram. Discovered UptimeRobot's free-tier-locked custom HTTP statuses, worked around it with keyword monitoring on Supabase 401 response (key insight: word "message" is reliably present in any healthy Supabase JSON 401 response).
+
+**Master Setup Checklist re-execution** — user explicitly asked to re-run the full checklist with all tools now available. Autonomous batch:
+- Repo inventory: HEAD `7ac44eb`, clean working tree, on main ✅
+- Pre-commit hook installed and active ✅
+- `scripts/smoke.sh --quick` passed: SW=qc-v201 = live, Sentry release matches ✅
+- Cursor MCP config has 4 servers (context7, sentry, supabase, dodopayments) ✅
+- Claude Desktop Chrome extension paired (deviceId `020a49a7-7cc1-4832-a6d3-44b28b149b0b`) ✅
+- **Microsoft Clarity NOT wired into docs/app.html** — confirmed gap, deferred to next chat
+- Cloudflare audit: DNS-only setup (orange cloud OFF), email routing fine, DMARC at p=none, 1 dormant Worker `holy-leaf-e567` to review
+- Resend audit: domain verified, no webhooks configured (gap), 2 API keys clean
+
+**New repo files written autonomously** (uncommitted):
+- `DECISIONS.md` (root) — 8 ADRs seeded
+- `.github/workflows/daily-health-check.yml` — daily cron, email-only alerting
+
+**This brief v37 + this archive entry** — written via Filesystem MCP edit_file tool. Brief was bumped from v35 to v37 directly (skipping v36 since the v36 drafts in /mnt/user-data/outputs were never deployed and had been superseded).
+
+### Lessons May 5
+
+- **Re-authorizing claude.ai connectors is the actual fix** when MCP tools persistently fail to surface. "Eventually-consistent" was a wrong hypothesis — the missing scope was real and required user action.
+- **`Filesystem:edit_file` is the right tool for surgical brief/archive updates.** Reading + writing whole files via `write_file` was tempting but error-prone for 50KB+ docs. `edit_file` with `dryRun: false` plus targeted oldText/newText pairs is safer and produces a git-style diff for review.
+- **Telegram Premium is NOT required for bot alerting** — the R25 prompt is upsell, not gate. Free Telegram + bots covers our entire use case. Worth filing as a non-finding so the next time we hit the prompt we don't pause.
+- **UptimeRobot's free tier locks "custom up status codes"** — but **keyword monitoring is free**. Use keyword presence/absence as a workaround to monitor endpoints that return non-2xx codes by design (like Supabase REST returning 401 without an apikey).
+- **Cloudflare "orange cloud" being OFF means we get no runtime CDN/WAF/bot-mgmt benefits**. We're using Cloudflare for DNS + Email Routing only. Worth re-evaluating if we ever want runtime protections (would require enabling proxy + verifying GitHub Pages compatibility).
+- **Don't let perceived urgency drive a rushed handover** — the morning chat almost wrote a hasty SESSION_HANDOFF document believing the chat was about to die. Always verify what the warning actually means before pivoting.
+- **Brief versions can skip numbers when intermediate drafts never ship.** v35→v37 directly is fine if v36 drafts existed only in scratch space. The version number should reflect what's actually deployed in project knowledge / repo, not the count of intermediate WIP attempts.
+
+**Outcomes May 5:**
+- 3 Supabase migrations applied. Security advisor 6→1 (last one is wontfix-by-design). Performance advisor clean.
+- UptimeRobot LIVE with 4 monitors and email alerting.
+- 2 new files in repo (DECISIONS.md, .github/workflows/daily-health-check.yml) ready to commit.
+- Brief v37 with consolidated v36-v37 update section.
+- Full tool surface unlocked in claude.ai (everything except GitHub Integration).
+- 8 setup artifacts staged in /mnt/user-data/outputs as future reference (`free-tier-analysis.md`, `uptimerobot-setup.md`, `sentry-telegram-worker.js`, etc.)
+
+---
+
 **End of archive. This document is frozen reference for future projects (especially QNC Academy) to mine for portable lessons. Do not edit.**
+
+
+---
+
+## May 5, 2026 — LATE AFTERNOON SESSION (Browser-tab audit + handover)
+
+### What this session was
+
+Final browser-tab settings audit via Claude in Chrome on Browser 1 (deviceId `020a49a7-7cc1-4832-a6d3-44b28b149b0b`). Goal: scan all 9 open tabs, verify settings, address remaining gaps from earlier sessions (Cloudflare orange cloud, DMARC, Resend webhooks, Microsoft Clarity wire-up).
+
+### Tabs scanned
+
+1. Claude.ai connectors page
+2. Resend Emails dashboard
+3. Supabase Billing (free tier confirmed)
+4. GitHub `quantumneurocreations-dot/qnc-academy` (separate project)
+5. UptimeRobot Monitors
+6. Cloudflare Billing
+7. Microsoft Clarity Getting Started (`wmb8y97pls`)
+8. Gmail (skipped — private inbox)
+9. Context7 Dashboard
+
+### Key findings
+
+**Microsoft Clarity is platform-locked to Mobile.** Existing project `wmb8y97pls` only offers install instructions for iOS/Android/Flutter/RN/Cordova/Ionic — no Website install option. Dashboard filters use Tablet/Mobile device classes. Decision: codified as ADR-011 — defer Clarity entirely until launch traffic justifies, then create new Website project. Existing Mobile project retained for future native app phase.
+
+**UptimeRobot Supabase REST monitor** confirmed already paused (was actioned in a previous session). The list view's "Down 1h 48m" status is misleading — it shows the last incident pre-pause. Detail page shows status "Paused" with "Recently paused for 0h 12m 45s" and Resume button visible. No further action needed.
+
+**Auth.users state verified clean.** Query against `auth.users` returned 8 users:
+- `quantumneurocreations@gmail.com` (Ronnie's main, paid)
+- `janek1223e@gmail.com` (Jane K, May 4 21:01 SAST — possible first organic signup)
+- `admin@qncacademy.com` (QNC admin, never confirmed since Apr 21)
+- `charlheyns1@gmail.com` (Charl Heyns)
+- `booyens.michelle@gmail.com` (Michelle Booyens)
+- `keyzer@xtremeprop24.com` (Keyzer)
+- `rkelbrickmail@gmail.com` (Ronnie Kelbrick — Ronnie's secondary)
+- `carlkelbrick@gmail.com` (Carl Kelbrick — possibly Ronnie's relative or test)
+
+April 18 batch was thorough — no further test cleanup needed.
+
+**Resend dashboard** showed all 15 recent emails delivered, zero bounces. Workspace is `qncacademy` (parent account), signed in as `admin@qncacademy.com`. 2 API keys (`quantum-cube-supabase-smtp` + `MCP Bundles - Claude`). Webhooks: still NONE configured — carry-forward gap.
+
+**Cloudflare zone settings invisible.** MCP token scope is DNS:Read + Workers:Read + Email Routing:Read only. SSL mode, security level, bot fight mode, etc. require dashboard inspection. DMARC TXT record retrieved (id `e4c164849cbe1153783624c130d44223`, content `v=DMARC1; p=none;`).
+
+**Context7 API key from earlier session is still active.** Revoke button visible in dashboard, key value still in Apple Notes (action: move to Apple Passwords + delete note still pending).
+
+### Decisions codified
+
+- **ADR-009** — Cloudflare orange cloud KEEP OFF (GH Pages cert renewal compat)
+- **ADR-010** — DMARC stays `p=none` for 30-60 days observation period
+- **ADR-011** — Microsoft Clarity deferred (project is Mobile-only, recreate as Website at scale)
+
+### Files changed this session
+
+- `PROJECT_BRIEF.md` v37 → v38 (audit summary + ADR references)
+- `DECISIONS.md` (added ADRs 009, 010, 011)
+- `BRIEF_ARCHIVE.md` (this entry)
+
+No code changes. No SW bump needed.
+
+### Carry-forward to next chat
+
+1. Microsoft Clarity: defer entirely OR user creates new Website project, then wire it up
+2. Resend webhooks: build Supabase Edge Function `/resend-webhook` with verify_jwt:false to receive bounce/complaint events
+3. Supabase Edge Function `/health` to replace paused UR Supabase REST monitor (returns 200 unauthenticated, pings DB with SELECT 1)
+4. Cloudflare orange cloud: stay OFF (no further action)
+5. DMARC strengthening: revisit in 30-60 days
+
+### Stage 6 user-eyeball items (no Claude action)
+
+- Apple Passwords inventory cross-check
+- Google 2FA on all 3 partner accounts
+- Domain registrar audits
+- Vercel shadow project (`prj_WKo5JwtJ02CGBVsyqbDAORQbQpDy`) decision: keep for Academy or delete
+- Cloudflare dormant Worker `holy-leaf-e567` (Apr 6) — review and delete if unused
+- Move Context7 API key from Apple Notes → Apple Passwords, delete note
+- GitHub branch protection ruleset for `main` (Settings → Branches: "Require linear history" + "Restrict deletions")
+- First manual run of GitHub Actions daily-health-check workflow
+

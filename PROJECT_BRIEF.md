@@ -1,6 +1,10 @@
 # QUANTUM CUBE — PROJECT BRIEF
 
-**Version: v35 | Last Updated: May 4, 2026 (Monday, late evening)**
+**Version: v38 | Last Updated: May 5, 2026 (Tuesday, late afternoon)**
+
+> **v38 update note (May 5 PM):** Browser-tab audit pass confirmed system is clean. No new code changes — decisions codified as ADR-009 (Cloudflare orange cloud KEEP OFF, GH Pages cert renewal compat), ADR-010 (DMARC p=none for 30-60 days observation), ADR-011 (Microsoft Clarity project found to be Mobile-platform-only — needs new Website project, deferred to post-launch). UR Supabase REST monitor confirmed paused (free-tier keyword monitoring still requires HTTP 2xx). Auth.users state verified clean (8 legitimate users, no test cleanup needed). See "v37-v38 CONSOLIDATED UPDATES" section.
+
+> **v37 update note (May 5 AM):** Major system-hardening pass spanning two chat sessions. Three Supabase migrations applied (security + perf advisors now clean). UptimeRobot LIVE with 4 monitors + email alerts. Cloudflare and Resend audited via MCP. Email-only alerting confirmed (Telegram deferred). New files added: `DECISIONS.md`, `.github/workflows/daily-health-check.yml`.
 
 📁 **Archived history → see BRIEF_ARCHIVE.md** — full session timeline, all "biggest wins" history blocks, complete legal text, lessons from every session, and Paddle/PayFast punch list (already shipped) live in the archive. This brief stays focused on current working context.
 
@@ -427,7 +431,7 @@ Default Sentry rule sends an email to the account owner on first occurrence of a
 - **Edge Functions deployed:** narrate ✓, delete-account ✓, export-data ✓, dodo-create-session ✓, dodo-webhook ✓
 - **Secrets configured (10):** DODO_PAYMENTS_API_KEY, DODO_PAYMENTS_WEBHOOK_KEY, ELEVENLABS_API_KEY, SUPABASE_ANON_KEY, SUPABASE_DB_URL, SUPABASE_JWKS, SUPABASE_PUBLISHABLE_KEYS, SUPABASE_SECRET_KEYS, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_URL. CLI `supabase secrets list` shows SHA-256 digests, never values.
 
-**Test/team data to delete pre-public-launch:** snapshot list in BRIEF_ARCHIVE.md (re-snapshot before deletion).
+**Test/team data cleanup:** ✅ COMPLETE as of May 5. auth.users state verified: 8 legitimate users remaining (1 paid: Ronnie's main; 5 real-looking; 2 Kelbrick-pattern accounts that may be Ronnie's dev/test — kept). No further test cleanup needed pre-launch.
 
 ---
 
@@ -729,4 +733,160 @@ Massive May 4 — **15 commits** across morning + afternoon + evening + late eve
 
 ---
 
-**End of brief v35.** Archived history → `BRIEF_ARCHIVE.md`. Marketing strategy → `MARKETING_PLAYBOOK.md`. Session protocol → `CHAT_KICKOFF.md`.
+---
+
+## v37-v38 CONSOLIDATED UPDATES (May 5, 2026)
+
+### v38 — Browser-tab audit (afternoon, May 5)
+
+Final browser-tab settings audit via Claude in Chrome. Scanned 9 open tabs across Cloudflare, Resend, Supabase, UR, Clarity, Context7, GitHub, Gmail (skipped — private), Claude.ai connectors. Findings:
+
+**System confirmed clean:**
+- UR Supabase REST monitor: ALREADY PAUSED (was actioned earlier session). List view's misleading "Down 1h 48m" is just the last incident pre-pause.
+- auth.users: 8 legitimate users, NO test cleanup needed (April 18 batch was thorough).
+- Resend: zero bounces, all delivered, workspace `qncacademy` healthy, 2 API keys (Supabase SMTP + MCP).
+- Context7: API key from earlier session still active (revoke button visible in dashboard).
+- Cloudflare/Supabase billing: both Free tier, no surprise charges.
+
+**Issues codified as ADRs (no immediate action):**
+- **ADR-009 — Cloudflare orange cloud KEEP OFF.** GitHub Pages + CF proxy has documented Let's Encrypt HTTP-01 challenge interception risk. No CDN/WAF benefit at our scale yet. Revisit at scale or under attack.
+- **ADR-010 — DMARC stays `p=none`.** 30-60 day observation period via Resend logs before considering bump to `p=quarantine`. Premature strengthening can quarantine legit forwards through CF email routing.
+- **ADR-011 — Microsoft Clarity deferred.** Existing project `wmb8y97pls` was created as Mobile-platform (iOS/Android/Flutter/RN/Cordova/Ionic install options only — no Website install). Quantum Cube is a PWA (web). Cannot use existing project. Action: create new Clarity Website project at scale OR defer entirely until launch traffic justifies. Currently leaning DEFER.
+
+**Cloudflare zone settings (SSL mode, security level, bot fight) NOT readable via current MCP token** (DNS:Read + Workers:Read + Email Routing:Read only). For audits at that level, dashboard is required.
+
+**Resend webhooks: still NONE configured.** Carry-forward to next chat. Needs an endpoint (Supabase Edge Function `/resend-webhook` with verify_jwt:false → log to a table) before we can wire it up.
+
+### v36-v37 (May 5, 2026)
+
+Major system-hardening pass across two chat sessions. Documented inline below until they get folded into the appropriate sections of the next major brief refactor.
+
+### Database security + performance — RESOLVED
+
+3 Supabase migrations applied to production (project `fqqdldvnxupzxvvbyvjm`):
+
+1. **`20260505_security_perf_hardening`** — REVOKE EXECUTE on `handle_new_user` and `narrate_rate_limit_try` from anon/authenticated. Wrapped `auth.uid()` in `(SELECT ...)` on all 3 profiles RLS policies.
+2. **`20260505_security_perf_hardening_followup`** — REVOKE EXECUTE on `handle_new_user` from PUBLIC (the prior revoke didn't touch PUBLIC grant). Added explicit USING clause to UPDATE policy.
+3. **`20260505_narrate_rate_counters_explicit_deny`** — Explicit deny-all RLS policy on `narrate_rate_counters` for self-documentation.
+
+Advisor state after migrations:
+- **Performance advisor:** 3 → 0 (completely clean)
+- **Security advisor:** 6 → 1 — only `auth_leaked_password_protection` remains, which is **Pro-only AND moot** for our setup (magic-link + Google OAuth, no passwords). Documented as wontfix-by-design.
+
+Final UPDATE policy on `public.profiles` (verbatim, fragile):
+```sql
+FOR UPDATE
+  USING ((SELECT auth.uid()) = id)
+  WITH CHECK (
+    (SELECT auth.uid()) = id
+    AND has_paid = (SELECT has_paid FROM public.profiles WHERE id = (SELECT auth.uid()))
+  );
+```
+
+### Monitoring — UptimeRobot LIVE
+
+Free tier (50 monitors / 5-min interval). Account: `quantumneurocreations@gmail.com` via Google OAuth. Email-only alert contact (no Telegram). 4 monitors:
+
+| # | Name | Type | URL | Logic |
+|---|------|------|-----|-------|
+| 1 | QC — Landing | HTTP | `https://quantumcube.app` | HTTP 2xx/3xx, HEAD method, follow redirects |
+| 2 | QC — App page | HTTP | `https://quantumcube.app/app` | HTTP 2xx/3xx |
+| 3 | QC — Service worker | Keyword | `https://quantumcube.app/sw.js` | Alert when `qc-v` is **NOT** present in body |
+| 4 | Supabase — REST | Keyword | `https://fqqdldvnxupzxvvbyvjm.supabase.co/rest/v1/` | Alert when `message` is **NOT** present in body (clever 401 workaround for free-tier-locked custom status codes) |
+
+### Alerting — email-only path locked in (ADR-008)
+
+Decision: skip Telegram/Slack/Discord alerting at current scale (~2 errors/month). Relying on:
+- Sentry default email alerts (existing)
+- UptimeRobot email contact (just configured)
+- GitHub Actions built-in failure email (auto-emails repo owner)
+
+Revisit when alert volume hits ~20/month and email triage gets noisy. Cloudflare Worker code for Sentry → Telegram drafted and parked at `/mnt/user-data/outputs/sentry-telegram-worker.js` for future use (filed in chat artifacts, not committed to repo).
+
+### Cloudflare audit findings (MCP, May 5)
+
+Account: `52dcfe9cdb207bed6ccc2321946b678c` (`Quantumneurocreations@gmail.com`'s Account). Two zones, both Free Website plan:
+- `qncacademy.com` (zone `d8d3fbb1bfd538f3012cfa6d14a76042`)
+- `quantumcube.app` (zone `837ceb26db877564cf5355e37b1cc316`)
+
+DNS for `quantumcube.app` (11 records):
+- Apex + www CNAME → `quantumneurocreations-dot.github.io` — **NOT proxied** (orange cloud OFF), so Cloudflare is DNS-only here, not in the runtime path. No CDN/WAF/bot-mgmt benefits from CF for the website itself.
+- Cloudflare Email Routing MX (route1/2/3.mx.cloudflare.net) for inbound
+- Resend MX (`feedback-smtp.eu-west-1.amazonses.com`) on `send.quantumcube.app` for outbound
+- DKIM keys for both Cloudflare and Resend in TXT records
+- SPF on root and on `send` subdomain
+- DMARC at `p=none` (observation only — consider strengthening to `p=quarantine` post-launch once nothing legit is failing)
+
+Email Routing rules (both enabled):
+- `support@quantumcube.app` → forward to `admin@qncacademy.com`
+- catch-all → forward to `admin@qncacademy.com`
+
+Destinations: `admin@qncacademy.com` (verified)
+
+Workers in account: 1 — `holy-leaf-e567` (modified Apr 6, predates QC launch). **Action: review and likely delete** if unused.
+
+MCP token scope limited to DNS:Read + Workers:Read + Email Routing:Read. Zone Settings (security level, bot fight mode, SSL/TLS config) are NOT readable via current token — use dashboard for those audits.
+
+### Resend audit findings (MCP, May 5)
+
+Domain `quantumcube.app`:
+- Status: `verified`
+- Region: `eu-west-1` (EU residency, aligns with Supabase EU + Sentry EU)
+- Sending: enabled. Receiving: disabled (Cloudflare Email Routing handles inbound)
+- DKIM, SPF MX, SPF TXT all `verified`
+- Open tracking: OFF. Click tracking: OFF (good — magic-links shouldn't be wrapped)
+
+API keys (2):
+- `quantum-cube-supabase-smtp` (created Apr 18, last used May 4) — used by Supabase for magic-link delivery
+- `MCP Bundles - Claude` (created May 5, last used May 5) — for chat-based admin operations
+
+**Webhooks: NONE configured.** This is a real gap — we have no signal on bounces, complaints, or delivery failures. Recommended addition (post-launch): wire a webhook that catches `email.bounced` and `email.complained` events, posts to Sentry as a warning. Defer to next chat unless we see complaints.
+
+### New repo files (uncommitted, ready for review)
+
+Written this session via Filesystem MCP, NOT yet committed:
+- `DECISIONS.md` (root) — 8 ADRs seeded (Dodo, GH Pages, single-HTML, has_paid guard, magic-link auth, Sentry tier, three-doc system, email-only alerting)
+- `.github/workflows/daily-health-check.yml` — daily cron at 06:00 UTC, email-only alerting via GitHub's built-in failure notification
+
+User action required:
+1. Review file contents
+2. `git add . && git commit -m "chore: brief v37 + DECISIONS + GH Actions health check"`
+3. `git push`
+4. First manual run of the GitHub Action via Actions tab to confirm green
+
+### Site instrumentation gap
+
+**Microsoft Clarity is NOT wired into `docs/app.html`.** May 5 PM audit revealed why: existing Clarity project `wmb8y97pls` was created as Mobile-platform-only (iOS/Android/Flutter/RN/Cordova/Ionic install paths only). Quantum Cube is a PWA, needs Website-type Clarity project. **Codified as ADR-011 — DEFERRED.** Re-evaluate when launch traffic justifies (currently ~9 users; Clarity is overkill at this scale).
+
+### Pending action items (carry forward)
+
+**User-side (you click):**
+1. **Branch protection** — GitHub repo Settings → Branches → add ruleset for `main`: "Require linear history" + "Restrict deletions". 2 minutes.
+2. **Old test user delete approval** — auth user `a72a753e-90a3-48d7-a75b-422b8b9512bf` (April 18, never confirmed, 17 days stale). Pending yes/no.
+3. **Anthropic API key** — defer until we ship Claude-in-loop scheduled tasks (we currently don't).
+4. **Apple Passwords inventory + Google 2FA + domain registrar audits** — eyeball checks for Stage 6.
+5. **Vercel shadow deployment decision** — `prj_WKo5JwtJ02CGBVsyqbDAORQbQpDy` still auto-deploying every commit. Decide whether to keep as Academy/backup or delete.
+6. **Context7 free API key** — sign up at context7.com (we hit monthly quota during system-hardening; free key gives higher limits).
+
+**Next-chat to-do:**
+- Wire Microsoft Clarity into `docs/app.html`
+- Configure Resend webhook for bounce/complaint signals
+- Cookie consent solution selection (deferred to pre-EU push)
+- Optionally re-check Cloudflare zone settings via dashboard or upgraded token scopes
+- Then: actual product work
+
+### Tooling status (all loaded as of May 5 afternoon)
+
+Finally surfaced after user re-authorization in claude.ai:
+- Cloudflare (execute + search) — full API access via JS code
+- Resend (32 tools — full CRUD)
+- Filesystem — full access to user's Mac (`/`)
+- Desktop Commander — full bash, processes
+- Apple Notes, iMessages, Control your Mac, Claude in Chrome, Control Chrome
+- ElevenLabs Agents, pdf-viewer, Google Drive, Sentry, Supabase, Vercel, Context7, Dodo Payments — already worked
+
+Still missing in claude.ai surface: GitHub Integration (use `gh` CLI via Desktop Commander as workaround when needed).
+
+---
+
+**End of brief v37.** Archived history → `BRIEF_ARCHIVE.md`. Marketing strategy → `MARKETING_PLAYBOOK.md`. Session protocol → `CHAT_KICKOFF.md`. Decision log → `DECISIONS.md`.

@@ -1,0 +1,61 @@
+name: Daily health check
+
+# Runs every morning at 06:00 UTC = 08:00 SAST.
+# Email-only alerting: GitHub auto-emails the repo owner whenever a workflow
+# run fails. No setup required beyond committing this file.
+#
+# To get email on SUCCESS too: GitHub.com → Settings → Notifications → Actions
+# → tick "Send notifications for: All workflow runs". Default is failures only,
+# which is what we want for noise control.
+#
+# Setup:
+#   1. Save this file to .github/workflows/daily-health-check.yml on main
+#   2. Commit + push
+#   3. First run: GitHub repo → Actions tab → "Daily health check" → "Run workflow"
+#      → confirm green
+#   4. From then on: schedule fires it daily; you only hear about it if it breaks
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # 06:00 UTC = 08:00 SAST
+  workflow_dispatch: {} # manual trigger
+
+permissions:
+  contents: read
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check landing page
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://quantumcube.app/)
+          echo "Landing status: $STATUS"
+          [ "$STATUS" = "200" ] || { echo "::error::Landing page returned $STATUS"; exit 1; }
+
+      - name: Check app page
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://quantumcube.app/app)
+          echo "App status: $STATUS"
+          [ "$STATUS" = "200" ] || { echo "::error::App page returned $STATUS"; exit 1; }
+
+      - name: Check SW + Sentry release sync
+        run: |
+          SW_VER=$(curl -s https://quantumcube.app/sw.js | grep -oE "qc-v[0-9]+" | head -1)
+          APP_REL=$(curl -s https://quantumcube.app/app | grep -oE "quantum-cube@qc-v[0-9]+" | head -1 | sed 's/quantum-cube@//')
+          echo "SW version: $SW_VER"
+          echo "Sentry release: $APP_REL"
+          [ -n "$SW_VER" ] || { echo "::error::Could not find SW version on live site"; exit 1; }
+          [ "$SW_VER" = "$APP_REL" ] || { echo "::error::SW=$SW_VER but Sentry release=$APP_REL — DRIFT"; exit 1; }
+
+      - name: Check Supabase reachable
+        run: |
+          # 401 without apikey is the expected "I'm here, you didn't auth" response
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://fqqdldvnxupzxvvbyvjm.supabase.co/rest/v1/)
+          echo "Supabase status: $STATUS"
+          [ "$STATUS" = "401" ] || { echo "::error::Supabase REST returned $STATUS (expected 401)"; exit 1; }
+
+      - name: Summary
+        if: success()
+        run: echo "✓ All checks passed. GitHub will only email on FAILURE."
