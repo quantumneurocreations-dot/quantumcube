@@ -1,17 +1,104 @@
 # QUANTUM CUBE — CHAT KICKOFF PROTOCOL
+
+```
+KICKOFF-VERSION: 4.0.0
+LAST-UPDATED:   2026-05-05 PM
+INTEGRITY:      If you cannot see this version stamp in the kickoff doc, you
+                are reading a stale cached copy. Stop and ask the user to
+                re-upload CHAT_KICKOFF.md to project knowledge.
+```
+
 **For starting every new Chat Claude session. Attach this AND PROJECT_BRIEF.md.**
 
-> **Updated May 5, 2026 PM — full rewrite for direct-MCP operating model.** Cursor demoted from primary driver to optional fallback. New sections: surface boundaries, auto-run discipline, handoff protocol. Old paste-to-Cursor patterns preserved in Cursor Fallback Mode section.
+---
+
+# 🚨 MANDATORY BOOT SEQUENCE — EXECUTE BEFORE ANYTHING ELSE
+
+**This is not a suggestion, not best practice, not a section to summarize. This is the literal first set of actions in every new chat. No exceptions.**
+
+Do NOT respond conversationally to the user before completing this sequence. Do NOT skim the rest of this doc and decide "I have what I need." Do NOT answer based on the visible tool list. Execute these calls IN ORDER and report the results in the exact First Response Template below.
+
+### BOOT STEP 1 — Tool Discovery
+
+Run ALL of these tool_search calls (do not skip any, even if you think tools are visible):
+
+```
+tool_search("filesystem files local mac")
+tool_search("bash shell desktop commander")
+tool_search("chrome browser automation")
+tool_search("supabase database")
+tool_search("sentry errors")
+```
+
+Each call will return either "Loaded N tools: ..." (tools available, now usable) or empty/no-match (genuinely unavailable on this surface).
+
+### BOOT STEP 2 — Smoke-Test Loaded Tools
+
+For each successfully loaded local tool, run a tiny test call to confirm it actually works (not just listed):
+
+- If Desktop Commander loaded: `bash_tool` or equivalent with `echo boot-ok && pwd`
+- If Filesystem loaded: list `/Users/qnc/Projects/quantumcube` (just to confirm read works)
+- If Claude in Chrome loaded: `list_connected_browsers` (no need to actually connect)
+
+A tool that loads via tool_search but fails on use = surface limitation. Treat as unavailable.
+
+### BOOT STEP 3 — Health Check
+
+Only AFTER tools confirmed working via boot step 2, run:
+
+```
+cd /Users/qnc/Projects/quantumcube
+git branch --show-current
+git status --short
+git log --oneline -3
+grep -n "function runCalculation" docs/app.html | head -1
+```
+
+### 📋 FIRST RESPONSE TEMPLATE — USE THIS EXACT FORMAT
+
+Your very first message back to the user MUST follow this template. The user is trained to recognize it and will know boot was skipped if it's missing or different. Skipping the template = failure.
+
+```
+Read brief + kickoff v4.0. Running boot sequence.
+
+🔍 Tool discovery:
+• Filesystem: [loaded N tools | not available]
+• Desktop Commander: [loaded N tools | not available]
+• Claude in Chrome: [loaded N tools | not available]
+• Supabase: [loaded N tools | not available]
+• Sentry: [loaded N tools | not available]
+
+✅ Smoke tests:
+• [tool]: [result of test call]
+
+🚀 Health check:
+• Branch: [main / other]
+• Working tree: [clean / dirty: N files]
+• Last commit: [hash + message]
+• SW version: [qc-vNNN]
+• runCalculation anchor: [present / MISSING]
+
+Status: [READY for full repo work | CLOUD-ONLY surface | BLOCKED: explain why]
+What's the focus, buddy?
+```
+
+If you are about to type ANY response that does not start with "Read brief + kickoff v4.0. Running boot sequence." — stop. You are about to skip the boot. Restart.
+
+### Why this is non-negotiable
+
+May 5 PM, two consecutive new chats misdiagnosed surface availability without running tool_search, costing the user multiple confused round-trips. The visible tool list at chat start is partial — your prior to declare limitations based on what you can see is wrong on this project. Always discover before declaring.
 
 ---
 
 ## THE 30-SECOND RULE
 
-Start fast. One minimal health check, trust the result, build. Full audits only when something actually breaks. Don't burn the user's mobile screen on multi-screen audit reports unless asked.
+Start fast. Boot sequence (above) takes ~10 seconds. After that, trust the result and build. Full audits only when something actually breaks. Don't burn the user's mobile screen on multi-screen audit reports unless asked.
 
 ---
 
-## TOOL DISCOVERY — CRITICAL FIRST STEP
+## TOOL DISCOVERY — REINFORCEMENT
+
+The Boot Sequence above is the canonical implementation. This section exists to back it up with rationale.
 
 **The visible tool list at chat start is PARTIAL by design.** Many tools — including Filesystem, Desktop Commander, Claude in Chrome, and several cloud connectors — are deferred behind `tool_search` and must be loaded explicitly before they appear available.
 
@@ -75,21 +162,9 @@ The old "Chat Claude + Cursor Claude + user-as-bridge" model is RETIRED. Referen
 
 ## FIRST MESSAGE PROTOCOL
 
-When user opens a new chat with brief + kickoff attached:
+**See MANDATORY BOOT SEQUENCE at the top of this doc.** That is the canonical first-message protocol. This section exists for reference — do not implement separately.
 
-1. **Acknowledge briefly** — "Read the brief + kickoff, ready to go." That's enough.
-2. **Run TOOL DISCOVERY first** (see Tool Discovery section above). Load Filesystem, Desktop Commander, Chrome via tool_search. This is non-optional — skip it and you will misdiagnose surface availability.
-3. **THEN run minimal health check directly** (no paste block to user):
-   - `git status` + `git branch --show-current` + `git log --oneline -3`
-   - Grep `runCalculation` in `docs/app.html` (fragile-area canary)
-   - Confirm `docs/sw.js` cache version matches Sentry release tag in `docs/app.html`
-   - Optional: DNS check only if today's work touches email/domain
-   - Optional: connector ping only if relying on a specific cloud service
-4. **Report 1-2 sentences** of status — "On main, clean tree, qc-v201 synced, ready" — and ask what's needed.
-
-**No multi-screen audit at startup.** Trust the result. Burn time only when something looks suspect.
-
-If tool_search confirms a surface genuinely lacks local tools (e.g. running on an unauthenticated mobile session), say so and ask user to either switch to Claude Desktop or paste a recon block via Cursor.
+Summary: every new chat MUST run boot sequence (tool_search → smoke test → health check) and respond using the First Response Template. Anything else is a protocol failure and the user will catch it.
 
 ---
 
@@ -284,9 +359,11 @@ When invoking Cursor, the OLD paste-block patterns apply:
 
 ---
 
-## END OF SESSION PROTOCOL
+## END OF SESSION PROTOCOL — STRICT HANDOVER CHECKLIST
 
 Before chat gets too long (and Claude starts compressing context):
+
+### Pre-handover (chat Claude executes)
 
 1. **Summarize what shipped** — commits + descriptions
 2. **Note any uncommitted work** AND any side branches created during the session
@@ -294,27 +371,82 @@ Before chat gets too long (and Claude starts compressing context):
 4. **Update archive** with session entry — IN THE SAME COMMIT as brief changes
 5. **Update DECISIONS.md** if any ADR-worthy calls happened
 6. **Update KICKOFF (this doc) if workflow changed** — same commit
+   - **If kickoff changed: bump KICKOFF-VERSION at the top of the doc** (e.g. 4.0.0 → 4.1.0). Patch bump for typos/clarifications, minor bump for new sections, major bump for breaking workflow changes.
 7. **Commit + push to origin/main**
-8. **Tell user what to upload to project knowledge folder** (BRIEF, ARCHIVE, DECISIONS, KICKOFF if changed)
-9. **Suggest stopping point** — don't push past their energy
+8. **Verify push succeeded** — `git log origin/main..HEAD` should be empty
+
+### Handover instructions (give to user verbatim)
+
+After pre-handover steps, give user this exact handover block:
+
+```
+✅ HANDOVER READY — commit [hash], pushed to origin/main
+
+Files to upload to project knowledge folder (replace existing):
+• PROJECT_BRIEF.md       [changed/unchanged]
+• BRIEF_ARCHIVE.md       [changed/unchanged]
+• DECISIONS.md           [changed/unchanged]
+• CHAT_KICKOFF.md        [changed/unchanged — v4.0.0 → v4.X.Y]
+
+Verification: when you start the new chat, expect the first response to:
+  1. Quote the kickoff version stamp (currently 4.X.Y)
+  2. Use the First Response Template (🔍 Tool discovery / ✅ Smoke tests / 🚀 Health check)
+  3. Report the latest commit hash matching [hash above]
+
+If any of those three checks fail in the new chat, the handover did not
+close cleanly — most likely cause is project knowledge re-indexing lag.
+Wait 30 seconds, refresh the new chat, or paste this single command
+as your first message: "Run the mandatory boot sequence per kickoff v4 and report using First Response Template before anything else."
+```
+
+9. **Suggest stopping point** — don't push past the user's energy.
 
 ---
 
-## HANDOFF PROTOCOL — CHAT-TO-CHAT
+## HANDOFF PROTOCOL — CHAT-TO-CHAT (HARDENED)
 
-The transition between chats is now formalized:
+The transition between chats is now formalized AND verified:
 
-1. **End of chat A:** I commit + push doc updates to `origin/main`
-2. **User uploads** updated MD files to the Quantum Cube project knowledge folder in claude.ai (replaces existing). Files to upload when changed:
-   - `PROJECT_BRIEF.md`
-   - `BRIEF_ARCHIVE.md`
-   - `DECISIONS.md`
-   - `CHAT_KICKOFF.md` (this file, only when itself changed)
-3. **User starts new chat** in the Quantum Cube project
-4. **New Chat Claude reads project knowledge automatically** at startup
-5. **First message can be casual** — "ready, run health check" — Chat Claude follows First Message Protocol above
+### Outgoing chat (closing chat)
 
-**The project-knowledge upload is the only manual step.** No MCP yet exists for Chat Claude to write to its own project knowledge folder. Until that ships, the user crosses that air-gap.
+1. Run END OF SESSION PROTOCOL above
+2. Verify everything pushed to origin/main
+3. Output the HANDOVER READY block (verbatim format from end-of-session)
+4. Wait for user confirmation that uploads completed before closing
+
+### User (the bridge)
+
+1. Open project knowledge folder in claude.ai project
+2. Replace each changed file (delete old, upload new) — BRIEF, ARCHIVE, DECISIONS, KICKOFF
+3. Wait ≈30 seconds for re-indexing (project knowledge is not instant)
+4. Start new chat in the project
+
+### Incoming chat (new chat)
+
+1. **MANDATORY:** execute the BOOT SEQUENCE at the top of this doc
+2. **MANDATORY:** respond using the First Response Template
+3. The template MUST include the kickoff version stamp (proves the latest doc is loaded)
+4. The template MUST report the latest commit hash (proves repo state is current)
+
+### User's verification (recognize a clean handover)
+
+The new chat's first response is a clean handover when:
+- ✅ First line is "Read brief + kickoff vX.Y.Z. Running boot sequence." with the EXPECTED version number
+- ✅ Includes the 🔍 Tool discovery / ✅ Smoke tests / 🚀 Health check structure
+- ✅ Reports the commit hash matching the one from outgoing chat's HANDOVER READY block
+- ✅ Tools loaded match the surface (Claude Desktop → should have local tools loaded)
+
+If ANY of those fail — reject the response. Paste this:
+
+```
+Reject — you skipped the boot sequence per kickoff v4. Restart your
+response using the First Response Template. Run all 5 tool_search
+calls and report each result before saying anything else.
+```
+
+If rejection still doesn't fix it: the kickoff didn't load. Check project knowledge has the latest version (look for KICKOFF-VERSION 4.X.Y stamp at the top), or wait longer for re-indexing.
+
+**The project-knowledge upload is the only manual step in the air-gap.** No MCP yet exists for Chat Claude to write directly to its own project knowledge folder. Until that ships, the user crosses that air-gap with the upload + version verification.
 
 ---
 
