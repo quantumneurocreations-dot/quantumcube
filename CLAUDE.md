@@ -21,7 +21,7 @@ This file is auto-loaded by Claude Code, Cursor, and other Claude surfaces openi
 
 ## Stack one-liner
 
-Static HTML on Cloudflare Pages, Supabase (Postgres + Edge Functions, EU project `fqqdldvnxupzxvvbyvjm`), Sentry (org `quantum-neuro-creations`, project `javascript`, EU), Dodo Payments, ElevenLabs narration, Resend transactional email, PostHog product analytics (EU). No build step. No framework. Single deployable artifact: `docs/`.
+Static HTML on GitHub Pages (built from `main:/docs`, custom domain via Cloudflare DNS only — not proxied), Supabase (Postgres + Edge Functions, EU project `fqqdldvnxupzxvvbyvjm`), Sentry (org `quantum-neuro-creations`, project `javascript`, EU), Dodo Payments, ElevenLabs narration, Resend transactional email, PostHog product analytics (EU). No build step. No framework. Single deployable artifact: `docs/`.
 
 ## First-time-here checklist
 

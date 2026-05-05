@@ -49,7 +49,7 @@ Conventional commits: `feat`, `fix`, `chore`, `docs`, `refactor`, `style`, `perf
 
 ### 5. Verify deploy
 
-Cloudflare Pages picks up commits to `main` automatically. Wait ~60s, then:
+GitHub Pages picks up commits to `main`'s `/docs` folder automatically (typically ~60-180s for the build workflow to complete). Then:
 
 ```bash
 scripts/smoke.sh

@@ -15,9 +15,11 @@
 # If Pages hasn't rebuilt yet (~60s after push), the SW version check will
 # show a mismatch — wait and re-run.
 #
-# NOTE: Run this from your Mac (residential IP). Cloudflare blocks
-# datacenter curl with HTTP 403; if running from a sandboxed agent, expect
-# 403 across the board — that's not a real deploy issue.
+# NOTE: Generally run this from your Mac (residential IP). Some sandboxed
+# agent environments may be blocked by edge protections; if running from
+# such an environment and seeing 403s across the board, that's not a real
+# deploy issue — the daily-health-check workflow runs from GitHub Actions
+# IPs and currently succeeds, so 403s indicate environment-specific filtering.
 set -uo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"

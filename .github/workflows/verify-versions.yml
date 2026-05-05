@@ -2,7 +2,7 @@ name: Verify versions in sync
 
 # Pre-deploy check that runs on every push touching docs/app.html or docs/sw.js.
 # Confirms the SW cache version and the Sentry release tag in app.html are equal
-# BEFORE Cloudflare Pages picks up the deploy. Catches drift early.
+# BEFORE GitHub Pages picks up the deploy. Catches drift early.
 #
 # Complements .github/workflows/daily-health-check.yml which catches drift AFTER
 # deploy by hitting the live URLs.
