@@ -1,0 +1,60 @@
+name: Verify versions in sync
+
+# Pre-deploy check that runs on every push touching docs/app.html or docs/sw.js.
+# Confirms the SW cache version and the Sentry release tag in app.html are equal
+# BEFORE Cloudflare Pages picks up the deploy. Catches drift early.
+#
+# Complements .github/workflows/daily-health-check.yml which catches drift AFTER
+# deploy by hitting the live URLs.
+#
+# Why this matters: if SW cache version != Sentry release tag, users see stale
+# HTML (SW won't activate) and Sentry tags errors with the wrong release.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/app.html'
+      - 'docs/sw.js'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/app.html'
+      - 'docs/sw.js'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify SW version and Sentry release tag match
+        run: |
+          SW_VER=$(grep -oE "qc-v[0-9]+" docs/sw.js | head -1)
+          APP_REL=$(grep -oE 'release: "quantum-cube@qc-v[0-9]+"' docs/app.html | head -1 | grep -oE "qc-v[0-9]+")
+
+          echo "SW cache version (docs/sw.js):        $SW_VER"
+          echo "Sentry release tag (docs/app.html):   $APP_REL"
+
+          if [ -z "$SW_VER" ]; then
+            echo "::error file=docs/sw.js::SW cache version not found (expected qc-vNNN)"
+            exit 1
+          fi
+
+          if [ -z "$APP_REL" ]; then
+            echo "::error file=docs/app.html::Sentry release tag not found (expected release: \"quantum-cube@qc-vNNN\")"
+            exit 1
+          fi
+
+          if [ "$SW_VER" != "$APP_REL" ]; then
+            echo "::error::Version drift detected: SW=$SW_VER but Sentry release=$APP_REL"
+            echo "::error::Fix: update both docs/sw.js and docs/app.html to the same qc-vNNN value, then re-push"
+            exit 1
+          fi
+
+          echo "✓ Versions in sync at $SW_VER"
