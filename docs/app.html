@@ -534,7 +534,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v205",
+      release: "quantum-cube@qc-v206",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -656,12 +656,12 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
       <span class="cube-face-lock" id="lock6">&#128477;&#65039;</span>
     </div>
   </div>
-  <button id="settingsBtn" onclick="showFace(1)" style="position:absolute;bottom:6px;right:12px;background:transparent;border:none;color:#ffffff;font-size:16px;cursor:pointer;padding:6px;line-height:1" title="Back to Introduction">&#8634;</button>
+  <button type="button" id="settingsBtn" onclick="showFace(1)" style="position:absolute;bottom:6px;right:12px;background:transparent;border:none;color:#ffffff;font-size:16px;cursor:pointer;padding:6px;line-height:1" title="Back to Introduction" aria-label="Back to Introduction">&#8634;</button>
 </div>
 <div id="faceLabelCard" class="face-label-card" style="display:none"><span class="face-label-text">Introduction</span></div>
 <button id="musicBtn" onclick="window.QC_AUDIO && window.QC_AUDIO.toggleMusic()" title="Toggle music" aria-pressed="false">🎵<span class="audio-label">Music</span></button>
 <div id="faceContainer">
-<div class="face active" id="face0">
+<div class="face active" id="face0" tabindex="-1" aria-label="Sign Up — Enter Your Details">
 
 <p class="form-title">Enter Your Details</p>
 <button type="button" id="googleSignInBtn" onclick="haptic('light');handleGoogleSignIn()" style="margin-top:8px;margin-left:24px;margin-right:24px;width:calc(100% - 48px);height:40px;background:#FFFFFF;border:1px solid #747775;border-radius:4px;color:#1F1F1F;font-family:'Roboto',sans-serif;font-weight:500;font-size:14px;line-height:20px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 12px;cursor:pointer;letter-spacing:0.25px"><svg width="20" height="20" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg><span>Continue with Google</span></button>
@@ -675,32 +675,32 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 <div class="form-group" style="text-align:center"><label for="dobMonth" style="text-align:center;display:block">Month</label><div class="sel-wrap"><select id="dobMonth" style="text-align:center"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select></div></div>
 <div class="form-group" style="text-align:center"><label for="dobYear" style="text-align:center;display:block">Year</label><input type="number" id="dobYear" placeholder="" min="1900" inputmode="numeric" required style="text-align:center" value="" oninput="var m=new Date().getFullYear()-1;if(parseInt(this.value)>m)this.value=m;if(parseInt(this.value)<1900&&this.value.length>=4)this.value=1900;"></div>
 </div>
-<p class="err-msg" id="errMsg">Please complete all fields</p>
+<p class="err-msg" id="errMsg" role="alert" aria-live="assertive">Please complete all fields</p>
 </div>
 <label class="marketing-consent">
   <input type="checkbox" id="marketingConsent" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
   <span class="consent-text"><span class="consent-main">Add Me To The Quantum</span><span class="consent-sub">News And Insights From The Cube</span></span>
 </label>
-<button class="calc-btn" id="revealBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleRevealClick()">Reveal My Cube</button>
+<button type="button" class="calc-btn" id="revealBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleRevealClick()">Reveal My Cube</button>
 
 <div id="legalFooter">
-<button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-<button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+<button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+<button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 <button type="button" class="legal-link" id="settingsLink" style="display:none" onclick="openFace(7)">Settings</button>
 </div>
 </div>
-<div class="face" id="faceCheckEmail">
+<div class="face" id="faceCheckEmail" tabindex="-1" aria-label="Check Your Email">
 <div class="glass-card" style="margin-top:8px">
   <p class="form-title" style="margin:0 0 14px 0">Check Your Email</p>
   <p class="form-title" style="margin:0 0 14px 0">A Sign-In Link Was Sent To Your Email</p>
   <p class="form-title" style="margin:0">Click On The Link To Verify Your Email</p>
-  <p class="err-msg" id="resendMsg" style="display:none">Link resent</p>
+  <p class="err-msg" id="resendMsg" role="status" aria-live="polite" style="display:none">Link resent</p>
 </div>
-<button class="calc-btn" id="resendBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleResendMagicLink()">Resend Email</button>
-<button class="reset-btn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleBackToSignUp()">Back to<br>Sign Up</button>
+<button type="button" class="calc-btn" id="resendBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleResendMagicLink()">Resend Email</button>
+<button type="button" class="reset-btn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleBackToSignUp()" aria-label="Back to Sign Up">Back to<br>Sign Up</button>
 </div>
-<div class="face" id="face1">
+<div class="face" id="face1" tabindex="-1" aria-label="Introduction">
 
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Introduction &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div class="video-face">
@@ -716,15 +716,15 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
   </div>
 </div>
 <div style="text-align:center;padding:40px 22% 20px 22%;">
-  <button class="reset-btn" onclick="resetAll()">Back to Sign Up</button>
+  <button type="button" class="reset-btn" onclick="resetAll()">Back to Sign Up</button>
 </div>
 <div class="legal-footer">
 
-<button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-<button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+<button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+<button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 </div>
 </div>
-<div class="face" id="face2">
+<div class="face" id="face2" tabindex="-1" aria-label="Results Explained">
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Numerology Explained &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div class="video-face">
   <div class="video-container">
@@ -766,11 +766,11 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 </div>
 <div class="legal-footer">
 
-<button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-<button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+<button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+<button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 </div>
 </div>
-<div class="face" id="face3">
+<div class="face" id="face3" tabindex="-1" aria-label="Numerology Results">
 <div id="face3-lock" class="lock-screen">
 <div class="lock-new-title">Complete Quantum Cube Unlock</div>
 <div class="lock-new-list">
@@ -783,7 +783,7 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 <div class="lock-new-divider"></div>
 <div class="lock-new-fee">One-Time Fee</div>
 <div class="lock-new-price">$ 17.00</div>
-<button class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()">Unlock</button>
+<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Unlock</button>
 <label class="marketing-consent" style="margin-top:14px">
   <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
@@ -791,10 +791,10 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 </label>
 </div>
 <div class="legal-footer lock-footer">
-<button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-<button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+<button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+<button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 </div>
-<div id="face3-content" style="display:none">
+<div id="face3-content" style="display:none" aria-hidden="true" inert>
 <p class="result-name" id="rName"></p>
 <p class="result-dob" id="rDob"></p>
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Numerology Profile &nbsp; &#10022;</span><div class="sec-line"></div></div>
@@ -806,12 +806,12 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 <div class="card-stack" id="numCards"></div>
 <div class="legal-footer">
 
-<button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-<button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+<button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+<button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 </div>
 </div>
 </div>
-<div class="face" id="face4">
+<div class="face" id="face4" tabindex="-1" aria-label="Astrology and Horoscope">
 <div id="face4-lock" class="lock-screen">
 <div class="lock-new-title">Complete Quantum Cube Unlock</div>
 <div class="lock-new-list">
@@ -824,7 +824,7 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 <div class="lock-new-divider"></div>
 <div class="lock-new-fee">One-Time Fee</div>
 <div class="lock-new-price">$ 17.00</div>
-<button class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()">Unlock</button>
+<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Unlock</button>
 <label class="marketing-consent" style="margin-top:14px">
   <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
@@ -832,10 +832,10 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 </label>
 </div>
 <div class="legal-footer lock-footer">
-<button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-<button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+<button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+<button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 </div>
-<div id="face4-content" style="display:none">
+<div id="face4-content" style="display:none" aria-hidden="true" inert>
 <p class="result-name" id="rName4"></p>
 <p class="result-dob" id="rDob4"></p>
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Astrology Profile &nbsp; &#10022;</span><div class="sec-line"></div></div>
@@ -845,12 +845,12 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 <div class="card-stack" id="astroCards"></div>
 <div class="legal-footer">
 
-<button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-<button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+<button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+<button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 </div>
 </div>
 </div>
-<div class="face" id="face5">
+<div class="face" id="face5" tabindex="-1" aria-label="Combined Results">
 <div id="face5-lock" class="lock-screen">
 <div class="lock-new-title">Complete Quantum Cube Unlock</div>
 <div class="lock-new-list">
@@ -863,7 +863,7 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 <div class="lock-new-divider"></div>
 <div class="lock-new-fee">One-Time Fee</div>
 <div class="lock-new-price">$ 17.00</div>
-<button class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()">Unlock</button>
+<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Unlock</button>
 <label class="marketing-consent" style="margin-top:14px">
   <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
@@ -871,10 +871,10 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 </label>
 </div>
 <div class="legal-footer lock-footer">
-<button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-<button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+<button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+<button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 </div>
-<div id="face5-content" style="display:none">
+<div id="face5-content" style="display:none" aria-hidden="true" inert>
 <p class="result-name" id="rName5"></p>
 <p class="result-dob" id="rDob5"></p>
 <button class="voice-btn" title="Toggle voice narrator" aria-pressed="false">👄<span class="audio-label">Voice</span></button>
@@ -882,12 +882,12 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 <div class="combo-full" id="comboContent"></div>
 <div class="legal-footer">
 
-<button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-<button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+<button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+<button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 </div>
 </div>
 </div>
-<div class="face" id="face6">
+<div class="face" id="face6" tabindex="-1" aria-label="Complete Profile">
 <div id="face6-lock" class="lock-screen">
 <div class="lock-new-title">Complete Quantum Cube Unlock</div>
 <div class="lock-new-list">
@@ -900,7 +900,7 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 <div class="lock-new-divider"></div>
 <div class="lock-new-fee">One-Time Fee</div>
 <div class="lock-new-price">$ 17.00</div>
-<button class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()">Unlock</button>
+<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Unlock</button>
 <label class="marketing-consent" style="margin-top:14px">
   <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
@@ -908,10 +908,10 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 </label>
 </div>
 <div class="legal-footer lock-footer">
-<button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-<button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+<button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+<button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 </div>
-<div id="face6-content" style="display:none">
+<div id="face6-content" style="display:none" aria-hidden="true" inert>
 <div class="outro-wrap">
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Your Journey Complete &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div class="video-face" style="margin-bottom:32px">
@@ -926,18 +926,18 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
     </div>
   </div>
 </div>
-<button class="reset-btn" onclick="resetAll()">Start a New Profile</button>
+<button type="button" class="reset-btn" onclick="resetAll()">Start a New Profile</button>
 <div class="legal-footer">
 
-<button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-<button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+<button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+<button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<div class="face" id="face7">
+<div class="face" id="face7" tabindex="-1" aria-label="Settings">
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Settings &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div style="display:flex;flex-direction:column;align-items:center;padding:24px 32px 32px;">
 <button type="button" class="reset-btn" onclick="signOut()">Sign Out</button>
@@ -1716,7 +1716,15 @@ function showFace(n){
   const targetId = (typeof n === 'string') ? ('face' + n) : ('face' + n);
   document.querySelectorAll('.face').forEach(f=>f.classList.remove('active'));
   const target = document.getElementById(targetId);
-  if(target){ target.classList.add('active'); target.scrollTop=0; }
+  if(target){
+    target.classList.add('active');
+    target.scrollTop=0;
+    // H3: Move focus to the active face for SR announcement of view change.
+    // Use timeout to ensure DOM/CSS settles before focus.
+    setTimeout(() => {
+      try { target.focus({preventScroll: true}); } catch(e){}
+    }, 60);
+  }
   currentFace=n;
   // Hide cube on entry screen (face0) and interstitial; show elsewhere
   const cs=document.getElementById('cubeScene');
@@ -2731,25 +2739,122 @@ function applyUnlockedState(animate){
   ["face3-content","face4-content","face5-content","face6-content"].forEach(id=>{
     const el=document.getElementById(id);if(el)el.style.display="block";
   });
+  // H1: Open premium content to assistive tech
+  qcSetPaidGate(true);
   if(animate){haptic("success");if(window.QC_AUDIO)window.QC_AUDIO.play("payment");
-    // Hide payment overlay, show success screen
-    document.getElementById("payOverlay").classList.remove("show");
-    document.getElementById("paySuccess").classList.add("show");
+    // Transition: close pay overlay, open success modal (focus + a11y handled)
+    QC_DIALOG.close("payOverlay");
+    QC_DIALOG.open("paySuccess");
   }
+}
+
+// ── DIALOG A11Y HELPER ───────────────────────
+// Centralised focus-trap, aria-hidden toggle, Esc handling, focus return.
+// Used by: payOverlay, legalOverlay, paySuccess.
+const QC_DIALOG = {
+  _prev: {},
+  _focusables(ov){
+    return Array.from(ov.querySelectorAll(
+      "button:not([disabled]):not([aria-hidden='true']), a[href], input:not([disabled]):not([type='hidden']), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])"
+    )).filter(el => el.offsetParent !== null);
+  },
+  open(id){
+    const ov = document.getElementById(id);
+    if(!ov) return;
+    this._prev[id] = document.activeElement;
+    ov.classList.add("show");
+    ov.removeAttribute("aria-hidden");
+    if(!ov._qcKey){
+      ov._qcKey = (ev) => QC_DIALOG._onKey(ev, id);
+    }
+    document.addEventListener("keydown", ov._qcKey);
+    setTimeout(() => {
+      const f = QC_DIALOG._focusables(ov);
+      if(f.length) f[0].focus();
+    }, 50);
+  },
+  close(id){
+    const ov = document.getElementById(id);
+    if(!ov) return;
+    ov.classList.remove("show");
+    ov.setAttribute("aria-hidden", "true");
+    if(ov._qcKey) document.removeEventListener("keydown", ov._qcKey);
+    const prev = this._prev[id];
+    if(prev && typeof prev.focus === "function") prev.focus();
+    delete this._prev[id];
+  },
+  _onKey(ev, id){
+    const ov = document.getElementById(id);
+    if(!ov || !ov.classList.contains("show")) return;
+    if(ev.key === "Escape"){
+      ev.preventDefault();
+      if(id === "payOverlay") hidePayOverlay();
+      else if(id === "legalOverlay") hideLegal();
+      else if(id === "paySuccess") afterPaySuccess();
+      return;
+    }
+    if(ev.key === "Tab"){
+      const f = QC_DIALOG._focusables(ov);
+      if(!f.length) return;
+      const first = f[0], last = f[f.length-1];
+      if(ev.shiftKey && document.activeElement === first){
+        ev.preventDefault(); last.focus();
+      } else if(!ev.shiftKey && document.activeElement === last){
+        ev.preventDefault(); first.focus();
+      }
+    }
+  }
+};
+
+// ── H4 aria-invalid helper for sign-up form ──────────────────────────
+function qcMarkInvalidFields(){
+  const ids = ["firstName","lastName","email","dobDay","dobYear"];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    const empty = !el.value || !String(el.value).trim();
+    if(empty){
+      el.setAttribute("aria-invalid","true");
+      el.setAttribute("aria-describedby","errMsg");
+    } else {
+      el.removeAttribute("aria-invalid");
+    }
+  });
+}
+function qcClearInvalidFields(){
+  ["firstName","lastName","email","dobDay","dobYear"].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.removeAttribute("aria-invalid"); el.removeAttribute("aria-describedby"); }
+  });
+}
+
+// ── CONTENT GATE (H1 paywall: aria-hidden + inert on face*-content) ──
+function qcSetPaidGate(isPaid){
+  ["face3-content","face4-content","face5-content","face6-content"].forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(isPaid){
+      el.removeAttribute("aria-hidden");
+      el.removeAttribute("inert");
+    } else {
+      el.setAttribute("aria-hidden", "true");
+      el.setAttribute("inert", "");
+    }
+  });
 }
 
 // ── SHOW / HIDE PAYMENT OVERLAY ──────────────
 function showPayOverlay(){
   stopIdleRotate();
-  document.getElementById("payOverlay").classList.add("show");
+  QC_DIALOG.open("payOverlay");
 }
 function hidePayOverlay(){
-  document.getElementById("payOverlay").classList.remove("show");
+  QC_DIALOG.close("payOverlay");
 }
 
 // ── AFTER SUCCESS SCREEN ─────────────────────
 function afterPaySuccess(){
-  document.getElementById("paySuccess").classList.remove("show");
+  QC_DIALOG.close("paySuccess");
   if(profileData){
     renderAllContent();
     showFace(3);
@@ -2792,6 +2897,7 @@ isUnlocked=false;profileData=null;
 ["face3-lock","face4-lock","face5-lock","face6-lock"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display="block"});
 document.querySelectorAll(".lock-footer").forEach(el=>el.style.display="");
 ["face3-content","face4-content","face5-content","face6-content"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display="none"});
+qcSetPaidGate(false);
 ["lock2","lock3","lock4","lock5"].forEach(id=>{const el=document.getElementById(id);if(el){el.style.display="block"}});
 // Restore locked class on cube faces 2-5
 [2,3,4,5].forEach(n=>{
@@ -2950,6 +3056,7 @@ async function handleRevealClick(){
       err.textContent = "Please complete all fields";
       err.style.display = "block";
     }
+    qcMarkInvalidFields();
     return;
   }
   // Age gate: must be 18+
@@ -2962,7 +3069,9 @@ async function handleRevealClick(){
     if(err){ err.textContent="You must be 18 or older to use Quantum Cube"; err.style.display="block"; }
     return;
   }
+  // Age error doesn't mark fields as invalid (the data IS entered, just out of range)
   if(err) err.style.display = "none";
+  qcClearInvalidFields();
   savePendingProfile(fn, mn, ln, d, m, y, em);
   // Short-circuit: if there's already an active session for THIS email,
   // skip the magic link and go straight to the app
@@ -3188,11 +3297,16 @@ function armDeleteAccount(){
   _deleteArmed = true;
   btn.classList.add("armed");
   btn.textContent = "Tap again to confirm — permanent";
+  // M7: announce armed state to screen readers
+  btn.setAttribute("aria-live", "assertive");
+  btn.setAttribute("aria-label", "Tap again to confirm permanent account deletion");
   if (_deleteTimer) clearTimeout(_deleteTimer);
   _deleteTimer = setTimeout(() => {
     _deleteArmed = false;
     btn.classList.remove("armed");
     btn.textContent = "Delete Account";
+    btn.removeAttribute("aria-live");
+    btn.removeAttribute("aria-label");
     _deleteTimer = null;
   }, 5000);
 }
@@ -3248,7 +3362,7 @@ const day=parseInt(dayVal);
 const month=parseInt(monthVal);
 const year=parseInt(yearVal);
 const err=document.getElementById("errMsg");
-if(!fn||!ln||!dayVal||!monthVal||!yearVal||isNaN(day)||isNaN(month)||isNaN(year)){err.textContent="Please complete all fields";err.style.display="block";return}
+if(!fn||!ln||!dayVal||!monthVal||!yearVal||isNaN(day)||isNaN(month)||isNaN(year)){err.textContent="Please complete all fields";err.style.display="block";qcMarkInvalidFields();return}
 var _today=new Date();
 var _dob=new Date(year,month-1,day);
 var _age=_today.getFullYear()-_dob.getFullYear();
@@ -3257,6 +3371,7 @@ if(_m<0||(_m===0&&_today.getDate()<_dob.getDate())) _age--;
 if(_age<18){err.textContent="You must be 18 or older to use Quantum Cube";err.style.display="block";return}
 err.textContent="Please complete all fields";
 err.style.display="none";
+qcClearInvalidFields();
 // Persist name + DOB to profile (fire-and-forget; no await needed)
 try { saveProfileFromForm(); } catch(e) {}
 const fullName=[fn,mn,ln].filter(Boolean).join(" ");
@@ -3363,12 +3478,13 @@ else if(s.cycleAll){
 }
 else if(s.multi&&s.multi.length>0){body=s.multi.map(k=>{const txt=NUM[s.k]&&NUM[s.k][k]?NUM[s.k][k]:"Content for "+k+" coming soon.";return s.multi.length>1?"<span class='icard-sub'>Number "+k+"</span>"+textToParas(txt):textToParas(txt)}).join("");}
 else{const ln=s.nk!==undefined?s.nk:s.n;body=textToParas(getNumText(s.k,ln));}
-return"<div class='icard' role='button' tabindex='0' aria-expanded='false' data-cat='"+s.k+"' data-num='"+s.n+"' data-first='"+(s.multi?s.multi[0]:s.n)+"' data-variant='"+((s.multi||s.cycleAll||s.none)?1:(getNumIdx(s.k,s.n)+1))+"' data-phases='"+(s.phases?JSON.stringify(s.phases):'')+"' data-multi='"+(s.multi&&s.multi.length>1?JSON.stringify(s.multi):'')+"' onclick='qcToggleCard(this,3)' onkeydown='qcCardKey(event,this,3)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.n+"</span></div><div class='icard-body'>"+body+"</div></div>";
+return"<div class='icard' role='button' tabindex='0' aria-expanded='false' aria-label='"+s.t.replace(/'/g, '&#39;')+"' data-cat='"+s.k+"' data-num='"+s.n+"' data-first='"+(s.multi?s.multi[0]:s.n)+"' data-variant='"+((s.multi||s.cycleAll||s.none)?1:(getNumIdx(s.k,s.n)+1))+"' data-phases='"+(s.phases?JSON.stringify(s.phases):'')+"' data-multi='"+(s.multi&&s.multi.length>1?JSON.stringify(s.multi):'')+"' onclick='qcToggleCard(this,3)' onkeydown='qcCardKey(event,this,3)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.n+"</span></div><div class='icard-body'>"+body+"</div></div>";
 }).join("");
 
 if(isUnlocked){
   document.getElementById("face3-lock").style.display="none";
   document.getElementById("face3-content").style.display="block";
+  qcSetPaidGate(true);
 }
 
 // Face 3
@@ -3396,7 +3512,7 @@ astroSecs.push({t:d.chin.n+" \u2014 Shadow Side",b:"\u25c6",body:textToParas(cDa
 astroSecs.push({t:d.chin.n+" \u2014 Love &amp; Relationships",b:"\u2661",body:textToParas(cData.love),prefix:"chin",key:cKey,slot:"love"});
 astroSecs.push({t:d.chin.n+" \u2014 Career &amp; Purpose",b:"\u25c7",body:textToParas(cData.career),prefix:"chin",key:cKey,slot:"career"});
 }
-document.getElementById("astroCards").innerHTML=astroSecs.map(s=>"<div class='icard' role='button' tabindex='0' aria-expanded='false' data-prefix='"+s.prefix+"' data-key='"+s.key+"' data-slot='"+s.slot+"' onclick='qcToggleCard(this,4)' onkeydown='qcCardKey(event,this,4)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.b+"</span></div><div class='icard-body'>"+s.body+"</div></div>").join("");
+document.getElementById("astroCards").innerHTML=astroSecs.map(s=>"<div class='icard' role='button' tabindex='0' aria-expanded='false' aria-label='"+s.t.replace(/&amp;/g,'and').replace(/'/g,'&#39;')+"' data-prefix='"+s.prefix+"' data-key='"+s.key+"' data-slot='"+s.slot+"' onclick='qcToggleCard(this,4)' onkeydown='qcCardKey(event,this,4)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.b+"</span></div><div class='icard-body'>"+s.body+"</div></div>").join("");
 if(isUnlocked){
   document.getElementById("face4-lock").style.display="none";
   document.getElementById("face4-content").style.display="block";
@@ -3422,11 +3538,11 @@ if(isUnlocked){
 // ═══════════════════════════════════════════
 function showLegal(tab){
   stopIdleRotate();
-  document.getElementById('legalOverlay').classList.add('show');
+  QC_DIALOG.open("legalOverlay");
   switchLegal(tab||'privacy');
 }
 function hideLegal(){
-  document.getElementById('legalOverlay').classList.remove('show');
+  QC_DIALOG.close("legalOverlay");
 }
 function switchLegal(tab){
   // Update tabs
@@ -3607,10 +3723,10 @@ if("serviceWorker" in navigator){
 <!-- ═══════════════════════════════════════════ -->
 <!-- LEGAL OVERLAY                               -->
 <!-- ═══════════════════════════════════════════ -->
-<div id="legalOverlay">
+<div id="legalOverlay" role="dialog" aria-modal="true" aria-labelledby="legalTitle" aria-hidden="true">
   <div id="legalHeader">
     <span id="legalTitle">Legal Documents</span>
-    <button id="legalBack" onclick="hideLegal()">&#8592; Close</button>
+    <button type="button" id="legalBack" onclick="hideLegal()" aria-label="Close legal documents">&#8592; Close</button>
   </div>
   <div id="legalTabs">
     <div class="legal-tab active" onclick="switchLegal('privacy')">Privacy Policy</div>
@@ -3803,7 +3919,7 @@ if("serviceWorker" in navigator){
 <!-- ═══════════════════════════════════════════ -->
 <!-- PAYMENT OVERLAY                             -->
 <!-- ═══════════════════════════════════════════ -->
-<div id="payOverlay">
+<div id="payOverlay" role="dialog" aria-modal="true" aria-label="Unlock your Quantum Cube" aria-hidden="true">
   <div id="payGlobalLogo" class="logo-wrap" style="padding:32px 0 8px;touch-action:pan-y;">
         <div style="display:inline-block;text-align:center">
       <div class="logo-main"><span class="logo-q">QUANTUM</span></div>
@@ -3828,21 +3944,21 @@ if("serviceWorker" in navigator){
       <div class="pay-price-line">No Subscription</div>
       <div class="pay-price-line">Yours Forever</div>
     </div>
-    <button class="unlock-btn pay-overlay-btn" onclick="haptic(&apos;medium&apos;);launchDodo()">Pay $17</button>
-    <button class="unlock-btn pay-overlay-btn" style="background:transparent;border-color:#ffffff;color:#ffffff;box-shadow:none" onclick="haptic(&apos;medium&apos;);hidePayOverlay()">Back to Cube</button>
+    <button type="button" class="unlock-btn pay-overlay-btn" onclick="haptic(&apos;medium&apos;);launchDodo()">Pay $17</button>
+    <button type="button" class="unlock-btn pay-overlay-btn" style="background:transparent;border-color:#ffffff;color:#ffffff;box-shadow:none" onclick="haptic(&apos;medium&apos;);hidePayOverlay()">Back to Cube</button>
   </div>
   <div class="legal-footer">
-    <button class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
-    <button class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
+    <button type="button" class="legal-link" onclick="showLegal('terms')">Terms of Use</button>
+    <button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════════ -->
 <!-- PAYMENT SUCCESS SCREEN                      -->
 <!-- ═══════════════════════════════════════════ -->
-<div id="paySuccess">
+<div id="paySuccess" role="alertdialog" aria-modal="true" aria-labelledby="paySuccessTitle" aria-hidden="true">
   <div class="success-icon">&#10022;</div>
-  <div class="success-title">Cube Unlocked</div>
+  <h2 id="paySuccessTitle" class="success-title">Cube Unlocked</h2>
   <p class="success-msg">Your complete cosmic profile is now unlocked.<br>All six sides of your Quantum Cube are open.<br><br>Welcome to the full reading.</p>
   <button type="button" class="pay-back" onclick="afterPaySuccess()">Continue</button>
 </div>
