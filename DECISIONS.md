@@ -396,6 +396,37 @@ Apply minimum-viable branch protection via gh API `PUT /repos/.../branches/main/
 
 ---
 
+## ADR-015 — ElevenLabs API key UI semantics (Key ID = working credential)
+
+**Date:** 2026-05-05
+**Status:** Accepted
+
+### Context
+During the May 5 evening secrets-leak audit, `.supabase-env` was suspected to contain a wrong value for `ELEVENLABS_API_KEY` (a 64-char hex string starting `18b...`, ending `3d2e`) because:
+1. ElevenLabs UI shows the key value masked as `••••••d3be` — a different last-4 from what the "Copy Key ID" button produces.
+2. The 64-char raw-hex format resembles a SHA-256 hash, not the typical `sk_<hex>` pattern used by similar APIs (Resend, Stripe, Anthropic, etc.).
+3. There appeared to be a paste-mismatch story plausible from zsh history (a verification hash possibly substituted for the real key during setup).
+
+This led to an investigation under the false assumption that "Copy Key ID" returns a public identifier and that the real secret was different and probably lost.
+
+### Decision
+The 64-char hex value labeled "Key ID" in the ElevenLabs settings UI **IS** the working API credential. The masked `••••••d3be` display in the UI is a different visual representation (likely a public account-tied portion or a JWT subset) of the same logical credential. Production narrate has been authenticating correctly using this value all along — present in both `.supabase-env` (local) and the Supabase Edge Function secret (prod).
+
+**Going forward:** when investigating ElevenLabs key issues, do NOT assume the UI's "Key ID" wording implies it's just an identifier. It IS the credential. Verify by empirical signal (does the function authenticate against ElevenLabs?) before assuming the stored value is wrong based on format-pattern intuition.
+
+### Consequences
+- No `.supabase-env` change needed; existing value is correct.
+- No Supabase Edge Function secret change needed; production already has the working value.
+- No key rotation needed for ElevenLabs (the leak audit's target was Dodo — that rotation IS done, see brief v40).
+- Future audits: format-pattern intuition (`sk_` prefixes, fixed-length hex looks suspicious) is a weak signal for ElevenLabs specifically. Trust the production-works check first.
+- The 64-hex value is still sensitive — treat as any API key: gitignored, scrubbed from shell history, rotated if exposed.
+
+### Alternatives considered
+- **Regenerate key to get a "proper" `sk_<hex>` format:** rejected — ElevenLabs doesn't let you choose key format, regeneration would invalidate the working prod credential, and would force re-configuring the per-key permission scope list (model access, voice cloning, etc.) for no functional gain.
+- **Continue investigating the UI for a hidden "real" key:** rejected — empirical evidence (narrate works in prod) outweighs format-pattern hypotheses.
+
+---
+
 ## ADR template — copy this for new entries
 
 ```markdown

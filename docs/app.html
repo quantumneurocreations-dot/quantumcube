@@ -12,6 +12,19 @@
 <meta name="apple-mobile-web-app-title" content="Quantum Cube">
 <link rel="preload" href="cube-background.jpg" as="image">
 <meta name="description" content="Quantum Cube — Your complete numerology and astrology profile. A multi-layered system revealing who you are through numbers, patterns and cosmic insight.">
+<meta property="og:title" content="Quantum Cube — Your Cosmic Profile">
+<meta property="og:description" content="Your complete numerology and astrology profile. A multi-layered system revealing who you are through numbers, patterns and cosmic insight.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://quantumcube.app/app">
+<meta property="og:image" content="https://quantumcube.app/icons/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="Quantum Cube — Your Cosmic Profile">
+<meta property="og:site_name" content="Quantum Cube">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quantum Cube — Your Cosmic Profile">
+<meta name="twitter:description" content="Your complete numerology and astrology profile. A multi-layered system revealing who you are through numbers, patterns and cosmic insight.">
+<meta name="twitter:image" content="https://quantumcube.app/icons/icon-512.png">
 <meta name="application-name" content="Quantum Cube">
 <meta name="msapplication-TileColor" content="#05050f">
 <title>Quantum Cube — Your Cosmic Profile</title>
@@ -341,7 +354,7 @@ input[type="number"]{-moz-appearance:textfield}
 .legal-divider{height:1px;background:rgba(255,255,255,0.08);margin:20px 0}
 .legal-highlight{background:rgba(125,212,252,0.06);border:1px solid rgba(125,212,252,0.2);
   padding:16px 18px;margin:16px 0}
-.legal-h3{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#fff;margin:20px 0 8px;font-weight:400}
+.legal-h2{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#fff;margin:20px 0 8px;font-weight:400} .legal-h3{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#fff;margin:20px 0 8px;font-weight:400}
 .legal-highlight .legal-p{margin-bottom:0}
 
 /* Footer legal link */
@@ -522,7 +535,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v202",
+      release: "quantum-cube@qc-v203",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -587,7 +600,7 @@ window.QC_SUPABASE_URL = SUPABASE_URL;
 window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/dodopayments-checkout@latest/dist/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dodopayments-checkout@1.8.0/dist/index.js" defer></script>
 
 </head>
 <body>
@@ -597,7 +610,7 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 <span>&#10022; Add to Home Screen</span>
 <div style="display:flex;gap:8px;align-items:center">
 <button id="installBtn">Install</button>
-<button id="dismissBtn">&#10005;</button>
+<button id="dismissBtn" aria-label="Dismiss install prompt">&#10005;</button>
 </div>
 </div>
 <div id="globalLogo" class="logo-wrap" style="padding:32px 0 8px;touch-action:pan-y;">
@@ -613,42 +626,42 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
     <!-- Front = Face 1: Introduction -->
     <div class="cube-face cube-face-front" onclick="faceClick(1)">
       <span class="cube-face-number">1</span>
-      <span class="cube-face-label">Introduction</span>
+      <span class="cube-face-label" aria-label="Introduction">Introduction</span>
     </div>
     <!-- Right = Face 2: Results Explained -->
     <div class="cube-face cube-face-right" onclick="faceClick(2)">
       <span class="cube-face-number">2</span>
-      <span class="cube-face-label">Results<br>Explained</span>
+      <span class="cube-face-label" aria-label="Results Explained">Results<br>Explained</span>
     </div>
     <!-- Back = Face 3: Numerology -->
     <div class="cube-face cube-face-back locked" onclick="faceClick(3)">
       <span class="cube-face-number">3</span>
-      <span class="cube-face-label">Numerology<br>Results</span>
+      <span class="cube-face-label" aria-label="Numerology Results">Numerology<br>Results</span>
       <span class="cube-face-lock" id="lock3">&#128477;&#65039;</span>
     </div>
     <!-- Left = Face 4: Astrology -->
     <div class="cube-face cube-face-left locked" onclick="faceClick(4)">
       <span class="cube-face-number">4</span>
-      <span class="cube-face-label">Astrology &amp;<br>Horoscope</span>
+      <span class="cube-face-label" aria-label="Astrology and Horoscope">Astrology &amp;<br>Horoscope</span>
       <span class="cube-face-lock" id="lock4">&#128477;&#65039;</span>
     </div>
     <!-- Top = Face 5: Combined -->
     <div class="cube-face cube-face-top locked" onclick="faceClick(5)">
       <span class="cube-face-number">5</span>
-      <span class="cube-face-label">Combined<br>Results</span>
+      <span class="cube-face-label" aria-label="Combined Results">Combined<br>Results</span>
       <span class="cube-face-lock" id="lock5">&#128477;&#65039;</span>
     </div>
     <!-- Bottom = Face 6: Complete -->
     <div class="cube-face cube-face-bottom locked" onclick="faceClick(6)">
       <span class="cube-face-number">6</span>
-      <span class="cube-face-label">Complete</span>
+      <span class="cube-face-label" aria-label="Complete">Complete</span>
       <span class="cube-face-lock" id="lock6">&#128477;&#65039;</span>
     </div>
   </div>
   <button id="settingsBtn" onclick="showFace(1)" style="position:absolute;bottom:6px;right:12px;background:transparent;border:none;color:#ffffff;font-size:16px;cursor:pointer;padding:6px;line-height:1" title="Back to Introduction">&#8634;</button>
 </div>
 <div id="faceLabelCard" class="face-label-card" style="display:none"><span class="face-label-text">Introduction</span></div>
-<button id="musicBtn" onclick="window.QC_AUDIO && window.QC_AUDIO.toggleMusic()" title="Toggle music">🎵<span class="audio-label">Music</span></button>
+<button id="musicBtn" onclick="window.QC_AUDIO && window.QC_AUDIO.toggleMusic()" title="Toggle music" aria-pressed="false">🎵<span class="audio-label">Music</span></button>
 <div id="faceContainer">
 <div class="face active" id="face0">
 
@@ -656,18 +669,18 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 <button type="button" id="googleSignInBtn" onclick="haptic('light');handleGoogleSignIn()" style="margin-top:8px;margin-left:24px;margin-right:24px;width:calc(100% - 48px);height:40px;background:#FFFFFF;border:1px solid #747775;border-radius:4px;color:#1F1F1F;font-family:'Roboto',sans-serif;font-weight:500;font-size:14px;line-height:20px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 12px;cursor:pointer;letter-spacing:0.25px"><svg width="20" height="20" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg><span>Continue with Google</span></button>
 <div class="glass-card" style="margin-top:24px">
 <div class="form-row">
-<div class="form-group form-full" style="text-align:center"><label for="firstName" style="text-align:center;display:block">First Name</label><input type="text" id="firstName" placeholder="" autocomplete="given-name" style="text-align:center"></div>
+<div class="form-group form-full" style="text-align:center"><label for="firstName" style="text-align:center;display:block">First Name</label><input type="text" id="firstName" placeholder="" autocomplete="given-name" required style="text-align:center"></div>
 <div class="form-group form-full" style="text-align:center"><label for="middleName" style="text-align:center;display:block">Middle Name &#8212; Optional</label><input type="text" id="middleName" placeholder="" autocomplete="additional-name" style="text-align:center"></div>
-<div class="form-group form-full" style="text-align:center"><label for="lastName" style="text-align:center;display:block">Last Name</label><input type="text" id="lastName" placeholder="" autocomplete="family-name" style="text-align:center"></div>
-<div class="form-group form-full" style="text-align:center"><label for="email" style="text-align:center;display:block">Email</label><input type="email" id="email" placeholder="" autocomplete="email" inputmode="email" style="text-align:center"></div>
-<div class="form-group" style="text-align:center"><label for="dobDay" style="text-align:center;display:block">Day</label><input type="number" id="dobDay" placeholder="" min="1" max="31" inputmode="numeric" style="text-align:center" value="" oninput="if(parseInt(this.value)>31)this.value=31;if(parseInt(this.value)<1&&this.value!=='')this.value=1;"></div>
+<div class="form-group form-full" style="text-align:center"><label for="lastName" style="text-align:center;display:block">Last Name</label><input type="text" id="lastName" placeholder="" autocomplete="family-name" required style="text-align:center"></div>
+<div class="form-group form-full" style="text-align:center"><label for="email" style="text-align:center;display:block">Email</label><input type="email" id="email" placeholder="" autocomplete="email" inputmode="email" required style="text-align:center"></div>
+<div class="form-group" style="text-align:center"><label for="dobDay" style="text-align:center;display:block">Day</label><input type="number" id="dobDay" placeholder="" min="1" max="31" inputmode="numeric" required style="text-align:center" value="" oninput="if(parseInt(this.value)>31)this.value=31;if(parseInt(this.value)<1&&this.value!=='')this.value=1;"></div>
 <div class="form-group" style="text-align:center"><label for="dobMonth" style="text-align:center;display:block">Month</label><div class="sel-wrap"><select id="dobMonth" style="text-align:center"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select></div></div>
-<div class="form-group" style="text-align:center"><label for="dobYear" style="text-align:center;display:block">Year</label><input type="number" id="dobYear" placeholder="" min="1900" max="2025" inputmode="numeric" style="text-align:center" value="" oninput="if(parseInt(this.value)>2025)this.value=2025;if(parseInt(this.value)<1900&&this.value.length>=4)this.value=1900;"></div>
+<div class="form-group" style="text-align:center"><label for="dobYear" style="text-align:center;display:block">Year</label><input type="number" id="dobYear" placeholder="" min="1900" inputmode="numeric" required style="text-align:center" value="" oninput="var m=new Date().getFullYear()-1;if(parseInt(this.value)>m)this.value=m;if(parseInt(this.value)<1900&&this.value.length>=4)this.value=1900;"></div>
 </div>
 <p class="err-msg" id="errMsg">Please complete all fields</p>
 </div>
 <label class="marketing-consent">
-  <input type="checkbox" id="marketingConsent" class="qc-consent-checkbox" onchange="syncMarketingConsent(this)">
+  <input type="checkbox" id="marketingConsent" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
   <span class="consent-text"><span class="consent-main">Add Me To The Quantum</span><span class="consent-sub">News And Insights From The Cube</span></span>
 </label>
@@ -695,7 +708,7 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 <div class="video-face">
   <div class="video-container portrait-video" style="width:75%;margin:0 auto;">
     <div style="position:relative;width:100%;padding-bottom:177.78%;">
-      <iframe
+      <iframe loading="lazy"
         src="https://player.vimeo.com/video/1183086210?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0&dnt=1&color=7dd4fc&api=1&playsinline=1"
         title="Introduction"
         frameborder="0"
@@ -705,8 +718,7 @@ window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
   </div>
 </div>
 <div style="text-align:center;padding:40px 22% 20px 22%;">
-  <button class="reset-btn" onclick="resetAll()">Back to
-Sign Up</button>
+  <button class="reset-btn" onclick="resetAll()">Back to Sign Up</button>
 </div>
 <div class="legal-footer">
 
@@ -719,7 +731,7 @@ Sign Up</button>
 <div class="video-face">
   <div class="video-container">
     <div style="position:relative;width:100%;padding-bottom:56.25%;">
-      <iframe
+      <iframe loading="lazy"
         src="https://player.vimeo.com/video/1183086853?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0&dnt=1&color=7dd4fc&api=1&playsinline=1"
         title="Numerology Explained"
         frameborder="0"
@@ -732,7 +744,7 @@ Sign Up</button>
 <div class="video-face">
   <div class="video-container">
     <div style="position:relative;width:100%;padding-bottom:56.25%;">
-      <iframe
+      <iframe loading="lazy"
         src="https://player.vimeo.com/video/1183087269?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0&dnt=1&color=7dd4fc&api=1&playsinline=1"
         title="Results Explained"
         frameborder="0"
@@ -745,7 +757,7 @@ Sign Up</button>
 <div class="video-face">
   <div class="video-container">
     <div style="position:relative;width:100%;padding-bottom:56.25%;">
-      <iframe
+      <iframe loading="lazy"
         src="https://player.vimeo.com/video/1183087951?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0&dnt=1&color=7dd4fc&api=1&playsinline=1"
         title="Astrology"
         frameborder="0"
@@ -775,7 +787,7 @@ Sign Up</button>
 <div class="lock-new-price">$ 17.00</div>
 <button class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()">Unlock</button>
 <label class="marketing-consent" style="margin-top:14px">
-  <input type="checkbox" class="qc-consent-checkbox" onchange="syncMarketingConsent(this)">
+  <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
   <span class="consent-text"><span class="consent-main">Add Me To The Quantum</span><span class="consent-sub">News And Insights From The Cube</span></span>
 </label>
@@ -791,7 +803,7 @@ Sign Up</button>
 <div class="scoreboard"><div class="sb-grid" id="sbGrid"></div></div>
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Numerology Matrix &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div class="matrix-wrap"><div class="matrix-grid" id="matGrid"></div></div>
-<button class="voice-btn" title="Toggle voice narrator">👄<span class="audio-label">Voice</span></button>
+<button class="voice-btn" title="Toggle voice narrator" aria-pressed="false">👄<span class="audio-label">Voice</span></button>
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Your Interpretations &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div class="card-stack" id="numCards"></div>
 <div class="legal-footer">
@@ -816,7 +828,7 @@ Sign Up</button>
 <div class="lock-new-price">$ 17.00</div>
 <button class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()">Unlock</button>
 <label class="marketing-consent" style="margin-top:14px">
-  <input type="checkbox" class="qc-consent-checkbox" onchange="syncMarketingConsent(this)">
+  <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
   <span class="consent-text"><span class="consent-main">Add Me To The Quantum</span><span class="consent-sub">News And Insights From The Cube</span></span>
 </label>
@@ -830,7 +842,7 @@ Sign Up</button>
 <p class="result-dob" id="rDob4"></p>
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Astrology Profile &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div class="astro-grid" id="astroGrid"></div>
-<button class="voice-btn" title="Toggle voice narrator">👄<span class="audio-label">Voice</span></button>
+<button class="voice-btn" title="Toggle voice narrator" aria-pressed="false">👄<span class="audio-label">Voice</span></button>
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Sign Interpretations &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div class="card-stack" id="astroCards"></div>
 <div class="legal-footer">
@@ -855,7 +867,7 @@ Sign Up</button>
 <div class="lock-new-price">$ 17.00</div>
 <button class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()">Unlock</button>
 <label class="marketing-consent" style="margin-top:14px">
-  <input type="checkbox" class="qc-consent-checkbox" onchange="syncMarketingConsent(this)">
+  <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
   <span class="consent-text"><span class="consent-main">Add Me To The Quantum</span><span class="consent-sub">News And Insights From The Cube</span></span>
 </label>
@@ -867,7 +879,7 @@ Sign Up</button>
 <div id="face5-content" style="display:none">
 <p class="result-name" id="rName5"></p>
 <p class="result-dob" id="rDob5"></p>
-<button class="voice-btn" title="Toggle voice narrator">👄<span class="audio-label">Voice</span></button>
+<button class="voice-btn" title="Toggle voice narrator" aria-pressed="false">👄<span class="audio-label">Voice</span></button>
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Your Complete Portrait &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div class="combo-full" id="comboContent"></div>
 <div class="legal-footer">
@@ -892,7 +904,7 @@ Sign Up</button>
 <div class="lock-new-price">$ 17.00</div>
 <button class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()">Unlock</button>
 <label class="marketing-consent" style="margin-top:14px">
-  <input type="checkbox" class="qc-consent-checkbox" onchange="syncMarketingConsent(this)">
+  <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
   <span class="consent-text"><span class="consent-main">Add Me To The Quantum</span><span class="consent-sub">News And Insights From The Cube</span></span>
 </label>
@@ -907,7 +919,7 @@ Sign Up</button>
 <div class="video-face" style="margin-bottom:32px">
   <div class="video-container portrait-video" style="width:75%;margin:0 auto;">
     <div style="position:relative;width:100%;padding-bottom:177.78%;">
-      <iframe
+      <iframe loading="lazy"
         src="https://player.vimeo.com/video/1183103519?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0&dnt=1&color=7dd4fc&api=1&playsinline=1"
         title="Journey Complete"
         frameborder="0"
@@ -1440,6 +1452,7 @@ function scrollBelowCube(){
     }
   },80);
 }
+(function(){var dy=document.getElementById("dobYear");if(dy)dy.setAttribute("max",String(new Date().getFullYear()-1));})();
 const FACE_NAMES={1:"Introduction",2:"Videos",3:"Your Numbers",4:"Stars and Signs",5:"Combination",6:"Complete"};
 function updateFaceLabel(n){
   const txt=document.querySelector('#faceLabelCard .face-label-text');
@@ -1513,8 +1526,25 @@ function gatherFaceText(faceNum){
   return (clone.innerText||"").replace(/\s+/g," ").trim();
 }
 
+/* icard accordion: unified toggle + keyboard handler.
+   Toggles open class, syncs aria-expanded, fires haptic + narration. */
+window.qcToggleCard = function(el, faceNum){
+  if(!el) return;
+  var nowOpen = el.classList.toggle("open");
+  el.setAttribute("aria-expanded", nowOpen ? "true" : "false");
+  if(window.haptic) haptic("light");
+  if(window.qcNarrateCard) qcNarrateCard(el, faceNum);
+};
+window.qcCardKey = function(ev, el, faceNum){
+  if(ev.key === "Enter" || ev.key === " " || ev.key === "Spacebar"){
+    ev.preventDefault();
+    qcToggleCard(el, faceNum);
+  }
+};
+
 function updateVoiceBtn(btn, on){
   btn.classList.toggle("voice-on", !!on);
+  btn.setAttribute("aria-pressed", on ? "true" : "false");
   const label = btn.querySelector(".audio-label");
   if(label) label.textContent = on ? "Mute" : "Unmute";
 }
@@ -3335,7 +3365,7 @@ else if(s.cycleAll){
 }
 else if(s.multi&&s.multi.length>0){body=s.multi.map(k=>{const txt=NUM[s.k]&&NUM[s.k][k]?NUM[s.k][k]:"Content for "+k+" coming soon.";return s.multi.length>1?"<span class='icard-sub'>Number "+k+"</span>"+textToParas(txt):textToParas(txt)}).join("");}
 else{const ln=s.nk!==undefined?s.nk:s.n;body=textToParas(getNumText(s.k,ln));}
-return"<div class='icard' data-cat='"+s.k+"' data-num='"+s.n+"' data-first='"+(s.multi?s.multi[0]:s.n)+"' data-variant='"+((s.multi||s.cycleAll||s.none)?1:(getNumIdx(s.k,s.n)+1))+"' data-phases='"+(s.phases?JSON.stringify(s.phases):'')+"' data-multi='"+(s.multi&&s.multi.length>1?JSON.stringify(s.multi):'')+"' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,3)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.n+"</span></div><div class='icard-body'>"+body+"</div></div>";
+return"<div class='icard' role='button' tabindex='0' aria-expanded='false' data-cat='"+s.k+"' data-num='"+s.n+"' data-first='"+(s.multi?s.multi[0]:s.n)+"' data-variant='"+((s.multi||s.cycleAll||s.none)?1:(getNumIdx(s.k,s.n)+1))+"' data-phases='"+(s.phases?JSON.stringify(s.phases):'')+"' data-multi='"+(s.multi&&s.multi.length>1?JSON.stringify(s.multi):'')+"' onclick='qcToggleCard(this,3)' onkeydown='qcCardKey(event,this,3)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.n+"</span></div><div class='icard-body'>"+body+"</div></div>";
 }).join("");
 
 if(isUnlocked){
@@ -3368,7 +3398,7 @@ astroSecs.push({t:d.chin.n+" \u2014 Shadow Side",b:"\u25c6",body:textToParas(cDa
 astroSecs.push({t:d.chin.n+" \u2014 Love &amp; Relationships",b:"\u2661",body:textToParas(cData.love),prefix:"chin",key:cKey,slot:"love"});
 astroSecs.push({t:d.chin.n+" \u2014 Career &amp; Purpose",b:"\u25c7",body:textToParas(cData.career),prefix:"chin",key:cKey,slot:"career"});
 }
-document.getElementById("astroCards").innerHTML=astroSecs.map(s=>"<div class='icard' data-prefix='"+s.prefix+"' data-key='"+s.key+"' data-slot='"+s.slot+"' onclick='this.classList.toggle(\"open\");haptic(\"light\");if(window.qcNarrateCard)qcNarrateCard(this,4)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.b+"</span></div><div class='icard-body'>"+s.body+"</div></div>").join("");
+document.getElementById("astroCards").innerHTML=astroSecs.map(s=>"<div class='icard' role='button' tabindex='0' aria-expanded='false' data-prefix='"+s.prefix+"' data-key='"+s.key+"' data-slot='"+s.slot+"' onclick='qcToggleCard(this,4)' onkeydown='qcCardKey(event,this,4)'><div class='icard-head'><span class='icard-title'>"+s.t+"</span><span class='icard-badge'>"+s.b+"</span></div><div class='icard-body'>"+s.body+"</div></div>").join("");
 if(isUnlocked){
   document.getElementById("face4-lock").style.display="none";
   document.getElementById("face4-content").style.display="block";
@@ -3686,9 +3716,9 @@ if("serviceWorker" in navigator){
     <div class="legal-doc" id="doc-ip">
       <div class="legal-h1">Intellectual Property</div>
       <span class="legal-updated">Effective date: 1 January 2025 &nbsp;&#183;&nbsp; Quantum Neuro Creations</span>
-      <h3 class="legal-h3">Original Works &amp; Synthesized Expression</h3>
+      <h2 class="legal-h2">Original Works &amp; Synthesized Expression</h2>
       <p class="legal-p">Numerology, Western astrology, and Chinese zodiac concepts belong to the public domain, being traditions of interpretation developed over centuries across many cultures. The specific interpretations, narrative voice, category structure, rotation variations, and combined readings within Quantum Cube are <strong>original works created by Quantum Neuro Creations</strong>, synthesizing traditional concepts with our own expression, phrasing, and framing.</p>
-      <h3 class="legal-h3">AI-Assisted Content &amp; Voice Narration</h3>
+      <h2 class="legal-h2">AI-Assisted Content &amp; Voice Narration</h2>
       <p class="legal-p">Portions of Quantum Cube's written content and all voice narration are produced with the assistance of AI tools under the direction and editorial control of Quantum Neuro Creations. Voice narration is generated by ElevenLabs text-to-speech technology using a licensed voice preset. All AI-assisted content is reviewed, edited, and approved by us before inclusion.</p>
       <div class="legal-h2">Ownership</div>
       <p class="legal-p">Quantum Cube, including its name, visual design, user interface, written content, numerological interpretation system, narrative framework, combination readings, and all other original elements, is the intellectual property of <strong>Quantum Neuro Creations</strong>. All rights are reserved.</p>
