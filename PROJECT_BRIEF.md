@@ -1,6 +1,8 @@
 # QUANTUM CUBE — PROJECT BRIEF
 
-**Version: v39 | Last Updated: May 5, 2026 (Tuesday, evening)**
+**Version: v40 | Last Updated: May 6, 2026 (Wednesday, evening)**
+
+> **v40 update note (May 6, full-day audit-close + SEO sprint):** Long single-chat day, 7 commits shipped (`d5fdc79` → `e40ff08`), SW qc-v202 → qc-v208 (six version bumps). Three audits closed back-to-back: (1) May-5 evening Chrome audit (13 fixes incl. Dodo `@latest` → `@1.8.0`, DOB year dynamic, OG/Twitter on `/app`, icard ARIA accordion), (2) unpaid-user Chrome audit (18 a11y fixes — paywall content gate via `aria-hidden`+`inert`, full dialog a11y via new `QC_DIALOG` helper covering `payOverlay`/`legalOverlay`/`paySuccess` with focus trap + Esc + focus return, form `aria-live` + `aria-invalid`), (3) my own independent 17-pass audit. Brand polish: removed "Quantum Neuro Creations" tagline from header, CUBE word colour `#7dd4fc` → `#0cc0df` with layered neon drop-shadow (3 stacked halos), `.logo-sub` resized 7px→11px / letter-spacing 5px→2px. Focus-outline regression introduced and fixed: replaced programmatic `target.focus()` with `aria-live` announcement on `#faceLabelCard` (zero visual artifact, same SR experience). SEO + distribution gap closed: 9 marketing pages got 10-tag meta block (description, robots, canonical, og:5, twitter:card 1) sharing `/qc-icon-512.png` as OG image; new `/robots.txt`, `/sitemap.xml` (10 URLs), `/.well-known/assetlinks.json` placeholder for Trusted Web Activity. Landing CTAs `/app.html` → `/app` cleanup. **Sentry: 0 unresolved issues at qc-v208 (verified live).** New ADRs: 015 (ElevenLabs UI semantics — Key ID *is* working credential), 016 (SEO meta-tag minimalism). Audit scores now: 6/8 areas at ⭐⭐⭐⭐⭐, Performance ⭐⭐⭐⭐, Play Store readiness ⭐⭐⭐⭐ (only blocker: real keystore SHA-256 for assetlinks). User triggered the no-`!` zsh history-expansion gotcha mid-session — single-quote message bodies for any commit referencing CSS `!important`.
 
 > **v39 update note (May 5 evening, DevX + analytics + security sprint):** 5 commits shipped (b0d2d92 → d70255b). PostHog product analytics wired (EU project 172921, host `eu.i.posthog.com`, production-only gate, post-Sentry init in app.html). CSP extended: vimeo.com (frame-src), blob: (media-src), eu.posthog.com + eu-assets.i.posthog.com (script-src + connect-src). New DevX foundation: `CLAUDE.md` root pointer, `.claude/skills/` codified workflows (4 skills), `.github/workflows/verify-versions.yml` pre-deploy CI. Tier 1 security audit auto-fixes shipped: GitHub vulnerability-alerts + automated-security-fixes ENABLED; DMARC ramped from `p=none` to `p=quarantine; pct=25; rua=mailto:dmarc@quantumcube.app` (see ADR-012, supersedes ADR-010); branch protection on `main` ENFORCED via gh API (see ADR-014). Doc drift fixed (Cloudflare Pages → GitHub Pages everywhere). Sentry issues JAVASCRIPT-2/4/5 resolved. Supabase MCP capability expanded mid-session: `deploy_edge_function`, `get_logs`, `get_edge_function`, `list_edge_functions`, `merge_branch` now available — chat-side edge function deploys possible without `supabase functions deploy` CLI. Confirmed via app.html audit: app uses passwordless auth exclusively (magic-link + Google OAuth, zero `<input type="password">` exists), so Supabase advisor's leaked-password warning is moot — re-affirms ADR-005. SW: qc-v201 → qc-v202.
 
@@ -936,19 +938,33 @@ User action required:
 ### Pending action items (carry forward)
 
 **User-side (you click):**
-1. ✅ ~~**Branch protection**~~ — **DONE May 5 evening via gh API**. Settings: `enforce_admins=true`, `force_pushes=false`, `deletions=false`, `required_linear_history=true`. See ADR-014.
-2. **Old test user delete approval** — auth user `a72a753e-90a3-48d7-a75b-422b8b9512bf` (April 18, never confirmed, 17 days stale). Pending yes/no.
+1. ✅ ~~**Branch protection**~~ — **DONE May 5 evening**. See ADR-014.
+2. **Old test user delete approval** — auth user `a72a753e-90a3-48d7-a75b-422b8b9512bf` (April 18, never confirmed, 18 days stale). Pending yes/no.
 3. **Anthropic API key** — defer until we ship Claude-in-loop scheduled tasks (we currently don't).
 4. **Apple Passwords inventory + Google 2FA + domain registrar audits** — eyeball checks for Stage 6.
 5. **Vercel shadow deployment decision** — `prj_WKo5JwtJ02CGBVsyqbDAORQbQpDy` still auto-deploying every commit. Decide whether to keep as Academy/backup or delete.
-6. **Context7 free API key** — sign up at context7.com (we hit monthly quota during system-hardening; free key gives higher limits).
+6. **Context7 free API key** — sign up at context7.com (free tier gives higher limits than the unauthenticated quota we hit twice).
+7. **Submit `sitemap.xml` to Google Search Console** — once you've added the property at `quantumcube.app`, Submit → `https://quantumcube.app/sitemap.xml`. ~5 min.
 
-**Next-chat to-do:**
-- Wire Microsoft Clarity into `docs/app.html`
-- Configure Resend webhook for bounce/complaint signals
-- Cookie consent solution selection (deferred to pre-EU push)
-- Optionally re-check Cloudflare zone settings via dashboard or upgraded token scopes
-- Then: actual product work
+**Next-chat to-do (Android/Play Store sprint — NEXT MAJOR PHASE):**
+
+🎯 **Primary objective: Google Play Store submission as TWA (Trusted Web Activity)**
+- Generate Android keystore (Bubblewrap recommended, or PWABuilder web UI)
+- Replace placeholders in `/.well-known/assetlinks.json`:
+  - `package_name: "app.quantumcube.twa"` → real value
+  - `sha256_cert_fingerprints: ["REPLACE_WITH..."]` → keystore SHA-256
+- Generate `.aab` (Android App Bundle) via Bubblewrap
+- Google Play Console: create app entry, upload bundle, fill in store listing, declare data-safety form (uses Supabase auth, Dodo Payments, etc.), pricing ($17 one-time IAP or external billing — research Google's policy on external billing for one-time digital goods)
+- Submit for review (typical 3-7 day turnaround)
+
+🎯 **Pre-Android user-requested item: narration change**
+- User mentioned "one more thing I would like to do regarding narration" at end of May 6 session. Specifics to be defined in next chat. Probable scope: voice/script/timing tweak.
+
+🎯 **Other carry-forward (lower priority):**
+- Wire Microsoft Clarity into `docs/app.html` (still requires Website-type project per ADR-011)
+- Configure Resend webhook for bounce/complaint → Sentry
+- Cookie consent solution (deferred to pre-EU push)
+- TWA submission may surface fresh items not anticipated (Google Play data-safety form requires reviewing PostHog/Sentry/Supabase data flows)
 
 ### Tooling status (all loaded as of May 5 afternoon)
 
@@ -964,4 +980,4 @@ Still missing in claude.ai surface: GitHub Integration (use `gh` CLI via Desktop
 
 ---
 
-**End of brief v39.** Archived history → `BRIEF_ARCHIVE.md`. Marketing strategy → `MARKETING_PLAYBOOK.md`. Session protocol → `CHAT_KICKOFF.md`. Decision log → `DECISIONS.md`.
+**End of brief v40.** Archived history → `BRIEF_ARCHIVE.md`. Marketing strategy → `MARKETING_PLAYBOOK.md`. Session protocol → `CHAT_KICKOFF.md`. Decision log → `DECISIONS.md`.

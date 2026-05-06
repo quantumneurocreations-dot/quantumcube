@@ -427,6 +427,65 @@ The 64-char hex value labeled "Key ID" in the ElevenLabs settings UI **IS** the 
 
 ---
 
+## ADR-016 — SEO meta-tag strategy (10-tag minimum, single shared OG image)
+
+**Date:** 2026-05-06
+**Status:** Accepted
+
+### Context
+Independent audit on May 6 found that 9 marketing pages (`/`, `/privacy`, `/terms`, `/disclaimer`, `/popia`, `/ip`, `/security`, `/refund`, `/contact`) had only `<title>` tags. Adding meta tags raises a real question: which ones? Open Graph protocol has 30+ optional fields, Twitter Cards has its own set, schema.org JSON-LD has many more. Adding everything bloats every page and creates a maintenance burden when titles/descriptions change.
+
+User explicitly asked: "We're obviously not gonna add all of them. There's just too many, and some of them not even relevant. So let's just discuss the specifics."
+
+### Decision
+Adopt a **10-tag minimum** that covers all major social/search platforms via Open Graph as the primary source plus a single Twitter declaration for the `summary_large_image` card layout. Use a **single shared OG image** (`/qc-icon-512.png`, the white CUBE logo on starfield) across all pages.
+
+The 10 tags per page:
+
+1. `<title>` — already present
+2. `<meta name="description">` — search snippet + social fallback
+3. `<meta name="robots" content="index,follow">` — was ambiguous before
+4. `<link rel="canonical">` — duplicate-content prevention
+5. `<meta property="og:title">` — primary social headline
+6. `<meta property="og:description">` — primary social subtext
+7. `<meta property="og:url">` — canonical URL the share resolves to
+8. `<meta property="og:image">` — preview image (shared, see below)
+9. `<meta property="og:type">` — `website` for landing, `article` for legal pages
+10. `<meta name="twitter:card" content="summary_large_image">` — Twitter falls back to og:* values for everything else
+
+Per-page customization is **only**: title, description, og:type, canonical URL. Implemented as a Python list of tuples in the deploy script — adding a new page is one row.
+
+### Tags deliberately skipped
+
+| Tag | Why skipped |
+|---|---|
+| `og:image:width` / `og:image:height` / `og:image:alt` | Optional, not required. Most scrapers measure the image themselves. |
+| `og:site_name` | Title already says "Quantum Cube". |
+| `og:locale` | Defaults to `en_US`, which is correct. |
+| `twitter:title` / `twitter:description` / `twitter:image` | Twitter falls back to og:* values when absent (saves 3 tags per page). |
+| Schema.org JSON-LD (Organization, Product, etc.) | Overkill for a 9-page site. Could revisit if rich-snippet visibility becomes a marketing priority. |
+
+### Single shared OG image rationale
+
+When a user shares 3 different links to the site in one chat (e.g., the landing, the refund policy, the contact page), all 3 previews look unified rather than mismatched — visual consistency reinforces brand identity. Easier to maintain (one asset to update). Per-page hero images would be ~9× more work for marginal gain.
+
+If a future blog post or marketing page needs its own preview image, override is one line in the deploy script's PAGES list.
+
+### Consequences
+
+- All 9 pages now share-preview cleanly on WhatsApp, iMessage, Twitter/X, LinkedIn, Facebook, Slack, Discord
+- Search engines have unambiguous signals (robots, canonical, description on every page)
+- Bloat avoided: no per-page maintenance burden when title/description change
+- Per-page override path is open if a specific page needs different metadata in future
+
+### Alternatives considered
+
+- **Add full OG block (15-20 tags) on every page:** rejected — image dimensions and alt text are inferred by scrapers, and `twitter:*` tags duplicate the og:* values when both are present. Bloat for marginal gain.
+- **Per-page custom OG images:** rejected — visual inconsistency in shared chats, ~9× the asset maintenance, no measurable share-rate uplift expected at current traffic.
+- **Schema.org JSON-LD for rich snippets:** rejected — premature for current traffic. Revisit if Google Search Console shows organic traffic growth that justifies the optimization work.
+
+---
+
 ## ADR template — copy this for new entries
 
 ```markdown

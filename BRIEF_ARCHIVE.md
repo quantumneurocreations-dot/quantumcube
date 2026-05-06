@@ -16,6 +16,155 @@ specific facts AND the underlying portable lessons are both preserved here.
 
 ---
 
+## May 6, 2026 — Wednesday — AUDIT-CLOSE & SEO SPRINT (single-day session)
+
+### What this session was
+
+Single long chat session starting 7:30 AM SAST. User triggered structured boot sequence ("Are you ready?" → I confirmed surfaces, then ran health check). Working tree had 5 unstaged deletions at root (BRIEF_ARCHIVE / CHAT_KICKOFF / DECISIONS / MARKETING_PLAYBOOK / PROJECT_BRIEF) — investigated, found Finder-side action (not destructive), restored via `git restore` (zero data lost since they were committed in `af7e0d7`).
+
+While investigating, found pre-existing secret leak: `~/.zsh_history` contained live Dodo Payments API keys + webhook secrets in plaintext from a previous session. Confirmed `.supabase-env` was gitignored (never pushed to GitHub) but local file had wrong ELEVENLABS_API_KEY value (a 64-char hex hash had been substituted for the real key during a previous paste, but production was unaffected — see ADR-015 for full root cause).
+
+Coordinated 4-step rotation: scrubbed zsh_history (34 sensitive lines removed, 3969 → 3935 lines, secrets count went from 47 to 0), added `HISTORY_IGNORE` + `HIST_IGNORE_SPACE` + `HIST_NO_STORE` to `~/.zshrc` (idempotent block, future-proofing), user rotated Dodo keys at Dodo dashboard, user updated Supabase Edge Function secrets via dashboard (not CLI — clean break from leak surface). Backup of pre-scrub history kept temporarily, then deleted after verification.
+
+Then proceeded to three full audits in sequence: external Chrome audit (May 5 evening — 21 findings), unpaid-user Chrome audit (May 6 — 22 findings across 4 HIGH / 8 MED / 10 LOW), and my own independent 17-pass audit (repo, infra, runtime, security, store-readiness, SEO, perf, code quality).
+
+### 7 commits shipped to origin/main
+
+| Commit    | Title                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------ |
+| `d5fdc79` | fix(audit): 13 fixes from May 5 Chrome audit — security, a11y, perf                                          |
+| `6bb08f3` | feat(logo): header refresh — remove QNC tagline, CUBE color #0cc0df, larger sub                              |
+| `4598c64` | feat(logo): restore neon glow on CUBE — layered drop-shadows                                                 |
+| `a5310bf` | fix(a11y): comprehensive accessibility pass — 18 fixes from unpaid-user audit                                |
+| `bf51546` | fix(a11y): defensive .face:focus outline reset                                                               |
+| `5996257` | fix(a11y): replace face focus with aria-live (kills outline artifact)                                        |
+| `e40ff08` | feat(seo+store): SEO meta block on 9 pages, robots/sitemap, TWA placeholder                                  |
+
+SW: qc-v202 → qc-v208 (six version bumps; CI gate caught one drift attempt and was passed cleanly each commit).
+
+### Audit-1 closure: May 5 Chrome audit (commit d5fdc79, 13 fixes)
+
+🚨 **FIX TODAY (active bugs):**
+- DOB year `max="2025"` was hardcoded — would block 2006-born signups in 2026. Removed static max, JS init now sets `setAttribute("max", currentYear-1)` at page load.
+- Dodo Payments script: `dodopayments-checkout@latest` → `@1.8.0` pinned. Closes supply-chain risk on payment path.
+- Dodo Payments script: `defer` added (was parser-blocking).
+- face1 "Back to Sign Up" button: source had literal `\n` between words, normalized to single space.
+
+🟢 **THIS WEEK small (a11y + sharing):**
+- `required` attrs added on firstName/lastName/email/dobDay/dobYear (defence-in-depth)
+- `aria-pressed` on `#musicBtn` + 3 `.voice-btn` HTML; `updateVoiceBtn` now syncs `aria-pressed` alongside `voice-on` class
+- 5 marketing-consent checkboxes get `aria-label="Subscribe to Quantum news and insights"`
+- `#dismissBtn` gets `aria-label="Dismiss install prompt"` (was announcing as "multiplication sign")
+- Pay $17 + Back to Cube + legalBack buttons get explicit `type="button"` (was defaulting to submit outside form)
+- 13 OG + Twitter card meta tags added to `/app` (the app route — separate from the 9 marketing pages addressed later)
+
+🟡 **THIS WEEK medium (a11y + perf):**
+- Icard accordion: 19 cards (numerology + astrology) get `role="button"`, `tabindex="0"`, `aria-expanded`. Refactored inline `onclick` → unified `qcToggleCard` helper. New `qcCardKey` handler for Enter/Space keyboard activation.
+- 6 cube-face-labels get `aria-label` so SR announces "Numerology Results" not "Numerology<br>Results" concatenated.
+- 5 Vimeo iframes: `loading="lazy"` (was `loading="auto"`).
+- Legal docs: 2 `<h3>` promoted to `<h2>` so heading hierarchy starts at h2 not h3 (page has no h1 by design — single-app architecture).
+
+### Logo brand refresh (commits 6bb08f3 + 4598c64)
+
+User asked for header polish:
+- Removed "Quantum Neuro Creations" tagline (the small text above the CUBE logo) from both `#globalLogo` and `#payGlobalLogo`. Company-name references in legal docs preserved.
+- CUBE word color: `#7dd4fc` (light cyan) → `#0cc0df` (deeper turquoise/cyan brand color).
+- "Your Cosmic Profile" subtitle: 7px → 11px (~57% bigger, meets WCAG legibility floor); letter-spacing 5px → 2px (60% tighter, more readable).
+- After color change, user reported lost neon glow — single 8px drop-shadow was insufficient at higher saturation. Replaced with layered 3-shadow effect:
+  - 6px tight inner halo @ rgba(12,192,223,0.95)
+  - 14px medium halo @ rgba(125,212,252,0.65)
+  - 28px soft outer glow @ rgba(125,212,252,0.35)
+- Cleanup: unused `.logo-eye` CSS rule removed.
+
+### Audit-2 closure: unpaid-user Chrome audit (commit a5310bf, 18 fixes)
+
+User ran a separate Chrome audit while logged in as an UNPAID user (the May 5 audit had been paid-user only — found big blind spots). Returned 22 findings (4 HIGH / 8 MED / 10 LOW). My triage: 1 finding (L2, DOB year) was already fixed in qc-v203 — audit misread DOM. 6 deliberately skipped (M10 cookie consent on deferred list, L6 cube keyboard nav intentional 3D design, M3/M8 overlay z-index partial mitigation via inert content, L3 lock-screen checkbox unique IDs not needed since aria-label covers, L9 Dodo SDK fallback not warranted at jsdelivr reliability). The remaining 18 shipped:
+
+🚨 **HIGH:**
+- **H1 — Premium content gate.** `face3-content` through `face6-content` carried only `display:none` (SR-readable). Added `aria-hidden="true"` + `inert` initial state. New helper `qcSetPaidGate(isPaid)` toggles them in lockstep with display. Wired into `applyUnlockedState` (open gate on success), `resetAll` (re-close on logout), and per-face inline unlocks. Closes screen-reader paywall bypass. (Note: DevTools bypass still exists by design — server-side render gating deferred as architectural change.)
+- **H2 — Dialog accessibility (centralised).** New `QC_DIALOG` helper handles role=dialog/alertdialog, aria-modal, aria-hidden lockstep, focus trap (Tab/Shift+Tab cycles within dialog focusables), Escape key dismiss, focus stored on open and returned to trigger on close. Used by `payOverlay`, `legalOverlay`, `paySuccess`. `showPayOverlay`/`hidePayOverlay`/`showLegal`/`hideLegal`/`afterPaySuccess` all refactored through the helper.
+- **H3 — Focus management on face transitions.** Initially: `showFace()` calls `target.focus({preventScroll:true})` after CSS settles. All 9 face panels (`face0`–`face7` + `faceCheckEmail`) get `tabindex="-1"` + `aria-label` so SR announces view change. **Caused a regression** — see "H3 regression" below.
+- **H4 — Sign-up form validation announcements.** `errMsg` gets `role="alert"` + `aria-live="assertive"` (was silent). `resendMsg` gets `role="status"` + `aria-live="polite"`. New `qcMarkInvalidFields()` / `qcClearInvalidFields()` helpers set `aria-invalid` + `aria-describedby="errMsg"` on empty fields, cleared on success. Wired into both validation call sites.
+
+🟢 **MEDIUM:**
+- M1: `type="button"` sweep on action buttons (44+ instances were defaulting to `type="submit"` outside `<form>`). Covered: 4 reset-btn (regex sweep), 24 legal-link, revealBtn, resendBtn, settingsBtn, Pay $17, pay-overlay Back-to-Cube, legalBack.
+- M2: 4 lock-screen Unlock buttons get `aria-label="Unlock all 6 faces — $17 one-time fee"`.
+- M5: faceCheckEmail Back-to-Sign-Up button gets `aria-label="Back to Sign Up"` (the visible `<br>` was breaking textContent for SR users — visible rendering correct but accessibility broken).
+- M6: 19 icard accordions get `aria-label` = title only (was concatenating full body text into accessible name).
+- M7: `armDeleteAccount` armed state announced via `aria-live="assertive"` + `aria-label="Tap again to confirm permanent account deletion"`. Cleared on disarm timer.
+- M9: `settingsBtn` (↺ button) gets `aria-label="Back to Introduction"` + explicit `type="button"`.
+
+🟡 **LOW:**
+- L1+L7+L10: All 9 face panels get aria-label landmarks for SR orientation.
+- L5: `paySuccess` role=alertdialog + new `<h2 id="paySuccessTitle">` with aria-modal.
+
+### H3 regression and fix (commits bf51546 + 5996257)
+
+Initial H3 implementation focused face panels programmatically on every transition. User reported visible horizontal lines below the music icon and below "Terms of Use" on the Introduction face — modern browsers should not show focus rings on touch/click thanks to `:focus-visible` defaults, but user's environment did. Two-step fix:
+
+- **bf51546** (qc-v207): Defensive `.face:focus,.face:focus-visible{outline:none}` CSS rule added. **Insufficient** — outline was browser-side, but other browser default styles could still draw artifacts.
+- **5996257** (qc-v208): Cleaner approach — removed `target.focus()` entirely from `showFace()`. Made `#faceLabelCard` a live region (`role="status"`, `aria-live="polite"`, `aria-atomic="true"`). Existing `updateFaceLabel(n)` already updates its `textContent` with `FACE_NAMES[n]` on every face transition — this now triggers SR announcement automatically. Removed now-unneeded `tabindex="-1"` from 9 face panels. Strengthened `.face:focus` CSS reset with `!important` overrides as belt-and-braces.
+
+Net: same SR experience, zero visual artifact, simpler code path. User confirmed lines gone after hard-refresh.
+
+### Audit-3: independent full audit (my own, 17 passes)
+
+User asked me to do my own audit using direct repo + infra + runtime access (Chrome audit can't see Sentry events, Supabase advisors, or DB state). 17 verification passes covering: repo health, build state, live deployment headers, SSL/cert, PWA manifest, icon resolution, SEO across all 10 routes, robots.txt/sitemap presence, SW behavior, edge function health, performance (transferred bytes / gzip ratio / inline CSS+JS sizes), Google Play TWA readiness, marketing follow-through, image optimization, HTML lint depth, code quality (TODO/FIXME, console.log, hard-coded URLs).
+
+Findings:
+- 🔴 (real, 3): No OG/Twitter/canonical on 9 marketing pages (all were title-only). Landing CTAs link to `/app.html` but PWA `start_url` is `/app` (small inconsistency). `/.well-known/assetlinks.json` missing (Google Play TWA prerequisite).
+- 🟡 (smaller, 4): No `robots.txt` or `sitemap.xml`. 28 `console.log` calls in production. `cube-background.jpg` 327KB (could be ~80KB WebP). Supabase HaveIBeenPwned password protection disabled (irrelevant — magic-link only auth, see ADR-005).
+- ✅ Strong: Sentry 0 unresolved past 30d. CSP comprehensive. 107 try/catch blocks. All public pages 200. SSL valid through July 23, 2026. Versions in lockstep. Narrate Edge Function 200 OK at 631ms TTFB. DB health excellent (RLS active, 0 perf lints, 9 profiles: 1 paid + 8 unpaid).
+
+Audit scores: Visual/UX, Content, Security, PWA, DB at ⭐⭐⭐⭐⭐. Performance ⭐⭐⭐⭐ (single-file ADR holds). SEO/discovery ⭐⭐ → addressed in commit `e40ff08`. Play Store readiness ⭐⭐⭐ → ⭐⭐⭐⭐ after `e40ff08`.
+
+### SEO + Play Store readiness (commit e40ff08)
+
+User opted for the 10-tag minimum (see ADR-016 for full rationale and per-tag justification). Single Python script applied:
+
+- 10-tag meta block (description, robots, canonical, og:5, twitter:card 1) on 9 pages: index, privacy, terms, disclaimer, popia, ip, security, refund, contact. Per-page customization is just title + description + url + og:type. Shared OG image: `/qc-icon-512.png` for visual consistency in chats with multiple shared links.
+- Landing CTAs: 2× `/app.html` → `/app` cleanup (now consistent with manifest `start_url`).
+- New `/robots.txt`: declares sitemap, allows full crawl.
+- New `/sitemap.xml`: 10 URLs with lastmod 2026-05-06, weekly/monthly changefreq, descending priority.
+- New `/.well-known/assetlinks.json` PLACEHOLDER for Trusted Web Activity. Has the correct shape with placeholders `package_name: "app.quantumcube.twa"` and `sha256_cert_fingerprints: ["REPLACE_WITH..."]`. Live verified HTTP 200 (GitHub Pages serves dotfile dirs cleanly with `.nojekyll`).
+- No `sw.js` change (no app-runtime changes), no version bump.
+
+### Tactical lessons captured
+
+- **zsh `!important` history-expansion gotcha.** When committing CSS-related fixes that mention `!important` in the message body, double-quoted `git commit -m "..."` triggers zsh history expansion on `!important` (zsh tries to find an "important" event in history, errors with `event not found: important`). Workaround: single-quote the entire message body, OR rephrase as "with override flags" / "with !important [escaped]". User hit this once mid-session.
+- **`docs/.well-known/` works on GitHub Pages.** Was uncertain whether dotfile-prefixed dirs would be served by GH Pages. With `.nojekyll` flag at repo root, they are — verified live HTTP 200 on `assetlinks.json`.
+- **MCP tool surface can drop mid-session.** Lost Desktop Commander tool registration mid-chat (after long session); recovered via fresh `tool_search`. Self-healed without user impact (recovered through ad-hoc heredoc-paste workflow during the gap).
+- **Audit's "L2 DOB year hardcoded" was wrong.** Audit inspected DOM, saw `max="2025"`, didn't realize our JS `setAttribute` ran at page load. The DOM showed the dynamic value — audit misattributed to HTML source. Fix was already in qc-v203.
+
+### Pending action items moved off the list this session
+
+- ✅ 13 May-5 Chrome audit items shipped (qc-v203, commit `d5fdc79`)
+- ✅ Logo header refresh shipped (qc-v204 + v205)
+- ✅ 18 unpaid-user a11y items shipped (qc-v206)
+- ✅ Focus-outline regression fixed (qc-v207 + v208)
+- ✅ SEO meta gap on 9 pages closed (`e40ff08`)
+- ✅ `robots.txt` and `sitemap.xml` deployed
+- ✅ `assetlinks.json` placeholder shape deployed
+- ✅ `/app.html` → `/app` cleanup
+- ✅ DevTools/screen-reader paywall bypass closed (mitigation, not full server-side gating)
+- ✅ Brief v40 + ADR-015 + ADR-016 + this archive entry committed
+
+### Items carried forward (see PROJECT_BRIEF v40 Pending section)
+
+Same as before, plus new Android-specific items:
+- Generate Android keystore (Bubblewrap or PWABuilder)
+- Replace `assetlinks.json` placeholder with real values
+- Generate `.aab` and submit to Google Play Console
+- User has one narration change to discuss in next chat
+- Submit `sitemap.xml` to Google Search Console (~5 min)
+
+### Why end-of-session protocol triggered
+
+User explicitly stated: "Let's do a proper proper update. Let's make sure all the documents are updated so I can store a new chat. Because this next work on the last few changes on the app might take a while, and I don't want this chat to run into a long chat too much. Just make sure we've got everything in this chat that's worth updating. Do a proper update. Then I'll start a fresh chat and do the last work on the app. And then we do the proper Google Play Store preparations we almost there buddy!"
+
+Translation: explicit request for a clean handover so the next chat can start fresh on the Android/Play Store phase. Covered: PROJECT_BRIEF v40, DECISIONS ADR-016, this BRIEF_ARCHIVE entry. CHAT_KICKOFF unchanged (boot protocol still v4.1 — no operational changes warrant a bump).
+
+
 ## 📅 SESSION TIMELINE (chronological)
 
 ### April 19, 2026 (Saturday, marathon — SW qc-v42 → qc-v99)
