@@ -149,6 +149,7 @@ html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow
 /* ── FACE CONTENT PANELS ── */
 #faceContainer{position:relative;touch-action:pan-y;}
 .face{display:none;padding:24px 18px 0 18px}
+.face:focus,.face:focus-visible{outline:none}
 .face.active{display:block}
 .logo-wrap{text-align:center;padding:28px 0 24px;animation:logoIn 1.2s ease-out both}
 @keyframes logoIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -534,7 +535,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v206",
+      release: "quantum-cube@qc-v207",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
