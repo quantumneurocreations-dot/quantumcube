@@ -1,0 +1,13 @@
+[
+  {
+    "_comment": "PLACEHOLDER — replace package_name and sha256_cert_fingerprints with values from your Android keystore before publishing to Google Play. See: https://developer.chrome.com/docs/android/trusted-web-activity/quick-start#step-2_link_your_application",
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.quantumcube.twa",
+      "sha256_cert_fingerprints": [
+        "REPLACE_WITH_KEYSTORE_SHA256_FINGERPRINT"
+      ]
+    }
+  }
+]
