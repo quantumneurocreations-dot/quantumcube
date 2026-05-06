@@ -158,7 +158,7 @@ html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow
 .logo-sub{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:#ffffff;text-transform:uppercase;margin:10px 0 18px;display:block;text-align:center}
 .logo-main{font-family:'Cinzel Decorative',serif !important;font-weight:900;font-size:clamp(30px,8vw,54px);line-height:1.1;margin-bottom:2px;animation:quantumFloat 6s linear infinite;}
 .logo-q{color:#ffffff}
-.logo-c{color:#0cc0df;filter:drop-shadow(0 0 8px rgba(12,192,223,0.8));animation:quantumFloatB 11s linear 0.8s infinite;}
+.logo-c{color:#0cc0df;filter:drop-shadow(0 0 6px rgba(12,192,223,0.95)) drop-shadow(0 0 14px rgba(125,212,252,0.65)) drop-shadow(0 0 28px rgba(125,212,252,0.35));animation:quantumFloatB 11s linear 0.8s infinite;}
 .logo-div{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:14px}
 .logo-line{flex:1;max-width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--ice-dim))}
 .logo-line.r{background:linear-gradient(90deg,var(--ice-dim),transparent)}
@@ -534,7 +534,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v204",
+      release: "quantum-cube@qc-v205",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
