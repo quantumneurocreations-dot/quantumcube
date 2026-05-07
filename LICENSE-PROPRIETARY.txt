@@ -1,0 +1,19 @@
+PROPRIETARY LICENSE
+
+Copyright (c) 2024-2026 Quantum Neuro Creations
+
+All rights reserved.
+
+This source code and the materials in this repository are the proprietary
+and confidential property of Quantum Neuro Creations.
+
+No part of this software may be reproduced, distributed, modified, sold,
+or used in any form, including for commercial or derivative work, without
+the prior written permission of Quantum Neuro Creations.
+
+The repository being publicly visible does not constitute a license, grant,
+or permission of any kind. Forking, copying, or redistributing the code is
+not authorized.
+
+For inquiries about licensing, partnerships, or permitted use, contact
+Quantum Neuro Creations.
