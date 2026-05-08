@@ -4,10 +4,6 @@
       "type": "sse",
       "url": "https://mcp.supabase.com/mcp"
     },
-    "github": {
-      "type": "sse",
-      "url": "https://api.githubcopilot.com/mcp"
-    },
     "sentry": {
       "type": "sse",
       "url": "https://mcp.sentry.dev/mcp"
