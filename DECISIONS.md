@@ -486,6 +486,56 @@ If a future blog post or marketing page needs its own preview image, override is
 
 ---
 
+## ADR-017 — Stack sweep (May 8 audit): analytics depth + email pipeline + canonical skill
+
+**Date:** 2026-05-08
+**Status:** Accepted
+
+### Context
+
+After the May 5–7 GitHub MCP integration and Chat/Code split, Ronnie asked for a proactive audit of what else could improve the QNC operating stack. Audit identified one major instrumentation gap, several connected-but-underutilized tools, and one missing alerting layer. This ADR captures the full sweep as one decision because the actions are interlinked (each ships within hours of the others, all from the same audit).
+
+### Decision
+
+**SHIPPED today (May 8):**
+
+1. **Microsoft Clarity installed across all 11 user-facing pages.** Project `wmc5lrewut`. CSP extended on each page for `https://*.clarity.ms`. Bumped `qc-v208` → `qc-v209`. Commit `f52fcb6`. Heatmaps + session recordings now flowing.
+
+2. **PostHog deeply instrumented.** Diagnosed: 30-day data showed only `$pageview` / `$autocapture` / `$pageleave` firing (zero custom product events). Added three funnel events with `try`/`catch` guards: `cube_calculation_started` (after `showFace(1)` in `runCalculation`), `payment_initiated` (in `launchDodo` after session check), `payment_completed` (in `syncUnlockFromProfile` on `unpaid → paid` transition, which also calls `posthog.identify(user.id)` for retention analysis). Created **Cube Conversion Funnel** insight (`AuQW0re4`) attached to existing dashboard `662076`. Bumped to `qc-v210`. Commit `6fb6b26`.
+
+3. **Resend welcome email pipeline wired.** Created audience "Quantum Cube Customers" (id `d9ba37bf-57f3-4e9b-929c-2bac5c2e856d`). Updated `dodo-webhook` Edge Function to: capture `has_paid` before update (idempotency guard), update `has_paid = true` (existing), only on unpaid → paid transition add customer to audience and send welcome email via Resend API. Welcome email matches brand voice (premium / mystical-grounded), HTML + plain text, from `welcome@quantumcube.app`, reply-to `quantumneurocreations@gmail.com`. Graceful failure: missing `RESEND_API_KEY` logs and skips, never breaks the webhook. Deployed. Commit `14e4210`. **User action pending:** add `RESEND_API_KEY` to Supabase Edge Function secrets.
+
+4. **Canonical Quantum Cube skill created.** New `.claude/skills/quantum-cube/SKILL.md` with proper frontmatter (`name`, `description`) for skill auto-discovery. Indexes the existing canonical docs (`PROJECT_BRIEF`, `CHAT_KICKOFF`, `MARKETING_PLAYBOOK`, `DECISIONS`, `BRIEF_ARCHIVE`, the existing `.claude/skills/qc-*.md` playbooks). Encodes operating principles: surface boundary, auto-run discipline, boot sequence reference, "buddy" address, direct/opinionated voice. Captures full May-2026 tooling stack snapshot (every connected service with IDs and current state). Brand voice condensed reference. Architecture quick-reference (app flow + critical anchors). Forward note that this is the QNC template — fork for Academy / HR product. Commit `1f71cb3`.
+
+**FORMALLY DEFERRED (with triggers to revisit):**
+
+| Item | Trigger to revisit |
+|---|---|
+| **Linear migration** from `BRIEF.md`-based work tracking | Post-launch + start of second QNC product (Academy or HR), where multi-product backlog overhead justifies the migration cost |
+| **Vercel** — keep MCP connection but do not migrate Cube. Audit unused Cube project on Vercel dashboard | Start of second product if it's React/Next.js with edge runtime needs |
+| **Cloudinary** — image hosting + transforms | Start of Nano Banana asset pipeline when image volume justifies the CDN+transform layer |
+| **Resend reactivation / birthday / broadcast campaigns** | When Michelle is set up on the email-marketing tooling and has copy strategy |
+| **PostHog post-purchase survey** | Once `payment_completed` event is verified flowing from real users (week-1 post-launch) |
+| **UptimeRobot** monitors at `/`, `/sw.js`, `/functions/v1/narrate` | Immediate (Ronnie to log in, then driven via Chrome) — same-week followup |
+
+### Consequences
+
+- **Conversion funnel now measurable.** Drop-off between any two of the four steps tells us where to focus. Before today: blind from `$pageview` to revenue.
+- **Welcome email unblocked.** First paying customer post-`RESEND_API_KEY` setup gets the brand-voiced welcome automatically. Audience starts populating for future broadcasts.
+- **Canonical skill establishes the pattern** for QNC's multi-product operating system. Sibling products inherit operating principles + tooling conventions for free.
+- **Idempotency is now part of the webhook contract.** Welcome email won't dupe on Dodo retries — guarded by previous `has_paid` lookup.
+- **Three observability layers active:** Sentry (errors), PostHog (product), Clarity (UX). Sufficient for launch. UptimeRobot adds the fourth (uptime) when Ronnie completes setup.
+- **Three formal defers stay parked** with explicit triggers — no risk of them rotting on a list.
+
+### Alternatives considered
+
+- **Build all the surveys, broadcasts, and reactivation emails today:** rejected — needs copy strategy from Michelle; today's foundation is the right scope.
+- **Migrate to Vercel for Cube:** rejected — current GH Pages + Cloudflare stack is fine for static; Vercel earns its slot only when an upcoming product needs serverless edge runtime.
+- **Add Stripe alongside Dodo as backup payment processor:** rejected — Dodo handles global Adaptive Currency, no incident has justified the migration overhead.
+- **Cursor / Codex / Obsidian / 21st.dev / Stitch / Remotion / Nano Banana now:** all rejected or parked in earlier audits this week. Today's sweep stayed focused on extracting value from already-connected tools rather than adding new ones.
+
+---
+
 ## ADR template — copy this for new entries
 
 ```markdown
