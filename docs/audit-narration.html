@@ -576,9 +576,18 @@ document.addEventListener("keydown", (e) => {
 });
 
 // Init
-updateStats();
-updateFilterCounts();
-render();
+document.addEventListener("DOMContentLoaded", function() {
+  try {
+    updateStats();
+    updateFilterCounts();
+    render();
+  } catch (err) {
+    document.getElementById("main").innerHTML =
+      '<div class="empty">⚠️ Failed to load: ' + err.message +
+      '<br><small>Try hard refresh or open in incognito.</small></div>';
+    console.error("Audit init failed:", err);
+  }
+});
 </script>
 </body>
 </html>
