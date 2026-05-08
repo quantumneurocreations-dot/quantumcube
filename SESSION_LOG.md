@@ -24,7 +24,10 @@ For older completed-and-committed history, see `BRIEF_ARCHIVE.md`.
 - ✅ **Status page rebranded as "Quantum Cube — Status"** at `https://stats.uptimerobot.com/azO4bPUJJQ` — logo (qc-icon-192.png) + favicon (qc-favicon-32.png) uploaded, homepage URL set to https://quantumcube.app, auto-add-monitors stays ON
 - ✅ **PostHog narrate instrumentation shipped** (commit `e5467d5`, qc-v210→v211) — `narrate_api_requested`, `narrate_api_succeeded`, `narrate_api_failed`, `narrate_audio_played` events added to `fetchNarration()` and `startNarrationFromUrl()`. Now we can measure narration success rate, API latency, and validate the upcoming narration fix against real before/after metrics.
 - ✅ **PostHog insight "Narrate — API health" created and favorited** — https://eu.posthog.com/project/172921/insights/buiaXjHa (short_id `buiaXjHa`, id 4114564). 14-day Trends line graph of all four narrate_* events. Tagged `narrate`, `api-health`, `qc-v211`.
+- ✅ **PostHog insight "Narrate — API latency (p50 / p95 / p99)" created and favorited** — https://eu.posthog.com/project/172921/insights/AHB7Ci6u (short_id `AHB7Ci6u`, id 4114617). 14-day Trends line graph of latency_ms percentiles from `narrate_api_succeeded`. Tagged `narrate`, `latency`, `qc-v211`.
 - ✅ **Project annotation marking qc-v211 deploy** at 2026-05-08T12:00:00Z — marker will appear on every PostHog chart so the before/narration-fix-after split is visible.
+
+*(Briefly created a "Quantum Cube — Narrate Health" dashboard to group both insights, then deleted it: the available PostHog MCP tools don't support attaching insights to a dashboard programmatically (no `insight-update` exposed via tool_search), and an empty pinned dashboard is worse UX than two favorited insights. Both insights are findable via the PostHog Insights menu's Favorites filter.)*
 
 **In progress:**
 - ~~Vercel preview deploys~~ — reconsidered, **decided to skip** (single-HTML PWA on GitHub Pages doesn't earn what Vercel costs in workflow change; better to set up a one-line `python3 -m http.server` dev script in the future)
