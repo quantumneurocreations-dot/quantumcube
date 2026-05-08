@@ -535,7 +535,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v210",
+      release: "quantum-cube@qc-v211",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1493,6 +1493,8 @@ function stopNarration(){
 
 async function fetchNarration(text){
   if(!text) return null;
+  const _narrateStart = Date.now();
+  try { if(window.posthog) posthog.capture('narrate_api_requested', { text_length: text.length }); } catch(e){}
   try{
     const res = await fetch(NARRATE_URL, {
       method: "POST",
@@ -1503,10 +1505,17 @@ async function fetchNarration(text){
       },
       body: JSON.stringify({ text: text.slice(0,2400), voice_id: VALORY_VOICE_ID })
     });
-    if(!res.ok){ console.warn("narrate failed", res.status); return null; }
+    if(!res.ok){
+      try { if(window.posthog) posthog.capture('narrate_api_failed', { status: res.status, latency_ms: Date.now() - _narrateStart, reason: 'http_error' }); } catch(e){}
+      console.warn("narrate failed", res.status); return null;
+    }
     const blob = await res.blob();
+    try { if(window.posthog) posthog.capture('narrate_api_succeeded', { latency_ms: Date.now() - _narrateStart, size_bytes: blob.size }); } catch(e){}
     return URL.createObjectURL(blob);
-  }catch(e){ console.warn("narrate err", e); return null; }
+  }catch(e){
+    try { if(window.posthog) posthog.capture('narrate_api_failed', { error: String(e && e.message || e).slice(0,200), latency_ms: Date.now() - _narrateStart, reason: 'network_error' }); } catch(_){}
+    console.warn("narrate err", e); return null;
+  }
 }
 
 async function startNarration(text, cardEl){
@@ -1578,6 +1587,12 @@ async function startNarrationFromUrl(url, cardEl){
   _narrateInflight = true;
   try{
     stopNarration();
+    try {
+      if(window.posthog){
+        const _fname = (url.split('/').pop() || '').split('?')[0];
+        posthog.capture('narrate_audio_played', { source: 'prerecorded', filename: _fname });
+      }
+    } catch(e){}
     if(window.QC_AUDIO && typeof QC_AUDIO.duckMusic === "function") QC_AUDIO.duckMusic();
     const audio = new Audio(url);
     audio.preload = "auto";
