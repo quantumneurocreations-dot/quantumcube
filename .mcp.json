@@ -1,16 +1,3 @@
 {
-  "mcpServers": {
-    "supabase": {
-      "type": "sse",
-      "url": "https://mcp.supabase.com/mcp"
-    },
-    "sentry": {
-      "type": "sse",
-      "url": "https://mcp.sentry.dev/mcp"
-    },
-    "posthog": {
-      "type": "sse",
-      "url": "https://mcp.posthog.com/mcp"
-    }
-  }
+  "mcpServers": {}
 }
