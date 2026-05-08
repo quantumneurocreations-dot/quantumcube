@@ -1,4 +1,4 @@
-const CACHE='qc-v212';
+const CACHE='qc-v213';
 const NARR_CACHE='qc-narration-v3';
 
 self.addEventListener('install', e => {
@@ -34,6 +34,12 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
+
+  // Bypass SW entirely for audit tool — always serve fresh
+  if (u.pathname.includes('audit-narration')) {
+    return;
+  }
+
   if (u.pathname.includes('/Sounds/Narration/')) {
     e.respondWith(
       caches.open(NARR_CACHE).then(c =>
