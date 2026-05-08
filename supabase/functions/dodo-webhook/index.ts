@@ -3,13 +3,19 @@
 // Receives Dodo Payments webhook events and updates user profile
 // has_paid status. Verified via Standard Webhooks signature.
 //
+// On payment.succeeded transition (unpaid -> paid):
+//   - adds customer to Resend audience "Quantum Cube Customers"
+//   - sends welcome email via Resend (best-effort, non-blocking on failure)
+//
 // Subscribed events:
-//   payment.succeeded -> has_paid = true
+//   payment.succeeded -> has_paid = true (+ welcome email on transition)
 //   refund.succeeded  -> has_paid = false
 //
 // Required Supabase secrets (set via dashboard or `supabase secrets set`):
 //   DODO_PAYMENTS_WEBHOOK_KEY  (signing secret from Dodo webhook config)
 //   DODO_PAYMENTS_API_KEY      (API key from Dodo dashboard)
+//   RESEND_API_KEY             (API key from Resend dashboard) - optional;
+//                              if absent, Resend integration is skipped
 //   SUPABASE_URL               (auto-injected)
 //   SUPABASE_SERVICE_ROLE_KEY  (auto-injected)
 //
@@ -22,13 +28,43 @@ import DodoPayments from "https://esm.sh/dodopayments@2.4.1";
 
 const WEBHOOK_KEY = Deno.env.get("DODO_PAYMENTS_WEBHOOK_KEY") ?? "";
 const API_KEY = Deno.env.get("DODO_PAYMENTS_API_KEY") ?? "";
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+const RESEND_AUDIENCE_ID = "d9ba37bf-57f3-4e9b-929c-2bac5c2e856d"; // "Quantum Cube Customers"
+const RESEND_FROM = "Quantum Cube <welcome@quantumcube.app>";
+const RESEND_REPLY_TO = "quantumneurocreations@gmail.com";
 
 const dodoClient = new DodoPayments({
   bearerToken: API_KEY,
   webhookKey: WEBHOOK_KEY,
 });
+
+// ── Profile helpers ─────────────────────────────────────────────────────────
+
+async function getProfile(
+  target: { user_id?: string; email?: string },
+): Promise<{ id?: string; email?: string; name?: string; has_paid?: boolean } | null> {
+  const url = target.user_id
+    ? `${SUPABASE_URL}/rest/v1/profiles?id=eq.${target.user_id}&select=id,email,name,has_paid`
+    : `${SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(target.email!)}&select=id,email,name,has_paid`;
+
+  const res = await fetch(url, {
+    headers: {
+      apikey: SERVICE_ROLE,
+      Authorization: `Bearer ${SERVICE_ROLE}`,
+    },
+  });
+
+  if (!res.ok) {
+    console.warn(`profile fetch failed ${res.status}`);
+    return null;
+  }
+
+  const rows = (await res.json()) as Array<Record<string, unknown>>;
+  return (rows[0] as any) ?? null;
+}
 
 async function setHasPaid(
   target: { user_id?: string; email?: string },
@@ -57,6 +93,136 @@ async function setHasPaid(
   const rows = (await res.json()) as unknown[];
   return rows.length;
 }
+
+// ── Resend helpers (best-effort; never throw) ───────────────────────────────
+
+async function addContactToAudience(email: string, firstName?: string): Promise<void> {
+  if (!RESEND_API_KEY) {
+    console.log("resend: skipping audience add (no RESEND_API_KEY)");
+    return;
+  }
+  try {
+    const res = await fetch(
+      `https://api.resend.com/audiences/${RESEND_AUDIENCE_ID}/contacts`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          first_name: firstName ?? "",
+          unsubscribed: false,
+        }),
+      },
+    );
+    if (!res.ok) {
+      const detail = await res.text();
+      console.error(`resend audience add failed ${res.status}: ${detail}`);
+    } else {
+      console.log(`resend audience: added ${email}`);
+    }
+  } catch (e) {
+    console.error("resend audience add error:", String(e));
+  }
+}
+
+function welcomeHtml(firstName?: string): string {
+  const greeting = firstName ? `Welcome, ${firstName}.` : "Welcome.";
+  return `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Your cosmic profile is unlocked</title></head>
+<body style="margin:0;padding:0;background:#05050f;font-family:Georgia,'Times New Roman',serif;color:#ffffff;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#05050f;">
+<tr><td align="center" style="padding:48px 20px;">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+<tr><td align="center" style="padding-bottom:32px;">
+<span style="font-family:Georgia,'Times New Roman',serif;font-size:30px;letter-spacing:0.12em;color:#ffffff;">QUANTUM <span style="color:#7dd4fc;">C</span>UBE</span>
+</td></tr>
+<tr><td style="padding-bottom:24px;">
+<h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:26px;font-weight:normal;color:#ffffff;line-height:1.3;text-align:center;">Your cosmic profile is unlocked.</h1>
+</td></tr>
+<tr><td style="padding-bottom:8px;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.7;color:#e5e5e5;">
+<p style="margin:0 0 18px 0;">${greeting}</p>
+<p style="margin:0 0 18px 0;">All four sides of your reading — your numerology, your Western zodiac, your Chinese zodiac, and how they weave together — are yours to revisit whenever you like.</p>
+<p style="margin:0 0 18px 0;">There's no subscription. No daily push. No homework.</p>
+<p style="margin:0;">Just one carefully curated reading, designed to be read once and returned to often.</p>
+</td></tr>
+<tr><td align="center" style="padding:36px 0;">
+<a href="https://quantumcube.app/app.html" style="display:inline-block;padding:14px 36px;font-family:Georgia,'Times New Roman',serif;font-size:16px;color:#05050f;background:#7dd4fc;text-decoration:none;letter-spacing:0.06em;">Open my Cube  &#10022;</a>
+</td></tr>
+<tr><td style="padding-top:20px;border-top:1px solid #1a1a2e;font-family:Georgia,'Times New Roman',serif;font-size:14px;line-height:1.7;color:#a8a8b8;">
+<p style="margin:0;">If anything's ever unclear — payment, access, the reading itself — reply to this email. A real person reads everything that comes in.</p>
+</td></tr>
+<tr><td align="center" style="padding-top:36px;font-family:Georgia,'Times New Roman',serif;font-size:12px;line-height:1.6;color:#7a7a8a;">
+<p style="margin:0 0 4px 0;">Quantum Cube — Your cosmic profile, simplified.</p>
+<p style="margin:0;">Lifetime access. No subscription, ever.</p>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>`;
+}
+
+function welcomeText(firstName?: string): string {
+  const greeting = firstName ? `Welcome, ${firstName}.` : "Welcome.";
+  return [
+    "QUANTUM CUBE",
+    "",
+    "Your cosmic profile is unlocked.",
+    "",
+    greeting,
+    "",
+    "All four sides of your reading — your numerology, your Western zodiac, your Chinese zodiac, and how they weave together — are yours to revisit whenever you like.",
+    "",
+    "There's no subscription. No daily push. No homework.",
+    "",
+    "Just one carefully curated reading, designed to be read once and returned to often.",
+    "",
+    "Open your Cube: https://quantumcube.app/app.html",
+    "",
+    "If anything's ever unclear — payment, access, the reading itself — reply to this email. A real person reads everything that comes in.",
+    "",
+    "—",
+    "Quantum Cube — Your cosmic profile, simplified.",
+    "Lifetime access. No subscription, ever.",
+  ].join("\n");
+}
+
+async function sendWelcomeEmail(email: string, firstName?: string): Promise<void> {
+  if (!RESEND_API_KEY) {
+    console.log("resend: skipping welcome email (no RESEND_API_KEY)");
+    return;
+  }
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: RESEND_FROM,
+        to: [email],
+        reply_to: RESEND_REPLY_TO,
+        subject: "Your cosmic profile is unlocked \u2726",
+        html: welcomeHtml(firstName),
+        text: welcomeText(firstName),
+        tags: [{ name: "type", value: "welcome" }],
+      }),
+    });
+    if (!res.ok) {
+      const detail = await res.text();
+      console.error(`resend send failed ${res.status}: ${detail}`);
+    } else {
+      console.log(`resend welcome: sent to ${email}`);
+    }
+  } catch (e) {
+    console.error("resend send error:", String(e));
+  }
+}
+
+// ── Webhook entrypoint ──────────────────────────────────────────────────────
 
 serve(async (req) => {
   if (req.method !== "POST") {
@@ -88,6 +254,7 @@ serve(async (req) => {
     const data = event.data ?? {};
     const metadata = data.metadata ?? {};
     const customerEmail = data.customer?.email;
+    const customerName = data.customer?.name;
     const userId = metadata.user_id;
 
     if (!userId && !customerEmail) {
@@ -102,8 +269,24 @@ serve(async (req) => {
     const target = userId ? { user_id: userId } : { email: customerEmail };
 
     if (event.type === "payment.succeeded") {
+      // Capture previous state for idempotency (only welcome on unpaid->paid transition)
+      const prevProfile = await getProfile(target);
+      const wasUnpaid = !prevProfile?.has_paid;
+
       const updated = await setHasPaid(target, true);
-      console.log(`payment.succeeded -> has_paid=true target=${JSON.stringify(target)} rows=${updated}`);
+      console.log(`payment.succeeded -> has_paid=true target=${JSON.stringify(target)} rows=${updated} wasUnpaid=${wasUnpaid}`);
+
+      if (wasUnpaid && customerEmail) {
+        const firstName =
+          (typeof prevProfile?.name === "string" && prevProfile.name.split(" ")[0]) ||
+          (typeof customerName === "string" && customerName.split(" ")[0]) ||
+          undefined;
+        // Run both in parallel; Promise.allSettled so one failure doesn't block the other
+        await Promise.allSettled([
+          addContactToAudience(customerEmail, firstName || undefined),
+          sendWelcomeEmail(customerEmail, firstName || undefined),
+        ]);
+      }
     } else if (event.type === "refund.succeeded") {
       const updated = await setHasPaid(target, false);
       console.log(`refund.succeeded -> has_paid=false target=${JSON.stringify(target)} rows=${updated}`);
