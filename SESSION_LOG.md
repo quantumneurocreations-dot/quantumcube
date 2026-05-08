@@ -8,26 +8,50 @@ For older completed-and-committed history, see `BRIEF_ARCHIVE.md`.
 
 ---
 
-## 2026-05-08 evening — TWA-prep sprint (Play submission target Sun May 10)
+## 2026-05-08 evening/night — Chrome audit sweep + Claude Code setup
 
-**Goal:** Manifest audit + narration fix workstream. Per previous session log lead-in.
+**Goal:** Chrome tabs safety/efficiency audit + Claude Code installation + full tool setup.
 
 **Done in this chat:**
-- ✅ `docs/manifest.json` TWA audit complete (commit `4b69936`) — added `id: "/app"` matching resolved start_url; identity-preserving for the 8 existing installs. All other Play-blocking checks already passed. No SW bump needed (manifest not in cache list).
-  - Audit verdict: 9/10 boxes ticked pre-fix. Only `id` was missing. Bonus gap: no `screenshots` array — would enrich Play install prompt but needs PNG assets first (deferred sprint).
+- ✅ `docs/manifest.json` TWA audit — added `id: "/app"` for stable PWA identity (commit `4b69936`)
+- ✅ **Claude.ai settings audit** — Instructions for Claude field populated (persistent prefs across all chats), Discovery toggle OFF, Cloudflare Developer Platform disconnected (redundant), Privacy verified (training OFF, location OFF)
+- ✅ **Supabase audit** — advisors clean (0 performance, 1 known false-positive re: password auth), RLS verified on both public tables, 6 edge functions confirmed ACTIVE. Stale unconfirmed auth user `admin@qncacademy.com` deleted (created Apr 21, never confirmed). auth.users: 8, all confirmed.
+- ✅ **Sentry/Clarity CSP fix** (commit `da02bc3`, qc-v212) — Previous chat wired Clarity but only whitelisted `www.clarity.ms` in script-src. Clarity CDN (`scripts.clarity.ms`) was blocked → Sentry `JAVASCRIPT-6`. Fixed: `*.clarity.ms` wildcard across all 10 pages with CSP meta tags. JAVASCRIPT-6 resolved.
+- ✅ **PostHog audit** — SDK doctor healthy, 3 insights configured, ingestion alive (6 events/2 days). No action needed.
+- ✅ **Claude Code installed** — v2.1.133 via native installer, Opus 4.7 (1M context), Claude Max plan, `~/Projects/quantumcube`
+- ✅ **Claude Code configured** (commits `347afb6`, `55f72fc`, `efc4a66`, `2ab95a0`):
+  - `~/.claude/CLAUDE.md` — global prefs (buddy tone, autonomy, upgrading mindset)
+  - `.claude/commands/` — `/project:health-check`, `/project:pre-ship`, `/project:narration-fix`
+  - `.claude/settings.json` — PostToolUse hook warns on SW/APP version mismatch
+  - `.mcp.json` cleared (project-level remote SSE MCPs conflict with claude.ai connectors)
+- ✅ **User MCPs added to Claude Code** (global scope): ElevenLabs (24 tools), Context7 (2 tools), Tavily (5 tools)
+- ✅ **20 MCP servers total** in Claude Code: 3 user MCPs + 17 claude.ai connectors (GitHub 41, Supabase 29, Sentry 22, Resend 32, Linear 33, etc.)
+- ✅ Extra usage enabled on Claude.ai ($20/month limit)
+
+**Key architectural insight (ADR-020):** Remote SSE MCPs (Supabase/Sentry/PostHog hosted URLs) cannot run from local Claude Code — Anthropic policy blocks persistent SSE from local machines. Solution: claude.ai connectors auto-sync to Claude Code when authenticated with Max plan. No project-level MCP config needed for cloud services.
+
+**Division of labour going forward:**
+- **Claude Code (terminal):** file edits, git, bash, deploys, narration regeneration via ElevenLabs MCP
+- **Claude Chat (web):** planning, PostHog analytics, Sentry investigation, browser automation
 
 **In progress:**
-- _(none yet)_
+- _(nothing uncommitted — all shipped)_
 
 **Open questions / decisions pending:**
-- _(none yet)_
+- _(none)_
 
-**Pre-existing notes still relevant:**
-- HEAD now `4b69936` (was `eaa515d` at boot)
-- SW: `qc-v211` (no bump this commit)
-- Narration-fix workstream queued — telemetry already in place (`narrate_*` events + 2 PostHog insights + qc-v211 annotation)
+**🚀 NEXT-CHAT LEAD-IN:**
+1. **Boot as usual** per CHAT_KICKOFF.md v4.3.0. Read this SESSION_LOG after PROJECT_BRIEF v43.
+2. **Narration fix is the immediate coding task** — start in Claude Code terminal: `/project:narration-fix`. This loads context and reads the Edge Function. The audit tool at `/audit-narration.html` needs a bug fix first (user reported it's not working well). Fix the audit tool → user flags bad MP3s → Claude Code regenerates flagged files via ElevenLabs MCP with corrected phonetics → replace files.
+3. **Play Store TWA** — target was Sunday May 10. Steps: generate Android keystore via Bubblewrap, get real SHA-256 for `/.well-known/assetlinks.json`, build `.aab`, submit to Play Console.
 
----
+**Pre-existing operational notes:**
+- HEAD: `2ab95a0` → will update after handoff commit
+- SW: `qc-v212`. Pre-commit hook validates sync.
+- Sentry: 0 unresolved issues.
+- auth.users: 8 (all confirmed, no stale records).
+- Claude Code: active at v2.1.133. Run `claude` from `~/Projects/quantumcube`.
+
 
 ## 2026-05-08 PM — Stack-upgrade sweep + process hardening
 

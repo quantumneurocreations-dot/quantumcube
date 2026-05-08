@@ -1580,3 +1580,48 @@ Doc commits (this end-of-session):
 - Current SW version: qc-v202
 - Connected Chrome browser deviceId: `020a49a7-7cc1-4832-a6d3-44b28b149b0b` ("Browser 1", local macOS)
 
+
+
+---
+
+## Session: May 8, 2026 (evening/night) — Chrome audit sweep + Claude Code setup
+
+**Brief version:** v42 → v43 | **SW version:** qc-v211 → qc-v212 | **Commits:** `4b69936`, `d11e2f6`, `da02bc3`, `347afb6`, `55f72fc`, `efc4a66`, `2ab95a0` (+ handoff commit)
+
+### What shipped
+
+**manifest.json TWA prep:** Added `id: "/app"` field for stable PWA identity ahead of Play Store submission. Identity-preserving (matches resolved start_url). No SW bump needed (manifest not in cache list).
+
+**CSP/Clarity fix (qc-v212):** Previous chat wired Clarity tracking but only whitelisted `www.clarity.ms` in script-src. Clarity's CDN loads from `scripts.clarity.ms` — blocked, firing Sentry JAVASCRIPT-6. Fixed: `*.clarity.ms` wildcard in script-src across all 10 HTML pages with embedded CSP meta tags (`docs/app.html` + 9 marketing pages). SW + Sentry release bumped qc-v211 → qc-v212. JAVASCRIPT-6 resolved. Deploy verified live.
+
+**Chrome pages security/efficiency audit:**
+- Claude.ai: Instructions for Claude field populated with persistent preferences (buddy tone, autonomy rules, upgrading mindset, mobile-first, minimum tools). Discovery toggle OFF. Cloudflare Developer Platform disconnected (redundant with custom Cloudflare MCP).
+- Supabase: Security advisors clean (1 known false-positive — passwordless app, no passwords). Performance advisors 0 findings. RLS verified on both public tables. All 6 Edge Functions ACTIVE. Stale unconfirmed user `admin@qncacademy.com` deleted (created Apr 21, never confirmed, never signed in). auth.users: 8, all confirmed.
+- Sentry: See CSP fix above. 0 unresolved issues post-fix.
+- PostHog: SDK doctor healthy. 3 insights configured. Ingestion alive.
+
+**Claude Code — now active:**
+- Installed: v2.1.133 via `curl -fsSL https://claude.ai/install.sh | bash`
+- Auth: Max plan OAuth, Opus 4.7 (1M context), `~/Projects/quantumcube`
+- User MCPs (stdio, global): ElevenLabs (24 tools), Context7 (2 tools), Tavily (5 tools)
+- claude.ai connectors: 17 cloud services auto-synced (GitHub 41, Supabase 29, Sentry 22, Resend 32, Linear 33, PostHog 1, Vercel 18, etc.)
+- Total: 20 MCP servers, ~285 tools
+- Project config: `.claude/commands/` (health-check, pre-ship, narration-fix slash commands), `.claude/settings.json` (PostToolUse hook)
+- Global config: `~/.claude/CLAUDE.md` (not committed — user-level prefs)
+- `.mcp.json` cleared: remote SSE MCPs (Supabase/Sentry/PostHog) fail from local Claude Code due to Anthropic policy; claude.ai connectors auto-sync instead (ADR-020)
+- Computer use intentionally disabled (not needed for coding workflow)
+
+**Usage management:**
+- Extra usage enabled on Claude.ai ($20/month limit) to handle heavy automation sessions
+- Division of labour: Claude Code (file/git/bash/deploy), Claude Chat (analytics/planning/browser)
+
+**New ADRs:** ADR-019 (Claude Code active coding surface), ADR-020 (MCP architecture split)
+
+### State at end of session
+- HEAD: handoff commit (SESSION_LOG + brief v43 + archive + DECISIONS + KICKOFF v4.3.0)
+- SW: qc-v212, Sentry release: quantum-cube@qc-v212
+- Sentry: 0 unresolved issues
+- auth.users: 8 (all confirmed)
+- Claude Code: active, fully configured, 20 MCP servers
+- **Pending:** Narration audit tool fix → flag bad MP3s → ElevenLabs regeneration
+- **Pending:** Play Store TWA submission (target Sun May 10)

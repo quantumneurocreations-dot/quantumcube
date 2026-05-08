@@ -1,8 +1,8 @@
 # QUANTUM CUBE — CHAT KICKOFF PROTOCOL
 
 ```
-KICKOFF-VERSION: 4.2.0
-LAST-UPDATED:   2026-05-08 evening
+KICKOFF-VERSION: 4.3.0
+LAST-UPDATED:   2026-05-08 night
 INTEGRITY:      If you cannot see this version stamp in the kickoff doc, you
                 are reading a stale cached copy. Stop and ask the user to
                 re-upload CHAT_KICKOFF.md to project knowledge.
@@ -82,7 +82,7 @@ Status: [READY for full repo work | CLOUD-ONLY surface | BLOCKED: explain why]
 What's the focus, buddy?
 ```
 
-If you are about to type ANY response that does not start with "Read brief + kickoff v4.1. Running boot sequence." — stop. You are about to skip the boot. Restart.
+If you are about to type ANY response that does not start with "Read brief + kickoff v4.3. Running boot sequence." — stop. You are about to skip the boot. Restart.
 
 ### Why this is non-negotiable
 
@@ -537,3 +537,5 @@ If the user says "this feels messy" or "we're going down rabbit holes" — **sto
 ---
 
 **End of kickoff.** Now read PROJECT_BRIEF.md, then SESSION_LOG.md, for project-specific context.
+
+**Claude Code (separate surface):** Runs from terminal in `~/Projects/quantumcube`. Reads `CLAUDE.md` + `SESSION_LOG.md` directly. Has 20 MCP servers (ElevenLabs, Context7, Tavily + 17 claude.ai connectors). Use for file edits, git, bash, deploys. Start with `claude` in the project directory.

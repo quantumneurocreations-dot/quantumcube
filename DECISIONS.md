@@ -610,3 +610,41 @@ What changes because of this? Both upsides and constraints.
 ### Alternatives considered
 What else was on the table and why we didn't pick it.
 ```
+
+
+---
+
+## ADR-019: Claude Code as Active Coding Surface (May 8, 2026)
+
+**Status:** Accepted
+
+**Context:** Claude.ai web session limits were hitting ~6% per turn during automated work sessions (browser screenshots, log dumps, large context from MCP tool schemas). Heavy automation in Claude Chat was causing session exhaustion within 1 hour. Previous model distributed work across Cursor (now retired as primary tool) + Claude Chat. Need a replacement for the coding workload that doesn't consume the Claude.ai session budget.
+
+**Decision:** Install and use Claude Code as the primary surface for all file editing, git, bash, and deployment work. Claude Chat remains the surface for planning, MCP-heavy analytics queries (PostHog, Sentry investigation), browser automation, and session coordination.
+
+**Rationale:** Claude Code runs on Opus 4.7 with 1M context window, on a separate quota from Claude.ai web sessions (both covered under Max plan). File edits + git + bash + deploys don't need a browser; Claude Code handles all of it natively. The 1M context window means Claude Code can read the entire quantumcube codebase at once without pagination.
+
+**Consequences:**
+- Claude Code reads `CLAUDE.md` + `SESSION_LOG.md` as its project context.
+- Claude Chat reads all 5 project docs (BRIEF, ARCHIVE, DECISIONS, KICKOFF, SESSION_LOG) per boot sequence.
+- Both surfaces commit to the same `origin/main` repo — SESSION_LOG is the bridge.
+- Division: Code = file/git/bash/ElevenLabs MCP; Chat = analytics/monitoring/planning/browser.
+
+---
+
+## ADR-020: MCP Architecture for Claude Code — claude.ai Connectors vs Local stdio (May 8, 2026)
+
+**Status:** Accepted
+
+**Context:** After installing Claude Code, attempted to add remote SSE MCP servers (Supabase, Sentry, PostHog via their hosted URLs) to the project `.mcp.json`. OAuth completed in browser but SSE connections failed from local Mac with "Got new credentials, but reconnecting failed." Root cause: Anthropic policy blocks persistent SSE connections from local machines to these hosted endpoints (designed for Anthropic's server-side infrastructure).
+
+**Decision:** Claude Code uses two-layer MCP architecture:
+1. **claude.ai connectors** (auto-synced via Max plan OAuth): 17 cloud services (GitHub 41 tools, Supabase 29 tools, Sentry 22 tools, PostHog 1 tool, etc.) — available automatically, no local config needed.
+2. **Local stdio MCPs** (run as local processes): ElevenLabs, Context7, Tavily — installed via `claude mcp add --scope user -- uvx/npx`, authenticate via env vars, no SSE restrictions.
+
+**Consequences:**
+- Project `.mcp.json` stays empty (`{}`). No project-level MCP config needed.
+- Remote cloud services available via claude.ai connector sync — same auth, same tools, zero friction.
+- ElevenLabs enables narration regeneration directly from Claude Code terminal.
+- Context7 provides live library docs for the exact versions used in the project.
+- Tavily provides web search from terminal (no default internet access in Claude Code).
