@@ -18,18 +18,20 @@ For older completed-and-committed history, see `BRIEF_ARCHIVE.md`.
 - ✅ Key validated: domain `quantumcube.app` reachable, "Quantum Cube Customers" audience reachable
 - ✅ UptimeRobot monitor `803021425` "QC — Narrate (Edge Function)" — keyword check on `Method not allowed`, alerts when missing
 - ✅ Memory edit added: user prefers verbal/speech-to-text — never use `ask_user_input_v0` option pickers
-- ✅ Canonical skill `.claude/skills/quantum-cube/SKILL.md` bumped 1.0.0 → 1.1.0 — added §2.6 no-option-pickers, §2.7 proactive inline suggestions, §2.8 SESSION_LOG protocol
+- ✅ Canonical skill `.claude/skills/quantum-cube/SKILL.md` bumped 1.0.0 → 1.1.0 — added §2.6 no-option-pickers, §2.7 proactive inline suggestions, §2.8 SESSION_LOG protocol (commit `094cb78`)
 - ✅ `SESSION_LOG.md` created (this file)
+- ✅ **Resend bounce/complaint → Sentry pipeline shipped** (commit `723b2d5`) — new Edge Function `resend-events`, webhook `2a5c62b4-7e5c-42eb-bdeb-fbe56bcdc8f9`, signing secret stored as `RESEND_WEBHOOK_SECRET`. Closes the Resend-webhooks-NONE-configured gap from PROJECT_BRIEF.md.
 
 **In progress:**
-- Resend bounce/complaint → Sentry webhook: new Edge Function `resend-events`, signature verification via Standard Webhooks SDK, posts to Sentry as warning. Closes the carry-forward gap noted in PROJECT_BRIEF.md (Resend webhooks NONE configured).
-- Vercel preview deploys for `docs/` folder per branch
-- Public status page on UptimeRobot
+- ~~Vercel preview deploys~~ — reconsidered, **decided to skip** (single-HTML PWA on GitHub Pages doesn't earn what Vercel costs in workflow change; better to set up a one-line `python3 -m http.server` dev script in the future)
+- ~~Public status page on UptimeRobot~~ — ✅ **shipped**: existing page at `https://stats.uptimerobot.com/azO4bPUJJQ` renamed to "Quantum Cube — Status", homepage URL set to https://quantumcube.app, logo (qc-icon-192.png) + favicon (qc-favicon-32.png) uploaded. Custom CNAME `status.quantumcube.app` is paid-only on UptimeRobot — deferred. Auto-add new monitors stays ON (per user)
 
 **Skipped (user agreed to defer):**
 - Weekly digest email (user prefers daily review)
 - PostHog feature flags + first A/B test (later)
 - "First 1000 customers" Resend templates playbook (later)
+- Vercel preview deploys (Claude reconsidered — architecture mismatch)
+- UptimeRobot CNAME (`status.quantumcube.app`) — paid-only on UptimeRobot, default `stats.uptimerobot.com/azO4bPUJJQ` URL is fine
 
 **Open questions / decisions pending:**
 - Vercel preview deploy: confirm whether existing parked Vercel project can be reused or needs fresh setup
