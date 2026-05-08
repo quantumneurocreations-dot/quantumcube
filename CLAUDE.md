@@ -14,7 +14,7 @@ This file is auto-loaded by Claude Code, Cursor, and other Claude surfaces openi
 
 - **App:** `docs/app.html` (~3.5k lines, vanilla HTML+JS, single page)
 - **Service worker:** `docs/sw.js`
-- **Edge functions:** `supabase/functions/*/index.ts` (Deno, 5 functions, all `verify_jwt=false` with manual JWT)
+- **Edge functions:** `supabase/functions/*/index.ts` (Deno, 6 functions, all `verify_jwt=false` with manual JWT)
 - **Migrations:** `supabase/migrations/`
 - **Smoke test:** `scripts/smoke.sh` (Mac-only — Cloudflare blocks datacenter IPs)
 - **Skills:** `.claude/skills/` — codified workflows. Read the relevant skill before executing the matching task.
