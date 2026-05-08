@@ -535,7 +535,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v209",
+      release: "quantum-cube@qc-v210",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2596,6 +2596,9 @@ async function launchDodo(){
       return;
     }
 
+    // Analytics: mid-funnel intent event
+    try { if(window.posthog) posthog.capture('payment_initiated'); } catch(e){}
+
     const user = session.user;
     const email = user.email || "";
     const userId = user.id;
@@ -2699,6 +2702,14 @@ function syncUnlockFromProfile(profile){
   const paid = !!(profile && profile.has_paid === true);
   if(paid){
     if(!isUnlocked){
+      // Analytics: bottom-of-funnel conversion event (fires once on transition unpaid->paid)
+      try {
+        if(window.posthog){
+          var uid = (typeof qcCurrentUser !== "undefined" && qcCurrentUser && qcCurrentUser.id) || (profile && profile.id);
+          if(uid) posthog.identify(uid);
+          posthog.capture('payment_completed');
+        }
+      } catch(e){}
       applyUnlockedState(false);
     }else{
       try{const uid=(qcCurrentUser&&qcCurrentUser.id)||null;if(uid)localStorage.setItem(STORE_KEY,uid);}catch(e){}
@@ -3397,6 +3408,8 @@ profileData={fullName,day,month,year,CY,lifePath,birthday,expression,soulUrge,pe
 // Always render results so faces 3-6 are populated; locked faces hide content via display:none anyway
 try { renderAllContent(); } catch(e){ console.warn('renderAllContent failed:', e); }
 showFace(1);
+// Analytics: top-of-funnel event (no PII in properties)
+try { if(window.posthog) posthog.capture('cube_calculation_started', { life_path: lifePath, west_sign: west && west.n, chin_sign: chin && chin.n }); } catch(e){}
 }
 function textToParas(t){
 if(!t)return"<p>Content coming soon.</p>";
