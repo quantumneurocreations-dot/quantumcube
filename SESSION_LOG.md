@@ -8,6 +8,27 @@ For older completed-and-committed history, see `BRIEF_ARCHIVE.md`.
 
 ---
 
+## 2026-05-08 evening — TWA-prep sprint (Play submission target Sun May 10)
+
+**Goal:** Manifest audit + narration fix workstream. Per previous session log lead-in.
+
+**Done in this chat:**
+- ✅ `docs/manifest.json` TWA audit complete (commit `4b69936`) — added `id: "/app"` matching resolved start_url; identity-preserving for the 8 existing installs. All other Play-blocking checks already passed. No SW bump needed (manifest not in cache list).
+  - Audit verdict: 9/10 boxes ticked pre-fix. Only `id` was missing. Bonus gap: no `screenshots` array — would enrich Play install prompt but needs PNG assets first (deferred sprint).
+
+**In progress:**
+- _(none yet)_
+
+**Open questions / decisions pending:**
+- _(none yet)_
+
+**Pre-existing notes still relevant:**
+- HEAD now `4b69936` (was `eaa515d` at boot)
+- SW: `qc-v211` (no bump this commit)
+- Narration-fix workstream queued — telemetry already in place (`narrate_*` events + 2 PostHog insights + qc-v211 annotation)
+
+---
+
 ## 2026-05-08 PM — Stack-upgrade sweep + process hardening
 
 **Goal:** Continue the May 8 stack audit. User flagged: previous chat (titled "System upgrade") got disrupted by a Mac permission prompt + Claude Desktop restart. Recovered context from git commits + DECISIONS.md (ADR-017). Then user asked Claude to bring its own ideas for further upgrades instead of always being the recipient of his.
