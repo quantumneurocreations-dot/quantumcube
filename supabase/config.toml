@@ -12,3 +12,6 @@ verify_jwt = false
 
 [functions.dodo-create-session]
 verify_jwt = false
+
+[functions.resend-events]
+verify_jwt = false
