@@ -1,6 +1,7 @@
 {
   "name": "Quantum Cube",
   "short_name": "Quantum Cube",
+  "id": "/app",
   "description": "Your complete numerology and astrology cosmic profile.",
   "start_url": "/app",
   "scope": "/",
