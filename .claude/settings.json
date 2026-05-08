@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /Users/qnc/Projects/quantumcube 2>/dev/null; if git diff --name-only HEAD 2>/dev/null | grep -qE 'docs/app.html|docs/sw.js'; then SW=$(grep -oE 'qc-v[0-9]+' docs/sw.js 2>/dev/null | head -1); APP=$(grep -oE 'quantum-cube@qc-v[0-9]+' docs/app.html 2>/dev/null | head -1 | sed 's/quantum-cube@//'); [ \"$SW\" != \"$APP\" ] && echo \"⚠️  VERSION MISMATCH: SW=$SW APP=$APP — bump qc-vNNN before committing\" || true; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
