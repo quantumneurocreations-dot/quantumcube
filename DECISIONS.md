@@ -536,6 +536,60 @@ After the May 5–7 GitHub MCP integration and Chat/Code split, Ronnie asked for
 
 ---
 
+## ADR-018 — Stack hardening sweep (May 8 PM): Resend webhook → Sentry, narrate analytics, skill v1.1.0
+
+**Date:** 2026-05-08
+**Status:** Accepted
+
+### Context
+
+ADR-017 (May 8 AM) shipped the welcome-email pipeline but left two adjacent gaps: (1) no observability on what happens AFTER Resend sends the email — bounces, complaints, and delivery delays were going unmonitored, and (2) the existing narrate path (the only credit-burn surface in the app) had zero product analytics, so an upcoming narration fix would have no before/after telemetry. Same chat day also surfaced a recurring process pattern worth codifying: the user is a verbal/speech-to-text user, and option pickers (`ask_user_input_v0` widgets) create friction that simple inline questions don't. Vercel preview deploys were on the audit list and worth a real look. Crash recovery: the AM chat was killed mid-session by a Mac permission prompt, exposing that there's no live working narrative file the next chat can pick up from.
+
+### Decision
+
+**SHIPPED today (May 8 PM, seven commits `094cb78` → `e26d591`):**
+
+1. **Resend dedicated key + welcome pipeline unblocked** (`094cb78`). Created Resend API key `quantum-cube-dodo-webhook` (id `5b36c8df-645e-4a77-bc25-a060ad22b161`) scoped to the welcome-email flow. Stored in Apple Passwords + set as Supabase secret `RESEND_API_KEY`. Closes the "User action pending" line from ADR-017.
+
+2. **6th Edge Function deployed: `resend-events`** (`723b2d5`). Receives Resend webhooks via Standard Webhooks signature verification (`standardwebhooks@1.0.0`). Subscribed to `email.bounced`, `email.complained`, `email.delivery_delayed`. Forwards each to Sentry as JSON via the Store API: bounced → warning, complained → error, delayed → info. Other event types (delivered/opened/clicked) get 200-acked but never forwarded — they'd burn Sentry quota with zero actionable signal. **Fail-closed on missing secret:** if `RESEND_WEBHOOK_SECRET` is unset, the function returns 503 rather than accepting unverified webhooks. Webhook id `2a5c62b4-7e5c-42eb-bdeb-fbe56bcdc8f9`. Tested 400 (missing headers) + 401 (bad signature) before going live.
+
+3. **UptimeRobot Narrate monitor** (`803021425`). Keyword check on the live narrate Edge Function URL, looking for the `Method not allowed` string that GET requests should produce. Status page at `https://stats.uptimerobot.com/azO4bPUJJQ` rebranded "Quantum Cube — Status" with QC logo (qc-icon-192) + favicon (qc-favicon-32) + homepage URL `https://quantumcube.app`. Custom CNAME `status.quantumcube.app` deferred (paid tier on UptimeRobot — not worth $5.50/mo for the cosmetic).
+
+4. **PostHog narrate instrumentation** (`e5467d5`, qc-v210 → qc-v211). Four new events instrumented in `fetchNarration()` and `startNarrationFromUrl()`:
+   - `narrate_api_requested` — `text_length` only, never the actual narration content (privacy)
+   - `narrate_api_succeeded` — `latency_ms` + `size_bytes` of the audio blob
+   - `narrate_api_failed` — `status` (HTTP), `error` truncated to <=200 chars, `latency_ms`, `reason` (`http_error` or `network_error`)
+   - `narrate_audio_played` — filename basename, `source: prerecorded`
+
+   Two saved+favorited PostHog insights created via MCP: "Narrate — API health" (`buiaXjHa`, all four events 14-day Trends) and "Narrate — API latency p50/p95/p99" (`AHB7Ci6u`, latency_ms percentiles). Project annotation marks the qc-v211 deploy on every chart so before/after for the upcoming narration fix is a vertical line on the timeline. Pre-commit hook validated SW + Sentry release sync, smoke test 13/13 PASS post-deploy.
+
+5. **Vercel preview deploys reconsidered — SKIPPED.** Audit conclusion: single-HTML PWA on GitHub Pages doesn't earn what Vercel costs in workflow change. Vercel's value proposition (preview URLs per branch, edge runtime, framework conventions) all assume a build step, multi-page architecture, or serverless functions. Cube has none of those — it's one HTML file plus a service worker, deployed via `git push`. Better future move when local-dev friction shows up: a one-line `python3 -m http.server 8000 -d docs/` script. Vercel MCP connection stays available for sibling QNC products that may earn the slot.
+
+6. **Canonical skill bumped 1.0.0 → 1.1.0** (`094cb78`, three new sections):
+   - **§2.6 No option pickers.** User is a verbal/speech-to-text user; selecting between buttons is harder than answering a single inline open-ended question. Never use `ask_user_input_v0` even when clarification is genuinely needed — either ask one short question inline, or decide-and-execute and report back.
+   - **§2.7 Proactive inline suggestions.** Assistant brings ideas, doesn't just respond. Every session ends with one explicit "I noticed X, worth doing Y — want me to?" suggestion before signing off.
+   - **§2.8 SESSION_LOG.md protocol.** Live working narrative at repo root, appended EARLY in each chat (not at the end), updated incrementally, designed to survive chat drops. Read at start of every chat alongside `PROJECT_BRIEF.md` and `CHAT_KICKOFF.md`.
+
+### Consequences
+
+- **Email pipeline now end-to-end observable.** Welcome email leaves Resend → if it bounces, Sentry alerts. Hard bounces and complaints become first-class incidents instead of silent deliverability decay. Closes the "Webhooks: NONE configured" gap from earlier audits.
+- **Narration fix gets real before/after telemetry.** The upcoming fix can be measured against actual user latency and failure rate. The qc-v211 annotation makes the split visible on every chart.
+- **Fail-closed webhook is the right default.** A misconfigured `RESEND_WEBHOOK_SECRET` is a deployment bug; better to surface it as a 503 (Resend will retry, eventually a human notices) than to silently accept unverified payloads.
+- **Process changes in skill v1.1.0 are durable.** The no-option-pickers rule is in user memory AND in the skill, so it survives memory drops AND tool changes.
+- **`SESSION_LOG.md` is now the chat-drop recovery primitive.** Future chat crashes (like the May 8 AM permission-prompt incident) don't lose session context — the log is committed locally and incrementally.
+- **Six functions on the rate-limit pattern, one new exception.** `resend-events` doesn't use `narrate_rate_limit_try` because Standard Webhooks signature verification is the rate limit (attackers can't forge valid signatures). Pattern note added to PROJECT_BRIEF.md.
+
+### Alternatives considered
+
+- **Keep webhooks on the deferred list:** rejected — the welcome-email work in ADR-017 made the gap actively concerning (we'd be sending mail with no way to know if it bounces). 90 minutes of work is worth it.
+- **Forward all Resend events (delivered/opened/clicked) to Sentry:** rejected — those are not errors and would create noise that obscures the actual bounces. PostHog or a marketing-events table is the right home for engagement signal, not error monitoring.
+- **Instrument PostHog narrate events as `$capture` with no privacy filter:** rejected — the source text could include personal birth-data context. `text_length` is enough to detect malformed inputs without ever shipping content.
+- **Build a custom Narrate Health dashboard with both insights pinned:** attempted, deleted. The PostHog MCP doesn't expose `insight-update` cleanly via tool_search, so the insights couldn't be attached programmatically. Empty pinned dashboard is worse UX than two favorited insights findable via Insights → Favorites filter.
+- **Migrate to Vercel for preview deploys:** rejected — see decision section #5.
+- **Use `ask_user_input_v0` for clarification:** rejected by skill §2.6 (user is speech-to-text; option pickers are friction).
+
+---
+
 ## ADR template — copy this for new entries
 
 ```markdown

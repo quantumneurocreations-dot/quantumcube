@@ -1,8 +1,8 @@
 # QUANTUM CUBE — CHAT KICKOFF PROTOCOL
 
 ```
-KICKOFF-VERSION: 4.1.0
-LAST-UPDATED:   2026-05-05 evening
+KICKOFF-VERSION: 4.2.0
+LAST-UPDATED:   2026-05-08 evening
 INTEGRITY:      If you cannot see this version stamp in the kickoff doc, you
                 are reading a stale cached copy. Stop and ask the user to
                 re-upload CHAT_KICKOFF.md to project knowledge.
@@ -204,11 +204,14 @@ Summary: every new chat MUST run boot sequence (tool_search → smoke test → h
 
 ```
 PROJECT_BRIEF.md       — current operational state, line refs, fragile areas (versioned vNN)
+SESSION_LOG.md         — live working narrative since v4.2.0; chat-drop recovery primitive (skill §2.8)
 BRIEF_ARCHIVE.md       — lossless append-only history of every session
 DECISIONS.md           — ADR-style decision log (ADR-001 onward)
 CHAT_KICKOFF.md        — this doc (operating protocol)
 MARKETING_PLAYBOOK.md  — separate marketing/launch strategy doc
 ```
+
+**SESSION_LOG.md is the live narrative.** Added in skill v1.1.0 §2.8 (May 8, 2026). At chat start, read it AFTER `PROJECT_BRIEF.md` to know where the previous chat left off — it's appended-to early in each chat (not at the end), updated incrementally, and committed locally so it survives chat drops. If it's been more than ~2 chats since the last condense, the log holds the freshest operational truth, not the brief.
 
 **Brief + archive must update in the SAME COMMIT** when condensing. Caught as a near-miss May 4 PM, codified May 5. The archive is the project's lossless working memory — what's not in the archive is effectively forgotten in 6 months. Don't trust git history alone.
 
@@ -533,4 +536,4 @@ If the user says "this feels messy" or "we're going down rabbit holes" — **sto
 
 ---
 
-**End of kickoff.** Now read PROJECT_BRIEF.md for project-specific context.
+**End of kickoff.** Now read PROJECT_BRIEF.md, then SESSION_LOG.md, for project-specific context.

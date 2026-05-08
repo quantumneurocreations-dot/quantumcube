@@ -30,28 +30,45 @@ For older completed-and-committed history, see `BRIEF_ARCHIVE.md`.
 *(Briefly created a "Quantum Cube — Narrate Health" dashboard to group both insights, then deleted it: the available PostHog MCP tools don't support attaching insights to a dashboard programmatically (no `insight-update` exposed via tool_search), and an empty pinned dashboard is worse UX than two favorited insights. Both insights are findable via the PostHog Insights menu's Favorites filter.)*
 
 **In progress:**
-- ~~Vercel preview deploys~~ — reconsidered, **decided to skip** (single-HTML PWA on GitHub Pages doesn't earn what Vercel costs in workflow change; better to set up a one-line `python3 -m http.server` dev script in the future)
-- ~~Public status page on UptimeRobot~~ — ✅ **shipped**: existing page at `https://stats.uptimerobot.com/azO4bPUJJQ` renamed to "Quantum Cube — Status", homepage URL set to https://quantumcube.app, logo (qc-icon-192.png) + favicon (qc-favicon-32.png) uploaded. Custom CNAME `status.quantumcube.app` is paid-only on UptimeRobot — deferred. Auto-add new monitors stays ON (per user)
+- _(none — all live work for this chat is shipped and pushed; HEAD at `e26d591`)_
 
 **Skipped (user agreed to defer):**
 - Weekly digest email (user prefers daily review)
 - PostHog feature flags + first A/B test (later)
 - "First 1000 customers" Resend templates playbook (later)
-- Vercel preview deploys (Claude reconsidered — architecture mismatch)
+- Vercel preview deploys (Claude reconsidered — architecture mismatch, see ADR-018)
 - UptimeRobot CNAME (`status.quantumcube.app`) — paid-only on UptimeRobot, default `stats.uptimerobot.com/azO4bPUJJQ` URL is fine
+- Custom "Narrate Health" PostHog dashboard — PostHog MCP doesn't expose `insight-update` cleanly; two favorited insights are sufficient (see ADR-018)
 
 **Open questions / decisions pending:**
-- Vercel preview deploy: confirm whether existing parked Vercel project can be reused or needs fresh setup
-- Status page: keep at UptimeRobot subdomain (`stats.uptimerobot.com/...`) or set up CNAME `status.quantumcube.app`?
+- _(none — all questions from earlier in the session resolved before doc-update commit)_
 
-**What's next (this chat):**
-1. Build + deploy `resend-events` Edge Function
-2. Wire Resend webhook in dashboard
-3. Smoke test by sending a known-bad email
-4. Vercel preview deploys recon
-5. Status page configuration
+**Doc-update transition pack (committed at end of this chat):**
+- `PROJECT_BRIEF.md` v41 → v42 — added v42 update note, bumped Edge Functions count 5 → 6, added `resend-events` subsection, added webhook → Sentry paragraph in Email Infrastructure
+- `DECISIONS.md` — added ADR-018 covering all PM work (Resend webhook, narrate analytics, Vercel skip, skill v1.1.0)
+- `CHAT_KICKOFF.md` v4.1.0 → v4.2.0 — added `SESSION_LOG.md` to the read-in-order doc system, updated boot footer to read brief THEN session log
+- `SESSION_LOG.md` (this file) — final polish for clean handoff
 
-**For the next chat (if this one drops):**
-- Read this entry + the latest commits in `git log --since="2026-05-08"` to know where we are
-- Resend webhook deployment status: check `supabase functions list` for `resend-events`
-- Skill is at v1.1.0 — process changes already encoded, no need to re-derive
+**🚀 NEXT-CHAT LEAD-IN (start here):**
+
+1. **Boot sequence as usual** — run `tool_search` calls per `CHAT_KICKOFF.md` v4.2.0 BOOT STEP 1, smoke-test loaded tools (BOOT STEP 2), health-check (BOOT STEP 3). Then read `PROJECT_BRIEF.md` v42 and this file.
+
+2. **First proactive task: 60-second `docs/manifest.json` audit against Google Play TWA requirements.** Target: Google Play submission Sunday May 10 (~2 days out). Specifically grep for / verify:
+   - 512×512 `maskable` icon entry (`purpose: "any maskable"` or `purpose: "maskable"` separate entry)
+   - `display: "standalone"` or `"fullscreen"` (TWA requires this; `"browser"` would block Play approval)
+   - `start_url` is a valid same-origin path
+   - `theme_color` and `background_color` set (Play uses these for splash)
+   - `name` (full ≤ 45 chars for Play listing) and `short_name` (≤ 12 chars for Android home screen)
+   - `scope` set to `/` or app-root
+   - `id` field present (recommended for stable PWA identity)
+
+   Report findings back inline, then ship a single commit if anything's missing. Existing `/.well-known/assetlinks.json` placeholder still needs the real keystore SHA-256 — that's a separate step user needs to do at signing time, not chat-side.
+
+3. **Then onto the narration-fix workstream.** Telemetry is now waiting (qc-v211 instrumentation + 2 PostHog insights + project annotation). Whatever the fix turns out to be, the before/after will be measurable on `https://eu.posthog.com/project/172921/insights/buiaXjHa` and `/AHB7Ci6u`.
+
+**Pre-existing operational notes for next-chat-Claude:**
+- HEAD: `e26d591` (post doc-update commit will bump this)
+- Live SW: `qc-v211`. Sentry release: `quantum-cube@qc-v211`. Pre-commit hook validates this sync — don't bypass.
+- Resend webhook deployment status: live, signing secret set, tested 400 + 401 paths
+- Welcome email pipeline live on `dodo-webhook` Edge Function (ADR-017) — first paying customer post-`RESEND_API_KEY` setup gets brand-voiced welcome automatically
+- Skill is at v1.1.0 — process changes already encoded (no option pickers, proactive close, this log file)
