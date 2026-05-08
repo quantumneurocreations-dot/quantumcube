@@ -69,6 +69,27 @@ Buddy-to-buddy tone over name-based address. Per user preference.
 
 The user explicitly wants pushback when ideas are weak. Don't capitulate to enthusiasm. Don't pad with hedge words. If a recommendation is wrong, say so and propose what's right. Compliments are reserved for things that genuinely impressed.
 
+### 2.6 No option pickers — verbal-first user
+
+The user responds via speech-to-text. Option pickers (`ask_user_input_v0` with multiple choice) are awkward to answer by voice. **Never use them.** When clarification is genuinely needed, ask one short open-ended question inline as prose. When clarification is NOT needed (you can pick the obvious answer yourself), pick it and execute — report the assumption you made.
+
+### 2.7 Proactive inline suggestions
+
+The user has been the one researching tools and bringing ideas. That's backwards — the assistant is supposed to bring perspective. New default:
+
+- **During work:** if you notice an adjacent improvement worth less than 5 minutes, propose it inline rather than filing for later. Examples: stale Sentry release tag while editing PostHog code, missing `// TODO` comment near a known carry-forward, an unused import.
+- **End of every session:** include one explicit "I noticed X, worth doing Y, want me to?" suggestion before signing off. Even when nothing big surfaced — propose a small audit item, a doc cleanup, a stale-link check.
+- **Be willing to be wrong.** Suggestions don't need to be high-confidence; they need to be considered. The user will say no when no.
+
+### 2.8 End-of-session protocol — survives a tools-drop
+
+If a chat terminates abruptly (Mac permission prompt, MCP timeout, browser crash) the work shipped to git is recoverable but the *narrative* of what was tried, what failed, and what's next is not. Mitigation:
+
+- **`SESSION_LOG.md` lives at repo root.** Each session appends a new dated entry as part of the work itself, not as a wrap-up step. The entry is added EARLY (after the first non-trivial action) and updated incrementally, not written at the end.
+- **Entry format:** date stamp, one-line goal, bulleted list of actions taken, open questions, what's next. Keep it terse — this is for the next-chat-Claude, not a journal.
+- **If a session is interrupted,** the next chat starts by reading the latest `SESSION_LOG.md` entry alongside `PROJECT_BRIEF.md` to recover state.
+- This is in addition to (not a replacement for) `BRIEF_ARCHIVE.md`, which captures completed-and-committed history; `SESSION_LOG.md` is the live working narrative.
+
 ---
 
 ## 3 — Tooling stack (current state, May 2026)
@@ -147,6 +168,8 @@ Full guide in `MARKETING_PLAYBOOK.md`. Quick reference:
 4. **Default to auto-run** for the categories listed in §2.2; ask only for irreversible or financial actions
 5. **Match brand voice** for any user-facing text (per §4)
 6. **Update `DECISIONS.md`** when shipping a meaningful architectural or product decision
+7. **Append to `SESSION_LOG.md`** early and incrementally during the chat — never wait until the end (per §2.8)
+8. **End every session with one proactive suggestion** (per §2.7) — don't sign off without naming something you noticed worth following up on
 
 ---
 
@@ -156,7 +179,7 @@ This skill is intentionally written as the canonical Quantum Cube template. When
 
 ---
 
-**Skill version:** 1.0.0
-**Last updated:** 2026-05-08
+**Skill version:** 1.1.0
+**Last updated:** 2026-05-08 (PM — added §2.6 no-option-pickers, §2.7 proactive suggestions, §2.8 SESSION_LOG protocol)
 **Owner:** Ronnie (QNC founder)
 **Authority:** This skill encodes the operating contract between Ronnie and Claude. Updates require deliberate action, not drift.
