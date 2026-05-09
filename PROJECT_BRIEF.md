@@ -1,6 +1,8 @@
 # QUANTUM CUBE — PROJECT BRIEF
 
-**Version: v43 | Last Updated: May 8, 2026 (Friday, night)**
+**Version: v44 | Last Updated: May 9, 2026 (Saturday)**
+
+> **v44 update note (May 9, 2026 — narration audit + full re-record pass, Claude Code surface):** Single full-day session in Claude Code terminal closing the narration-fix workstream queued from May 8. **Audit tool fixed first** — `docs/audit-narration.html` had silent HTML parse failure on every browser caused by an unescaped single quote in a textarea `placeholder` (`ed04840`); SW bypass for the audit page added so debug iterations don't fight stale cache (`9aec413`). **Narration audit completed** — 98 of 385 MP3s flagged. **Three rerecord passes to find the correct ElevenLabs settings**: pass 1 used speed 0.85 (from the dashboard's saved voice profile — wrong); pass 2 used speed 1.0 (closer but still off); pass 3 used **speed 1.15 with similarity_boost 0.75** — found in git history at `f7854ee` and `be9f385` where the `narrate` Edge Function had these hard-coded at the time the originals were generated. **ElevenLabs voice settings now LOCKED** (ADR-021): `eleven_turbo_v2_5`, stability 0.5, similarity_boost 0.75, speed 1.15 (welcome.mp3 exception: speed 1.0). The dashboard-stored voice profile is no longer authoritative — `scripts/rerecord.py` carries the canonical values. **Per-category TTS text transforms** (manifest text + UI text unchanged — TTS payload only): Life Phase 2-9 opening rewritten to "A Life Phase governed by the N marks…" (kills pause-before-number); Karmic Lesson digits 1-9 spelled as words ("One", "Two", …); Hidden Passion 4 & 6 digits spelled out + em-dash padded to break phonetic merge with "Passion"; chin_ox uses phonetic respelling "Ocks" because "Ox" rendered as just a sibilant. **`scripts/rerecord.py` shipped** as the canonical re-record tool — reads manifest, applies named transforms per filename, POSTs ElevenLabs, writes MP3s, emits SHA256 JSON. **Numerology Matrix description card added to `app.html`** — non-interactive `.matrix-desc` card directly below the 3×3 grid, same border/glass/inset-glow as the icard pattern. **claudewatch MCP installed surgically** (binary at `~/.local/bin/claudewatch`, MCP entry only — no global rule files; ADR-024). **11 commits this session** (`e0f3c79` → `29eece7`), SW qc-v213 → **qc-v223** (10 cache bumps for the rerecord/transform iterations + matrix card + audit fixes). Both manifests (`narration-manifest.json` + embedded `<script id="manifest-data">` in `audit-narration.html`) updated for every batch. **HEAD: `29eece7` → updated by handoff commit.** **Next session:** listen-pass on hp_6 v223 first thing — em-dash padding may still drop the digit; if so, fall back to "The Hidden Passion of Six" preposition-bridge.
 
 > **v43 update note (May 8, 2026 evening/night — Chrome audit sweep + Claude Code setup):** Full-evening sprint, two major tracks. **Track 1 — Chrome pages audit:** Claude.ai settings hardened (Instructions for Claude populated, Discovery OFF, Cloudflare Dev Platform disconnected). Supabase: advisors clean, RLS verified, 6 Edge Functions confirmed, stale unconfirmed user `admin@qncacademy.com` deleted (auth.users now 8, all confirmed). Sentry: diagnosed + fixed `JAVASCRIPT-6` — previous chat had wired Clarity but only whitelisted `www.clarity.ms` in script-src; Clarity CDN (`scripts.clarity.ms`) blocked. Fixed: `*.clarity.ms` wildcard across all 10 pages with CSP meta tags (`da02bc3`), SW bumped qc-v211 → qc-v212, JAVASCRIPT-6 resolved. PostHog: healthy, 3 insights configured, SDK doctor clean. **Track 2 — Claude Code setup (NOW ACTIVE):** Installed v2.1.133 via native installer (`curl -fsSL https://claude.ai/install.sh | bash`), authenticated via Max OAuth, runs Opus 4.7 (1M context) in `~/Projects/quantumcube`. User MCPs (global stdio): ElevenLabs 24 tools, Context7 2 tools, Tavily 5 tools. Total 20 MCP servers (3 user + 17 claude.ai connectors auto-synced via Max plan — GitHub 41, Supabase 29, Sentry 22, Resend 32, Linear 33, etc.). Project files added: `.claude/commands/` (3 slash commands: health-check, pre-ship, narration-fix), `.claude/settings.json` (PostToolUse hook for SW version mismatch), `~/.claude/CLAUDE.md` (global prefs, not committed). `.mcp.json` cleared — project-level remote SSE MCPs conflict with claude.ai connectors (key insight ADR-020). Division of labour: Claude Code for file/git/bash/deploy, Claude Chat for analytics/monitoring/planning. Extra usage enabled ($20/month). Commits: `4b69936` (manifest id), `da02bc3` (CSP fix), `347afb6`–`2ab95a0` (Claude Code config). **HEAD: `2ab95a0` → updated by handoff commit.**
 
@@ -214,7 +216,7 @@ Quantum Cube Plus ($9.99/mo with daily horoscope generation) is **deferred and d
 |   |- privacy.html / terms.html / refund.html         (CSP applied)
 |   |- disclaimer.html / ip.html / popia.html          (CSP applied)
 |   |- security.html / contact.html                    (CSP applied)
-|   |- sw.js                                   <- Service worker (current: qc-v202)
+|   |- sw.js                                   <- Service worker (current: qc-v223)
 |   |- CNAME                                   <- quantumcube.app
 |   |- .nojekyll
 |   |- qc-icon-192.png / qc-icon-512.png / qc-icon-512-maskable.png
@@ -332,7 +334,7 @@ Use **regular Chrome** (not PWA) with **DevTools open**.
 - **Product analytics:** PostHog EU (project 172921, host `https://eu.i.posthog.com`, asset host `eu-assets.i.posthog.com`). Production-only gate (`location.hostname !== "quantumcube.app"` short-circuits init). Wired in `app.html` AFTER Sentry init, BEFORE Supabase client. Public client API key (safe to commit, by design): `phc_sXjrkSUy6SAFddX69V53HGEegVKPUpRjpUEsERF6wcVk`. Autocapture ON. Person ID anonymized until `posthog.identify(user_id)` wired (deferred — paid users only).
 - **Content Security Policy:** applied to all 10 HTML pages via `<meta http-equiv>`. App page allows inline scripts (existing inline handlers); public pages strict (no inline, no external scripts). Allow-list covers Vimeo (player.vimeo.com + vimeo.com), jsdelivr, Sentry CDN + ingest, Supabase, Dodo, Google Fonts, PostHog (eu.i.posthog.com + eu-assets.i.posthog.com), blob: (media-src for narration).
 - **PWA:** Real `sw.js` file + static `manifest.json` with PNG icons. Two-cache architecture:
-  - `qc-v202` — HTML + root assets (skips caching of HTTP 206 partial-content responses since `b99b807`)
+  - `qc-v223` — HTML + root assets (skips caching of HTTP 206 partial-content responses since `b99b807`; bypasses `audit-narration.html` per ADR-022)
   - `qc-narration-v3` — 385 MP3s
 
 ---
@@ -340,12 +342,15 @@ Use **regular Chrome** (not PWA) with **DevTools open**.
 ## 🎙️ ELEVENLABS NARRATOR
 
 - **Voice:** Valory (voice ID `VhxAIIZM8IRmnl5fyeyk`)
-- **Production model:** `eleven_turbo_v2_5`, speed 1.15
-- **Welcome greeting:** speed 1.00 (slower) — re-rendered May 3
+- **Production voice settings (LOCKED, ADR-021):** model `eleven_turbo_v2_5`, stability 0.5, similarity_boost 0.75, speed 1.15
+- **Welcome greeting exception:** speed 1.00 (slower) — re-rendered May 3 (`5a382ff`)
+- **Dashboard voice profile is NOT authoritative** — `scripts/rerecord.py` carries the canonical settings; the dashboard has been edited and may drift
+- **Re-record tooling:** `scripts/rerecord.py` reads the manifest, applies per-category TTS-payload transforms (Karmic Lesson digit→word, Hidden Passion em-dash padding, chin_ox phonetic Ox→Ocks, Life Phase opening rephrase — see ADR-023), POSTs ElevenLabs direct, emits SHA256 JSON for manifest update. Edit `FILES`, dry-run, run.
 - **Edge Function:** `supabase/functions/narrate/index.ts` (rate-limited, `verify_jwt=false`)
 - **Rate limit:** 5/min + 20/hr per IP. Returns HTTP 429 with `Retry-After`.
-- **Inventory:** 385 MP3s on disk
+- **Inventory:** 385 MP3s on disk — full library at production settings as of May 9, 2026 (qc-v223). 98 re-recorded this session, 287 untouched originals match.
 - **Live Edge Function only fires for Face 5** (combined results) — ONLY credit-burn path at runtime
+- **Audit tool:** `https://quantumcube.app/audit-narration.html` — embeds the full manifest, lets you flag bad files for re-record. Always served network-only (SW bypassed per ADR-022).
 
 Full narration paths + generation pipeline detail in BRIEF_ARCHIVE.md.
 
@@ -712,7 +717,7 @@ Phase 5a (US-only with Dodo billing, months 1-2) → Phase 5b (English markets, 
 
 | System                   | State                                                                                                                       |
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| GitHub Pages             | Live (source: `/docs` on `main`. SW **qc-v202**, narration **qc-narration-v3**)                                             |
+| GitHub Pages             | Live (source: `/docs` on `main`. SW **qc-v223**, narration **qc-narration-v3**)                                             |
 | **quantumcube.app**      | **LIVE** — landing + 8 legal + /app, all HTTP 200, all CSP-protected ✓                                                      |
 | qncacademy.com           | Full email stack live                                                                                                       |
 | Google Workspace         | admin@qncacademy.com + 5 aliases                                                                                            |

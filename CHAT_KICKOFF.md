@@ -1,12 +1,18 @@
 # QUANTUM CUBE — CHAT KICKOFF PROTOCOL
 
 ```
-KICKOFF-VERSION: 4.3.0
-LAST-UPDATED:   2026-05-08 night
+KICKOFF-VERSION: 4.4.0
+LAST-UPDATED:   2026-05-09
 INTEGRITY:      If you cannot see this version stamp in the kickoff doc, you
                 are reading a stale cached copy. Stop and ask the user to
                 re-upload CHAT_KICKOFF.md to project knowledge.
 ```
+
+**State at last handoff (2026-05-09):**
+- **Narration pipeline complete** — all 385 MP3s at production settings (model `eleven_turbo_v2_5`, stability 0.5, similarity_boost 0.75, speed 1.15). 98 files re-recorded this session; 287 untouched originals match. Audit tool live at `/audit-narration.html` for any future regression.
+- **`scripts/rerecord.py`** is the canonical re-record script — edit `FILES`, dry-run, run. Carries the locked production voice settings + per-category text transforms (Karmic Lesson digit→word, Hidden Passion em-dash padding, chin_ox phonetic Ox→Ocks).
+- **App state:** small UI polish + Play Store TWA still pending.
+- **Cache:** `qc-v223`. SW + Sentry release in sync (pre-commit hook validates).
 
 **For starting every new Chat Claude session. Attach this AND PROJECT_BRIEF.md.**
 
@@ -59,7 +65,7 @@ grep -n "function runCalculation" docs/app.html | head -1
 Your very first message back to the user MUST follow this template. The user is trained to recognize it and will know boot was skipped if it's missing or different. Skipping the template = failure.
 
 ```
-Read brief + kickoff v4.1. Running boot sequence.
+Read brief + kickoff v4.4. Running boot sequence.
 
 🔍 Tool discovery:
 • Filesystem: [loaded N tools | not available]
@@ -82,7 +88,7 @@ Status: [READY for full repo work | CLOUD-ONLY surface | BLOCKED: explain why]
 What's the focus, buddy?
 ```
 
-If you are about to type ANY response that does not start with "Read brief + kickoff v4.3. Running boot sequence." — stop. You are about to skip the boot. Restart.
+If you are about to type ANY response that does not start with "Read brief + kickoff v4.4. Running boot sequence." — stop. You are about to skip the boot. Restart.
 
 ### Why this is non-negotiable
 

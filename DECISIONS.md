@@ -648,3 +648,78 @@ What else was on the table and why we didn't pick it.
 - ElevenLabs enables narration regeneration directly from Claude Code terminal.
 - Context7 provides live library docs for the exact versions used in the project.
 - Tavily provides web search from terminal (no default internet access in Claude Code).
+
+---
+
+## ADR-021: ElevenLabs Valory voice settings locked at production values (May 9, 2026)
+
+**Status:** Accepted
+
+**Context:** Session re-recording the 98 audit-flagged narration MP3s burned three batches discovering that the live ElevenLabs voice profile and the production-correct generation settings had drifted. The voice profile retrieved via `/v1/voices/<id>` returned `speed: 0.85, similarity_boost: 0.51` — both wrong. The originals (committed in `f7854ee` and `be9f385`) were generated through the `narrate` Edge Function which had `voice_settings: { stability: 0.5, similarity_boost: 0.75, speed: 1.15 }` hard-coded at the time.
+
+**Decision:** Production voice settings for any future ElevenLabs Valory generation are locked to:
+- `model_id`: `eleven_turbo_v2_5`
+- `stability`: 0.5
+- `similarity_boost`: 0.75
+- `speed`: 1.15
+- **Exception**: `welcome.mp3` only — `speed: 1.0` (re-rendered May 3 at slower pace, per `5a382ff`).
+
+The voice profile saved on the ElevenLabs dashboard side is **not authoritative** — it has been edited and may drift again. The authoritative source is the values above, also documented in PROJECT_BRIEF.md "ElevenLabs Narrator" section and hard-coded in `scripts/rerecord.py` `VOICE_SETTINGS`.
+
+**Consequences:**
+- `scripts/rerecord.py` carries the canonical settings — when it disagrees with the dashboard, the script wins.
+- Any future re-record across the 385-file library uses these exact settings to keep tonal consistency with the untouched ~287 originals.
+- If we ever decide to re-do the whole library at a different pace, this ADR gets superseded; piecemeal drift is not allowed.
+
+---
+
+## ADR-022: `audit-narration.html` always bypasses the service worker (May 9, 2026)
+
+**Status:** Accepted
+
+**Context:** Debugging the audit page in May 2026 burned hours because the service worker was serving stale cached copies of `audit-narration.html` even after fixes were committed and live. Hard refresh wasn't enough on mobile; users would have a broken page indefinitely until the SW cache rotated. Each cache bump for an unrelated SW reason would also drag along stale audit-page state.
+
+**Decision:** `docs/sw.js` short-circuits any fetch for `audit-narration.html` (or its `?` querystring variants) and serves it network-only. Never cached. Commit `9aec413`.
+
+**Consequences:**
+- Audit page always reflects the latest deploy; no SW rotation needed.
+- Audit page is unusable offline — acceptable, since audit is a desktop diagnostic tool, never user-facing.
+- Cache version bumps don't need to consider audit-page state.
+- The same pattern is the right answer for any future debug/diagnostic page that we want to update without a forced full SW refresh.
+
+---
+
+## ADR-023: TTS scripts spell out digits as words for numbered category narrations (May 9, 2026)
+
+**Status:** Accepted
+
+**Context:** ElevenLabs' Valory voice consistently swallowed or mispronounced bare digits in category-name openings — "A Karmic Lesson 1 points…" came out as "A Karmic Lesson points…" with the digit completely missing. Hidden Passion 4 and 6 had the same issue, with "Passion 6" sometimes phonetically merging into "Passion's". This is a known TTS issue with short numeric tokens at strong consonant boundaries.
+
+**Decision:** For all numbered-category narrations, the TTS-input rewrites the digit as a spelled-out word ("1" → "One", "6" → "Six", etc.). The manifest text and the in-app UI text stay numeric — only the payload sent to ElevenLabs is transformed. Implementation is per-category in `scripts/rerecord.py`'s `transform()` function:
+
+- `num_kl_*`: "A Karmic Lesson <digit>" → "A Karmic Lesson <Word>"
+- `num_hp_*`: "The Hidden Passion <digit>" → "The Hidden Passion — <Word> —" (em-dashes for hp_6 specifically; comma-pad / no-pad as fallback patterns)
+- `num_pc_*_v1`: opening rephrased entirely from "A 2 Life Phase marks…" to "A Life Phase governed by the 2 marks…" (kills the awkward pause-before-number)
+- `chin_ox_*`: "Ox" → "Ocks" (phonetic respelling — "Ox" was rendering as just a sibilant)
+
+**Consequences:**
+- Display text ↔ audio text intentionally diverge for numbered categories. The user reads "Karmic Lesson 1"; they hear "Karmic Lesson One".
+- Future numbered categories must extend `transform()` — bare digits in TTS input can't be trusted.
+- Phonetic respellings (Ox → Ocks) are isolated to the TTS payload and never leak to UI.
+- If we ever switch TTS providers, all of `transform()` likely becomes redundant — flag for re-evaluation at provider-swap time.
+
+---
+
+## ADR-024: claudewatch installed MCP-only — no global rule files (May 9, 2026)
+
+**Status:** Accepted
+
+**Context:** claudewatch is a third-party Claude Code-adjacent observability tool. Its install script offered to write rule/preference files into `~/.claude/` — typical pattern for tools that want to inject persistent behavior changes into every Claude Code session. We don't trust unaudited tools to silently mutate our global Claude Code config; the install audit memory entry already codifies this.
+
+**Decision:** Install claudewatch as a binary at `~/.local/bin/claudewatch` plus an MCP entry only. **No** `~/.claude/CLAUDE.md` writes, **no** project-level rule files, **no** auto-injected slash commands. The MCP exposes ~30 analytics tools (session stats, friction scores, cost attribution, drift signals, etc.) which we can call when explicitly relevant. Behavior of every other Claude Code session is unaffected.
+
+**Consequences:**
+- claudewatch tools are available on demand but never run unless we call them.
+- No risk of silent prompt injection or context pollution from third-party rules.
+- If claudewatch later ships a feature that genuinely benefits from rule-file installation, we revisit — but the bar is "show us what's in the rule file first."
+- Same pattern is the default for any future Claude Code-adjacent tool: MCP entry yes, global rules no.

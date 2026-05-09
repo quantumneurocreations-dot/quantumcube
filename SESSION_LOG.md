@@ -8,6 +8,62 @@ For older completed-and-committed history, see `BRIEF_ARCHIVE.md`.
 
 ---
 
+## 2026-05-09 — Narration audit & full re-record pass (Claude Code)
+
+**Goal:** Finish the narration-fix workstream queued from May 8: fix the audit tool, audit all 385 MP3s for issues, regenerate every flagged file at the correct ElevenLabs settings, ship.
+
+**Done in this chat (Claude Code, terminal):**
+
+- ✅ **claudewatch MCP installed** (surgical — MCP entry only, no global rule files; binary at `~/.local/bin/claudewatch`). Cache bumped qc-v212 → qc-v213 in the same commit chain. Tools-list now shows ~30 claudewatch.* analytics tools alongside the prior 20 servers.
+- ✅ **`docs/audit-narration.html` actually working.** Root cause: an unescaped single quote inside the textarea `placeholder` attribute was silently breaking HTML parsing on every browser, leaving the page blank with no console error. Fixed via `&apos;` escapes (commit `ed04840`). Added a SW bypass for `audit-narration.html` so a fresh copy is always served (commit `9aec413`) — needed because debugging cached failures was burning time.
+- ✅ **Audit completed end-to-end.** Of 385 MP3s, **98 flagged** for re-record (Life Phase pause-before-number, Birthday prefix, Karmic Lesson awkward digits, etc.).
+- ✅ **Three rerecord passes to find the correct ElevenLabs settings** (story preserved here because it cost real credits):
+  1. **Pass 1 — speed 0.85.** Source: ElevenLabs dashboard's saved voice profile (`/v1/voices/<id>` returned `speed: 0.85`). Wrong — too slow vs the untouched 287 originals.
+  2. **Pass 2 — speed 1.0.** Closer but still noticeably slower than the rest of the library.
+  3. **Pass 3 — speed 1.15.** Found by `git log -p --pickaxe-regex -S speed -- supabase/functions/narrate/`: commits `f7854ee` (256 MP3 bulk gen) and `be9f385` (phase 2 generation) both had the narrate Edge Function hard-coded at `speed: 1.15` at the time the originals were recorded. **This is the correct production setting.** `similarity_boost` was also wrong on disk (0.51 vs original 0.75) — corrected in the same pass.
+- ✅ **Script transformations for stubborn TTS.** Ran each fix as a TTS-payload-only rewrite (manifest text untouched, app UI unchanged):
+  - **Life Phase 2-9** (`num_pc_<n>_v1.mp3`): "A 2 Life Phase marks…" → "A Life Phase governed by the 2 marks…" (kills the awkward pause before the number).
+  - **Birthday 1-9, 11, 22**: scripts already had "Birthday Number" prefix. Confirmed and shipped as-is.
+  - **Karmic Lesson 1-9** (`num_kl_*`): digit spelled out — "A Karmic Lesson 1" → "A Karmic Lesson One". Same pattern for 2/3/4/5/6/7/9.
+  - **Hidden Passion 4 & 6** (`num_hp_4_v3`, `num_hp_6_v3`): digit was being swallowed entirely. Spelled out + comma-padded + finally em-dash-padded for hp_6 ("The Hidden Passion — Six —"). Three passes to crack hp_6 specifically.
+  - **chin_ox_core**: "Ox" rendered as just "ssss". TTS payload now uses phonetic respelling "Ocks" for all three occurrences. Manifest text stays "Ox".
+- ✅ **`scripts/rerecord.py` shipped** — single-purpose Python script that reads the manifest from `audit-narration.html`, applies the named transforms, POSTs to ElevenLabs direct, writes MP3s + emits SHA256 JSON for manifest update. Lives at `scripts/rerecord.py` for any future per-file re-records.
+- ✅ **Numerology Matrix description card added to `docs/app.html`** — non-interactive `.matrix-desc` static card sits directly below the 3×3 matrix grid, explains what the matrix is. Same border/glass/inset-glow as the icard pattern, no cursor or click handler.
+- ✅ **Per-key ElevenLabs quota raised twice** mid-session (200K → 400K) when the rerecord burned through the per-key character cap. Account-level pool was fine; the `Quantum Cube` key's own limit needed lifting in the dashboard.
+
+**Commits (chronological, this session, after `ed04840`):**
+
+- `e0f3c79` — feat(narration): regenerate 98 MP3s; Life Phase pause fix, Birthday prefix
+- `b78bf86` — chore: bump cache qc-v213 → qc-v214
+- `6d8af3b` — feat(narration): regenerate 98 MP3s at speed 1.0; bump qc-v214 → v215
+- `3161400` — feat(matrix): add static description card below numerology matrix; bump v215 → v216
+- `cec69b0` — feat(narration): regenerate 98 MP3s at original settings (sb 0.75, speed 1.15); bump v216 → v217
+- `4bc30f3` — feat(narration): re-record 20 MP3s; spell out Karmic Lesson digit; bump v217 → v218
+- `c19d19f` — feat(narration): re-record 3 MP3s (hp_4, hp_6, ox); bump v218 → v219
+- `cb1628e` — feat(narration): re-record same 3 MP3s again; bump v219 → v220
+- `4064ae4` — fix(narration): phonetic fixes for hp_4/hp_6 (digit→word) and ox (Ox→Ocks); bump v220 → v221
+- `46f7994` — fix(narration): hp_6 comma-pad 'Six'; bump v221 → v222
+- `29eece7` — fix(narration): hp_6 em-dash 'Six' to break Passion-Six phonetic merge; bump v222 → v223
+
+**In progress:**
+- _(Listening pass on hp_6 v223 outstanding from user — em-dash fix may still drop the digit. Fallback plan: "The Hidden Passion of Six" or "Number Six".)_
+
+**Open questions / decisions pending:**
+- _(none beyond hp_6 confirmation above)_
+
+**🚀 NEXT-CHAT LEAD-IN:**
+1. Boot per `CHAT_KICKOFF.md` v4.3.0.
+2. **Listen to hp_6 at qc-v223 first thing.** If the digit is still swallowed, tweak `rerecord.py` Hidden Passion transform to "The Hidden Passion of Six" (preposition-bridge), regenerate, ship.
+3. **Narration pipeline is otherwise complete** — all 385 MP3s at the correct production settings, manifests in sync, audit tool live for any future regression.
+4. **App polish + Play Store TWA still pending** (target was Sunday May 10 — slipping; keystore + assetlinks SHA-256 still need real values).
+
+**Pre-existing operational notes:**
+- HEAD: `29eece7` → will update after this handoff commit
+- SW: `qc-v223`. Sentry release: `quantum-cube@qc-v223`. Pre-commit hook validates sync.
+- ElevenLabs key (`Quantum Cube`) per-key cap now 400K; account pool healthy.
+- `scripts/rerecord.py` is the canonical re-record tool — edit `FILES` + transforms, dry-run, generate.
+
+
 ## 2026-05-08 evening/night — Chrome audit sweep + Claude Code setup
 
 **Goal:** Chrome tabs safety/efficiency audit + Claude Code installation + full tool setup.
