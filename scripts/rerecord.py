@@ -34,13 +34,7 @@ HTML_PATH = REPO / "docs" / "audit-narration.html"
 OUTPUT_DIR = REPO / "docs" / "Sounds" / "Narration"
 
 FILES = [
-    "num_bd_3_v2.mp3", "num_bd_7_v3.mp3", "num_bd_9_v3.mp3",
-    "num_su_3_v3.mp3", "num_su_7_v1.mp3", "num_su_7_v3.mp3",
-    "num_hp_4_v3.mp3", "num_hp_6_v3.mp3",
-    "num_kl_1_v1.mp3", "num_kl_2_v1.mp3", "num_kl_2_v2.mp3",
-    "num_kl_3_v1.mp3", "num_kl_3_v2.mp3", "num_kl_4_v1.mp3", "num_kl_4_v2.mp3",
-    "num_kl_5_v2.mp3", "num_kl_6_v2.mp3",
-    "west_aries_career.mp3", "chin_ox_core.mp3", "chin_ox_love.mp3",
+    "num_hp_4_v3.mp3", "num_hp_6_v3.mp3", "chin_ox_core.mp3",
 ]
 
 
