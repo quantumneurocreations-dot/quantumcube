@@ -24,10 +24,8 @@ VOICE_ID = "VhxAIIZM8IRmnl5fyeyk"
 MODEL_ID = "eleven_turbo_v2_5"
 VOICE_SETTINGS = {
     "stability": 0.5,
-    "similarity_boost": 0.51,
-    "style": 0.0,
-    "speed": 1.0,
-    "use_speaker_boost": True,
+    "similarity_boost": 0.75,
+    "speed": 1.15,
 }
 THROTTLE_S = 0.5
 
