@@ -81,7 +81,7 @@ def transform(filename: str, text: str) -> str:
         return new_text
     if filename.startswith("num_hp_"):
         new_text, n = HIDDEN_PASSION_RE.subn(
-            lambda mm: f"The Hidden Passion, {DIGIT_WORD[mm.group(1)]},",
+            lambda mm: f"The Hidden Passion — {DIGIT_WORD[mm.group(1)]} —",
             text, count=1,
         )
         if n == 0:
