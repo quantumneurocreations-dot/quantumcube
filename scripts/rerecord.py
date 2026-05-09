@@ -37,6 +37,9 @@ FILES = [
     "num_hp_4_v3.mp3", "num_hp_6_v3.mp3", "chin_ox_core.mp3",
 ]
 
+HIDDEN_PASSION_RE = re.compile(r"\bThe Hidden Passion (\d+)\b")
+OX_WORD_RE = re.compile(r"\bOx\b")
+
 
 def load_manifest():
     html = HTML_PATH.read_text(encoding="utf-8")
@@ -75,6 +78,19 @@ def transform(filename: str, text: str) -> str:
         )
         if n == 0:
             raise RuntimeError(f"{filename}: Karmic Lesson opening not found")
+        return new_text
+    if filename.startswith("num_hp_"):
+        new_text, n = HIDDEN_PASSION_RE.subn(
+            lambda mm: f"The Hidden Passion {DIGIT_WORD[mm.group(1)]}",
+            text, count=1,
+        )
+        if n == 0:
+            raise RuntimeError(f"{filename}: Hidden Passion opening not found")
+        return new_text
+    if filename.startswith("chin_ox_"):
+        new_text, n = OX_WORD_RE.subn("Ocks", text)
+        if n == 0:
+            raise RuntimeError(f"{filename}: 'Ox' word not found")
         return new_text
     return text
 
