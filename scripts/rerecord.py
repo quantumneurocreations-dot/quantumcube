@@ -34,38 +34,13 @@ HTML_PATH = REPO / "docs" / "audit-narration.html"
 OUTPUT_DIR = REPO / "docs" / "Sounds" / "Narration"
 
 FILES = [
-    "num_lp_1_v2.mp3", "num_lp_3_v3.mp3", "num_lp_4_v1.mp3", "num_lp_7_v3.mp3",
-    "num_lp_9_v1.mp3", "num_lp_9_v3.mp3", "num_lp_11_v1.mp3", "num_lp_22_v1.mp3",
-    "num_bd_1_v1.mp3", "num_bd_1_v2.mp3", "num_bd_1_v3.mp3",
-    "num_bd_2_v1.mp3", "num_bd_2_v2.mp3", "num_bd_2_v3.mp3",
-    "num_bd_3_v1.mp3", "num_bd_3_v2.mp3", "num_bd_3_v3.mp3",
-    "num_bd_4_v1.mp3", "num_bd_4_v2.mp3", "num_bd_4_v3.mp3",
-    "num_bd_5_v1.mp3", "num_bd_5_v2.mp3", "num_bd_5_v3.mp3",
-    "num_bd_6_v1.mp3", "num_bd_6_v2.mp3", "num_bd_6_v3.mp3",
-    "num_bd_7_v1.mp3", "num_bd_7_v2.mp3", "num_bd_7_v3.mp3",
-    "num_bd_8_v1.mp3", "num_bd_8_v2.mp3", "num_bd_8_v3.mp3",
-    "num_bd_9_v1.mp3", "num_bd_9_v2.mp3", "num_bd_9_v3.mp3",
-    "num_bd_11_v1.mp3", "num_bd_11_v2.mp3", "num_bd_11_v3.mp3",
-    "num_bd_22_v1.mp3", "num_bd_22_v2.mp3", "num_bd_22_v3.mp3",
-    "num_ex_2_v1.mp3", "num_ex_3_v1.mp3", "num_ex_4_v2.mp3",
-    "num_ex_5_v1.mp3", "num_ex_5_v2.mp3", "num_ex_6_v2.mp3",
-    "num_ex_7_v1.mp3", "num_ex_7_v3.mp3", "num_ex_11_v1.mp3", "num_ex_22_v1.mp3",
-    "num_su_1_v1.mp3", "num_su_3_v3.mp3", "num_su_5_v3.mp3",
-    "num_su_7_v1.mp3", "num_su_7_v2.mp3", "num_su_7_v3.mp3",
-    "num_su_9_v2.mp3", "num_su_11_v3.mp3", "num_su_22_v3.mp3",
-    "num_su_33_v2.mp3", "num_su_33_v3.mp3",
-    "num_hp_2_v3.mp3", "num_hp_4_v3.mp3", "num_hp_5_v3.mp3",
-    "num_hp_6_v1.mp3", "num_hp_6_v3.mp3", "num_hp_7_v1.mp3", "num_hp_8_v3.mp3",
+    "num_bd_3_v2.mp3", "num_bd_7_v3.mp3", "num_bd_9_v3.mp3",
+    "num_su_3_v3.mp3", "num_su_7_v1.mp3", "num_su_7_v3.mp3",
+    "num_hp_4_v3.mp3", "num_hp_6_v3.mp3",
     "num_kl_1_v1.mp3", "num_kl_2_v1.mp3", "num_kl_2_v2.mp3",
     "num_kl_3_v1.mp3", "num_kl_3_v2.mp3", "num_kl_4_v1.mp3", "num_kl_4_v2.mp3",
-    "num_kl_5_v2.mp3", "num_kl_6_v1.mp3", "num_kl_6_v2.mp3",
-    "num_kl_7_v1.mp3", "num_kl_7_v2.mp3", "num_kl_9_v1.mp3",
-    "num_pc_2_v1.mp3", "num_pc_3_v1.mp3", "num_pc_4_v1.mp3", "num_pc_5_v1.mp3",
-    "num_pc_6_v1.mp3", "num_pc_7_v1.mp3", "num_pc_8_v1.mp3", "num_pc_9_v1.mp3",
-    "west_aries_career.mp3", "west_gemini_str.mp3",
-    "west_virgo_core.mp3", "west_pisces_core.mp3",
-    "chin_ox_core.mp3", "chin_ox_shadow.mp3", "chin_ox_love.mp3",
-    "chin_dog_core.mp3",
+    "num_kl_5_v2.mp3", "num_kl_6_v2.mp3",
+    "west_aries_career.mp3", "chin_ox_core.mp3", "chin_ox_love.mp3",
 ]
 
 
@@ -82,6 +57,11 @@ def load_manifest():
 
 
 LIFE_PHASE_RE = re.compile(r"^An?\s+(\d+)\s+Life Phase marks\b")
+KARMIC_LESSON_RE = re.compile(r"\bA Karmic Lesson (\d+)\b")
+DIGIT_WORD = {
+    "1": "One", "2": "Two", "3": "Three", "4": "Four", "5": "Five",
+    "6": "Six", "7": "Seven", "8": "Eight", "9": "Nine",
+}
 
 
 def transform(filename: str, text: str) -> str:
@@ -93,6 +73,14 @@ def transform(filename: str, text: str) -> str:
         )
         if n == 0:
             raise RuntimeError(f"{filename}: Life Phase opening not found")
+        return new_text
+    if filename.startswith("num_kl_"):
+        new_text, n = KARMIC_LESSON_RE.subn(
+            lambda mm: f"A Karmic Lesson {DIGIT_WORD[mm.group(1)]}",
+            text, count=1,
+        )
+        if n == 0:
+            raise RuntimeError(f"{filename}: Karmic Lesson opening not found")
         return new_text
     return text
 
