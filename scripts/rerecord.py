@@ -26,7 +26,7 @@ VOICE_SETTINGS = {
     "stability": 0.5,
     "similarity_boost": 0.51,
     "style": 0.0,
-    "speed": 0.85,
+    "speed": 1.0,
     "use_speaker_boost": True,
 }
 THROTTLE_S = 0.5
