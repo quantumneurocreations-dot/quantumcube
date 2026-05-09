@@ -34,7 +34,7 @@ HTML_PATH = REPO / "docs" / "audit-narration.html"
 OUTPUT_DIR = REPO / "docs" / "Sounds" / "Narration"
 
 FILES = [
-    "num_hp_4_v3.mp3", "num_hp_6_v3.mp3", "chin_ox_core.mp3",
+    "num_hp_6_v3.mp3",
 ]
 
 HIDDEN_PASSION_RE = re.compile(r"\bThe Hidden Passion (\d+)\b")
@@ -81,7 +81,7 @@ def transform(filename: str, text: str) -> str:
         return new_text
     if filename.startswith("num_hp_"):
         new_text, n = HIDDEN_PASSION_RE.subn(
-            lambda mm: f"The Hidden Passion {DIGIT_WORD[mm.group(1)]}",
+            lambda mm: f"The Hidden Passion, {DIGIT_WORD[mm.group(1)]},",
             text, count=1,
         )
         if n == 0:
