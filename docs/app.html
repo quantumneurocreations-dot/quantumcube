@@ -228,6 +228,10 @@ input[type="number"]{-moz-appearance:textfield}
 .sb-wide{}
 
 .matrix-wrap{padding:4px 0;margin-bottom:16px}
+.matrix-desc{background:var(--glass);border:1px solid var(--border);padding:16px 18px;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 1px 0 0 0 rgba(125,212,252,0.15),inset -1px 0 0 0 rgba(125,212,252,0.15);position:relative;overflow:hidden;margin-bottom:16px}
+.matrix-desc::before{content:'';position:absolute;top:0;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,rgba(125,212,252,0.6),transparent)}
+.matrix-desc::after{content:'';position:absolute;bottom:0;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,rgba(125,212,252,0.6),transparent)}
+.matrix-desc p{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;line-height:1.95;color:var(--text);margin:0;text-align:center}
 .matrix-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:100%;margin:0 auto 14px}
 .mc{border:1px solid var(--border);padding:8px;text-align:center;background:var(--glass);position:relative;aspect-ratio:1/1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 1px 0 0 0 rgba(125,212,252,0.15),inset -1px 0 0 0 rgba(125,212,252,0.15);overflow:hidden}
 .mc.passion{border-color:var(--border-m);background:rgba(125,212,252,0.04)}
@@ -535,7 +539,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v215",
+      release: "quantum-cube@qc-v216",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -810,6 +814,7 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 <div class="scoreboard"><div class="sb-grid" id="sbGrid"></div></div>
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Numerology Matrix &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div class="matrix-wrap"><div class="matrix-grid" id="matGrid"></div></div>
+<div class="matrix-desc"><p>The Numerology Matrix maps the frequency of each digit 1&ndash;9 in your full birth name. Numbers that appear often reveal your natural strengths and dominant energies. Numbers that are absent become your Karmic Lessons &mdash; qualities you are here to develop. The number that appears most frequently is your Hidden Passion.</p></div>
 <button class="voice-btn" title="Toggle voice narrator" aria-pressed="false">👄<span class="audio-label">Voice</span></button>
 <div class="sec-head"><div class="sec-line"></div><span class="sec-txt">&#10022; &nbsp; Your Interpretations &nbsp; &#10022;</span><div class="sec-line"></div></div>
 <div class="card-stack" id="numCards"></div>
