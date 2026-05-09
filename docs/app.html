@@ -539,7 +539,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v224",
+      release: "quantum-cube@qc-v225",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1029,6 +1029,17 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 // STATE
 // ═══════════════════════════════════════════
 let currentFace=0,isUnlocked=false,profileData=null,deferredInstall=null;
+// TWA detection — true when running inside the Android app wrapper
+const IS_TWA = (function(){
+  try{
+    if(document.referrer && document.referrer.startsWith('android-app://')) return true;
+    if(sessionStorage.getItem('qc_twa')==='1') return true;
+    const p=new URLSearchParams(window.location.search);
+    if(p.get('utm_source')==='android-twa') return true;
+  }catch(e){}
+  return false;
+})();
+if(IS_TWA) sessionStorage.setItem('qc_twa','1');
 // Hide cube on entry screen at startup
 // cubeScene hidden by default in CSS — no JS needed on load
 
@@ -2922,6 +2933,11 @@ function redeemCode(){
 function unlock(){
   if(!profileData){
     alert("Please enter your details on the first side first.");
+    return;
+  }
+  if(IS_TWA){
+    // Android TWA: external billing not available in-app — open website in browser
+    window.open('https://quantumcube.app/app?ref=android-unlock','_blank','noopener');
     return;
   }
   showPayOverlay();
