@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "d92a6cfff1fde61e",
+        "id": "335007f3d9e89f4e",
         "type": "tabs",
         "children": [
           {
-            "id": "736a92b62cfbf737",
+            "id": "aa416ff98f1c6613",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -74,7 +74,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "53d5c6e2557d3763",
@@ -189,8 +190,13 @@
       "3d-graph:3D Graph": false
     }
   },
-  "active": "736a92b62cfbf737",
+  "active": "aa416ff98f1c6613",
   "lastOpenFiles": [
+    "vault/features/service-worker.md",
+    "vault/features/unlock-flow.md",
+    "vault/features/resend-events.md",
+    "vault/features/dodo-webhook.md",
+    "vault/features/narrate.md",
     "vault/tech/resend.md",
     "vault/tech/cloudflare.md",
     "vault/tech/android.md",
@@ -212,14 +218,9 @@
     "vault/decisions/ADR-007.md",
     "vault/decisions/ADR-006.md",
     "vault/decisions/ADR-005.md",
-    "vault/decisions/ADR-004.md",
-    "vault/decisions/ADR-003.md",
-    "vault/decisions/ADR-002.md",
-    "vault/decisions/ADR-001.md",
     "vault/features",
     "vault/tech",
     "vault/decisions",
-    "vault",
-    "OPERATING_RULES.md"
+    "vault"
   ]
 }
