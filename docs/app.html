@@ -365,6 +365,11 @@ input[type="number"]{-moz-appearance:textfield}
 #legalFooter,.legal-footer{
   text-align:center;padding:16px 0 0;flex-shrink:0;margin-top:32px;margin-bottom:16px;
 }
+.legal-footer::before,#legalFooter::before{
+  content:"For entertainment purposes only";
+  display:block;font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;
+  text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:10px;
+}
 .legal-link{background:transparent;border:none;color:#ffffff;font-family:'Cinzel',serif;
   font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;padding:6px 12px;
   text-decoration:none;
@@ -539,7 +544,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v225",
+      release: "quantum-cube@qc-v226",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
