@@ -282,3 +282,13 @@ Checked against all Play Policy Center categories May 10, 2026. Three additions:
 
 ### Everything Else — CLEAN ✅
 Restricted Content, IP, Impersonation, Malware, MUS, Families, Store Listing, Spam/UX — all verified clean against current policy. No additional gaps found.
+
+---
+
+## 14. Play Console Tools — Pre-Launch Checklist
+
+### 14a. Deep Link Verification (Play Console tool)
+🔴 [ ] After uploading AAB to internal track → Play Console → Android Vitals → Deep links → run verification. Separate from assetlinks.json check. Takes 2 minutes. Must pass green before promoting to closed test.
+
+### 14b. Crash Stack Trace Deobfuscation
+🟡 [ ] Upload ProGuard/R8 mapping file to Play Console so Google's own crash reporter shows readable stack traces (separate from Sentry). TWA may not generate a mapping file — check after AAB build. If no mapping file exists, skip this step.
