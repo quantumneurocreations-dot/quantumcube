@@ -1,27 +1,51 @@
 {
   "collapse-filter": false,
-  "search": "path:.md -path:docs/ -path:supabase/ -path:scripts/ -path:android/ -path:brand/ -path:screenshots/ -path:More backgrounds/",
+  "search": "-path:docs -path:supabase -path:scripts -path:android -path:brand -path:screenshots -path:More",
   "showTags": true,
   "showAttachments": false,
   "hideUnresolved": false,
   "showOrphans": true,
   "collapse-color-groups": false,
   "colorGroups": [
-    { "query": "tag:#core", "color": { "a": 1, "rgb": 861951 } },
-    { "query": "tag:#session", "color": { "a": 1, "rgb": 2874879 } },
-    { "query": "tag:#reference", "color": { "a": 1, "rgb": 16744272 } },
-    { "query": "tag:#marketing", "color": { "a": 1, "rgb": 10027263 } }
+    {
+      "query": "tag:#core",
+      "color": {
+        "a": 1,
+        "rgb": 1048527
+      }
+    },
+    {
+      "query": "tag:#session",
+      "color": {
+        "a": 1,
+        "rgb": 2874879
+      }
+    },
+    {
+      "query": "tag:#reference",
+      "color": {
+        "a": 1,
+        "rgb": 16732855
+      }
+    },
+    {
+      "query": "tag:#marketing",
+      "color": {
+        "a": 1,
+        "rgb": 10027263
+      }
+    }
   ],
   "collapse-display": false,
   "showArrow": false,
-  "textFadeMultiplier": 0.8,
-  "nodeSizeMultiplier": 1.8,
-  "lineSizeMultiplier": 1.5,
+  "textFadeMultiplier": 0.4,
+  "nodeSizeMultiplier": 0.775026041666667,
+  "lineSizeMultiplier": 0.412204861111111,
   "collapse-forces": false,
-  "centerStrength": 0.5,
-  "repelStrength": 10,
+  "centerStrength": 1,
+  "repelStrength": 18.0902777777778,
   "linkStrength": 1,
-  "linkDistance": 80,
-  "scale": 1,
+  "linkDistance": 468,
+  "scale": 0.5882947170096384,
   "close": false
 }

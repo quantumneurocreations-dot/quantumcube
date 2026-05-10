@@ -4,17 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "01b15bc0323e31d4",
+        "id": "d92a6cfff1fde61e",
         "type": "tabs",
         "children": [
           {
-            "id": "02384549c76326f1",
+            "id": "736a92b62cfbf737",
             "type": "leaf",
             "state": {
-              "type": "3d_graph_view",
+              "type": "graph",
               "state": {},
-              "icon": "lucide-file",
-              "title": "3D-Graph"
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -158,8 +158,19 @@
               "icon": "lucide-list",
               "title": "Outline"
             }
+          },
+          {
+            "id": "a06d1eddaaf517d4",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
@@ -179,7 +190,7 @@
       "3d-graph:3D Graph": false
     }
   },
-  "active": "02384549c76326f1",
+  "active": "736a92b62cfbf737",
   "lastOpenFiles": [
     "OPERATING_RULES.md",
     "CHAT_KICKOFF.md"
