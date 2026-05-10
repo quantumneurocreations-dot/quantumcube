@@ -8,6 +8,58 @@ For older completed-and-committed history, see `BRIEF_ARCHIVE.md`.
 
 ---
 
+## 2026-05-10 — Brand polish + Google Play Store setup (Chat Claude)
+
+**Goal:** Pre-Play-Store app polish, full Play Store submission preparation, Google Play developer account creation, Android TWA build + assetlinks wired.
+
+**Done in this chat:**
+
+- ✅ **Brand cyan updated #7dd4fc → #0cc0df** across entire `app.html` — 75 replacements covering hover states, glows, box-shadows, cube face borders, face label cards, all interactive button hovers, and all 5 Vimeo `color=` params (commit `af5a3f3`, qc-v223 → qc-v224). CSS `--glow` variable now points to the new cyan so all referencing selectors inherit automatically.
+- ✅ **Privacy policy updated** — added PostHog (EU, anonymous usage events) and Sentry (EU, error/crash data) to service providers list; effective date updated 24 Apr → 9 May 2026 (commit `0db433f`). Live at `https://quantumcube.app/privacy` — Play Store ready.
+- ✅ **TWA detection + Android payment redirect** (commit `0cd3f9c`, qc-v224 → qc-v225): `IS_TWA` const (triple detection: `document.referrer` startsWith `android-app://`, `sessionStorage`, URL param `utm_source=android-twa`). `unlock()` now short-circuits to `window.open('https://quantumcube.app/app?ref=android-unlock')` on Android — zero Play Billing required, zero policy risk. Web unlock flow completely unchanged. Supabase `has_paid` flag means existing paid web users open the Android app already unlocked.
+- ✅ **`assetlinks.json` wired with real SHA-256** (commit `d298804`): `app.quantumcube.twa` + keystore fingerprint `14:01:92:A5:20:FC:99:8F:03:07:2C:0E:69:3B:EC:04:18:5F:30:DA:14:07:BF:61:6E:C8:E1:12:F9:F7:9B:3D`. Verified live on `https://quantumcube.app/.well-known/assetlinks.json`.
+- ✅ **PLAY_STORE_PREP.md / PLAY_STORE_CHECKLIST.md created** (commit `9ed130b`, Claude Code) — comprehensive Play Store submission checklist with 2026 Google policies cited, ~80 yes/no items, payment strategy analysis, all risks documented.
+- ✅ **AAB + APK built by Claude Code** — `android/app-release-bundle.aab` (1.66 MB), `android/app-release-signed.apk` (1.62 MB). Keystore: `android/quantumcube.keystore` (2.7 KB), validity 10,000 days (~27 years). Target SDK 35, compile SDK 36. Keystore password saved to Apple Passwords ("Quantum Cube Android Keystore"). `.gitignore` protects keystore + build outputs; `twa-manifest.json` + `scripts/build-twa.mjs` committed for rebuild.
+- ✅ **Google Play developer account created** — Quantum Neuro Creations, personal account, Account ID `9099327495444765719`, `quantumneurocreations@gmail.com`. $25 fee paid. Identity documents + bank statement uploaded for verification. 14-day closed testing gate clock started May 10 → production access request eligible ~May 24.
+- ✅ **Play Console configured** — developer name "Quantum Neuro Creations", website `https://quantumcube.app`, payments profile: Computer Software, "QUANTUM CUBE" statement name, in-app purchases (not paid apps).
+- ✅ **Feature graphic created** — 1024×500 PNG (Play Store spec), Milky Way space photo background, Cinzel Decorative font (real Google Fonts via Puppeteer), wireframe neon cyan cube (multi-pass glow), tagline + descriptor. File: `quantum-cube-feature-graphic.png`.
+
+**Commits (this session):**
+- `af5a3f3` — style: update brand cyan #7dd4fc → #0cc0df across app (buttons, glows, cube, Vimeo); bump qc-v224
+- `0db433f` — legal: privacy policy — add PostHog + Sentry to service providers, update effective date
+- `0cd3f9c` — feat(android): TWA detection — redirect unlock to website on Android, no Play Billing required; bump qc-v225
+- `d298804` — feat(android): assetlinks.json — real SHA-256 fingerprint from production keystore (app.quantumcube.twa)
+- `9ed130b` — docs: add PLAY_STORE_PREP.md — strict first-try-approval checklist with 2026 policies cited (Claude Code)
+
+**Current HEAD:** `d298804` | **SW:** `qc-v225` | **Sentry:** `quantum-cube@qc-v225`
+
+**Pending / waiting:**
+- ⏳ Google identity verification (1–3 business days — unlocks "Create app" in Play Console)
+- ⏳ 12 testers needed for closed testing track — recruit friends/family with Android phones, 14-day gate
+- ⏳ Play App Signing SHA-256 — Google generates their own upload key after first AAB upload; add as second fingerprint in `assetlinks.json`
+- ⏳ Data safety form + content rating questionnaire (in Play Console once app entry created)
+- 🔲 In-app entertainment disclaimer — short "for entertainment purposes only" note somewhere visible (Google "impossible functionality" risk for astrology/numerology)
+- 🔲 Supabase Pro plan upgrade — flagged: free tier auto-pauses projects with no traffic for 7 days. Live paying-customer app = production blocker risk at $25/month. Also unlocks custom auth domain (`auth.quantumcube.app` → fixes ugly OAuth sign-in URL).
+- 🔲 4–6 portrait screenshots of live app (user's phone) for Play Store listing
+- 🔲 Feature graphic: user to approve final version, then copy to `docs/` + commit
+
+**🚀 NEXT-CHAT LEAD-IN:**
+1. Boot per `CHAT_KICKOFF.md`. Check `d298804` is still HEAD.
+2. **Check email** — Google identity verification approval unblocks everything. When approved: go to Play Console → Create app → walk through setup.
+3. **Tester recruitment** — if 12 testers not yet recruited, draft message and send today. Counter visible in Play Console → Testing → Closed testing.
+4. **In-app entertainment disclaimer** — add a small line to the app. Suggest: add to the profile form page or settings area. Quick commit.
+5. **Supabase Pro upgrade** — do this before any significant traffic. One-click in Supabase dashboard.
+6. **Screenshots** — take 4–6 portrait screenshots on phone, have ready for Play Console store listing.
+
+**Pre-existing operational notes:**
+- Android keystore: `~/Projects/quantumcube/android/quantumcube.keystore` — password in Apple Passwords
+- Package name: `app.quantumcube.twa` — permanent, never changes
+- SHA-1: `B4:AB:EA:5B:C2:23:41:45:E4:11:0E:AD:06:D8:7C:16:C3:ED:9C:76` (some tools need this)
+- ElevenLabs: `eleven_turbo_v2_5`, stability 0.5, similarity_boost 0.75, speed 1.15 (welcome.mp3: speed 1.0)
+- Claude Code at `~/Projects/quantumcube`, `scripts/build-twa.mjs` is the AAB rebuild script
+
+---
+
 ## 2026-05-09 — Narration audit & full re-record pass (Claude Code)
 
 **Goal:** Finish the narration-fix workstream queued from May 8: fix the audit tool, audit all 385 MP3s for issues, regenerate every flagged file at the correct ElevenLabs settings, ship.

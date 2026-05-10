@@ -1,8 +1,8 @@
 # QUANTUM CUBE — CHAT KICKOFF PROTOCOL
 
 ```
-KICKOFF-VERSION: 4.4.0
-LAST-UPDATED:   2026-05-09
+KICKOFF-VERSION: 4.5.0
+LAST-UPDATED:   2026-05-10
 INTEGRITY:      If you cannot see this version stamp in the kickoff doc, you
                 are reading a stale cached copy. Stop and ask the user to
                 re-upload CHAT_KICKOFF.md to project knowledge.
@@ -542,6 +542,14 @@ If the user says "this feels messy" or "we're going down rabbit holes" — **sto
 
 ---
 
-**End of kickoff.** Now read PROJECT_BRIEF.md, then SESSION_LOG.md, for project-specific context.
+**End of kickoff.** Now read PROJECT_BRIEF.md v45, then SESSION_LOG.md (top entry = May 10 session), for project-specific context.
+
+**Current priorities (as of May 10, 2026):**
+1. Wait for Google identity verification email → then create app entry in Play Console
+2. Recruit 12 Android testers → send opt-in link → 14-day gate running
+3. Supabase Pro upgrade (auto-pause risk — do before traffic push)
+4. In-app entertainment disclaimer (small, avoids Play Store "impossible functionality" rejection)
+5. Take 4–6 portrait screenshots for Play Store listing
+6. Once 14 days + identity verified → upload AAB → get Play App Signing SHA-256 → update assetlinks.json
 
 **Claude Code (separate surface):** Runs from terminal in `~/Projects/quantumcube`. Reads `CLAUDE.md` + `SESSION_LOG.md` directly. Has 20 MCP servers (ElevenLabs, Context7, Tavily + 17 claude.ai connectors). Use for file edits, git, bash, deploys. Start with `claude` in the project directory.

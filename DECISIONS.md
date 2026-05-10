@@ -723,3 +723,69 @@ The voice profile saved on the ElevenLabs dashboard side is **not authoritative*
 - No risk of silent prompt injection or context pollution from third-party rules.
 - If claudewatch later ships a feature that genuinely benefits from rule-file installation, we revisit — but the bar is "show us what's in the rule file first."
 - Same pattern is the default for any future Claude Code-adjacent tool: MCP entry yes, global rules no.
+
+---
+
+## ADR-025: Brand cyan updated #7dd4fc → #0cc0df (May 10, 2026)
+
+**Status:** Accepted
+
+**Context:** The app icon, logo, and brand documents had been updated to a richer cyan (#0cc0df) but the app itself still used the older, lighter cyan (#7dd4fc / rgba 125,212,252) across 75 colour references — hover states, glows, cube borders, Vimeo player chrome, button shadows.
+
+**Decision:** Global sed replace across `app.html` — #7dd4fc → #0cc0df, rgba(125,212,252,) → rgba(12,192,223,). Vimeo `color=7dd4fc` params also updated. CSS `--glow` variable was already using the new value so all downstream references inherited automatically.
+
+**Consequences:** Single visual pass — 75 replacements, zero logic changes. Vimeo player UI now matches brand. All future colour references must use #0cc0df / rgba(12,192,223,).
+
+---
+
+## ADR-026: Android payment — TWA redirect to web, no Play Billing (May 10, 2026)
+
+**Status:** Accepted
+
+**Context:** Google Play policy requires Play Billing for in-app digital purchases — OR a qualified exemption. The External Offers / Alternative Billing enrollment requires a registered business account (not available to individual Play Console accounts). The US Epic v Google ruling (effective Oct 29, 2025) allows external payments for US users but the enrollment program still has the business-account gate.
+
+**Alternatives considered:**
+- Wire Google Play Billing inside the TWA (Digital Goods API) — complex, 15-30% Google cut, maintains two payment paths
+- External Offers enrollment — blocked: requires registered business account, not individual
+- Free "viewer" on Play, web-only purchase (Option C) — cleanest but eliminates in-app CTA entirely
+
+**Decision:** TWA detection via `document.referrer.startsWith('android-app://')` + sessionStorage + URL param fallback. When `IS_TWA === true`, `unlock()` redirects to `https://quantumcube.app/app?ref=android-unlock` in the browser instead of showing the Dodo overlay. Supabase `has_paid` flag means users who buy on web are instantly unlocked when they return to the app. Zero Play Billing integration. Zero Google cut.
+
+**Consequences:**
+- New Android users: one extra step (tap out to browser, buy, return). Acceptable friction.
+- Existing paid web users: open Android app and it's already unlocked. Perfect experience.
+- Zero policy risk — no in-app purchase CTA exists inside the TWA.
+- If Google ever mandates Play Billing universally with no exemptions, we add the Digital Goods API at that point.
+
+---
+
+## ADR-027: Google Play — personal account, not organisation (May 10, 2026)
+
+**Status:** Accepted
+
+**Context:** Google Play Console offers two developer account types: Organisation (requires DUNS number, business verification, takes 1-2 weeks) and Personal (email + phone + $25, same-day). QNC is a registered PTY LTD in South Africa but the Play Store target is US-first launch.
+
+**Decision:** Personal account. Developer name set to "Quantum Neuro Creations" — this is what users see on Play Store. Account can be upgraded to Organisation later without losing the app listing.
+
+**Consequences:**
+- 14-day closed testing gate applies (post-Nov 2023 account — needs 12 opted-in testers for 14 consecutive days before production access).
+- Identity verification still required (ID + proof of address uploaded; estimated 1-3 business days).
+- Organisation upgrade deferred to post-launch when DUNS number is less time-critical.
+
+---
+
+## ADR-028: Supabase Pro plan — deferred, flagged as pre-traffic risk (May 10, 2026)
+
+**Status:** Deferred (queued for next session)
+
+**Context:** Quantum Cube is a live paying-customer app on Supabase free tier. Free tier auto-pauses projects that receive no API requests for 7 consecutive days. A slow week = all users locked out of auth, edge functions dead.
+
+**Decision:** Upgrade deferred until the session after account verification completes — too many parallel items today. But flagged as HIGH PRIORITY — must be done before any significant marketing push or Play Store traffic.
+
+**Additional Pro benefits relevant to QNC:**
+- No auto-pause (production safety — the primary driver)
+- Daily backups + point-in-time recovery (paying customer data protection)
+- Custom domain (`auth.quantumcube.app`) — fixes the ugly OAuth sign-in URL (`fqqdldvnxupzxvvbyvjm.supabase.co`) shown during Google sign-in
+- 8GB DB vs 500MB, 100K MAUs vs 50K (not urgent at current scale)
+
+**Cost:** $25/month. Justified for any live paying-customer app.
