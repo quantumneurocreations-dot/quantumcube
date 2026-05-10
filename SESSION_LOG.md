@@ -298,3 +298,16 @@ Three steps outlined:
 2. Build secure + transparent — Play Integrity API + complete data safety form
 3. Comply and stay in control — follow Play Developer policy, use managed publishing
 ⚠️ Warning in email: "Don't forget to verify your account to maintain your Console access" — identity verification still pending, this is the main blocker for everything.
+
+**End of session additions:**
+- PLAY_STORE_PREP.md updated with Section 13 (policy audit) + Section 14 (Play Console tools)
+- Full Google Play Policy Center audit completed — all categories checked, 4 small gaps added to checklist
+- Deep link verification + crash deobfuscation added as pre-launch steps
+- Vault has everything. All committed and pushed.
+
+**🚀 MONDAY PLAN:**
+1. Boot — check email for Google identity verification
+2. Once verified → Create app in Play Console → upload AAB → internal test track live within minutes
+3. Team meeting → recruit 12 testers → share opt-in link → 14-day closed test clock starts
+4. While waiting on 14 days → entertainment disclaimer commit → store listing copy → screenshots → data safety form → app content declarations (health, AI, ads, no news)
+5. After 14 days → request production access → submit
