@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "6578a81b34fac332",
+        "id": "def39e22d0f77d4c",
         "type": "tabs",
         "children": [
           {
-            "id": "0fb26ad2e8251c69",
+            "id": "dc9aa0c95b39838d",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -189,8 +189,9 @@
       "3d-graph:3D Graph": false
     }
   },
-  "active": "0fb26ad2e8251c69",
+  "active": "dc9aa0c95b39838d",
   "lastOpenFiles": [
+    "CHAT_KICKOFF.md",
     "vault/brief-archive/posthog-instruments.md",
     "vault/brief-archive/resend-webhook.md",
     "vault/brief-archive/assetlinks-setup.md",
@@ -216,7 +217,6 @@
     "vault/marketing-detail/launch-email.md",
     "vault/marketing-detail/brand-voice.md",
     "vault/marketing-detail/target-demographics.md",
-    "vault/marketing-detail/pricing-strategy.md",
     "vault/brief-archive",
     "vault/operating",
     "vault/marketing-detail",
