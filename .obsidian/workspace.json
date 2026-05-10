@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "c777b6744315dbc8",
+        "id": "bbca3be429534feb",
         "type": "tabs",
         "children": [
           {
-            "id": "28d301b08d9ebc32",
+            "id": "c7e250ff28e1c853",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -190,7 +190,7 @@
       "3d-graph:3D Graph": false
     }
   },
-  "active": "28d301b08d9ebc32",
+  "active": "c7e250ff28e1c853",
   "lastOpenFiles": [
     "vault/marketing/supabase-pro-upgrade.md",
     "vault/marketing/entertainment-disclaimer.md",
