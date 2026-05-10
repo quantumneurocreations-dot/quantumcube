@@ -1,3 +1,6 @@
+---
+tags: [core, session]
+---
 # Session Log
 
 Live working narrative across chats. Append-only. Each session adds a new entry **early** in the work (after the first non-trivial action), then updates it incrementally. This survives tools-drops, Mac permission prompts, browser crashes — anything that wipes the chat without wiping git.
@@ -225,3 +228,6 @@ For older completed-and-committed history, see `BRIEF_ARCHIVE.md`.
 - Resend webhook deployment status: live, signing secret set, tested 400 + 401 paths
 - Welcome email pipeline live on `dodo-webhook` Edge Function (ADR-017) — first paying customer post-`RESEND_API_KEY` setup gets brand-voiced welcome automatically
 - Skill is at v1.1.0 — process changes already encoded (no option pickers, proactive close, this log file)
+
+> **Related:** [[PROJECT_BRIEF]] · [[DECISIONS]] · [[BRIEF_ARCHIVE]] · [[CHAT_KICKOFF]] · [[OPERATING_RULES]]
+

@@ -1,3 +1,6 @@
+---
+tags: [reference, rules]
+---
 # QUANTUM CUBE — OPERATING RULES
 
 Detailed reference doc. Read from Obsidian on demand — not needed at every boot.
@@ -127,3 +130,6 @@ Never 3 clarifying questions in a row. "Assuming X — say if not."
 - Don't narrate what you're about to do. Just do it
 - Commit messages: imperative mood, specific about what changed
 - No "As you mentioned..." preambles
+
+
+> **Related:** [[CHAT_KICKOFF]] · [[PROJECT_BRIEF]] · [[SESSION_LOG]]

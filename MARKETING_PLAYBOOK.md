@@ -1,3 +1,6 @@
+---
+tags: [marketing, reference]
+---
 # QUANTUM CUBE — MARKETING PLAYBOOK
 **Version: v3 | Last Updated: May 3, 2026 (Sunday, afternoon)**
 
@@ -663,3 +666,6 @@ Not needed until marketing email list exists (likely month 1-2). Detailed plan s
 ---
 
 **End of marketing playbook v3.**
+
+
+> **Related:** [[PROJECT_BRIEF]] · [[DECISIONS]]

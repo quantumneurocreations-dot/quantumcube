@@ -1,3 +1,6 @@
+---
+tags: [core, brief]
+---
 # QUANTUM CUBE — PROJECT BRIEF
 
 **Version: v45 | Last Updated: May 10, 2026 (Sunday)**
@@ -1032,3 +1035,6 @@ Still missing in claude.ai surface: GitHub Integration (use `gh` CLI via Desktop
 ---
 
 **End of brief v41.** Archived history → `BRIEF_ARCHIVE.md`. Marketing strategy → `MARKETING_PLAYBOOK.md`. Session protocol → `CHAT_KICKOFF.md`. Decision log → `DECISIONS.md`.
+
+
+> **Related:** [[SESSION_LOG]] · [[DECISIONS]] · [[BRIEF_ARCHIVE]] · [[OPERATING_RULES]] · [[MARKETING_PLAYBOOK]]

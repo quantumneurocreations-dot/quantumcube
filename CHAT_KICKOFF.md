@@ -1,3 +1,6 @@
+---
+tags: [core, kickoff]
+---
 # QUANTUM CUBE — CHAT KICKOFF PROTOCOL
 
 ```

@@ -1,3 +1,6 @@
+---
+tags: [core, decisions]
+---
 # Quantum Cube — Architecture Decision Records (ADRs)
 
 Append-only log of significant decisions during development. When you find
@@ -789,3 +792,6 @@ The voice profile saved on the ElevenLabs dashboard side is **not authoritative*
 - 8GB DB vs 500MB, 100K MAUs vs 50K (not urgent at current scale)
 
 **Cost:** $25/month. Justified for any live paying-customer app.
+
+
+> **Related:** [[SESSION_LOG]] · [[PROJECT_BRIEF]] · [[BRIEF_ARCHIVE]]
