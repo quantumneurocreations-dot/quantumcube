@@ -4,7 +4,8 @@ This file is auto-loaded by Claude Code, Cursor, and other Claude surfaces openi
 
 ## Where the rules live
 
-- **`CHAT_KICKOFF.md`** — operating model for chat sessions: mandatory boot sequence, surface boundaries, auto-run discipline, end-of-session protocol. **Read this first on every new chat.**
+- **`CHAT_KICKOFF.md`** — lean boot doc for Chat Claude (v5 Obsidian-first). Boot sequence only — full rules in `OPERATING_RULES.md`.
+- **`OPERATING_RULES.md`** — golden rules, command templates, Cursor fallback, failure recovery, PWA debugging.
 - **`PROJECT_BRIEF.md`** — what Quantum Cube is, current state, line refs, decisions.
 - **`DECISIONS.md`** — ADR-style decisions. Append when a call is worth preserving.
 - **`BRIEF_ARCHIVE.md`** — historical session log. Don't read in full; grep for context.
