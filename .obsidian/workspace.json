@@ -192,6 +192,8 @@
   },
   "active": "43cd85dd90c12c16",
   "lastOpenFiles": [
+    "vault/play-store/policy/google-play-requirements-checklist.md",
+    "vault/play-store/policy",
     "vault/content/sounds/audio-player.md",
     "vault/content/sounds/elevenlabs-voice.md",
     "vault/content/sounds/background-music.md",
@@ -217,7 +219,6 @@
     "vault/business/security-policy.md",
     "vault/business/terms-of-service-doc.md",
     "vault/business/privacy-policy.md",
-    "vault/business/gdpr-compliance.md",
     "vault/content/fonts",
     "vault/content/sounds",
     "vault/content/colors",
@@ -226,7 +227,6 @@
     "vault/tech/edge-functions",
     "vault/tech/sentry-detail",
     "vault/tech/posthog-events",
-    "vault/tech/supabase-detail",
-    "vault/chinese-zodiac/detail"
+    "vault/tech/supabase-detail"
   ]
 }
