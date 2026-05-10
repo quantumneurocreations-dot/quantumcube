@@ -3,6 +3,33 @@ tags: [core, session]
 ---
 # Session Log
 
+## 2026-05-10 Evening — Obsidian graph maximised (Chat Claude)
+
+**Goal:** Build out the Obsidian second brain graph to full visual density.
+
+**Done:**
+- ✅ **550+ atomic vault nodes created** — numerology numbers 1-31, alphabet A-Z, challenge/pinnacle/karmic-debt/personal-month numbers, astrology houses 1-12, aspects, ruling planets per sign, Chinese zodiac yin/yang + elements, PostHog events, Supabase table/column detail, Sentry detail, edge function internals, business/legal nodes, marketing channels, Play Store requirements, ADR sub-decisions, operating rule sub-items, colors/fonts/sounds
+- ✅ **Graph color fixed** — switched from tag-based to path-based color groups. White=core docs, Cyan=vault/numerology+cube-faces+app-sections, Purple=vault/tech+features, Pink=vault/decisions+marketing+play-store+operating+brief-archive
+- ✅ **All 8 core docs now white** — MARKETING_PLAYBOOK, BRIEF_ARCHIVE, PLAY_STORE_PREP, OPERATING_RULES all tagged #core
+- ✅ **Tags toggle OFF recommended** — tag nodes (green dots) are visual clutter, file nodes with colors look far cleaner
+
+**Current HEAD:** `d1118bb` | **SW:** `qc-v225`
+
+**Pending (unchanged):**
+- ⏳ Google identity verification email — check first thing next chat
+- ⏳ 12 Android testers recruited
+- 🔲 In-app entertainment disclaimer (quick commit)
+- 🔲 Supabase Pro upgrade ($25/mo)
+- 🔲 4–6 portrait screenshots for Play Store
+
+**🚀 NEXT-CHAT LEAD-IN:**
+1. Boot per CHAT_KICKOFF v5.0.0 — Obsidian must be open
+2. Check email for Google identity verification approval
+3. First task: entertainment disclaimer commit, then tester recruitment message
+
+---
+
+
 ## 2026-05-10 PM — Obsidian second brain setup (Chat Claude)
 
 **Goal:** Wire Obsidian as the live knowledge base for the project. Obsidian-first boot architecture replacing manual project file uploads.
