@@ -3,6 +3,61 @@ tags: [core, session]
 ---
 # Session Log
 
+## 2026-05-10 Night — Play Store final pre-Monday checks (Chat Claude)
+
+**Goal:** Audit all remaining Play Store requirements, ship outstanding code items, lock in the payment path decision.
+
+**Done:**
+- ✅ **Entertainment disclaimer confirmed already shipped** — CSS `::before` pseudo-element on every `.legal-footer` and `#legalFooter` reads "For entertainment purposes only" in small uppercase Cinzel. Added in `ca863c2`. No action needed.
+- ✅ **PostHog SDK confirmed v3+** — self-loading CDN snippet always loads latest; Android ID policy (April 2025) handled correctly. No action needed.
+- ✅ **192×192 maskable icon created + committed** — `docs/qc-icon-192-maskable.png` generated from 512 maskable (17KB), added to `docs/manifest.json` icons array. Committed in `ca863c2` alongside SW bump qc-v225 → **qc-v226**. Pushed.
+- ✅ **Delete account requirement confirmed covered** — `delete-account` Edge Function live since May 4, accessible from Face 7 (Settings). Required by Play since 2024. Already in PLAY_STORE_PREP.md Section 10 with ✓.
+- ✅ **Comprehensive Play Store gap audit completed** — full list of remaining items catalogued (see NEXT-CHAT LEAD-IN).
+
+**🔴 CRITICAL DECISION — PAYMENT PATH (do not lose this):**
+- **Decision: US-only launch, Dodo Payments on Android, no Google Play Billing.**
+- **Legal basis:** Epic Games vs Google court ruling — US court ordered Google to allow third-party payment processors in the Play Store for US users. This is the legitimate path; no Play Billing required for US launch.
+- **Play Console fee confirmation:** "Quantum Neuro Creations" account group enrolled at **15% service fee** (standard reduced rate for first $1M/year in earnings — applies to all small developers since 2021). Screenshot saved.
+- **Current code state:** Commit `0cd3f9c` has IS_TWA detection that redirects Android unlock to `window.open('https://quantumcube.app/app?ref=android-unlock')`. This works as a fallback but **needs review Monday**: if Dodo overlay renders cleanly inside a TWA Chrome instance, we can show it directly instead of redirecting to the browser — better UX. If not, the redirect stays.
+- **Do NOT touch payments code until Monday UX test on device.**
+
+**Current HEAD:** `3049a13` (vault backup) | **SW:** `qc-v226` | **Sentry:** `quantum-cube@qc-v226`
+
+**Pending before Play Store submission:**
+- ⏳ Google identity verification — main gate, check email Monday morning
+- ⏳ 12 testers + 14-day closed test
+- 🔲 Monday: test Dodo overlay inside TWA on device → decide redirect vs direct overlay
+- 🔲 Privacy policy: verify Supabase + Dodo Payments are explicitly named by name (PostHog + Sentry already confirmed added)
+- 🔲 Supabase Pro upgrade ($25/mo) — do before Android traffic hits
+- 🔲 4–6 portrait screenshots on phone
+- 🔲 Feature graphic: user approval → commit to `docs/`
+- 🔲 Store listing copy: short description (≤80 chars) + full description (≤4000 chars) — not drafted yet
+- 🔲 **Play Console form work** (all require app entry created first — post-identity-verification):
+  - Health Apps Declaration (all apps, even non-health — declare "no health functionality")
+  - AI-generated content declaration (tick YES — ElevenLabs narration)
+  - Target audience: 18+ (avoids Families Policy)
+  - Content rating questionnaire (IARC — likely Everyone/Everyone 10+)
+  - Data safety form (email, name, DOB, purchase history, PostHog, Sentry)
+  - App content declarations (ads: no, news: no, financial: no, COVID: no, government: no)
+  - Privacy policy URL input
+  - Test credentials for Google review team (app requires sign-in — need to provide test email)
+- 🔲 **Post-AAB-upload:**
+  - Play App Signing second SHA-256 from Play Console → add to `assetlinks.json` → redeploy
+  - Deep Link Verification tool (Play Console → Android Vitals)
+  - Pre-launch report review before promoting to closed test
+
+**🚀 MONDAY PLAN:**
+1. Check email for identity verification approval
+2. Once approved → Create app in Play Console → upload AAB
+3. Test Dodo overlay on device inside TWA → lock payment UX
+4. Recruit 12 testers → 14-day clock starts
+5. Fill all Play Console forms while waiting on 14 days
+6. Take screenshots on phone
+7. Draft store listing copy (can do in parallel)
+
+---
+
+
 ## 2026-05-10 Evening — Obsidian graph maximised (Chat Claude)
 
 **Goal:** Build out the Obsidian second brain graph to full visual density.
