@@ -1,51 +1,35 @@
 {
   "collapse-filter": false,
   "search": "-path:docs -path:supabase -path:scripts -path:android -path:brand -path:screenshots -path:More",
-  "showTags": true,
+  "showTags": false,
   "showAttachments": false,
   "hideUnresolved": false,
-  "showOrphans": true,
+  "showOrphans": false,
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "tag:#core",
-      "color": {
-        "a": 1,
-        "rgb": 1048527
-      }
+      "query": "tag:#core OR tag:#session OR tag:#brief OR tag:#kickoff",
+      "color": { "a": 1, "rgb": 16727450 }
     },
     {
-      "query": "tag:#session",
-      "color": {
-        "a": 1,
-        "rgb": 2874879
-      }
+      "query": "tag:#tech OR tag:#features OR tag:#infrastructure OR tag:#monitoring OR tag:#analytics OR tag:#audio OR tag:#email OR tag:#android OR tag:#pwa OR tag:#payments OR tag:#edge-function",
+      "color": { "a": 1, "rgb": 10040319 }
     },
     {
-      "query": "tag:#reference",
-      "color": {
-        "a": 1,
-        "rgb": 16732855
-      }
-    },
-    {
-      "query": "tag:#marketing",
-      "color": {
-        "a": 1,
-        "rgb": 10027263
-      }
+      "query": "tag:#decisions OR tag:#adr OR tag:#reference OR tag:#rules OR tag:#archive OR tag:#marketing",
+      "color": { "a": 1, "rgb": 16777215 }
     }
   ],
   "collapse-display": false,
   "showArrow": false,
-  "textFadeMultiplier": 0.4,
-  "nodeSizeMultiplier": 0.485364583333333,
-  "lineSizeMultiplier": 0.412204861111111,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 2.2,
+  "lineSizeMultiplier": 1.0,
   "collapse-forces": false,
-  "centerStrength": 1,
-  "repelStrength": 18.0902777777778,
-  "linkStrength": 1,
-  "linkDistance": 468,
-  "scale": 0.7234739769443962,
+  "centerStrength": 0.3,
+  "repelStrength": 14,
+  "linkStrength": 0.8,
+  "linkDistance": 100,
+  "scale": 1,
   "close": false
 }
