@@ -3,6 +3,38 @@ tags: [core, session]
 ---
 # Session Log
 
+## 2026-05-10 PM — Obsidian second brain setup (Chat Claude)
+
+**Goal:** Wire Obsidian as the live knowledge base for the project. Obsidian-first boot architecture replacing manual project file uploads.
+
+**Done:**
+- ✅ **mcp-obsidian installed** — `uvx mcp-obsidian` via Local REST API plugin (HTTP port 27123, API key stored in config). Full read/write access to vault from Claude Desktop.
+- ✅ **Vault pointed at `/Users/qnc/Projects/quantumcube`** — all project markdown files now browsable in Obsidian with graph view.
+- ✅ **Obsidian Git plugin installed + configured** — auto commit-and-sync every 10 min, push on sync, pull on startup.
+- ✅ **CHAT_KICKOFF.md rewritten to v5.0.0** — lean Obsidian-first boot doc. SESSION_LOG + PROJECT_BRIEF read live from vault every chat. No more manual project file uploads ever.
+- ✅ **OPERATING_RULES.md created** — all detailed golden rules, command templates, failure recovery, Cursor fallback moved here from old CHAT_KICKOFF.
+- ✅ **31 atomic vault notes created** — 18 ADR notes, 6 tech nodes (supabase, sentry, posthog, elevenlabs, android, cloudflare, resend), 5 feature nodes (narrate, dodo-webhook, resend-events, unlock-flow, service-worker), 4 marketing nodes. All tagged + wiki-linked to hub docs.
+- ✅ **Obsidian graph configured** — dark mode, AnuPpuccin theme, 3D Graph plugin, color groups (white=core, purple=tech/features, pink=decisions/reference), filters exclude non-markdown folders.
+- ✅ **Vercel downgraded** — Pro → Hobby (free). Was billing ~$47/cycle for unused Academy project. Stopped.
+- ✅ **Google Play email clarified** — generic onboarding email, NOT identity verification approval. Still waiting on that.
+
+**Current HEAD:** `c26ea4e` | **SW:** `qc-v225`
+
+**Pending (unchanged from morning session):**
+- ⏳ Google identity verification email
+- ⏳ 12 Android testers recruited
+- 🔲 In-app entertainment disclaimer
+- 🔲 Supabase Pro upgrade ($25/mo)
+- 🔲 4–6 portrait screenshots for Play Store
+
+**🚀 NEXT-CHAT LEAD-IN:**
+1. Boot per CHAT_KICKOFF v5.0.0 — Obsidian must be open.
+2. Waiting on Google identity verification — check email first.
+3. First real task: entertainment disclaimer (quick commit) or tester recruitment message.
+
+---
+
+
 Live working narrative across chats. Append-only. Each session adds a new entry **early** in the work (after the first non-trivial action), then updates it incrementally. This survives tools-drops, Mac permission prompts, browser crashes — anything that wipes the chat without wiping git.
 
 Format per entry: date stamp, one-line goal, bulleted actions, open questions, what's next. Terse. This is for the next-chat-Claude, not a journal.
