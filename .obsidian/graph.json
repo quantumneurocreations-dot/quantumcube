@@ -11,7 +11,7 @@
       "query": "tag:#core OR tag:#session OR tag:#brief OR tag:#kickoff",
       "color": {
         "a": 1,
-        "rgb": 16777215
+        "rgb": 10617082
       }
     },
     {
@@ -34,25 +34,18 @@
         "a": 1,
         "rgb": 52479
       }
-    },
-    {
-      "query": "",
-      "color": {
-        "a": 1,
-        "rgb": 5431473
-      }
     }
   ],
   "collapse-display": false,
   "showArrow": false,
   "textFadeMultiplier": 2.9,
-  "nodeSizeMultiplier": 0.709522569444444,
+  "nodeSizeMultiplier": 0.687404513888889,
   "lineSizeMultiplier": 0.307994791666667,
   "collapse-forces": false,
-  "centerStrength": 0.953645833333333,
-  "repelStrength": 18.4895833333333,
-  "linkStrength": 0.8,
-  "linkDistance": 100,
-  "scale": 0.2111904886528118,
+  "centerStrength": 0.0980034722222222,
+  "repelStrength": 20,
+  "linkStrength": 0.5015625,
+  "linkDistance": 500,
+  "scale": 0.03608029987551993,
   "close": false
 }
