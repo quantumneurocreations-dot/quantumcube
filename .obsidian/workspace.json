@@ -4,21 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "6be92310104d560c",
+        "id": "6578a81b34fac332",
         "type": "tabs",
         "children": [
           {
-            "id": "62e2e70867b7a657",
-            "type": "leaf",
-            "state": {
-              "type": "3d_graph_view",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "3D-Graph"
-            }
-          },
-          {
-            "id": "f9a69262564281e4",
+            "id": "0fb26ad2e8251c69",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -27,8 +17,7 @@
               "title": "Graph view"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -200,35 +189,38 @@
       "3d-graph:3D Graph": false
     }
   },
-  "active": "f9a69262564281e4",
+  "active": "0fb26ad2e8251c69",
   "lastOpenFiles": [
-    "vault/marketing/supabase-pro-upgrade.md",
-    "vault/marketing/entertainment-disclaimer.md",
-    "vault/marketing/closed-testing.md",
-    "vault/marketing/play-store-listing.md",
-    "vault/tech/jwt-validation.md",
-    "vault/tech/rate-limiting.md",
-    "vault/tech/google-oauth.md",
-    "vault/tech/magic-link.md",
-    "vault/tech/github-pages.md",
-    "vault/features/lock-screen.md",
-    "vault/features/cube-animation.md",
-    "vault/features/payment-gate.md",
-    "vault/features/narration-player.md",
-    "vault/features/profile-form.md",
-    "vault/features/numerology-calculation.md",
-    "vault/features/auth-flow.md",
+    "vault/cube-faces/astrology-pisces.md",
+    "vault/cube-faces/astrology-aquarius.md",
+    "vault/cube-faces/astrology-capricorn.md",
+    "vault/cube-faces/astrology-sagittarius.md",
+    "vault/cube-faces/astrology-scorpio.md",
+    "vault/cube-faces/astrology-libra.md",
+    "vault/cube-faces/astrology-virgo.md",
+    "vault/cube-faces/astrology-leo.md",
+    "vault/cube-faces/astrology-cancer.md",
+    "vault/cube-faces/astrology-gemini.md",
+    "vault/cube-faces/astrology-taurus.md",
+    "vault/cube-faces/astrology-aries.md",
+    "vault/cube-faces/chinese-zodiac-pig.md",
+    "vault/cube-faces/chinese-zodiac-dog.md",
+    "vault/cube-faces/chinese-zodiac-rooster.md",
+    "vault/cube-faces/chinese-zodiac-monkey.md",
+    "vault/cube-faces/chinese-zodiac-goat.md",
+    "vault/cube-faces/chinese-zodiac-horse.md",
+    "vault/cube-faces/chinese-zodiac-snake.md",
+    "vault/cube-faces/chinese-zodiac-dragon.md",
+    "vault/cube-faces/chinese-zodiac-rabbit.md",
+    "vault/cube-faces/chinese-zodiac-tiger.md",
+    "vault/cube-faces/chinese-zodiac-ox.md",
+    "vault/cube-faces/chinese-zodiac-rat.md",
+    "vault/numerology/essence-cycles.md",
+    "vault/numerology/challenge-numbers.md",
+    "vault/app-sections",
+    "vault/cube-faces",
+    "vault/numerology",
     "vault/marketing",
-    "vault/features/service-worker.md",
-    "vault/features/unlock-flow.md",
-    "vault/features/resend-events.md",
-    "vault/features/dodo-webhook.md",
-    "vault/features/narrate.md",
-    "vault/tech/resend.md",
-    "vault/tech/cloudflare.md",
-    "vault/tech/android.md",
-    "vault/tech/elevenlabs.md",
-    "vault/tech/posthog.md",
     "vault/features",
     "vault/tech",
     "vault/decisions",

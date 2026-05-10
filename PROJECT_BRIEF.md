@@ -1041,3 +1041,11 @@ Still missing in claude.ai surface: GitHub Integration (use `gh` CLI via Desktop
 
 ---
 **Vault index:** [[supabase]] · [[sentry]] · [[posthog]] · [[elevenlabs]] · [[android]] · [[cloudflare]] · [[resend]] · [[narrate]] · [[dodo-webhook]] · [[resend-events]] · [[unlock-flow]] · [[service-worker]] · [[auth-flow]] · [[payment-gate]] · [[narration-player]] · [[profile-form]] · [[play-store-listing]] · [[closed-testing]] · [[DECISIONS]] · [[SESSION_LOG]] · [[MARKETING_PLAYBOOK]] · [[OPERATING_RULES]]
+
+**Numerology:** [[life-path]] · [[expression-number]] · [[soul-urge]] · [[birthday-number]] · [[personal-year]] · [[karmic-lesson]] · [[hidden-passion]] · [[life-phase]] · [[numerology-matrix]] · [[master-number-11]] · [[master-number-22]] · [[karmic-debt]] · [[pinnacle-cycles]] · [[challenge-numbers]]
+
+**Cube faces:** [[face-1]] · [[face-2]] · [[face-3]] · [[face-4]] · [[face-5]] · [[face-6]] · [[face-7]] · [[face-8]] · [[face-9]] · [[chinese-zodiac-rat]] · [[chinese-zodiac-dragon]] · [[astrology-aries]] · [[astrology-scorpio]]
+
+**App sections:** [[onboarding]] · [[profile-setup]] · [[cube-home]] · [[settings-page]] · [[export-feature]] · [[magic-link-login]] · [[loading-screen]]
+
+**Infrastructure:** [[pre-commit-hook]] · [[assetlinks]] · [[manifest-json]] · [[pwa-install]] · [[csp-headers]] · [[version-sync]]
