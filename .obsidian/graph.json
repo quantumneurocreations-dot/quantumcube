@@ -2,7 +2,7 @@
   "collapse-filter": false,
   "search": "-path:docs -path:supabase -path:scripts -path:android -path:brand -path:screenshots -path:More",
   "showTags": false,
-  "showAttachments": true,
+  "showAttachments": false,
   "hideUnresolved": false,
   "showOrphans": false,
   "collapse-color-groups": false,
@@ -18,14 +18,28 @@
       "query": "tag:#tech OR tag:#features OR tag:#infrastructure OR tag:#monitoring OR tag:#analytics OR tag:#audio OR tag:#email OR tag:#android OR tag:#pwa OR tag:#payments OR tag:#edge-function",
       "color": {
         "a": 1,
-        "rgb": 10040319
+        "rgb": 11351039
       }
     },
     {
       "query": "tag:#decisions OR tag:#adr OR tag:#reference OR tag:#rules OR tag:#archive OR tag:#marketing",
       "color": {
         "a": 1,
-        "rgb": 16727450
+        "rgb": 16727525
+      }
+    },
+    {
+      "query": "path:vault  ",
+      "color": {
+        "a": 1,
+        "rgb": 52479
+      }
+    },
+    {
+      "query": "",
+      "color": {
+        "a": 1,
+        "rgb": 5431473
       }
     }
   ],
@@ -39,6 +53,6 @@
   "repelStrength": 18.4895833333333,
   "linkStrength": 0.8,
   "linkDistance": 100,
-  "scale": 0.08635439248284338,
+  "scale": 0.2111904886528118,
   "close": false
 }
