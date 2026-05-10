@@ -27,6 +27,7 @@ tags: [core, session]
 - ⏳ Google identity verification — main gate, check email Monday morning
 - ⏳ 12 testers + 14-day closed test
 - 🔲 Monday: test Dodo overlay inside TWA on device → decide redirect vs direct overlay
+- 🔲 **Create review Gmail account** — dedicated account for Google Play reviewers. Sign in once at quantumcube.app/app via magic link to create Supabase profile → then ping Claude to set has_paid=true. Share credentials in Play Console App Access → Any other instructions. (Magic link flow: enter email, check Gmail, click link.)
 - 🔲 Privacy policy: verify Supabase + Dodo Payments are explicitly named by name (PostHog + Sentry already confirmed added)
 - 🔲 Supabase Pro upgrade ($25/mo) — do before Android traffic hits
 - 🔲 4–6 portrait screenshots on phone
