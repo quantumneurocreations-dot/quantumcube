@@ -1,5 +1,5 @@
 ---
-tags: [reference]
+tags: [core, reference, android]
 ---
 # Quantum Cube — Google Play Store Submission Checklist
 
@@ -258,3 +258,6 @@ Current `docs/manifest.json` reviewed. Status:
 - [Play App Signing (Play Console Help)](https://support.google.com/googleplay/android-developer/answer/9842756)
 - [Families Policy (Play Console Help)](https://support.google.com/googleplay/android-developer/answer/9893335)
 - [Play Console asset specs (icon, screenshots, feature graphic)](https://support.google.com/googleplay/android-developer/answer/9866151)
+
+---
+**Sub-topics:** [[data-safety-form]] · [[content-rating]] · [[store-listing]] · [[screenshots-prep]] · [[feature-graphic]] · [[closed-testing-track]] · [[production-rollout]] · [[app-review-checklist]] · [[target-audience]] · [[app-category]] · [[twa-asset-links]] · [[aab-upload]] · [[identity-verification]] · [[android]] · [[PROJECT_BRIEF]]

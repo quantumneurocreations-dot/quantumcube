@@ -1,5 +1,5 @@
 ---
-tags: [marketing, reference]
+tags: [core, marketing, reference]
 ---
 # QUANTUM CUBE — MARKETING PLAYBOOK
 **Version: v3 | Last Updated: May 3, 2026 (Sunday, afternoon)**
@@ -669,3 +669,6 @@ Not needed until marketing email list exists (likely month 1-2). Detailed plan s
 
 
 > **Related:** [[PROJECT_BRIEF]] · [[DECISIONS]]
+
+---
+**Sub-topics:** [[launch-strategy]] · [[tester-recruitment]] · [[social-media-plan]] · [[app-store-copy]] · [[pricing-strategy]] · [[target-demographics]] · [[brand-voice]] · [[launch-email]] · [[beta-feedback]] · [[press-kit]] · [[play-store-listing]] · [[closed-testing]] · [[entertainment-disclaimer]]

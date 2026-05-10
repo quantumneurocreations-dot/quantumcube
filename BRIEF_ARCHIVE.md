@@ -1,5 +1,5 @@
 ---
-tags: [reference, archive]
+tags: [core, reference, archive]
 ---
 # QUANTUM CUBE — BRIEF ARCHIVE
 
@@ -1628,3 +1628,6 @@ Doc commits (this end-of-session):
 - Claude Code: active, fully configured, 20 MCP servers
 - **Pending:** Narration audit tool fix → flag bad MP3s → ElevenLabs regeneration
 - **Pending:** Play Store TWA submission (target Sun May 10)
+
+---
+**Archive index:** [[session-may-08-pm]] · [[session-may-08-eve]] · [[session-may-09]] · [[session-may-10-am]] · [[session-may-10-pm]] · [[brand-cyan-update]] · [[twa-detection]] · [[assetlinks-setup]] · [[resend-webhook]] · [[posthog-instruments]] · [[SESSION_LOG]] · [[DECISIONS]]

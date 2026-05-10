@@ -1,5 +1,5 @@
 ---
-tags: [reference, rules]
+tags: [core, reference, rules]
 ---
 # QUANTUM CUBE — OPERATING RULES
 
@@ -133,3 +133,6 @@ Never 3 clarifying questions in a row. "Assuming X — say if not."
 
 
 > **Related:** [[CHAT_KICKOFF]] · [[PROJECT_BRIEF]] · [[SESSION_LOG]]
+
+---
+**Sub-topics:** [[str-replace-rule]] · [[sw-sync-rule]] · [[bsd-sed-rule]] · [[mobile-css-rule]] · [[branch-awareness]] · [[revert-strategy]] · [[commit-convention]] · [[pwa-debug]] · [[supabase-mcp-vs-cli]] · [[secret-hygiene]] · [[service-worker]] · [[pre-commit-hook]] · [[version-sync]]
