@@ -1,24 +1,31 @@
 {
   "filters": {
-    "doShowOrphans": true,
-    "doShowAttachments": true
+    "doShowOrphans": false,
+    "doShowAttachments": false,
+    "searchQuery": "-path:docs -path:supabase -path:scripts -path:android -path:brand -path:screenshots -path:More"
   },
   "groups": {
     "groups": [
       {
-        "query": "decisions",
-        "color": "#5c5c5c"
+        "query": "tag:#core OR tag:#session OR tag:#brief OR tag:#kickoff",
+        "color": "#ffffff"
       },
       {
-        "query": "",
-        "color": "#5c5c5c"
+        "query": "tag:#tech OR tag:#features OR tag:#infrastructure OR tag:#monitoring OR tag:#analytics OR tag:#audio OR tag:#email OR tag:#android OR tag:#pwa OR tag:#payments OR tag:#edge-function",
+        "color": "#9933ff"
+      },
+      {
+        "query": "tag:#decisions OR tag:#adr OR tag:#reference OR tag:#rules OR tag:#archive OR tag:#marketing",
+        "color": "#ff3d9a"
       }
     ]
   },
   "display": {
-    "nodeSize": 5,
-    "linkThickness": 3,
-    "particleSize": 6,
-    "particleCount": 8
-  }
+    "nodeSize": 6,
+    "linkThickness": 1,
+    "particleSize": 8,
+    "particleCount": 12
+  },
+  "autoRotate": true,
+  "autoRotateSpeed": 0.5
 }

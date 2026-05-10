@@ -4,11 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "bbca3be429534feb",
+        "id": "c75a12d430b71241",
         "type": "tabs",
         "children": [
           {
-            "id": "c7e250ff28e1c853",
+            "id": "fb7cc638ad11801d",
+            "type": "leaf",
+            "state": {
+              "type": "3d_graph_view",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "3D-Graph"
+            }
+          },
+          {
+            "id": "166bda7fb743c8ac",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -17,7 +27,8 @@
               "title": "Graph view"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -74,8 +85,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "53d5c6e2557d3763",
@@ -190,7 +200,7 @@
       "3d-graph:3D Graph": false
     }
   },
-  "active": "c7e250ff28e1c853",
+  "active": "166bda7fb743c8ac",
   "lastOpenFiles": [
     "vault/marketing/supabase-pro-upgrade.md",
     "vault/marketing/entertainment-disclaimer.md",
