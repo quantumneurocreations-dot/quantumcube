@@ -9,7 +9,7 @@
   "colorGroups": [
     {
       "query": "tag:#core OR tag:#session OR tag:#brief OR tag:#kickoff",
-      "color": { "a": 1, "rgb": 16727450 }
+      "color": { "a": 1, "rgb": 16777215 }
     },
     {
       "query": "tag:#tech OR tag:#features OR tag:#infrastructure OR tag:#monitoring OR tag:#analytics OR tag:#audio OR tag:#email OR tag:#android OR tag:#pwa OR tag:#payments OR tag:#edge-function",
@@ -17,7 +17,7 @@
     },
     {
       "query": "tag:#decisions OR tag:#adr OR tag:#reference OR tag:#rules OR tag:#archive OR tag:#marketing",
-      "color": { "a": 1, "rgb": 16777215 }
+      "color": { "a": 1, "rgb": 16727450 }
     }
   ],
   "collapse-display": false,

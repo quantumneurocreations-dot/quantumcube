@@ -1038,3 +1038,6 @@ Still missing in claude.ai surface: GitHub Integration (use `gh` CLI via Desktop
 
 
 > **Related:** [[SESSION_LOG]] · [[DECISIONS]] · [[BRIEF_ARCHIVE]] · [[OPERATING_RULES]] · [[MARKETING_PLAYBOOK]]
+
+---
+**Vault index:** [[supabase]] · [[sentry]] · [[posthog]] · [[elevenlabs]] · [[android]] · [[cloudflare]] · [[resend]] · [[narrate]] · [[dodo-webhook]] · [[resend-events]] · [[unlock-flow]] · [[service-worker]] · [[auth-flow]] · [[payment-gate]] · [[narration-player]] · [[profile-form]] · [[play-store-listing]] · [[closed-testing]] · [[DECISIONS]] · [[SESSION_LOG]] · [[MARKETING_PLAYBOOK]] · [[OPERATING_RULES]]
