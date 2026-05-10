@@ -1,3 +1,6 @@
+---
+tags: [reference]
+---
 # Quantum Cube — Google Play Store Submission Checklist
 
 **Last updated:** 2026-05-09

@@ -1,3 +1,6 @@
+---
+tags: [reference]
+---
 # Security Policy
 
 ## Reporting a Vulnerability

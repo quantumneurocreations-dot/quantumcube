@@ -1,3 +1,6 @@
+---
+tags: [core, kickoff]
+---
 # Quantum Cube — context for Claude
 
 This file is auto-loaded by Claude Code, Cursor, and other Claude surfaces opening this repo. It's a **pointer doc** — the substance lives in the docs below.

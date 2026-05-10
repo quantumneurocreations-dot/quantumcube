@@ -1,3 +1,6 @@
+---
+tags: [reference]
+---
 # Quantum Cube
 
 A Progressive Web App by [Quantum Neuro Creations](https://github.com/quantumneurocreations-dot).
