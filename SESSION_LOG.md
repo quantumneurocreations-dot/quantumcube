@@ -290,3 +290,11 @@ For older completed-and-committed history, see `BRIEF_ARCHIVE.md`.
 
 > **Related:** [[PROJECT_BRIEF]] · [[DECISIONS]] · [[BRIEF_ARCHIVE]] · [[CHAT_KICKOFF]] · [[OPERATING_RULES]]
 
+
+**Google Play onboarding email content (received May 10, 4:47PM SAST):**
+From: Google Play | Apps & Games — "Quantum Neuro Creations, your launch journey starts here"
+Three steps outlined:
+1. Test early and often — internal tests + 14-day closed test with min 12 users
+2. Build secure + transparent — Play Integrity API + complete data safety form
+3. Comply and stay in control — follow Play Developer policy, use managed publishing
+⚠️ Warning in email: "Don't forget to verify your account to maintain your Console access" — identity verification still pending, this is the main blocker for everything.
