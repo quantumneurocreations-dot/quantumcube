@@ -4,17 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "6794b9341a03c311",
+        "id": "01b15bc0323e31d4",
         "type": "tabs",
         "children": [
           {
-            "id": "eae9dcf50cc994f6",
+            "id": "02384549c76326f1",
             "type": "leaf",
             "state": {
-              "type": "empty",
+              "type": "3d_graph_view",
               "state": {},
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "3D-Graph"
             }
           }
         ]
@@ -175,12 +175,13 @@
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
-      "obsidian-git:Open Git source control": false
+      "obsidian-git:Open Git source control": false,
+      "3d-graph:3D Graph": false
     }
   },
-  "active": "eae9dcf50cc994f6",
+  "active": "02384549c76326f1",
   "lastOpenFiles": [
-    "CHAT_KICKOFF.md",
-    "OPERATING_RULES.md"
+    "OPERATING_RULES.md",
+    "CHAT_KICKOFF.md"
   ]
 }
