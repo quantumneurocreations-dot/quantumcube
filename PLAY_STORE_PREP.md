@@ -261,3 +261,24 @@ Current `docs/manifest.json` reviewed. Status:
 
 ---
 **Sub-topics:** [[data-safety-form]] · [[content-rating]] · [[store-listing]] · [[screenshots-prep]] · [[feature-graphic]] · [[closed-testing-track]] · [[production-rollout]] · [[app-review-checklist]] · [[target-audience]] · [[app-category]] · [[twa-asset-links]] · [[aab-upload]] · [[identity-verification]] · [[android]] · [[PROJECT_BRIEF]]
+
+---
+
+## 13. Recent Policy Updates — May 2026 Audit
+
+Checked against all Play Policy Center categories May 10, 2026. Three additions:
+
+### 13a. Health Apps Declaration Form (ALL developers must complete)
+🔴 [ ] Even non-health apps must complete the Health Apps declaration on App content page in Play Console. Declare "This app does not provide health or medical functionality." Required field — don't skip it.
+
+### 13b. AI-Generated Content Disclosure
+🔴 [ ] Google started enforcing AI-generated content disclosures in 2024. ElevenLabs narration = AI-generated audio. Must tick the AI-generated content declaration in App Content page in Play Console. Missing this = silent flag during review.
+
+### 13c. External Content Links Program (payments-relevant)
+🟡 [ ] The deadline to enroll in Google's External Content Links Program was January 28, 2026. If we go Path C (free viewer, link to web for payment), we need to verify whether our specific use case (linking OUT of app to website, not inside TWA) is covered under the post-deadline rules. May require enrollment or may be exempt as a TWA. **Confirm before choosing Path C.**
+
+### 13d. Android ID No Longer a Persistent Identifier (April 2025)
+🟢 [ ] Android ID is no longer treated as a persistent device identifier per Google policy from April 2025. PostHog SDK v3+ handles this correctly. Verify our PostHog SDK version in app.html is current — if it is, no action needed.
+
+### Everything Else — CLEAN ✅
+Restricted Content, IP, Impersonation, Malware, MUS, Families, Store Listing, Spam/UX — all verified clean against current policy. No additional gaps found.
