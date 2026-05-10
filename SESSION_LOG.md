@@ -33,6 +33,13 @@ tags: [core, session]
 - 🔲 4–6 portrait screenshots on phone
 - 🔲 Feature graphic: user approval → commit to `docs/`
 - 🔲 Store listing copy: short description (≤80 chars) + full description (≤4000 chars) — not drafted yet
+- 🔲 **External Content Links Program** — enroll in Play Console → Settings before going live. Also integrate Google API for pre-redirect info screen in IS_TWA unlock flow (code change in app.html).
+- 🔲 **Pre-redirect disclosure modal** — add to IS_TWA unlock flow: "You'll be taken to your browser to complete this purchase outside Google Play." (code change)
+- 🔲 **Public account-deletion URL** — static page at quantumcube.app/account/delete. Play Console Data Safety form requires web URL alongside in-app deletion.
+- 🔲 **USPTO trademark check** — run "Quantum Cube" on tmsearch.uspto.gov in Class 9 + Class 41. 5 min check.
+- 🔲 **Prominent in-flow privacy disclosure** — small visible line before DOB/email entry on Face 0, not just footer.
+- 🔲 **ElevenLabs commercial license** — verify current tier permits paid-app distribution.
+- 🔲 **AI declaration: NO** — ElevenLabs TTS of pre-written scripts = not AI-generated content per Google's definition. Declare NO in App Content.
 - 🔲 **Play Console form work** (all require app entry created first — post-identity-verification):
   - Health Apps Declaration (all apps, even non-health — declare "no health functionality")
   - AI-generated content declaration (tick YES — ElevenLabs narration)

@@ -292,3 +292,57 @@ Restricted Content, IP, Impersonation, Malware, MUS, Families, Store Listing, Sp
 
 ### 14b. Crash Stack Trace Deobfuscation
 🟡 [ ] Upload ProGuard/R8 mapping file to Play Console so Google's own crash reporter shows readable stack traces (separate from Sentry). TWA may not generate a mapping file — check after AAB build. If no mapping file exists, skip this step.
+
+---
+
+## 15. Claude Code Policy Audit — May 10, 2026
+
+Full crawl of Google Play Policy Center completed by Claude Code (3 parallel agents, 195 tool uses). New findings below.
+
+### 15a. External Content Links Program — ENROLL BEFORE SUBMISSION
+🔴 [ ] Enroll in Play Console → Settings → External content links BEFORE using external payment redirect.
+- Jan 28 2026 deadline was for EXISTING apps already using external links. New apps must enroll prior to going live — not past the deadline.
+- Integrate Google's external content links API in IS_TWA unlock flow so Google's own info screen renders before redirect fires.
+- Currently $0 fees. Future fee structure ~20% (subject to ongoing Epic v Google proceedings).
+- Source: https://support.google.com/googleplay/android-developer/answer/16470497
+
+### 15b. Pre-Redirect Disclosure — CODE CHANGE NEEDED
+🔴 [ ] Add disclosure modal/screen before IS_TWA unlock redirect fires. Must show: "You'll be taken to your browser to complete this purchase outside Google Play. Refunds handled by Dodo Payments." Required by External Content Links Program terms.
+
+### 15c. Public Account-Deletion URL
+🔴 [ ] Add static page at `quantumcube.app/account/delete` (or similar) documenting the in-app deletion process. Play Console Data Safety form requires a public web URL in addition to in-app deletion. Quick new HTML page.
+
+### 15d. USPTO Trademark Clearance
+🟡 [ ] Run "Quantum Cube" on TESS at tmsearch.uspto.gov — check Class 9 (software) and Class 41 (entertainment/education). Quick check before submission. No direct conflicts found via web search but TESS is the authoritative source.
+
+### 15e. Prominent In-Flow Privacy Disclosure
+🟡 [ ] Add visible privacy disclosure before first DOB/email entry on Face 0 — not buried in footer. Common rejection trigger. E.g. small line: "Your data is used only for your personal reading. See our Privacy Policy." with a link.
+
+### 15f. ElevenLabs Commercial License
+🟡 [ ] Confirm current ElevenLabs tier explicitly permits distribution in paid apps. Check ElevenLabs dashboard → plan details.
+
+### 15g. AI-Generated Content Declaration — DECISION: Declare NO
+🟡 [ ] Recommend Path A: declare NO in App Content. ElevenLabs TTS of pre-written deterministic scripts = TTS productivity feature, not runtime AI generation. Document rationale. Avoids needing "Report content" link.
+- If declaring YES: must add "Report content" link in legal footer (mailto:support@quantumcube.app?subject=Report%20content)
+
+### 15h. Review Gmail Account for Play Store Reviewers
+🔴 [ ] Create dedicated Gmail for Google's internal review team. Sign in once at quantumcube.app/app via magic link to create Supabase profile → ping Claude to set has_paid=true. Add credentials in Play Console → App content → App access → Any other instructions. Instructions: "App uses magic-link auth. Enter [email], open Gmail at gmail.com with [password], click link."
+
+### Confirmed PASS from audit
+- Ads policy ✅ (no ads, no AAID)
+- Permissions ✅ (INTERNET only — no SMS/Location/Camera — no Permissions Declaration Form needed)
+- Restricted Content ✅ (astrology/numerology not in restricted list)
+- Real-Money Gambling ✅ (no prize element)
+- Financial Services ✅
+- Health Content ✅ (just need declaration form in Console)
+- User Generated Content ✅ (none)
+- Children/Families ✅ (18+, out of scope)
+- Spam/Webview wrapping ✅ (owned site + Digital Asset Links = supported TWA path)
+- Minimum Functionality ✅
+- Mobile Unwanted Software ✅
+- Deceptive Behavior ✅ (entertainment disclaimer in place)
+- SDKs ✅ (PostHog, Sentry, Supabase, Dodo, ElevenLabs all clean)
+- Target SDK 35 ✅
+- Account deletion + data export ✅
+- Cube visual ✅ (face labels, not Rubik's Cube coloured grid — no Spin Master IP conflict)
+- Subscriptions ✅ (one-time purchase, not subscription)
