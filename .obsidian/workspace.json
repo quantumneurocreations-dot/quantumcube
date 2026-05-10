@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "c75a12d430b71241",
+        "id": "6be92310104d560c",
         "type": "tabs",
         "children": [
           {
-            "id": "fb7cc638ad11801d",
+            "id": "62e2e70867b7a657",
             "type": "leaf",
             "state": {
               "type": "3d_graph_view",
@@ -18,7 +18,7 @@
             }
           },
           {
-            "id": "166bda7fb743c8ac",
+            "id": "f9a69262564281e4",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -200,7 +200,7 @@
       "3d-graph:3D Graph": false
     }
   },
-  "active": "166bda7fb743c8ac",
+  "active": "f9a69262564281e4",
   "lastOpenFiles": [
     "vault/marketing/supabase-pro-upgrade.md",
     "vault/marketing/entertainment-disclaimer.md",
