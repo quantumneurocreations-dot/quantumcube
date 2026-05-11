@@ -50,6 +50,22 @@ async function checkRateLimit(ip: string): Promise<{ ok: true } | { ok: false; r
   }
 
   const j = (await res.json()) as { ok: boolean; reason?: string; retry_after?: number };
+
+  // Lazy janitor: prune counters older than 10 min so the table never grows unbounded.
+  // Awaited per spec; .catch() swallows failures so a transient delete error never kills a narration.
+  const cutoff = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+  await fetch(
+    `${SUPABASE_URL}/rest/v1/narrate_rate_counters?window_end=lt.${encodeURIComponent(cutoff)}`,
+    {
+      method: "DELETE",
+      headers: {
+        apikey: SERVICE_ROLE,
+        Authorization: `Bearer ${SERVICE_ROLE}`,
+        Prefer: "return=minimal",
+      },
+    },
+  ).catch((e) => { console.warn("narrate cleanup failed:", e); });
+
   if (j.ok === false) {
     return {
       ok: false,
