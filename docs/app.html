@@ -578,7 +578,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v239",
+      release: "quantum-cube@qc-v240",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1075,7 +1075,7 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 // ═══════════════════════════════════════════
 let currentFace=0,isUnlocked=false,profileData=null,deferredInstall=null;
 // TWA detection — true when running inside the Android app wrapper
-const IS_TWA = (function(){
+const IS_TWA = (/Android/i.test(navigator.userAgent)) && (function(){
   try{
     if(document.referrer && document.referrer.startsWith('android-app://')) return true;
     if(sessionStorage.getItem('qc_twa')==='1') return true;
@@ -3392,21 +3392,34 @@ function syncMarketingConsent(source){
 
 async function initSupabaseSession(){
   let hasSession = false;
+  let _initProfile = null;
+  let _initUser = null;
   try{
     const { data: { session } } = await sb.auth.getSession();
     if(session && session.user){
       qcCurrentUser = session.user;
+      _initUser = session.user;
       hasSession = true;
       const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
       qcCurrentProfile = profile || null;
+      _initProfile = profile || null;
       syncUnlockFromProfile(profile);
     }
   }catch(e){}
   restorePendingProfile();
+  // Populate form from profile/auth so returning users skip manual entry
+  if(_initUser) populateFormFromProfile(_initProfile, _initUser);
   updateSettingsLinkVisibility();
   // Chunk 5b: if already signed in on page load, skip Face 0 entirely
   if(hasSession && currentFace === 0){
-    try { runCalculation(); } catch(e) { showFace(1); }
+    const _formReady = !!(document.getElementById('firstName')?.value &&
+      document.getElementById('lastName')?.value &&
+      document.getElementById('dobDay')?.value &&
+      document.getElementById('dobMonth')?.value &&
+      document.getElementById('dobYear')?.value);
+    if(_formReady){
+      try { runCalculation(); } catch(e) { showFace(1); }
+    }
   }
 }
 
