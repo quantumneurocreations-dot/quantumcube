@@ -1,11 +1,14 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "app.quantumcube.twa",
       "sha256_cert_fingerprints": [
-        "14:01:92:A5:20:FC:99:8F:03:07:2C:0E:69:3B:EC:04:18:5F:30:DA:14:07:BF:61:6E:C8:E1:12:F9:F7:9B:3D"
+        "14:01:92:A5:20:FC:99:8F:03:07:2C:0E:69:3B:EC:04:18:5F:30:DA:14:07:BF:61:6E:C8:E1:12:F9:F7:9B:3D",
+        "9D:72:AD:7C:6D:00:BE:62:F2:F4:F6:21:F3:72:53:A8:C5:95:85:D4:41:DC:D4:67:81:47:AD:3B:3E:B4:C0:17"
       ]
     }
   }
