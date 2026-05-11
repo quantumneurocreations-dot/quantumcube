@@ -3,6 +3,50 @@ tags: [core, session]
 ---
 # Session Log
 
+## 2026-05-11 Morning/Afternoon — Google Play Console setup (Chat Claude)
+
+**Goal:** Create app in Play Console, upload AAB, work through all store listing requirements.
+
+**Done:**
+- ✅ **assetlinks.json updated** — Play App Signing SHA-256 added (`9D:72:AD:7C:6D:00:BE:62:F2:F4:F6:21:F3:72:53:A8:C5:95:85:D4:41:DC:D4:67:81:47:AD:3B:3E:B4:C0:17`). Both fingerprints now in file. Commit `b44ecaa`. TWA verification will work correctly.
+- ✅ **App created in Play Console** — App ID `4973211872239545786`, package `app.quantumcube.twa`, Free, en-US
+- ✅ **AAB uploaded** — `app-release-bundle.aab` (1.66MB), Version 2(y), Target SDK 35, API 21+, uploaded to Closed testing - Alpha track
+- ✅ **Financial features** — declared "no financial features"
+- ✅ **Privacy policy** — `https://quantumcube.app/privacy` submitted
+- ✅ **App access** — "restricted", temp credentials: `quantumneurocreations@gmail.com`, magic link instructions added
+- ✅ **Content rating** — IARC questionnaire completed: All other app types, online content Yes, no violence/sexuality/language, purchase digital goods Yes (no loot boxes), 18+ only, minor restriction enabled
+- ✅ **Target audience** — 18+ selected, minor restriction ticked
+- ✅ **Data safety** — fully completed: Name/Email/UserIDs/Purchase history/App interactions/Crash logs/Diagnostics/Device IDs all declared with correct collection/sharing/purpose answers. Delete account URL: `https://quantumcube.app/account/delete`
+- ✅ **App category** — Lifestyle, tags: Horoscope + Self-help
+- ✅ **Store listing contact** — support@quantumcube.app, https://quantumcube.app
+- ✅ **External marketing** — ON
+- ✅ **Store listing descriptions** — short (≤80 chars) + full (≤4000 chars) drafted and entered
+- ✅ **App icon** — `docs/qc-icon-512.png` uploaded
+- ✅ **Feature graphic** — designed in Claude + Canva (star background, QUANTUM white + CUBE cyan, phone mockups with app screenshots). Uploaded 1024×500.
+- ✅ **Phone screenshots** — 6 portrait screenshots taken and uploaded
+- ✅ **Tablet screenshots** — in progress (APK sideloaded on tablet, Play Protect warning = expected, tap Install anyway)
+
+**Still pending (Play Console):**
+- 🔲 Tablet screenshots (7-inch + 10-inch) — sideload APK, take screenshots
+- 🔲 Ads declaration
+- 🔲 Government apps declaration
+- 🔲 Health declaration
+- 🔲 Re-upload AAB and submit closed testing release (was blocked by errors — all now cleared except store listing)
+- 🔲 Select countries (United States)
+- 🔲 Add 12 testers → 14-day clock starts
+- 🔲 Create dedicated reviewer Gmail → sign in once → Claude sets has_paid=true → update App access credentials
+- 🔲 Enroll External Content Links Program (Play Console → Settings)
+- 🔲 Supabase Pro upgrade ($25/mo)
+
+**Code fixes needed (new chat):**
+- 🔲 Video spacing issues on phone
+- 🔲 "Reveal My Cube" button spacing issue
+- 🔲 Email page buttons (Continue/Google) shift left on larger screens — need centering fix
+
+**Current HEAD:** `b44ecaa` | **SW:** qc-v227 | **Sentry:** quantum-cube@qc-v227
+
+---
+
 ## 2026-05-10 Night — Play Store final pre-Monday checks (Chat Claude)
 
 **Goal:** Audit all remaining Play Store requirements, ship outstanding code items, lock in the payment path decision.
