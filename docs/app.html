@@ -427,6 +427,22 @@ input[type="number"]{-moz-appearance:textfield}
   padding:40px 24px;text-align:center;
 }
 #paySuccess.show{display:flex}
+#twaRedirectOverlay{
+  position:fixed;inset:0;z-index:1100;
+  background:radial-gradient(ellipse at 50% 40%,#0e3a5a 0%,#071b2e 70%,#040d18 100%);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 24px;text-align:center;
+}
+#twaRedirectOverlay.show{display:flex}
+#twaRedirectOverlay .twa-card{
+  max-width:420px;width:100%;
+  background:rgba(8,18,32,0.85);
+  border:1px solid rgba(12,192,223,0.4);border-radius:16px;
+  padding:28px 22px;
+  box-shadow:0 0 32px rgba(12,192,223,0.18),inset 0 0 24px rgba(12,192,223,0.05);
+}
+#twaRedirectOverlay .twa-title{font-family:'Cinzel Decorative',serif;font-size:22px;color:#fff;margin:0 0 14px}
+#twaRedirectOverlay .twa-body{font-size:15px;font-weight:300;color:rgba(255,255,255,0.85);line-height:1.7;margin:0 0 22px}
 .success-icon{font-size:64px;margin-bottom:20px;filter:drop-shadow(0 0 20px rgba(12,192,223,0.8))}
 .success-title{font-family:'Cinzel Decorative',serif;font-size:24px;color:#fff;margin-bottom:12px}
 .success-msg{font-size:17px;font-weight:300;color:rgba(255,255,255,0.85);line-height:1.85;margin-bottom:32px;font-style:italic}
@@ -544,7 +560,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v226",
+      release: "quantum-cube@qc-v227",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -700,6 +716,7 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
   <span class="consent-box"></span>
   <span class="consent-text"><span class="consent-main">Add Me To The Quantum</span><span class="consent-sub">News And Insights From The Cube</span></span>
 </label>
+<p class="privacy-inline" style="margin:14px 24px 0;font-size:11px;line-height:1.5;color:rgba(255,255,255,0.55);text-align:center;font-weight:300">Your details are used only to generate your personal reading. See our <button type="button" class="privacy-inline-link" style="background:transparent;border:none;color:#0cc0df;text-decoration:underline;font-size:11px;padding:0;cursor:pointer;font-family:inherit" onclick="showLegal('privacy')">Privacy Policy</button>.</p>
 <button type="button" class="calc-btn" id="revealBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleRevealClick()">Reveal My Cube</button>
 
 <div id="legalFooter">
@@ -962,6 +979,7 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 <button type="button" class="reset-btn" onclick="signOut()">Sign Out</button>
 <button type="button" class="export-btn" onclick="haptic('light');exportMyData()" style="margin-top:14px">Download My Data</button>
 <button type="button" class="delete-btn" id="deleteAccountBtn" onclick="haptic('medium');armDeleteAccount()" style="margin-top:14px">Delete Account</button>
+<p style="margin:22px 0 0;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.45);text-align:center;line-height:1.7">Narration is AI-generated using ElevenLabs</p>
 <button type="button" class="legal-link" onclick="openFace(0)" style="margin-top:18px">Back</button>
 </div>
 </div>
@@ -2841,6 +2859,7 @@ const QC_DIALOG = {
       if(id === "payOverlay") hidePayOverlay();
       else if(id === "legalOverlay") hideLegal();
       else if(id === "paySuccess") afterPaySuccess();
+      else if(id === "twaRedirectOverlay") cancelTwaRedirect();
       return;
     }
     if(ev.key === "Tab"){
@@ -2941,11 +2960,20 @@ function unlock(){
     return;
   }
   if(IS_TWA){
-    // Android TWA: external billing not available in-app — open website in browser
-    window.open('https://quantumcube.app/app?ref=android-unlock','_blank','noopener');
+    // Android TWA: external billing not available in-app — show disclosure
+    // before opening external browser for purchase (Google Play External
+    // Content Links Program requirement).
+    QC_DIALOG.open("twaRedirectOverlay");
     return;
   }
   showPayOverlay();
+}
+function confirmTwaRedirect(){
+  QC_DIALOG.close("twaRedirectOverlay");
+  window.open('https://quantumcube.app/app?ref=android-unlock','_blank','noopener');
+}
+function cancelTwaRedirect(){
+  QC_DIALOG.close("twaRedirectOverlay");
 }
 function resetAll(){
 isUnlocked=false;profileData=null;
@@ -4018,6 +4046,18 @@ if("serviceWorker" in navigator){
   <h2 id="paySuccessTitle" class="success-title">Cube Unlocked</h2>
   <p class="success-msg">Your complete cosmic profile is now unlocked.<br>All six sides of your Quantum Cube are open.<br><br>Welcome to the full reading.</p>
   <button type="button" class="pay-back" onclick="afterPaySuccess()">Continue</button>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- TWA EXTERNAL REDIRECT DISCLOSURE            -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="twaRedirectOverlay" role="alertdialog" aria-modal="true" aria-labelledby="twaRedirectTitle" aria-describedby="twaRedirectBody" aria-hidden="true">
+  <div class="twa-card">
+    <h2 id="twaRedirectTitle" class="twa-title">Leaving Quantum Cube</h2>
+    <p id="twaRedirectBody" class="twa-body">You'll be taken to your browser to complete your purchase outside Google Play. Refunds are handled by Dodo Payments.</p>
+    <button type="button" class="unlock-btn pay-overlay-btn" onclick="haptic('medium');confirmTwaRedirect()">Continue</button>
+    <button type="button" class="unlock-btn pay-overlay-btn" style="background:transparent;border-color:#ffffff;color:#ffffff;box-shadow:none" onclick="haptic('medium');cancelTwaRedirect()">Cancel</button>
+  </div>
 </div>
 
 </body>
