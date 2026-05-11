@@ -520,9 +520,10 @@ input[type="number"]{-moz-appearance:textfield}
 @media (min-width:600px){
   .glass-card{max-width:56.25%;margin-left:auto;margin-right:auto}
   .lock-screen{max-width:44%;margin-left:auto;margin-right:auto}
-  .calc-btn{max-width:56.25%;margin-left:auto;margin-right:auto;display:block}
-  .reset-btn{max-width:56.25%;margin-left:auto;margin-right:auto;display:block}
+  .calc-btn{max-width:56.25%;margin-left:auto!important;margin-right:auto!important;display:block}
+  .reset-btn{max-width:56.25%;margin-left:auto!important;margin-right:auto!important;display:block}
   .export-btn,.delete-btn{max-width:56.25%;margin-left:auto;margin-right:auto;display:block}
+  #googleSignInBtn{max-width:56.25%;margin-left:auto!important;margin-right:auto!important;display:flex!important}
 }
 
 .video-container.vid-fullscreen{position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;z-index:9999!important;margin:0!important;padding-bottom:0!important;background:#000!important}
@@ -560,7 +561,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v227",
+      release: "quantum-cube@qc-v228",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
