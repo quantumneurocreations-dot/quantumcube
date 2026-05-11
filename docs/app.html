@@ -578,7 +578,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v233",
+      release: "quantum-cube@qc-v234",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1545,6 +1545,12 @@ let _narrateInflight = false;
 function stopNarration(){
   if(_currentAudio){ try{ _currentAudio.pause(); _currentAudio.src=""; }catch(e){} _currentAudio=null; }
   _currentCard = null;
+  // Release the inflight guard so a new narration can start immediately even
+  // when interrupting a multi-track playSequence — without this, opening a new
+  // numerology card while a multi/phase card is mid-sequence is silently
+  // blocked by the `if(_narrateInflight) return;` guard at the top of
+  // startNarrationFromUrl / playSequence.
+  _narrateInflight = false;
   if(window.QC_AUDIO && typeof QC_AUDIO.unduckMusic === "function") QC_AUDIO.unduckMusic();
 }
 
@@ -1600,9 +1606,25 @@ function gatherFaceText(faceNum){
 }
 
 /* icard accordion: unified toggle + keyboard handler.
-   Toggles open class, syncs aria-expanded, fires haptic + narration. */
+   Toggles open class, syncs aria-expanded, fires haptic + narration.
+   When opening a previously-closed card, first close every other open card in
+   the same stack and halt in-flight narration so the new card can start
+   immediately — without this, clicking a second numerology card while a
+   multi/phase card is mid-playSequence would be silently blocked. */
 window.qcToggleCard = function(el, faceNum){
   if(!el) return;
+  var willOpen = !el.classList.contains("open");
+  if(willOpen){
+    var stack = el.closest('.card-stack');
+    if(stack){
+      stack.querySelectorAll('.icard.open').forEach(function(other){
+        if(other === el) return;
+        other.classList.remove('open');
+        other.setAttribute('aria-expanded', 'false');
+      });
+    }
+    if(typeof stopNarration === "function") stopNarration();
+  }
   var nowOpen = el.classList.toggle("open");
   el.setAttribute("aria-expanded", nowOpen ? "true" : "false");
   if(window.haptic) haptic("light");
