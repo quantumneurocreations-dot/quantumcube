@@ -578,7 +578,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v234",
+      release: "quantum-cube@qc-v235",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1541,8 +1541,16 @@ const voiceState = { 3:true, 4:true, 5:true };
 let _currentAudio = null;
 let _currentCard = null;
 let _narrateInflight = false;
+// Cancellation token. Every starter captures its own generation right after
+// calling stopNarration(); any subsequent stopNarration() bumps this, and the
+// older async chain self-terminates the next time it checks (before every
+// await, at every loop iteration, and before its finally cleanup). This
+// removes the timing dependency where the old playSequence's finally block
+// would call stopNarration() AFTER a new narration had already started.
+let _qcNarrateGen = 0;
 
 function stopNarration(){
+  _qcNarrateGen++;
   if(_currentAudio){ try{ _currentAudio.pause(); _currentAudio.src=""; }catch(e){} _currentAudio=null; }
   _currentCard = null;
   // Release the inflight guard so a new narration can start immediately even
@@ -1584,15 +1592,19 @@ async function fetchNarration(text){
 async function startNarration(text, cardEl){
   if(_narrateInflight) return;
   _narrateInflight = true;
+  let myGen;
   try{
     stopNarration();
+    myGen = _qcNarrateGen;
     const url = await fetchNarration(text);
-    if(!url){ _narrateInflight=false; return; }
+    if(_qcNarrateGen !== myGen) return;
+    if(!url) return;
     if(window.QC_AUDIO && typeof QC_AUDIO.duckMusic === "function") QC_AUDIO.duckMusic();
     const audio = new Audio(url);
     _currentAudio = audio;
     _currentCard = cardEl || null;
     audio.addEventListener("ended", ()=>{ if(_currentAudio===audio) stopNarration(); });
+    if(_qcNarrateGen !== myGen) return;
     audio.play().catch(e=>console.warn("audio play", e));
   } finally { _narrateInflight = false; }
 }
@@ -1664,8 +1676,10 @@ document.addEventListener("click", function(e){
 async function startNarrationFromUrl(url, cardEl){
   if(_narrateInflight) return;
   _narrateInflight = true;
+  let myGen;
   try{
     stopNarration();
+    myGen = _qcNarrateGen;
     try {
       if(window.posthog){
         const _fname = (url.split('/').pop() || '').split('?')[0];
@@ -1679,6 +1693,7 @@ async function startNarrationFromUrl(url, cardEl){
     _currentCard = cardEl;
     audio.addEventListener("ended", ()=>{ if(_currentAudio===audio) stopNarration(); });
     audio.addEventListener("error", ()=>{ if(_currentAudio===audio) stopNarration(); });
+    if(_qcNarrateGen !== myGen) return;
     await audio.play().catch(()=>{});
   } finally { _narrateInflight = false; }
 }
@@ -1686,12 +1701,13 @@ async function startNarrationFromUrl(url, cardEl){
 async function playSequence(urls, cardEl){
   if(_narrateInflight) return;
   _narrateInflight = true;
-  let cancelled = false;
+  let myGen;
   try{
     stopNarration();
+    myGen = _qcNarrateGen;
     if(window.QC_AUDIO && typeof QC_AUDIO.duckMusic === "function") QC_AUDIO.duckMusic();
     for(let i=0; i<urls.length; i++){
-      if(cancelled || _currentCard !== cardEl && i > 0) break;
+      if(_qcNarrateGen !== myGen) return;
       const audio = new Audio(urls[i]);
       audio.preload = "auto";
       _currentAudio = audio;
@@ -1701,10 +1717,14 @@ async function playSequence(urls, cardEl){
         audio.addEventListener("error", res, {once:true});
         audio.play().catch(()=>res());
       });
-      if(_currentCard !== cardEl) { cancelled = true; break; }
+      if(_qcNarrateGen !== myGen) return;
     }
   } finally {
-    stopNarration();
+    // Only finalise if we still own the active session. If a newer session
+    // started while we were awaiting, _qcNarrateGen has already advanced —
+    // calling stopNarration() here would clobber the new narration that is
+    // now playing on a different card.
+    if(_qcNarrateGen === myGen) stopNarration();
     _narrateInflight = false;
   }
 }
