@@ -578,7 +578,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v232",
+      release: "quantum-cube@qc-v233",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1826,6 +1826,7 @@ function showFace(n){
   if(n === 'CheckEmail'){ _qcStartMagicPoller(); } else { _qcStopMagicPoller(); }
   if(window.QC_AUDIO && typeof n==="number" && n>=1 && n<=6) window.QC_AUDIO.play("select_side");
   if(typeof stopNarration==="function")stopNarration();
+  if(typeof pauseAllVideos==="function")pauseAllVideos();
   if(typeof onFaceShown==="function")setTimeout(function(){onFaceShown(n)},10);
 
   window.scrollTo(0,0);
@@ -3788,14 +3789,32 @@ window.redeemCode=function(){
 document.addEventListener('contextmenu',e=>e.preventDefault());
 
 // ═══ VIMEO PLAYER API — REAL FULLSCREEN + ORIENTATION LOCK ═══
+// Track every player we create so showFace() / pauseAllVideos() can halt
+// playback when the user navigates away or starts a different video.
+var _qcVimeoPlayers = [];
+function pauseAllVideos(){
+  for(var i = 0; i < _qcVimeoPlayers.length; i++){
+    try { _qcVimeoPlayers[i].pause(); } catch(e) {}
+  }
+}
+function pauseOtherVideos(except){
+  for(var i = 0; i < _qcVimeoPlayers.length; i++){
+    if(_qcVimeoPlayers[i] === except) continue;
+    try { _qcVimeoPlayers[i].pause(); } catch(e) {}
+  }
+}
+window.pauseAllVideos = pauseAllVideos;
+
 window.addEventListener('load', function(){
   setTimeout(function(){
     document.querySelectorAll('.video-container iframe').forEach(function(iframe){
       if(iframe.__qcVimeoAnyHook) return;
       iframe.__qcVimeoAnyHook = true;
       const player = new Vimeo.Player(iframe);
+      _qcVimeoPlayers.push(player);
       const container = iframe.closest('.video-container');
       player.on('play', function(){
+        pauseOtherVideos(player);
         if(window.QC_AUDIO) QC_AUDIO.pauseForVideo();
         const wantsPortrait = container.classList.contains('portrait-video');
         if(screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
@@ -3824,7 +3843,8 @@ window.addEventListener('load', function(){
         iframe.__qcVimeoAnyHook = true;
         try{
           const p = new Vimeo.Player(iframe);
-          p.on('play', function(){ if(window.QC_AUDIO) QC_AUDIO.pauseForVideo(); });
+          _qcVimeoPlayers.push(p);
+          p.on('play', function(){ pauseOtherVideos(p); if(window.QC_AUDIO) QC_AUDIO.pauseForVideo(); });
           p.on('pause', function(){ if(window.QC_AUDIO) QC_AUDIO.resumeAfterVideo(); });
           p.on('ended', function(){ if(window.QC_AUDIO) QC_AUDIO.resumeAfterVideo(); });
         }catch(e){}
