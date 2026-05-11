@@ -524,19 +524,22 @@ input[type="number"]{-moz-appearance:textfield}
   .reset-btn{max-width:56.25%;margin-left:auto!important;margin-right:auto!important;display:block}
   .export-btn,.delete-btn{max-width:56.25%;margin-left:auto;margin-right:auto;display:block}
   #googleSignInBtn{max-width:56.25%;margin-left:auto!important;margin-right:auto!important;display:flex!important}
-  /* Vertically center the paywall card on tablet/desktop. Scoped via :has() to
-     only faces whose .lock-screen is still visible — the unlock flow sets
-     inline display:none on .lock-screen, which removes this rule and restores
-     normal block flow for the paid content (scoreboards, grids, card stacks). */
-  .face.active:has(> .lock-screen:not([style*="none"])){
+  /* Vertically center the Pay $17 fullscreen overlay (the modal that fires
+     when the user taps Unlock on a locked face). Base CSS uses
+     justify-content:flex-start so the content stays scrollable on phones —
+     on tablet/desktop there's plenty of headroom, so center it. */
+  #payOverlay{justify-content:center}
+  /* Vertically center the .lock-screen card on the locked Numerology/Astrology/
+     Combined/Profile faces. Scoped by ID so unlocked paid content (scoreboards,
+     matrix grids, card stacks) keeps normal block flow — those elements all
+     live inside #faceN-content siblings that are taller than 85vh anyway, so
+     justify-content:center becomes a no-op once the lock is removed.
+     No align-items override → default stretch keeps children full-width. */
+  #face3.active, #face4.active, #face5.active, #face6.active{
     display:flex;
     flex-direction:column;
-    align-items:center;
     justify-content:center;
     min-height:85vh;
-    padding-left:0;
-    padding-right:0;
-    box-sizing:border-box;
   }
 }
 
@@ -575,7 +578,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v231",
+      release: "quantum-cube@qc-v232",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
