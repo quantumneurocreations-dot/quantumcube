@@ -428,3 +428,127 @@ Three steps outlined:
 - 🔲 4–6 portrait screenshots on phone
 - 🔲 Store listing: short description (≤80 chars) + full description (≤4000 chars)
 - 🔲 Play Console forms (all after app created): Health Apps, AI content, target audience 18+, content rating, data safety, app access (review Gmail credentials), privacy policy URL
+
+---
+
+## 2026-05-11 Morning — IDENTITY VERIFIED + Full session wrap (Chat Claude)
+
+**🚨 IDENTITY VERIFIED 6:45 AM — GO TO PLAY CONSOLE NOW**
+**🚨 BANK ACCOUNT VERIFIED 5:32 AM — payments unblocked**
+
+Both gates cleared. App creation is unblocked. Start new chat immediately — will be sending screenshots through Play Console setup.
+
+---
+
+### WHAT WAS COMPLETED THIS SESSION (full record)
+
+**Code commits:**
+- `ca863c2` — qc-v226: entertainment disclaimer confirmed in CSS, 192×192 maskable icon created + added to manifest.json
+- `2244dfe` — qc-v227: pre-redirect disclosure modal (IS_TWA only), Face 0 in-flow privacy disclosure, AI narration label in Settings (Face 7), `/account/delete` page created. All pushed to origin/main.
+- Current HEAD: `2244dfe` | SW: qc-v227 | Sentry: quantum-cube@qc-v227
+
+**Trademark search — CLEAR ✅**
+- Full USPTO export (500 live marks) scanned programmatically
+- NO federal registration or pending application for "QUANTUM CUBE" in Class 9 (software/apps) or Class 41 (entertainment)
+- Quantum Cube LLC exists (speed cubing timer app) — common law rights only, completely different goods/services, coexistence defensible
+- Name is clear to use
+
+**Claude Code policy audit — 3 agents, 195 tool uses:**
+All findings captured in PLAY_STORE_PREP.md Section 15. Key items:
+- External Content Links Program: must enroll in Play Console → Settings BEFORE going live (Jan 28 deadline was for existing apps only — new apps enroll pre-launch)
+- Pre-redirect disclosure modal: ✅ DONE in qc-v227
+- Public account/delete URL: ✅ DONE (quantumcube.app/account/delete)
+- In-flow privacy disclosure Face 0: ✅ DONE in qc-v227
+- AI narration label: ✅ DONE in qc-v227
+- Health Apps Declaration: do in Play Console (declare no health functionality)
+- AI-generated content declaration: declare NO (ElevenLabs TTS of pre-written scripts ≠ runtime AI generation)
+- Data Safety form: email, name, DOB, purchase history, PostHog, Sentry, device IDs
+- ElevenLabs commercial license: ✅ CONFIRMED — all paid plans permit app distribution
+- USPTO trademark: ✅ CLEAR
+
+**Payment path — DECIDED AND LOCKED:**
+- US-only launch, Dodo Payments on Android, NO Google Play Billing
+- Legal basis: Epic Games v Google US court ruling
+- IS_TWA redirect code already live — redirects to quantumcube.app/app?ref=android-unlock
+- Pre-redirect disclosure modal now shows before redirect fires (qc-v227)
+
+**Account type — personal, staying personal:**
+- Cannot convert to organization (read-only after creation)
+- Developer name "Quantum Neuro Creations" shows prominently — fine
+- 14-day closed testing required (personal account post-Nov 2023)
+- Company: Quantum Neuro Creations (PTY) Ltd, reg 2019/559151/07, South Africa
+
+---
+
+### IMMEDIATE NEXT STEPS (new chat picks up here)
+
+**Step 1 — CREATE APP in Play Console (doing now)**
+- App name: Quantum Cube (12 chars — under 30 limit ✅)
+- Type: App (not game)
+- Free (NOT paid — irreversible if set wrong)
+- Support email: quantumneurocreations@gmail.com (or support@quantumcube.app)
+- Tick: Developer Program Policies + US export laws
+- Tick: Accept Play App Signing Terms of Service
+- Click Create app
+
+**Step 2 — CRITICAL immediately after creation:**
+Play Console → Release → Setup → App signing → copy "App signing key certificate" SHA-256 fingerprint → paste to Claude in new chat → Claude updates assetlinks.json + redeploys. TWA verification BREAKS without this second fingerprint.
+
+**Step 3 — Upload AAB**
+File: `android/app-release-bundle.aab` (1.66MB, already built and signed)
+Go to: Testing → Closed testing → Create new release → Upload AAB
+
+**Step 4 — Enroll External Content Links Program**
+Play Console → Settings → External content links → Enroll → register quantumcube.app/app as destination
+
+**Step 5 — Recruit 12 testers → 14-day clock starts**
+
+**Step 6 — Fill Play Console forms (App content page)**
+All in Policy and programs → App content:
+- Privacy policy URL: https://quantumcube.app/privacy
+- Ads: NO
+- App access: "App uses magic-link auth. Enter [review email], open Gmail at gmail.com with [password], click link." (Need to CREATE review Gmail first — set has_paid=true via Claude after first sign-in)
+- Target audience: 18+
+- Content rating: complete IARC questionnaire (likely Everyone/Everyone 10+)
+- COVID-19: NO
+- News/Magazine: NO
+- Health Apps Declaration: NO health functionality
+- AI-generated content: NO (ElevenLabs TTS of pre-written deterministic scripts)
+- Data safety form: declare email, name, DOB, purchase history (Dodo), app interactions (PostHog), crash logs (Sentry), device IDs (PostHog)
+
+**Step 7 — Store listing**
+- Short description (≤80 chars): NOT YET DRAFTED — do in new chat
+- Full description (≤4000 chars): NOT YET DRAFTED — do in new chat
+- Feature graphic: needs approval + commit to docs/
+- Screenshots: 4–6 portrait on phone
+
+**Step 8 — Infrastructure before go-live**
+- Supabase Pro upgrade ($25/mo) — before any Android traffic
+- Verify Privacy Policy explicitly names Supabase + Dodo Payments by name (PostHog + Sentry already confirmed)
+
+---
+
+### PLAY STORE CHECKLIST REFERENCE
+Full detailed checklist with policy citations: PLAY_STORE_PREP.md (Sections 1–15)
+Claude Code audit findings: PLAY_STORE_PREP.md Section 15
+
+---
+
+### KEY FACTS FOR NEW CHAT
+
+| Item | Value |
+|------|-------|
+| Package name | app.quantumcube.twa |
+| Keystore | android/quantumcube.keystore (pw in Apple Passwords) |
+| AAB location | android/app-release-bundle.aab (1.66MB) |
+| Live domain | quantumcube.app |
+| Support email | quantumneurocreations@gmail.com |
+| Supabase project | fqqdldvnxupzxvvbyvjm, eu-central-1 |
+| Sentry org | quantum-neuro-creations, project: javascript, EU |
+| PostHog project | 172921, EU, https://eu.i.posthog.com |
+| Current SW version | qc-v227 |
+| Company reg | Quantum Neuro Creations (PTY) Ltd, 2019/559151/07 |
+| Payment processor | Dodo Payments (MoR) — US only launch |
+| ElevenLabs voice | eleven_turbo_v2_5, stability 0.5, similarity_boost 0.75, speed 1.15 |
+| account/delete URL | quantumcube.app/account/delete ✅ live |
+| Trademark status | CLEAR — no USPTO registration for Quantum Cube Class 9/41 |
