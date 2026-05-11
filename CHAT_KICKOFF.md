@@ -127,3 +127,26 @@ All docs live in `/Users/qnc/Projects/quantumcube` and are readable via mcp-obsi
 
 **Full golden rules, command templates, Cursor fallback, failure recovery, PWA cache debugging:**
 → read `OPERATING_RULES.md` from Obsidian vault on demand.
+
+<!-- KICKOFF-VERSION: 5.1.0 — added CONNECTORS.md to boot + golden rules ref -->
+
+---
+
+## BOOT SEQUENCE UPDATE (v5.1.0)
+
+CONNECTORS.md is now a mandatory boot read alongside SESSION_LOG + PROJECT_BRIEF.
+
+**Updated Step 2:**
+```
+mcp-obsidian: get SESSION_LOG.md    → read top entry only
+mcp-obsidian: get PROJECT_BRIEF.md  → app state, line refs, fragile areas
+mcp-obsidian: get CONNECTORS.md     → ALL service IDs, MCP map, golden rules ← NEW
+```
+
+**Updated First Response Template — add this line under Docs read:**
+```
+• CONNECTORS: [confirmed — Cloudflare/Supabase/Sentry/PostHog/GitHub loaded]
+```
+
+**KICKOFF-VERSION: 5.1.0** — previous 5.0.0 lacked CONNECTORS.md in boot.
+Re-upload this file to Claude Project knowledge to activate the v5.1.0 boot.

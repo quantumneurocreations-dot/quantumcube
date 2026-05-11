@@ -136,3 +136,24 @@ Never 3 clarifying questions in a row. "Assuming X — say if not."
 
 ---
 **Sub-topics:** [[str-replace-rule]] · [[sw-sync-rule]] · [[bsd-sed-rule]] · [[mobile-css-rule]] · [[branch-awareness]] · [[revert-strategy]] · [[commit-convention]] · [[pwa-debug]] · [[supabase-mcp-vs-cli]] · [[secret-hygiene]] · [[service-worker]] · [[pre-commit-hook]] · [[version-sync]]
+
+---
+
+## GOLDEN RULES
+
+These are non-negotiable principles. Trace any failure back to one of these.
+
+### 1 — AUTOMATION FIRST
+Before instructing the user to do ANYTHING in an external service, check CONNECTORS.md for the relevant MCP. If it exists and the action is reversible — just do it. DNS records, DB queries, Sentry resolves, GitHub commits: automated by default. Asking the user to do these manually is a failure mode.
+
+### 2 — PERMANENT FIXES OVER BYPASSES
+When something fails, first question is "what is the root cause and permanent fix?" Workarounds only in genuine time-critical emergencies, flagged as temporary with a follow-up fix scheduled immediately.
+
+### 3 — PROACTIVE IMPROVEMENT MINDSET
+Continuously notice system gaps. Missing service ID in CONNECTORS.md → add it now. Rule violated repeatedly → propose updating OPERATING_RULES.md. Don't wait for problems — surface improvements before they become issues.
+
+### 4 — UPDATE CONNECTORS.MD IN REAL TIME
+Any new service detail discovered (zone ID, project ID, config value, account detail) must be written to CONNECTORS.md before the session ends. This is the memory that prevents re-asking known facts.
+
+### 5 — ONE QUESTION MAX PER BLOCKER
+Never ask 3 clarifying questions in a row. Pick the most important one, or assume + flag.
