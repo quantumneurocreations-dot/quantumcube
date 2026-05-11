@@ -561,7 +561,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v228",
+      release: "quantum-cube@qc-v229",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1767,7 +1767,46 @@ function onFaceShown(n){
 }
 /* --- end narrator --- */
 
+// Magic-link session poller. Some in-app browsers (Gmail/Outlook webviews) open
+// the magic link in a separate storage partition, so Supabase's cross-tab
+// broadcast never reaches this tab. While the user sits on CheckEmail, poll
+// getSession() every 2s; if a live session appears, setSession() to re-fire
+// onAuthStateChange (SIGNED_IN) — the existing handler does the rest.
+var _qcMagicPoller = null;
+function _qcStartMagicPoller(){
+  if(_qcMagicPoller) return;
+  var attempts = 0;
+  _qcMagicPoller = setInterval(async function(){
+    attempts++;
+    if(attempts > 30){
+      clearInterval(_qcMagicPoller);
+      _qcMagicPoller = null;
+      return;
+    }
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if(session && session.access_token && session.refresh_token){
+        clearInterval(_qcMagicPoller);
+        _qcMagicPoller = null;
+        try {
+          await sb.auth.setSession({
+            access_token: session.access_token,
+            refresh_token: session.refresh_token
+          });
+        } catch(e) {}
+      }
+    } catch(e) {}
+  }, 2000);
+}
+function _qcStopMagicPoller(){
+  if(_qcMagicPoller){
+    clearInterval(_qcMagicPoller);
+    _qcMagicPoller = null;
+  }
+}
+
 function showFace(n){
+  if(n === 'CheckEmail'){ _qcStartMagicPoller(); } else { _qcStopMagicPoller(); }
   if(window.QC_AUDIO && typeof n==="number" && n>=1 && n<=6) window.QC_AUDIO.play("select_side");
   if(typeof stopNarration==="function")stopNarration();
   if(typeof onFaceShown==="function")setTimeout(function(){onFaceShown(n)},10);
@@ -3297,8 +3336,11 @@ sb.auth.onAuthStateChange(async (event, session) => {
     if(currentFace === 0 || currentFace === 'CheckEmail'){
       if(formReady){
         try { runCalculation(); } catch(e) { showFace(1); }
+      } else {
+        // Session is live but form data is incomplete — bring user back to Face 0
+        // so they can fill the missing fields and tap Reveal
+        showFace(0);
       }
-      // else: stay on Face 0; user fills missing fields and taps Reveal manually
     }
   }
   if(event === "SIGNED_OUT"){
