@@ -561,7 +561,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v229",
+      release: "quantum-cube@qc-v230",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2677,6 +2677,45 @@ async function handleDodoEvent(event){
   }
 }
 
+// Scale the Dodo overlay down on tablet/desktop. The SDK injects two fixed,
+// full-viewport divs (#dodo-checkout-outer-div + #dodo-checkout-inner-div)
+// with the iframe inside the inner. On wide screens that's overkill — shrink
+// the inner to a centered modal-sized pane and dim the outer as a backdrop.
+function _qcScaleDodoOverlay(){
+  if(window.innerWidth < 600) return;
+  let applied = false;
+  let timeoutId = null;
+  const apply = () => {
+    const inner = document.getElementById('dodo-checkout-inner-div');
+    const outer = document.getElementById('dodo-checkout-outer-div');
+    if(inner && !applied){
+      inner.style.setProperty('width', 'min(520px, 92vw)', 'important');
+      inner.style.setProperty('height', 'min(700px, 92vh)', 'important');
+      inner.style.setProperty('max-width', '520px', 'important');
+      inner.style.setProperty('max-height', '700px', 'important');
+      inner.style.setProperty('min-height', '0', 'important');
+      inner.style.setProperty('top', '50%', 'important');
+      inner.style.setProperty('left', '50%', 'important');
+      inner.style.setProperty('transform', 'translate(-50%, -50%)', 'important');
+      if(outer){
+        outer.style.setProperty('background', 'rgba(0,0,0,0.65)', 'important');
+      }
+      applied = true;
+    }
+    if(applied && !inner){
+      observer.disconnect();
+      if(timeoutId){ clearTimeout(timeoutId); timeoutId = null; }
+    }
+  };
+  const observer = new MutationObserver(apply);
+  observer.observe(document.body, { childList: true, subtree: true });
+  apply();
+  timeoutId = setTimeout(() => {
+    observer.disconnect();
+    timeoutId = null;
+  }, 8000);
+}
+
 async function launchDodo(){
   try {
     if (!ensureDodoSdk()) {
@@ -2748,6 +2787,7 @@ async function launchDodo(){
       alert("Payment system not ready. Please refresh and try again.");
       return;
     }
+    _qcScaleDodoOverlay();
     SDK.Checkout.open({ checkoutUrl: checkout_url });
   } catch (e) {
     console.error("launchDodo failed:", e);
