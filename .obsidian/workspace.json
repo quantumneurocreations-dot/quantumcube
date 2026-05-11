@@ -74,8 +74,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "53d5c6e2557d3763",
@@ -192,6 +191,10 @@
   },
   "active": "43cd85dd90c12c16",
   "lastOpenFiles": [
+    "docs/account/delete/index.html",
+    "docs/account/delete",
+    "docs/account",
+    "docs/account-delete.html",
     "PROJECT_BRIEF.md",
     "vault/play-store/policy/google-play-requirements-checklist.md",
     "vault/play-store/policy",
@@ -218,15 +221,11 @@
     "vault/business/cookie-policy.md",
     "vault/business/data-retention.md",
     "vault/business/security-policy.md",
-    "vault/business/terms-of-service-doc.md",
     "vault/content/fonts",
     "vault/content/sounds",
     "vault/content/colors",
     "vault/content",
     "vault/business",
-    "vault/tech/edge-functions",
-    "vault/tech/sentry-detail",
-    "vault/tech/posthog-events",
-    "vault/tech/supabase-detail"
+    "vault/tech/edge-functions"
   ]
 }

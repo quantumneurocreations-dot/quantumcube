@@ -399,3 +399,32 @@ Three steps outlined:
 6. Use 14 days: Play Console forms + store listing copy + screenshots
 
 **HEAD:** `3049a13` | **SW:** qc-v226 | **Sentry:** quantum-cube@qc-v226
+
+---
+
+## 2026-05-11 Morning — Claude Code compliance fixes (qc-v227)
+
+**Commit:** `2244dfe` — pushed to origin/main
+
+**Done:**
+- ✅ Pre-redirect disclosure modal (TWA only) — "Leaving Quantum Cube / You'll be taken to your browser to complete your purchase outside Google Play." Continue/Cancel buttons. Only fires when IS_TWA=true. Lines 430–445 (CSS), 2860 (escape key), 2952–2975 (unlock logic), 4032–4040 (HTML).
+- ✅ In-flow privacy disclosure — line below Face 0 form inputs, above submit button: "Your details are used only to generate your personal reading. See our Privacy Policy." Line 704.
+- ✅ AI narration disclosure — Settings face (Face 7), below Delete Account button: "Narration is AI-generated using ElevenLabs." Line 985.
+- ✅ Account deletion page — `docs/account/delete/index.html` + `docs/account-delete.html` both created. URL: quantumcube.app/account/delete. Dark theme, Cinzel font, full deletion instructions + fallback email.
+- ✅ SW bumped qc-v226 → qc-v227. Sentry release in sync. runCalculation anchor intact at line 3437.
+- ⚠️ USPTO trademark search — partial. No exact "QUANTUM CUBE" found in Class 9 or 41 via web mirrors (Justia, Trademarkia). Similar marks noted (Q.U.B.E., Quantum Conundrum, QUBE) but none identical. Manual pass still needed at tmsearch.uspto.gov — 5 min human task.
+
+**Google bank account verified** (email 05:32 AM) — payments unblocked ✅
+**Identity verification** — submitted Saturday May 9, expected today/tomorrow.
+
+**Still pending:**
+- 🔲 Identity verification email → create app in Play Console
+- 🔲 USPTO manual trademark check (tmsearch.uspto.gov — "Quantum Cube" Class 9 + 41)
+- 🔲 Create review Gmail account → sign in once → ping Claude to set has_paid=true
+- 🔲 External Content Links Program enrollment (Play Console → Settings, after app created)
+- 🔲 Supabase Pro upgrade ($25/mo) before Android traffic hits
+- 🔲 assetlinks.json second SHA-256 (Play App Signing key — after AAB upload)
+- 🔲 12 testers recruited → 14-day clock
+- 🔲 4–6 portrait screenshots on phone
+- 🔲 Store listing: short description (≤80 chars) + full description (≤4000 chars)
+- 🔲 Play Console forms (all after app created): Health Apps, AI content, target audience 18+, content rating, data safety, app access (review Gmail credentials), privacy policy URL
