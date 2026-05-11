@@ -578,7 +578,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v236",
+      release: "quantum-cube@qc-v237",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1269,6 +1269,10 @@ const QC_AUDIO = {
     }
   },
   resumeAfterVideo: function(){
+    // Guard: a programmatic .pause() during a video-to-video switch fires a
+    // Vimeo 'pause' event on the outgoing video. Don't resume music while
+    // another video is supposed to be active.
+    if(window._qcVideoActive) return;
     if(!this._wasMusicOnBeforeVideo) return;
     this._wasMusicOnBeforeVideo = false;
     if(!this._musicOn) return;
@@ -3851,12 +3855,22 @@ document.addEventListener('contextmenu',e=>e.preventDefault());
 // Track every player we create so showFace() / pauseAllVideos() can halt
 // playback when the user navigates away or starts a different video.
 var _qcVimeoPlayers = [];
+// Set while any video is "supposed to be active". Programmatic .pause() calls
+// (from pauseOtherVideos during a video-to-video switch) fire Vimeo 'pause'
+// events; this flag lets the pause handler suppress the music resume.
+var _qcVideoActive = false;
+window._qcVideoActive = false;
 function pauseAllVideos(){
+  // Full stop — navigating away (showFace). Music should be allowed to resume.
+  _qcVideoActive = false;
+  window._qcVideoActive = false;
   for(var i = 0; i < _qcVimeoPlayers.length; i++){
     try { _qcVimeoPlayers[i].pause(); } catch(e) {}
   }
 }
 function pauseOtherVideos(except){
+  // Video-to-video switch — keep _qcVideoActive true so the music doesn't
+  // pop back in between the two videos.
   for(var i = 0; i < _qcVimeoPlayers.length; i++){
     if(_qcVimeoPlayers[i] === except) continue;
     try { _qcVimeoPlayers[i].pause(); } catch(e) {}
@@ -3873,6 +3887,8 @@ window.addEventListener('load', function(){
       _qcVimeoPlayers.push(player);
       const container = iframe.closest('.video-container');
       player.on('play', function(){
+        _qcVideoActive = true;
+        window._qcVideoActive = true;
         pauseOtherVideos(player);
         if(window.QC_AUDIO) QC_AUDIO.pauseForVideo();
         const wantsPortrait = container.classList.contains('portrait-video');
@@ -3886,6 +3902,8 @@ window.addEventListener('load', function(){
         if(window.QC_AUDIO) QC_AUDIO.resumeAfterVideo();
       });
       player.on('ended', function(){
+        _qcVideoActive = false;
+        window._qcVideoActive = false;
         player.exitFullscreen().catch(function(){});
         if(window.QC_AUDIO) QC_AUDIO.resumeAfterVideo();
       });
@@ -3903,9 +3921,9 @@ window.addEventListener('load', function(){
         try{
           const p = new Vimeo.Player(iframe);
           _qcVimeoPlayers.push(p);
-          p.on('play', function(){ pauseOtherVideos(p); if(window.QC_AUDIO) QC_AUDIO.pauseForVideo(); });
+          p.on('play', function(){ _qcVideoActive = true; window._qcVideoActive = true; pauseOtherVideos(p); if(window.QC_AUDIO) QC_AUDIO.pauseForVideo(); });
           p.on('pause', function(){ if(window.QC_AUDIO) QC_AUDIO.resumeAfterVideo(); });
-          p.on('ended', function(){ if(window.QC_AUDIO) QC_AUDIO.resumeAfterVideo(); });
+          p.on('ended', function(){ _qcVideoActive = false; window._qcVideoActive = false; if(window.QC_AUDIO) QC_AUDIO.resumeAfterVideo(); });
         }catch(e){}
       });
     }, 3000);
