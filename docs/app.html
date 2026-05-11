@@ -578,7 +578,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v235",
+      release: "quantum-cube@qc-v236",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1829,9 +1829,16 @@ function onFaceShown(n){
 // Magic-link session poller. Some in-app browsers (Gmail/Outlook webviews) open
 // the magic link in a separate storage partition, so Supabase's cross-tab
 // broadcast never reaches this tab. While the user sits on CheckEmail, poll
-// getSession() every 2s; if a live session appears, setSession() to re-fire
-// onAuthStateChange (SIGNED_IN) — the existing handler does the rest.
+// getSession() every 2s; if a live session appears AND the user genuinely just
+// requested a magic link (not a cached session left over from a prior visit),
+// setSession() to re-fire onAuthStateChange (SIGNED_IN) — the existing handler
+// does the rest.
 var _qcMagicPoller = null;
+// Only set true after a successful signInWithOtp() call in handleRevealClick or
+// handleResendMagicLink. Without this gate, the poller would act on the cached
+// session of any returning user the moment CheckEmail is shown, re-firing
+// SIGNED_IN and bouncing them around the auth flow.
+var _qcMagicLinkRequested = false;
 function _qcStartMagicPoller(){
   if(_qcMagicPoller) return;
   var attempts = 0;
@@ -1842,11 +1849,13 @@ function _qcStartMagicPoller(){
       _qcMagicPoller = null;
       return;
     }
+    if(!_qcMagicLinkRequested) return;
     try {
       const { data: { session } } = await sb.auth.getSession();
       if(session && session.access_token && session.refresh_token){
         clearInterval(_qcMagicPoller);
         _qcMagicPoller = null;
+        _qcMagicLinkRequested = false;
         try {
           await sb.auth.setSession({
             access_token: session.access_token,
@@ -1862,6 +1871,7 @@ function _qcStopMagicPoller(){
     clearInterval(_qcMagicPoller);
     _qcMagicPoller = null;
   }
+  _qcMagicLinkRequested = false;
 }
 
 function showFace(n){
@@ -3324,6 +3334,7 @@ async function handleRevealClick(){
       options: { emailRedirectTo: redirectTo, data: { marketing_consent: consent } }
     });
     if(result && result.error) throw new Error(result.error.message || "Could not send");
+    _qcMagicLinkRequested = true;
     // Success: magic link dispatched. Interstitial + auto-advance land in next commit.
   } catch(e){
     if(err){
@@ -3390,6 +3401,7 @@ async function handleResendMagicLink(){
       options: { emailRedirectTo: redirectTo, data: { marketing_consent: consent } }
     });
     if(result && result.error) throw new Error(result.error.message || 'Could not send');
+    _qcMagicLinkRequested = true;
     if(msg){ msg.textContent = 'Link resent'; msg.classList.add('success'); msg.style.display = 'block'; }
   } catch(e){
     if(msg){ msg.classList.remove('success'); msg.textContent = 'Could not resend: ' + (e.message || 'Network error'); msg.style.display = 'block'; }
@@ -3417,6 +3429,7 @@ sb.auth.onAuthStateChange(async (event, session) => {
     attemptPaymentUnlock(session);
   }
   if(event === "SIGNED_IN" && session && session.user){
+    _qcMagicLinkRequested = false;
     qcCurrentUser = session.user;
     updateSettingsLinkVisibility();
     // Magic-link path: restore pending name+DOB from localStorage
@@ -3436,9 +3449,13 @@ sb.auth.onAuthStateChange(async (event, session) => {
     if(currentFace === 0 || currentFace === 'CheckEmail'){
       if(formReady){
         try { runCalculation(); } catch(e) { showFace(1); }
-      } else {
-        // Session is live but form data is incomplete — bring user back to Face 0
-        // so they can fill the missing fields and tap Reveal
+      } else if(!profileRow){
+        // Genuinely new user with no profile row — bounce to Face 0 so they
+        // can fill the form (this handles in-app browser magic-link landings
+        // where the new tab has no pending profile data). If a profile row
+        // exists but is incomplete (e.g. OAuth signup without DOB), leave the
+        // user wherever they are — initSupabaseSession() and the populated
+        // form fields will guide them.
         showFace(0);
       }
     }
