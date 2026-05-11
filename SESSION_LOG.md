@@ -374,3 +374,28 @@ Three steps outlined:
 3. Team meeting → recruit 12 testers → share opt-in link → 14-day closed test clock starts
 4. While waiting on 14 days → entertainment disclaimer commit → store listing copy → screenshots → data safety form → app content declarations (health, AI, ads, no news)
 5. After 14 days → request production access → submit
+
+---
+
+## 2026-05-10 Late Night — Final wrap-up (Chat Claude)
+
+**Done this session:**
+- ✅ Entertainment disclaimer — already in CSS on every face, confirmed
+- ✅ PostHog SDK v3+ — Android ID policy fine
+- ✅ 192×192 maskable icon — created + committed ca863c2, qc-v226, pushed
+- ✅ ElevenLabs commercial license — confirmed, all paid plans cover app distribution
+- ✅ Account type — stay personal. Read-only after signup. Developer name "Quantum Neuro Creations" already set and shows prominently on Play Store. Not a blocker.
+- ✅ CIPC docs confirmed — QNC (PTY) Ltd reg 2019/559151/07, In Business
+- ✅ Claude Code full policy audit — 3 agents, 195 tool uses. PLAY_STORE_PREP.md Section 15 added.
+- ✅ External Content Links Program — Jan 28 deadline for existing apps only. New apps enroll before going live. Still open.
+- ✅ All docs updated (SESSION_LOG + PLAY_STORE_PREP.md)
+
+**Monday plan:**
+1. Check email — identity verification approval
+2. Run Claude Code audit list — implement code-side items (pre-redirect disclosure, account/delete page, in-flow privacy disclosure)
+3. USPTO trademark check via Claude Code (tmsearch.uspto.gov — "Quantum Cube" Class 9 + 41)
+4. Once verified → Create app → upload AAB → enroll External Content Links Program
+5. Recruit 12 testers → 14-day clock starts
+6. Use 14 days: Play Console forms + store listing copy + screenshots
+
+**HEAD:** `3049a13` | **SW:** qc-v226 | **Sentry:** quantum-cube@qc-v226
