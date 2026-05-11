@@ -204,7 +204,8 @@ input[type="number"]{-moz-appearance:textfield}
 .lock-new-list span{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.8);text-transform:uppercase;text-align:center}
 .lock-new-divider{width:60%;height:1px;background:rgba(12,192,223,0.3);margin:0 auto 12px}
 .lock-new-fee{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.6);text-transform:uppercase;text-align:center;margin-bottom:4px}
-.lock-new-price{font-family:'Cinzel Decorative',serif;font-size:28px;color:#ffffff;text-align:center;margin-bottom:16px}
+.lock-new-price{font-family:'Cinzel Decorative',serif;font-size:28px;color:#ffffff;text-align:center;margin-bottom:6px}
+.lock-new-sub{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,0.5);text-transform:uppercase;text-align:center;margin-bottom:16px}
 .lock-screen::before{content:'';position:absolute;top:0;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,rgba(12,192,223,0.6),transparent)}
 .lock-screen::after{content:'';position:absolute;bottom:0;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,rgba(12,192,223,0.6),transparent)}
 .lock-icon{font-size:40px;margin-bottom:8px;display:block;opacity:.7}
@@ -578,7 +579,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v240",
+      release: "quantum-cube@qc-v241",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -840,7 +841,8 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 <div class="lock-new-divider"></div>
 <div class="lock-new-fee">One-Time Fee</div>
 <div class="lock-new-price">$ 17.00</div>
-<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Unlock</button>
+<div class="lock-new-sub">No Subscription · Yours Forever</div>
+<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Pay $17</button>
 <label class="marketing-consent" style="margin-top:14px">
   <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
@@ -882,7 +884,8 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 <div class="lock-new-divider"></div>
 <div class="lock-new-fee">One-Time Fee</div>
 <div class="lock-new-price">$ 17.00</div>
-<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Unlock</button>
+<div class="lock-new-sub">No Subscription · Yours Forever</div>
+<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Pay $17</button>
 <label class="marketing-consent" style="margin-top:14px">
   <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
@@ -921,7 +924,8 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 <div class="lock-new-divider"></div>
 <div class="lock-new-fee">One-Time Fee</div>
 <div class="lock-new-price">$ 17.00</div>
-<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Unlock</button>
+<div class="lock-new-sub">No Subscription · Yours Forever</div>
+<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Pay $17</button>
 <label class="marketing-consent" style="margin-top:14px">
   <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
@@ -958,7 +962,8 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 <div class="lock-new-divider"></div>
 <div class="lock-new-fee">One-Time Fee</div>
 <div class="lock-new-price">$ 17.00</div>
-<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Unlock</button>
+<div class="lock-new-sub">No Subscription · Yours Forever</div>
+<button type="button" class="unlock-btn" onclick="haptic(&apos;medium&apos;);unlock()" aria-label="Unlock all 6 faces — $17 one-time fee">Pay $17</button>
 <label class="marketing-consent" style="margin-top:14px">
   <input type="checkbox" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
   <span class="consent-box"></span>
@@ -3146,7 +3151,9 @@ function unlock(){
     QC_DIALOG.open("twaRedirectOverlay");
     return;
   }
-  showPayOverlay();
+  // Skip the pre-payment overlay — lock card already shows price + features.
+  // Go straight to Dodo checkout.
+  launchDodo();
 }
 function confirmTwaRedirect(){
   QC_DIALOG.close("twaRedirectOverlay");
