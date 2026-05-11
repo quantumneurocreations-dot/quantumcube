@@ -596,3 +596,45 @@ Claude Code audit findings: PLAY_STORE_PREP.md Section 15
 | ElevenLabs voice | eleven_turbo_v2_5, stability 0.5, similarity_boost 0.75, speed 1.15 |
 | account/delete URL | quantumcube.app/account/delete ✅ live |
 | Trademark status | CLEAR — no USPTO registration for Quantum Cube Class 9/41 |
+
+
+## 2026-05-11 Full Day — App polish, auth fixes, Supabase Pro + custom domain (Chat Claude)
+
+**Goal:** Ship all outstanding UI/UX fixes, lock down auth, upgrade infrastructure, progress Play Store submission.
+
+**Code commits shipped:**
+- `f9f80cb` qc-v228 — fix(ui): center buttons on wide screens — `!important` override on `.calc-btn`, `.reset-btn`, `#googleSignInBtn` inside `@media (min-width:600px)`
+- `5aff6fe` qc-v229 — fix(auth): CheckEmail dead end + session poller for in-app browser magic link. `_qcMagicPoller` polls getSession() every 2s on CheckEmail; `showFace(0)` fallback only when `profileRow` is null
+- `9d93440` qc-v230 — fix(ui): widen Dodo checkout overlay on tablet/desktop. `_qcScaleDodoOverlay()` MutationObserver targets `#dodo-checkout-inner-div`, forces `min(520px,92vw) × min(700px,92vh)`, centred
+- `da21783` qc-v231 — fix(ui): vertically centre lock paywall on tablet. `:has(> .lock-screen:not([style*="none"]))` scoped flexbox — self-disables on unlock, no impact on paid content faces
+- `2324080` qc-v234 — fix(ux): clicking new numerology card immediately stops previous. Root cause: `_narrateInflight` held true for entire `playSequence` duration, silently aborting all other card taps
+- `686f998` qc-v237 — fix(media): stop video + narration on face change; suppress music resume during video-to-video switches. `_qcVideoActive` flag, `pauseAllVideos()` in `showFace()`, `resumeAfterVideo` guard
+- `5aff6fe→686f998` also includes qc-v233 (cancellation token `_qcNarrateGen` on all narration paths — old `finally` was clobbering new audio)
+- `5626c8e` qc-v236 — fix(auth): prevent showFace(0) regression for returning users + scope poller to requested magic links only. `_qcMagicLinkRequested` flag; `profileRow` null guard
+- `61fda7f` qc-v238 — fix(auth): switch Supabase client URL to custom domain `auth.quantumcube.app` (3 refs: CSP, SUPABASE_URL, NARRATE_URL)
+- `715067f` qc-v239 — fix(auth): Android stuck-on-CheckEmail — visibilitychange guard (unconditional on CheckEmail), "Already verified?" escape hatch button, OTP metadata fallback (`pending_first_name/last_name/dob_*`) for Gmail CCT storage isolation
+
+**Infrastructure done:**
+- ✅ Supabase Pro upgraded — $34.62/month (quantum-cube Micro + credit offset). No more auto-pausing.
+- ✅ qnc-academy Supabase project deleted — was empty (3 rows), saves $10/month
+- ✅ Custom domain `auth.quantumcube.app` — Cloudflare CNAME + TXT via MCP, Supabase activated, app.html updated, Google OAuth redirect URI added (via Claude in Chrome automation)
+- ✅ Supabase health check completed — RLS ✓, 6 edge functions ✓, profiles structure ✓, 38 stale rate-counter rows cleared, test account deleted, leaked-password protection enabled, URL config verified
+- ✅ CONNECTORS.md created — full service registry (Cloudflare zone ID, Supabase IDs, Sentry, PostHog, GitHub, Resend, Dodo, ElevenLabs, Google OAuth)
+- ✅ OPERATING_RULES.md — Golden Rules section added (5 rules: Automation First, Permanent Fixes, Proactive Improvement, Update Connectors in Real Time, One Question Max)
+- ✅ CHAT_KICKOFF.md v5.1.0 — CONNECTORS.md added to mandatory boot sequence
+
+**Play Store progress:**
+- ✅ Countries/regions — South Africa + United States added to Alpha track
+- ✅ 7-inch tablet screenshots — reuse 10-inch (Google doesn't validate device origin)
+- ✅ Chromebook + Android XR screenshot slots — confirmed optional, skipped
+- ⏳ Testers — still gathering 12 Gmail addresses
+- 🔲 Preview and confirm release
+- 🔲 Send to Google for review → 14-day clock
+
+**Pending:**
+- 🔲 Test Android auth fixes on device (qc-v239) — verify magic link no longer opens stuck second tab
+- 🔲 Add Google OAuth client ID to CONNECTORS.md (client ID: `886533964656-j8d17l8ij6u3q0i3bc8hgusr8od28c2h.apps.googleusercontent.com`)
+- 🔲 12 testers opted in → submit closed testing release
+- 🔲 Create review Gmail → set has_paid=true (Supabase)
+
+**Current HEAD:** `715067f` | **SW:** qc-v239 | **Sentry:** quantum-cube@qc-v239

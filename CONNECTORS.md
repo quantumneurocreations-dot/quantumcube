@@ -140,3 +140,16 @@ PURPOSE: Single source of truth for all connected services, IDs, and operational
 When any new service detail is discovered (zone ID, project ID, API key, config
 value), update this file immediately in the same session. Do not wait.
 This file is the memory that prevents asking the user things we already know.
+
+---
+
+## GOOGLE CLOUD CONSOLE (updated 2026-05-11)
+
+- **Project:** Quantum Cube (`quantum-cube-494914`)
+- **OAuth client name:** `Quantum Cube Web Client`
+- **Client ID:** `886533964656-j8d17l8ij6u3q0i3bc8hgusr8od28c2h.apps.googleusercontent.com`
+- **Authorised JS origins:** `https://quantumcube.app`
+- **Authorised redirect URIs:**
+  - `https://fqqdldvnxupzxvvbyvjm.supabase.co/auth/v1/callback` (keep as fallback)
+  - `https://auth.quantumcube.app/auth/v1/callback` (custom domain, added 2026-05-11)
+- **MCP:** No direct MCP — use Claude in Chrome (`tabs_context_mcp` → navigate → `computer`) to automate dashboard changes
