@@ -578,7 +578,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v238",
+      release: "quantum-cube@qc-v239",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -751,6 +751,10 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
   <p class="err-msg" id="resendMsg" role="status" aria-live="polite" style="display:none">Link resent</p>
 </div>
 <button type="button" class="calc-btn" id="resendBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleResendMagicLink()">Resend Email</button>
+<div style="margin:14px 24px 0 24px;text-align:center;">
+  <a href="#" id="alreadyVerifiedLink" onclick="event.preventDefault();haptic('light');handleAlreadyVerified();return false;" style="color:rgba(255,255,255,0.7);font-size:13px;text-decoration:underline;cursor:pointer;">Already verified your email? Tap here.</a>
+  <p id="alreadyVerifiedMsg" role="status" aria-live="polite" style="display:none;margin:8px 0 0 0;font-size:13px;color:rgba(255,255,255,0.85);"></p>
+</div>
 <button type="button" class="reset-btn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleBackToSignUp()" aria-label="Back to Sign Up">Back to<br>Sign Up</button>
 </div>
 <div class="face" id="face1" aria-label="Introduction">
@@ -1877,6 +1881,28 @@ function _qcStopMagicPoller(){
   }
   _qcMagicLinkRequested = false;
 }
+
+// Android Chrome aggressively suspends the original tab when the magic link
+// opens in a new Chrome tab — onAuthStateChange's BroadcastChannel sync stops
+// firing and the poller's setInterval is paused. When the user returns to the
+// original tab, force a session check regardless of _qcMagicLinkRequested
+// (which may have been cleared by an earlier showFace transition or a partial
+// SIGNED_IN). If a session exists, re-fire SIGNED_IN via setSession().
+document.addEventListener('visibilitychange', async function(){
+  if(document.visibilityState !== 'visible') return;
+  if(currentFace !== 'CheckEmail') return;
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if(session && session.access_token && session.refresh_token){
+      try {
+        await sb.auth.setSession({
+          access_token: session.access_token,
+          refresh_token: session.refresh_token
+        });
+      } catch(e) {}
+    }
+  } catch(e) {}
+});
 
 function showFace(n){
   if(n === 'CheckEmail'){ _qcStartMagicPoller(); } else { _qcStopMagicPoller(); }
@@ -3335,7 +3361,15 @@ async function handleRevealClick(){
   try {
     const result = await sb.auth.signInWithOtp({
       email: em,
-      options: { emailRedirectTo: redirectTo, data: { marketing_consent: consent } }
+      options: { emailRedirectTo: redirectTo, data: {
+        marketing_consent: consent,
+        pending_first_name: fn,
+        pending_middle_name: mn,
+        pending_last_name: ln,
+        pending_dob_day: d,
+        pending_dob_month: m,
+        pending_dob_year: y
+      } }
     });
     if(result && result.error) throw new Error(result.error.message || "Could not send");
     _qcMagicLinkRequested = true;
@@ -3387,6 +3421,31 @@ function handleBackToSignUp(){
   if(window.QC_AUDIO) window.QC_AUDIO.play("back_to_signup");
   showFace(0);
 }
+// Manual escape hatch from CheckEmail face. Some users land back on this
+// face after the magic link opened in a separate browser context (Gmail
+// CCT, Chrome Custom Tab) and BroadcastChannel never synced. Lets them
+// force a session check + re-fire SIGNED_IN.
+async function handleAlreadyVerified(){
+  const msg = document.getElementById('alreadyVerifiedMsg');
+  if(msg){ msg.textContent = 'Checking…'; msg.style.display = 'block'; }
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if(session && session.access_token && session.refresh_token){
+      try {
+        await sb.auth.setSession({
+          access_token: session.access_token,
+          refresh_token: session.refresh_token
+        });
+        if(msg){ msg.style.display = 'none'; }
+        return;
+      } catch(e) {}
+    }
+    if(msg){ msg.textContent = 'No verified session found yet — please check your email.'; msg.style.display = 'block'; }
+  } catch(e){
+    if(msg){ msg.textContent = 'No verified session found yet — please check your email.'; msg.style.display = 'block'; }
+  }
+}
+
 async function handleResendMagicLink(){
   const btn = document.getElementById('resendBtn');
   const msg = document.getElementById('resendMsg');
@@ -3400,9 +3459,23 @@ async function handleResendMagicLink(){
   const redirectTo = window.location.origin + window.location.pathname;
   try {
     const consent = !!document.getElementById('marketingConsent')?.checked;
+    const fn = document.getElementById('firstName')?.value.trim() || '';
+    const mn = document.getElementById('middleName')?.value.trim() || '';
+    const ln = document.getElementById('lastName')?.value.trim() || '';
+    const d  = document.getElementById('dobDay')?.value.trim() || '';
+    const m  = document.getElementById('dobMonth')?.value || '';
+    const y  = document.getElementById('dobYear')?.value.trim() || '';
     const result = await sb.auth.signInWithOtp({
       email: qcLastMagicEmail,
-      options: { emailRedirectTo: redirectTo, data: { marketing_consent: consent } }
+      options: { emailRedirectTo: redirectTo, data: {
+        marketing_consent: consent,
+        pending_first_name: fn,
+        pending_middle_name: mn,
+        pending_last_name: ln,
+        pending_dob_day: d,
+        pending_dob_month: m,
+        pending_dob_year: y
+      } }
     });
     if(result && result.error) throw new Error(result.error.message || 'Could not send');
     _qcMagicLinkRequested = true;
@@ -3446,6 +3519,25 @@ sb.auth.onAuthStateChange(async (event, session) => {
       qcCurrentProfile = profileRow;
       syncUnlockFromProfile(qcCurrentProfile);
     } catch(e) { console.error("profile fetch error:", e); }
+    // First-time signup on a device where the magic link opened in a separate
+    // storage partition (Gmail Chrome Custom Tab, Android tab suspension):
+    // QC_PENDING_KEY is empty AND profile row doesn't exist yet. Recover the
+    // form data we stashed in user_metadata when we called signInWithOtp.
+    if(!profileRow){
+      let hasPending = false;
+      try { hasPending = !!localStorage.getItem(QC_PENDING_KEY); } catch(e) {}
+      const meta = session.user.user_metadata || {};
+      if(!hasPending && (meta.pending_first_name || meta.pending_dob_year)){
+        const set = (id,v)=>{const el=document.getElementById(id);if(el&&v!=null&&v!=='')el.value=v;};
+        set("firstName",  meta.pending_first_name);
+        set("middleName", meta.pending_middle_name);
+        set("lastName",   meta.pending_last_name);
+        set("dobDay",     meta.pending_dob_day);
+        set("dobMonth",   meta.pending_dob_month);
+        set("dobYear",    meta.pending_dob_year);
+        if(typeof updateCalcBtnReady === "function") updateCalcBtnReady();
+      }
+    }
     // Populate Face 0 form fields from profile/auth metadata.
     // OAuth users with no DOB yet get email + name pre-filled, must add DOB manually.
     // Returning users with full profile get everything pre-filled.
