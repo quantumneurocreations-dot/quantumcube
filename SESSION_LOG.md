@@ -656,3 +656,7 @@ Claude Code audit findings: PLAY_STORE_PREP.md Section 15
 - 🔲 Supabase SESSION_LOG updated (this entry)
 
 **Current HEAD:** `715067f` | **SW:** qc-v239 | **Sentry:** quantum-cube@qc-v239
+
+## 2026-05-12 Update — App access credentials confirmed
+
+- ✅ **Play Console → App content → App access** updated with reviewer Gmail credentials (`qnc.review@gmail.com` / `QNC@Reviewer2026!`). Instruction name: "Google Sign-In". Confirmed via screenshot.
