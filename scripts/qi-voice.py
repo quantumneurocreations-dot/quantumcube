@@ -74,6 +74,13 @@ def _speak_sentence(text):
     finally:
         last_spoke_at = time.time()
         notify_dashboard(False)
+        set_mic(True)    # unmute mic — Owen is done, your turn
+
+def set_mic(enabled: bool):
+    """Hard mute/unmute system microphone via macOS osascript."""
+    vol = '100' if enabled else '0'
+    subprocess.run(['osascript', '-e', f'set volume input volume {vol}'],
+                   capture_output=True)
 
 def notify_dashboard(speaking: bool):
     try:
