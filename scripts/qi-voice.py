@@ -5,6 +5,49 @@ Claude streams tokens → sentence detected → ElevenLabs immediately → queue
 Target: <1.5s from end of speech to first word from Owen
 """
 import os, sys, json, re, time, queue, threading, tempfile, subprocess
+from datetime import datetime
+
+# ── Security layer — prompt injection protection ──────────────────────────────
+INJECTION_PATTERNS = [
+    r'ignore\s+(previous|all|your|prior)\s+(instructions?|prompts?|rules?|constraints?)',
+    r'(system\s+prompt|system\s+message)',
+    r'(jailbreak|jail\s*break)',
+    r'act\s+as\s+(if|though|a|an)\s+(?!quantum|qi)',
+    r'you\s+are\s+now\s+(?!qi|quantum)',
+    r'(disregard|forget|override)\s+(your|all|the)\s+(instructions?|rules?|guidelines?)',
+    r'(new\s+instructions?|updated\s+instructions?|different\s+instructions?)',
+    r'(reveal|expose|print|show|output|repeat)\s+(your\s+)?(system|prompt|instructions?|rules?)',
+    r'pretend\s+(you\s+are|to\s+be)',
+    r'(sudo|root|admin)\s*(mode|access|override)',
+    r'<(script|img|iframe|object)',
+    r'\$\{.*\}',  # template injection
+]
+INJECTION_RE = re.compile('|'.join(INJECTION_PATTERNS), re.IGNORECASE)
+MAX_INPUT_CHARS = 500
+SECURITY_LOG = os.path.expanduser("~/.config/qi/security.log")
+
+def sanitize_input(text):
+    """Returns (clean_text, is_safe, reason). Blocks prompt injection attempts."""
+    # Length cap — voice input is naturally short
+    if len(text) > MAX_INPUT_CHARS:
+        _log_security("LENGTH_EXCEEDED", text[:100])
+        return text[:MAX_INPUT_CHARS], True, "truncated"
+    # Injection detection
+    match = INJECTION_RE.search(text)
+    if match:
+        _log_security("INJECTION_DETECTED", text)
+        return None, False, f"blocked: injection pattern '{match.group(0)[:30]}'"
+    # Excessive punctuation / unicode abuse
+    if sum(1 for c in text if ord(c) > 127) > len(text) * 0.4:
+        _log_security("UNICODE_ABUSE", text[:100])
+        return None, False, "blocked: unicode anomaly"
+    return text, True, "ok"
+
+def _log_security(event, sample):
+    try:
+        with open(SECURITY_LOG, "a") as f:
+            f.write(f"{datetime.now().isoformat()} [{event}] {repr(sample[:120])}\n")
+    except: pass
 
 def read_key(f):
     try: return open(os.path.expanduser(f"~/.config/qi/{f}")).read().strip()
@@ -208,8 +251,13 @@ def respond_now():
     pending_timer = None
     if not text or len(text.split()) < MIN_WORDS:
         return
-    print(f"\n  You: {text}")
-    threading.Thread(target=think_and_stream, args=(text,), daemon=True).start()
+    clean, is_safe, reason = sanitize_input(text)
+    if not is_safe:
+        print(f"\n  [SECURITY] Input {reason}")
+        audio_queue.put("That input was flagged and blocked.")
+        return
+    print(f"\n  You: {clean}")
+    threading.Thread(target=think_and_stream, args=(clean,), daemon=True).start()
 
 def handle_input(text):
     global pending_text, pending_timer
