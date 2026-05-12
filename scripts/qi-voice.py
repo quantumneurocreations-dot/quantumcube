@@ -107,6 +107,8 @@ SENTENCE_END = re.compile(r'(?<=[.!?])\s+')
 
 def think_and_stream(user_input):
     """Stream Claude response, detect sentence boundaries, queue each sentence."""
+    global last_spoke_at
+    last_spoke_at = time.time()  # block mic immediately when QI starts responding
     import urllib.request, http.client
 
     ctx = maybe_search(user_input)
@@ -252,7 +254,8 @@ if __name__ == "__main__":
     player = threading.Thread(target=audio_player, daemon=True)
     player.start()
 
-    # Intro via streaming
+    # Intro via streaming — pre-set cooldown so mic is blocked during intro
+    last_spoke_at = time.time()
     think_and_stream("Introduce yourself in one sentence. Start with 'Hmm,'")
 
     try:
