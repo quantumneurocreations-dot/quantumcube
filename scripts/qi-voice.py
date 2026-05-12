@@ -167,7 +167,7 @@ def listen(callback):
     url = (f"wss://api.deepgram.com/v1/listen"
            f"?encoding=linear16&sample_rate={RATE}&channels=1"
            f"&model=nova-3&language=en&punctuate=true"
-           f"&endpointing=600&utterance_end_ms=1200")
+           f"&endpointing=600&interim_results=true&utterance_end_ms=1200")
 
     def on_message(ws, msg):
         d = json.loads(msg)
