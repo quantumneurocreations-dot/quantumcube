@@ -166,3 +166,25 @@ This file is the memory that prevents asking the user things we already know.
 
 - **QI Voice:** Owen · voice ID `giAoKpl5weRTCJK7uB9b` · model `eleven_turbo_v2_5` · stability 0.5 · similarity_boost 0.75 · speed 1.0
 - **Narration Voice:** Valory · voice ID `VhxAIIZM8IRmnl5fyeyk` — Quantum Cube app narration only, never use for QI
+
+## TAVILY
+
+- **API key:** stored in `~/.config/qi/tavily_api_key`
+- **Free tier:** 1,000 searches/month
+- **Used for:** QI web search (live news, prices, current events)
+
+## DEEPGRAM
+
+- **API key:** stored in `~/.config/qi/deepgram_api_key`
+- **Model:** nova-3, endpointing 2500ms
+- **Used for:** QI voice input (speech-to-text)
+
+## QI SYSTEM
+
+- **Dashboard:** localhost:3001 (`node scripts/qi-server.js &`)
+- **Voice:** `qi` alias in terminal
+- **Briefing:** `qi-brief` alias
+- **Owen voice ID:** giAoKpl5weRTCJK7uB9b (ElevenLabs)
+- **Mic device:** DIXON UM-20 USB (system default input)
+- **Keys vault:** `~/.config/qi/` (chmod 600 all files)
+- **Crons:** 2am overnight / 3am security / 7am briefing

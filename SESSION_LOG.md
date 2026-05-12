@@ -841,3 +841,121 @@ Claude Code audit findings: PLAY_STORE_PREP.md Section 15
 **Note:** QI voice has echo feedback issue — fixed with headphones (mic picks up speakers). Code cooldown + min-words + streaming all in place.
 
 **Current HEAD:** `62ebb36` | **SW:** qc-v243
+
+## 2026-05-12 Full Day — QI System Build (Complete Record)
+
+**This was the biggest single session. Full QI system built from scratch.**
+
+---
+
+### WHAT WAS BUILT TODAY
+
+**Infrastructure:**
+- ✅ ANTHROPIC_API_KEY — secured in `~/.config/anthropic/key`
+- ✅ All 7 API keys in `~/.config/qi/` chmod 600: anthropic, deepgram, elevenlabs, posthog, sentry, supabase_service_role, tavily
+- ✅ Mac Mini energy: prevent sleep ON, wake for network ON, restart after power failure ON
+- ✅ Bun installed (`~/.bun/bin/bun`)
+- ✅ Python 3.12 installed via Homebrew (`/opt/homebrew/opt/python@3.12`)
+
+**Graphify:**
+- ✅ Installed: `pip install graphifyy` (double y)
+- ✅ Wired into Claude Code via `graphify claude install`
+- ✅ Graph built: 175 nodes, 249 edges, 14 communities
+- ✅ God nodes: Architecture Decision Records (17), Quantum Cube Product (15), check_run_calc() (10), Dodo Payments (8)
+- ✅ CLAUDE.md updated to read GRAPH_REPORT.md before file searches
+- ✅ `/graphify` command in `.claude/commands/graphify.md`
+- ⚠️ API key needed for full semantic extraction. Code files extracted via tree-sitter (free). Docs need ANTHROPIC_API_KEY env var.
+
+**North Star:**
+- ✅ `NORTH_STAR.md` created — 500 customers by Aug 15 2026, $8,500 gross, milestones, guardrails
+- ✅ Wired into CLAUDE.md boot checklist (step 3)
+- ✅ CHAT_KICKOFF v5.2.0 — NORTH_STAR.md added to mandatory boot reads
+
+**QI Dashboard (`scripts/qi-server.js` + `scripts/qi-dashboard.html`):**
+- ✅ Node.js server on localhost:3001
+- ✅ `/api/briefing` — pulls Supabase customers, PostHog sessions, Sentry errors
+- ✅ `/api/speaking` — POST state=true/false, dashboard polls every 500ms
+- ✅ Dark sci-fi UI: Cinzel font, cyan (#0cc0df) glows, particle orb
+- ✅ v2 dashboard: wider panels (330px), bigger text, revenue+days moved to right panel bottom
+- ✅ Orb flares when QI speaks: faster particles, bigger glow, 3 pulsing rings, "SPEAKING" label
+- ✅ Launch: `qi-dash` alias OR `node scripts/qi-server.js &` then open localhost:3001
+
+**Morning Briefing:**
+- ✅ `scripts/morning-briefing.py` — pulls all 3 sources, gives one action
+- ✅ `/morning-briefing` Claude Code command
+- ✅ Cron: `0 7 * * *` — auto-runs daily at 7am, speaks via Owen
+- ✅ `qi-brief` alias for manual trigger
+
+**QI Voice Loop (`scripts/qi-voice.py` — currently v4):**
+- ✅ Owen voice: ElevenLabs voice ID `giAoKpl5weRTCJK7uB9b`
+- ✅ Deepgram STT: nova-3, endpointing 2500ms
+- ✅ Claude Haiku 4.5 for fast voice responses
+- ✅ Streaming pipeline: sentence-by-sentence, first word ~1.5s after you stop talking
+- ✅ Filler words: "Hmm," "Got it," "Right," mask remaining latency
+- ✅ Hard mic mute via osascript: `set volume input volume 0` when Owen speaks, 100 when done
+- ✅ Response buffer: 1.2s timer after last transcript — waits for full sentence
+- ✅ Tavily web search: triggered on news/current events keywords
+- ✅ DIXON UM-20 external USB mic confirmed as system input
+- ⚠️ Voice still being refined — echo/feedback work in progress. Mic mute + buffer should resolve it.
+- 🔑 Launch: `qi` alias (new terminal window after `source ~/.zshrc`)
+
+**Overnight Automation:**
+- ✅ `scripts/qi-overnight.py` — 2am cron, pulls all data, saves to `/tmp/qi-overnight-report.json`
+- ✅ `scripts/qi-security.py` — 3am cron, secrets scan + key permissions + prompt injection check
+- ✅ Security score: 100/100
+- ✅ Cron schedule: `0 2 * * *` overnight, `0 3 * * *` security, `0 7 * * *` briefing
+
+**gstack (Garry Tan's 23-tool Claude Code setup):**
+- ✅ Installed: `git clone https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && ./setup`
+- ✅ Wired into quantumcube project via `gstack-team-init required`
+- ✅ Available slash commands in Claude Code: /office-hours /plan-ceo-review /plan-eng-review /review /ship /qa /cso /retro /autoplan /browse /investigate /document-release /codex
+- ✅ Playwright browser installed (~91MB, headless Chrome)
+
+**Shell aliases (in `~/.zshrc`):**
+```bash
+qi          # launch QI voice loop
+qi-dash     # launch dashboard + open browser
+qi-brief    # speak morning briefing now
+```
+
+---
+
+### STILL TO BUILD (from chat discussion)
+
+- 🔲 **War Room multi-agent dashboard** — 7 named agents (Content, Analytics, Revenue, Developer etc) with task board. Start one agent at a time.
+- 🔲 **Ad performance in morning briefing** — Google/Meta Ads ROAS, spend, downloads. No API integration yet.
+- 🔲 **Play Store download count** — Play Console API not integrated.
+- 🔲 **Overnight task instructions** — way to tell QI before bed "run X at 3am tonight"
+- 🔲 **Auto-start QI server on login** — launchd plist so localhost:3001 always running
+- 🔲 **NotebookLM + GWS CLI** — research layer (from hexagon image in videos)
+- 🔲 **hellotrilion.ai Chief of Staff skill** — daily 3-priority briefing format
+- 🔲 **Google Play Billing** — pre-production Android task
+- 🔲 **12 testers opted in** — critical path to production
+
+---
+
+### KEY FACTS FOR NEXT CHAT
+
+| Item | Value |
+|------|-------|
+| QI dashboard | localhost:3001 (run: `node scripts/qi-server.js &`) |
+| QI voice | run: `qi` in new terminal |
+| Owen voice ID | giAoKpl5weRTCJK7uB9b |
+| Current SW | qc-v243 |
+| Paying customers | 3 (as of May 12) |
+| Days to goal | 95 (Aug 15) |
+| Security score | 100/100 |
+| Mic device | DIXON UM-20 USB external mic |
+| CHAT_KICKOFF | v5.2.0 |
+
+---
+
+### BOOT NOTE FOR NEXT CHAT
+
+Boot sequence is now CHAT_KICKOFF v5.2.0:
+1. SESSION_LOG.md (this file, top entry)
+2. PROJECT_BRIEF.md
+3. CONNECTORS.md
+4. NORTH_STAR.md ← NEW mandatory read
+
+First task next chat: test QI voice with the mic mute + buffer fixes. Then War Room agent planning.
