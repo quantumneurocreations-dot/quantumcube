@@ -1,0 +1,336 @@
+{
+  "communities": {
+    "0": [
+      "dodo_create_session_index_config",
+      "dodo_webhook_index_addcontacttoaudience",
+      "dodo_webhook_index_dodoclient",
+      "dodo_webhook_index_getprofile",
+      "dodo_webhook_index_sendwelcomeemail",
+      "dodo_webhook_index_sethaspaid",
+      "dodo_webhook_index_webhookheaders",
+      "dodo_webhook_index_welcomehtml",
+      "dodo_webhook_index_welcometext",
+      "export_data_index_exportpayload",
+      "export_data_index_hourend",
+      "export_data_index_jwt",
+      "export_data_index_minend",
+      "export_data_index_now",
+      "export_data_index_sb",
+      "narrate_index_checkratelimit",
+      "narrate_index_cors",
+      "narrate_index_getclientip",
+      "narrate_index_ip",
+      "resend_events_index_forwarded_events",
+      "resend_events_index_levelfor",
+      "resend_events_index_parseddsn",
+      "resend_events_index_parsedsn",
+      "resend_events_index_resendevent",
+      "resend_events_index_sendtosentry",
+      "resend_events_index_svixid",
+      "resend_events_index_svixsignature",
+      "resend_events_index_svixtimestamp",
+      "resend_events_index_wh",
+      "supabase_functions_narrate_index_ts"
+    ],
+    "1": [
+      "scripts_extract_narration_astro_slots",
+      "scripts_extract_narration_buildnarration",
+      "scripts_extract_narration_cat_labels",
+      "scripts_extract_narration_clean",
+      "scripts_extract_narration_counts",
+      "scripts_extract_narration_data",
+      "scripts_extract_narration_extractastroobject",
+      "scripts_extract_narration_extractbalancedliteral",
+      "scripts_extract_narration_manifest",
+      "scripts_extract_narration_mjs",
+      "scripts_extract_narration_num",
+      "scripts_extract_narration_numlit",
+      "scripts_extract_narration_sha256",
+      "scripts_extract_narration_src",
+      "scripts_extract_narration_text",
+      "scripts_extract_narration_totalchars",
+      "scripts_generate_narration_args",
+      "scripts_generate_narration_failures",
+      "scripts_generate_narration_generateone",
+      "scripts_generate_narration_mjs",
+      "scripts_generate_narration_outpath",
+      "scripts_generate_narration_parseargs",
+      "scripts_generate_narration_sleep",
+      "scripts_generate_narration_todo",
+      "scripts_generate_welcome_env",
+      "scripts_generate_welcome_loadenv",
+      "scripts_generate_welcome_mjs",
+      "scripts_generate_welcome_viaelevenlabsdirect",
+      "scripts_generate_welcome_vianarrateedge"
+    ],
+    "2": [
+      "adr_001",
+      "adr_003",
+      "adr_004",
+      "android_twa",
+      "app_html",
+      "assetlinks_json",
+      "connectors_doc",
+      "delete_account_fn",
+      "dodo_create_session_fn",
+      "dodo_payments",
+      "dodo_webhook_fn",
+      "edge_functions",
+      "elevenlabs_service",
+      "export_data_fn",
+      "github_service",
+      "google_cloud_oauth",
+      "google_play_store",
+      "manifest_json",
+      "narrate_fn",
+      "play_billing_strategy",
+      "play_store_prep_doc",
+      "posthog_service",
+      "sentry_service",
+      "session_log_doc",
+      "supabase_service",
+      "sw_js",
+      "uptimerobot_service"
+    ],
+    "3": [
+      "adr_002",
+      "adr_005",
+      "adr_006",
+      "adr_008",
+      "adr_009",
+      "adr_010",
+      "adr_011",
+      "adr_012",
+      "adr_013",
+      "adr_014",
+      "cloudflare_service",
+      "decisions_doc",
+      "github_pages",
+      "quantumcube_app_domain",
+      "resend_events_fn",
+      "resend_service"
+    ],
+    "4": [
+      "bg_olena",
+      "bg_pexels_haseeb",
+      "bg_pexels_kate",
+      "license_doc",
+      "north_star_goal",
+      "quantum_compatibility_product",
+      "quantum_cube_product",
+      "quantum_family_product",
+      "quantum_neuro_creations",
+      "quantum_tarot_product",
+      "quantum_year_ahead_product",
+      "readme_doc",
+      "screenshot_tablet_intro",
+      "security_doc",
+      "shareable_cosmic_card"
+    ],
+    "5": [
+      "adr_007",
+      "brief_archive_doc",
+      "chat_kickoff_doc",
+      "claude_md_doc",
+      "instagram_channel",
+      "marketing_playbook_doc",
+      "mcp_obsidian",
+      "michelle_social_owner",
+      "north_star_doc",
+      "obsidian_vault",
+      "operating_rules_doc",
+      "product_hunt_channel",
+      "project_brief_doc",
+      "tiktok_channel"
+    ],
+    "6": [
+      "cleanup_duplicate_fn_py",
+      "quantumcube_cleanup_duplicate_fn_check_run_calc",
+      "wire_supabase_01_setup_py",
+      "wire_supabase_02_form_py",
+      "wire_supabase_02b_consent_style_py",
+      "wire_supabase_03_submit_py",
+      "wire_supabase_04_unlock_gate_py",
+      "wire_supabase_05_banner_mirror_py",
+      "wire_supabase_06_banner_v2_py",
+      "wire_supabase_07_inline_msg_py",
+      "wire_supabase_08_timing_fix_py"
+    ],
+    "7": [
+      "scripts_build_twa_consolelog",
+      "scripts_build_twa_generator",
+      "scripts_build_twa_keystore_path",
+      "scripts_build_twa_log",
+      "scripts_build_twa_mjs",
+      "scripts_build_twa_require",
+      "scripts_build_twa_twa_manifest_path",
+      "scripts_build_twa_twagenerator",
+      "scripts_build_twa_twamanifest",
+      "scripts_build_twa_validationerror"
+    ],
+    "8": [
+      "quantumcube_rewrite_terms_die",
+      "rewrite_legal_py",
+      "rewrite_terms_py",
+      "scripts_rerecord_load_manifest",
+      "scripts_rerecord_main",
+      "scripts_rerecord_py",
+      "scripts_rerecord_rationale_65",
+      "scripts_rerecord_transform",
+      "scripts_rerecord_tts"
+    ],
+    "9": [
+      "android_app_src_main_java_app_quantumcube_twa_application_java",
+      "android_app_src_main_java_app_quantumcube_twa_delegationservice_java",
+      "twa_application_application",
+      "twa_application_application_oncreate",
+      "twa_delegationservice_delegationservice",
+      "twa_launcheractivity_launcheractivity",
+      "twa_launcheractivity_launcheractivity_getlaunchingurl"
+    ],
+    "10": [
+      "docs_sw_batch",
+      "docs_sw_js",
+      "docs_sw_u",
+      "docs_sw_urls"
+    ],
+    "11": [
+      "write_brief_py"
+    ],
+    "12": [
+      "android_build_gradle"
+    ],
+    "13": [
+      "android_settings_gradle"
+    ]
+  },
+  "cohesion": {
+    "0": 0.08,
+    "1": 0.08,
+    "2": 0.14,
+    "3": 0.17,
+    "4": 0.13,
+    "5": 0.31,
+    "6": 0.18,
+    "7": 0.2,
+    "8": 0.36,
+    "9": 0.29,
+    "10": 0.5,
+    "11": 1.0,
+    "12": 1.0,
+    "13": 1.0
+  },
+  "gods": [
+    {
+      "id": "decisions_doc",
+      "label": "Architecture Decision Records",
+      "degree": 17
+    },
+    {
+      "id": "quantum_cube_product",
+      "label": "Quantum Cube Product",
+      "degree": 15
+    },
+    {
+      "id": "session_log_doc",
+      "label": "Session Log",
+      "degree": 14
+    },
+    {
+      "id": "chat_kickoff_doc",
+      "label": "Chat Kickoff Protocol",
+      "degree": 12
+    },
+    {
+      "id": "play_store_prep_doc",
+      "label": "Play Store Prep Checklist",
+      "degree": 11
+    },
+    {
+      "id": "connectors_doc",
+      "label": "Connectors & Service Registry",
+      "degree": 11
+    },
+    {
+      "id": "quantumcube_cleanup_duplicate_fn_check_run_calc",
+      "label": "check_run_calc()",
+      "degree": 10
+    },
+    {
+      "id": "project_brief_doc",
+      "label": "Project Brief",
+      "degree": 9
+    },
+    {
+      "id": "claude_md_doc",
+      "label": "CLAUDE.md Context Pointer",
+      "degree": 9
+    },
+    {
+      "id": "dodo_payments",
+      "label": "Dodo Payments",
+      "degree": 8
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Play Store Screenshot: 10-inch Tablet Intro",
+      "target": "Quantum Cube Product",
+      "source_files": [
+        "Playstore Screenshots/10 Inch Tablet Screenshots/Tablet - Intro page.jpg",
+        "MARKETING_PLAYBOOK.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (doc \u2194 image); connects across different repos/directories; peripheral node `Play Store Screenshot: 10-inch Tablet Intro` unexpectedly reaches hub `Quantum Cube Product`"
+    },
+    {
+      "source": "Background Image: pexels-haseeb-syed",
+      "target": "Quantum Cube Product",
+      "source_files": [
+        "More backgrounds/pexels-haseeb-syed-2150151139-35198179.jpg",
+        "MARKETING_PLAYBOOK.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (doc \u2194 image); connects across different repos/directories; peripheral node `Background Image: pexels-haseeb-syed` unexpectedly reaches hub `Quantum Cube Product`"
+    },
+    {
+      "source": "Background Image: pexels-kate-holovacheva",
+      "target": "Quantum Cube Product",
+      "source_files": [
+        "More backgrounds/pexels-kate-holovacheva-1824230-5726190.jpg",
+        "MARKETING_PLAYBOOK.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (doc \u2194 image); connects across different repos/directories; peripheral node `Background Image: pexels-kate-holovacheva` unexpectedly reaches hub `Quantum Cube Product`"
+    },
+    {
+      "source": "Background Image: olena-bohovyk-unsplash",
+      "target": "Quantum Cube Product",
+      "source_files": [
+        "More backgrounds/olena-bohovyk-Cq5NaI0yKBE-unsplash.jpg",
+        "MARKETING_PLAYBOOK.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (doc \u2194 image); connects across different repos/directories; peripheral node `Background Image: olena-bohovyk-unsplash` unexpectedly reaches hub `Quantum Cube Product`"
+    },
+    {
+      "source": "Play Store Screenshot: 10-inch Tablet Intro",
+      "target": "Google Play Store",
+      "source_files": [
+        "Playstore Screenshots/10 Inch Tablet Screenshots/Tablet - Intro page.jpg",
+        "PLAY_STORE_PREP.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "conceptually_related_to",
+      "why": "crosses file types (doc \u2194 image); connects across different repos/directories; bridges separate communities; peripheral node `Play Store Screenshot: 10-inch Tablet Intro` unexpectedly reaches hub `Google Play Store`"
+    }
+  ],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}

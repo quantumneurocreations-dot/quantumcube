@@ -1,0 +1,4410 @@
+{
+  "/Users/qnc/Projects/quantumcube/wire_supabase_03_submit.py": {
+    "mtime": 1776432425.7468474,
+    "hash": "844d7bf36bb66d9e65573746331c0c4c"
+  },
+  "/Users/qnc/Projects/quantumcube/wire_supabase_06_banner_v2.py": {
+    "mtime": 1776454329.3874595,
+    "hash": "fb64e348f12f7615d9412b1cd17f0d3a"
+  },
+  "/Users/qnc/Projects/quantumcube/cleanup_duplicate_fn.py": {
+    "mtime": 1776431801.5658655,
+    "hash": "962804fa0dde41e282049a22fd7818b1"
+  },
+  "/Users/qnc/Projects/quantumcube/wire_supabase_05_banner_mirror.py": {
+    "mtime": 1776453033.6051126,
+    "hash": "53930aa5be9fc03575353fa922e90926"
+  },
+  "/Users/qnc/Projects/quantumcube/wire_supabase_08_timing_fix.py": {
+    "mtime": 1776456106.4025183,
+    "hash": "ef8f97a1979f82bce15eef1dfd72032a"
+  },
+  "/Users/qnc/Projects/quantumcube/rewrite_terms.py": {
+    "mtime": 1776424775.035776,
+    "hash": "5221ab1bd6d0a008497513432fbce7e7"
+  },
+  "/Users/qnc/Projects/quantumcube/rewrite_legal.py": {
+    "mtime": 1776422236.147448,
+    "hash": "f98adff7aeb5b9d2dbb8d006ab1ae962"
+  },
+  "/Users/qnc/Projects/quantumcube/wire_supabase_07_inline_msg.py": {
+    "mtime": 1776455261.154613,
+    "hash": "6e3663a5337e6fae0e47fa2cf7e74c86"
+  },
+  "/Users/qnc/Projects/quantumcube/wire_supabase_02b_consent_style.py": {
+    "mtime": 1776432281.7397788,
+    "hash": "39fd4a3a7dcd04f890628b267eafe339"
+  },
+  "/Users/qnc/Projects/quantumcube/wire_supabase_02_form.py": {
+    "mtime": 1776431481.6667008,
+    "hash": "f9dad9ccb38746e053092522a10ee2a3"
+  },
+  "/Users/qnc/Projects/quantumcube/wire_supabase_01_setup.py": {
+    "mtime": 1776429592.6044044,
+    "hash": "d62d35df159c1eefc40342a04796a4cd"
+  },
+  "/Users/qnc/Projects/quantumcube/wire_supabase_04_unlock_gate.py": {
+    "mtime": 1776433681.1276195,
+    "hash": "53f7c399bd7619093d681f411bcb3535"
+  },
+  "/Users/qnc/Projects/quantumcube/write_brief.py": {
+    "mtime": 1776361515.5932274,
+    "hash": "5921c48f32e06f57e9393477dde00619"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/sw.js": {
+    "mtime": 1778597543.9602773,
+    "hash": "30284dbbd631ab30416f9d3ff3af1fe2"
+  },
+  "/Users/qnc/Projects/quantumcube/supabase/migrations/20260417104424_create_profiles_table_and_rls.sql": {
+    "mtime": 1777710670.7442424,
+    "hash": "6a77b9ba310549e3ed46020b46f7d8ec"
+  },
+  "/Users/qnc/Projects/quantumcube/supabase/migrations/20260430164143_add_dob_name_to_profiles.sql": {
+    "mtime": 1777560168.8751473,
+    "hash": "1dfe1819ea0b10b478f7a678e282144f"
+  },
+  "/Users/qnc/Projects/quantumcube/supabase/migrations/20250429140000_narrate_rate_limit.sql": {
+    "mtime": 1777462976.1209815,
+    "hash": "487d00afae15c597b0bb117541ddcb02"
+  },
+  "/Users/qnc/Projects/quantumcube/supabase/functions/delete-account/index.ts": {
+    "mtime": 1777958004.445655,
+    "hash": "4e13a3f2fbb252b543c87d778bba8fa3"
+  },
+  "/Users/qnc/Projects/quantumcube/supabase/functions/narrate/index.ts": {
+    "mtime": 1778519114.7642846,
+    "hash": "ace199a941f430420e1820b5d4cee973"
+  },
+  "/Users/qnc/Projects/quantumcube/supabase/functions/export-data/index.ts": {
+    "mtime": 1777958004.4456716,
+    "hash": "b08cfd2db853f803f9b10c7d1819fb1c"
+  },
+  "/Users/qnc/Projects/quantumcube/supabase/functions/dodo-create-session/index.ts": {
+    "mtime": 1777958004.4288757,
+    "hash": "6c0f5e68a8f72ed1bb2c4c9f0d5e9c94"
+  },
+  "/Users/qnc/Projects/quantumcube/supabase/functions/resend-events/index.ts": {
+    "mtime": 1778238823.5842688,
+    "hash": "c14285614d6ef62ea3a72f339add6c36"
+  },
+  "/Users/qnc/Projects/quantumcube/supabase/functions/dodo-webhook/index.ts": {
+    "mtime": 1778231223.5007646,
+    "hash": "b846539aca45c9559fdf5e234b1e0d24"
+  },
+  "/Users/qnc/Projects/quantumcube/android/gradlew": {
+    "mtime": 1778320427.2065651,
+    "hash": "6fb879f157b4ed904c6849aa34bb4c24"
+  },
+  "/Users/qnc/Projects/quantumcube/android/build.gradle": {
+    "mtime": 1778320427.2065496,
+    "hash": "4aa64a40a35f0d3e19c6a60aa8064301"
+  },
+  "/Users/qnc/Projects/quantumcube/android/settings.gradle": {
+    "mtime": 1778320427.2065446,
+    "hash": "a7fe1ac39169b5e5285a5e53662f251b"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/build.gradle": {
+    "mtime": 1778320427.2172627,
+    "hash": "f6e4180f70d293b96fe82ff4ac82aa87"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/java/app/quantumcube/twa/Application.java": {
+    "mtime": 1778320427.217661,
+    "hash": "9a628016704c1a54bf1c21281dce9593"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/java/app/quantumcube/twa/LauncherActivity.java": {
+    "mtime": 1778320427.2176208,
+    "hash": "411bbbc904efc6191178feb6e6b612b8"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/java/app/quantumcube/twa/DelegationService.java": {
+    "mtime": 1778320427.2186186,
+    "hash": "cb94960a0911370e8b693bab2aa1316a"
+  },
+  "/Users/qnc/Projects/quantumcube/scripts/rerecord.py": {
+    "mtime": 1778308425.4449313,
+    "hash": "bf7ed133a66e058d800e2eb5ef085167"
+  },
+  "/Users/qnc/Projects/quantumcube/scripts/build-twa.mjs": {
+    "mtime": 1778320229.112505,
+    "hash": "30ac2955902a195147691163841dc44e"
+  },
+  "/Users/qnc/Projects/quantumcube/scripts/extract-narration.mjs": {
+    "mtime": 1776858776.7795231,
+    "hash": "8dc19ebee1aae99fa4b46c64634da8d9"
+  },
+  "/Users/qnc/Projects/quantumcube/scripts/generate-narration.mjs": {
+    "mtime": 1776783885.643485,
+    "hash": "35984db6b757cb9308bd10d512c5b2c4"
+  },
+  "/Users/qnc/Projects/quantumcube/scripts/generate-welcome.mjs": {
+    "mtime": 1777958004.4289043,
+    "hash": "6b14b36012238ec00265ff7d4c943e46"
+  },
+  "/Users/qnc/Projects/quantumcube/scripts/hooks/pre-commit": {
+    "mtime": 1777958004.4385283,
+    "hash": "0e0c842adc4ab837cf14ce5f896aa01f"
+  },
+  "/Users/qnc/Projects/quantumcube/MARKETING_PLAYBOOK.md": {
+    "mtime": 1778438299.1120448,
+    "hash": "a0e09b43715c849d1153a2a784494993"
+  },
+  "/Users/qnc/Projects/quantumcube/PROJECT_BRIEF.md": {
+    "mtime": 1778438094.8623931,
+    "hash": "253b9b0c659680ed1e4de17072ee1445"
+  },
+  "/Users/qnc/Projects/quantumcube/NORTH_STAR.md": {
+    "mtime": 1778603418.6407197,
+    "hash": "d0babd95fb5fc397a4edb0278e092105"
+  },
+  "/Users/qnc/Projects/quantumcube/BRIEF_ARCHIVE.md": {
+    "mtime": 1778438299.1150806,
+    "hash": "946fff96b1836b9b5b2143a14366c679"
+  },
+  "/Users/qnc/Projects/quantumcube/PLAY_STORE_PREP.md": {
+    "mtime": 1778446063.8364606,
+    "hash": "219744ecade4a94b75ca2b7a0f80e137"
+  },
+  "/Users/qnc/Projects/quantumcube/CHAT_KICKOFF.md": {
+    "mtime": 1778603465.054733,
+    "hash": "2712c84dd64053ae2e611051a7d6b4b4"
+  },
+  "/Users/qnc/Projects/quantumcube/SESSION_LOG.md": {
+    "mtime": 1778598365.290571,
+    "hash": "56918864a3000a5d91a9155c05d2caf9"
+  },
+  "/Users/qnc/Projects/quantumcube/OPERATING_RULES.md": {
+    "mtime": 1778521110.1878548,
+    "hash": "4676cbd889159e6160e71b30fd3a4df1"
+  },
+  "/Users/qnc/Projects/quantumcube/README.md": {
+    "mtime": 1778400292.150694,
+    "hash": "c2eb2f1915964d0a362589ad83d81c0f"
+  },
+  "/Users/qnc/Projects/quantumcube/CONNECTORS.md": {
+    "mtime": 1778598193.6676457,
+    "hash": "c236894496418351e4760dad4ad9575d"
+  },
+  "/Users/qnc/Projects/quantumcube/LICENSE-PROPRIETARY.txt": {
+    "mtime": 1778215184.8441172,
+    "hash": "9624fd61dee5b11b37b018a1f1b1d42c"
+  },
+  "/Users/qnc/Projects/quantumcube/CLAUDE.md": {
+    "mtime": 1778603452.2181904,
+    "hash": "3b3f94ab22f0cad85196d15cadf956f9"
+  },
+  "/Users/qnc/Projects/quantumcube/SECURITY.md": {
+    "mtime": 1778400292.157823,
+    "hash": "2ef358cfe7e6b2753536753d40e0e288"
+  },
+  "/Users/qnc/Projects/quantumcube/DECISIONS.md": {
+    "mtime": 1778401125.3571687,
+    "hash": "178f32c6d0756a60d4b8145c0ab5a91f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/ip.html": {
+    "mtime": 1778254333.332896,
+    "hash": "4196e48583b796756bcf65329c88b78c"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/index.html": {
+    "mtime": 1778561481.2305756,
+    "hash": "f38d393b57df03f7cfa2c577e168bb4b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/contact.html": {
+    "mtime": 1778254333.3285155,
+    "hash": "8d7d428c282fb7f13e194a9744137150"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/disclaimer.html": {
+    "mtime": 1778254333.3300197,
+    "hash": "2d7a2436111ac600ba60ae166502b556"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/terms.html": {
+    "mtime": 1778254333.3405142,
+    "hash": "36e37db08028cdeeb5969c523574f3c4"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/refund.html": {
+    "mtime": 1778254333.337374,
+    "hash": "dc37a9bcc3b6780b99b3efc3c3c52256"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/security.html": {
+    "mtime": 1778254333.338867,
+    "hash": "54807126c6d505e025aef96cfb38ece4"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/popia.html": {
+    "mtime": 1778254333.334263,
+    "hash": "673243b012e864aa4922bffa69cdf9e2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/account-delete.html": {
+    "mtime": 1778473655.9251902,
+    "hash": "549f7a711578ba9155de81aacd5fd273"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/audit-narration.html": {
+    "mtime": 1778308465.827788,
+    "hash": "3d89f0891238da34fd9740fa1a77956d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/app.html": {
+    "mtime": 1778597543.0565243,
+    "hash": "601db6ec42048f583d0a2e1b1755497e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/robots.txt": {
+    "mtime": 1778084924.0139935,
+    "hash": "7b4110c428dcaa2b16d80a66a329bdf2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/privacy.html": {
+    "mtime": 1778314290.6702921,
+    "hash": "b15aaa47eda68b6a69a406bf5f8ef59f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/privacy/index.html": {
+    "mtime": 1778219930.5796046,
+    "hash": "31587bcdad30c77e241a6de9ba4d279e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/app/index.html": {
+    "mtime": 1777013516.3632379,
+    "hash": "a732157f757f092723e555814ecf003e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/account/delete/index.html": {
+    "mtime": 1778473684.4744866,
+    "hash": "e105268b97932a7e1c422e9c53f7f94a"
+  },
+  "/Users/qnc/Projects/quantumcube/android/manifest-checksum.txt": {
+    "mtime": 1778320428.448924,
+    "hash": "130555b98f4bdab61855b9c75e6bb547"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/life-phase.md": {
+    "mtime": 1778438082.0895095,
+    "hash": "13c65c27fd3deca8576031ab3c986d7f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/master-number-22.md": {
+    "mtime": 1778438082.0940099,
+    "hash": "93b4b354c82aba2f381d6bb421667e6e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/soul-urge.md": {
+    "mtime": 1778438082.0809076,
+    "hash": "1102e527b839023106fd5a67dcda930e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/master-number-33.md": {
+    "mtime": 1778438082.095688,
+    "hash": "3c491639707fc8dd1baa73f446ebf44e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/expression-number.md": {
+    "mtime": 1778438082.079574,
+    "hash": "9206bb28c65f0a58e3c8eecb9d495386"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday-number.md": {
+    "mtime": 1778438082.0823278,
+    "hash": "12a2d4384e7189b74c614915319c93ff"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic-debt.md": {
+    "mtime": 1778438082.09767,
+    "hash": "d9cadb3b431a250bfadbd3aa1d0858c8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/life-path.md": {
+    "mtime": 1778438082.0781956,
+    "hash": "4317c31af55bc4c8610e426966643306"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic-lesson.md": {
+    "mtime": 1778438082.0864046,
+    "hash": "c47a49152d3d51ac9a4c7afafeba0f5f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numerology-matrix.md": {
+    "mtime": 1778438082.091135,
+    "hash": "ab132960d91129e99d1dd46aa3339f3c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/personal-year.md": {
+    "mtime": 1778438082.084655,
+    "hash": "7b0b1f0a58222b0f0af343f775461f35"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/essence-cycles.md": {
+    "mtime": 1778438082.1021504,
+    "hash": "0ad63d423b79aaf8f0396da37b5b91e4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle-cycles.md": {
+    "mtime": 1778438082.0993311,
+    "hash": "71f095409834bca62e9293433bfc9019"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/challenge-numbers.md": {
+    "mtime": 1778438082.1007695,
+    "hash": "8d58cb799f7ab67ca55921c07e366a76"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/hidden-passion.md": {
+    "mtime": 1778438082.0879853,
+    "hash": "d88abd9bef46c082d4ed1db101c0a077"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/master-number-11.md": {
+    "mtime": 1778438082.0926476,
+    "hash": "f883bafe09f8ef468cde53116614a286"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic/karmic-lesson-6.md": {
+    "mtime": 1778438661.4297245,
+    "hash": "46f8e9114c9e0a9f375fa73886687b20"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic/karmic-lesson-2.md": {
+    "mtime": 1778438661.4203708,
+    "hash": "af8eb7a4b397d191e1ba80a0c4c58799"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic/karmic-lesson-3.md": {
+    "mtime": 1778438661.423182,
+    "hash": "1ecbcf842843446fd206442018935d20"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic/karmic-lesson-7.md": {
+    "mtime": 1778438661.4313362,
+    "hash": "424f2aa8c951faaa13c1bca504843920"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic/karmic-lesson-8.md": {
+    "mtime": 1778438661.43326,
+    "hash": "d6634f23bc2646cdb5bbe8893df54400"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic/karmic-lesson-9.md": {
+    "mtime": 1778438661.4351811,
+    "hash": "1e54a3e9016017ee83117e1aeb01765b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic/karmic-lesson-4.md": {
+    "mtime": 1778438661.4254239,
+    "hash": "e759b37888a65d74c7b60d510ca2e561"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic/karmic-lesson-5.md": {
+    "mtime": 1778438661.4275987,
+    "hash": "5ab807ecea4d23a80278111b5adc3192"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic/karmic-lesson-1.md": {
+    "mtime": 1778438661.4175181,
+    "hash": "bf9c2f4c783a969b1b97adfac6fb9bb8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/hidden-passion-nums/hidden-passion-2.md": {
+    "mtime": 1778438661.44209,
+    "hash": "6322800631e29857570c3a2feff98d66"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/hidden-passion-nums/hidden-passion-6.md": {
+    "mtime": 1778438661.4498806,
+    "hash": "69da0b56036dabead96e44fc554aebff"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/hidden-passion-nums/hidden-passion-7.md": {
+    "mtime": 1778438661.4516768,
+    "hash": "394ce59e0492a6bf2b8c4c14510904ce"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/hidden-passion-nums/hidden-passion-3.md": {
+    "mtime": 1778438661.4439683,
+    "hash": "ee25300c6170efebc70064f7c840eede"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/hidden-passion-nums/hidden-passion-8.md": {
+    "mtime": 1778438661.4543285,
+    "hash": "d46c6f0f0780e7b76ca04cf5e79d1ddb"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/hidden-passion-nums/hidden-passion-9.md": {
+    "mtime": 1778438661.456052,
+    "hash": "6c0d2565d2572ea226090f6a806a9e5d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/hidden-passion-nums/hidden-passion-4.md": {
+    "mtime": 1778438661.4459672,
+    "hash": "ee10c2711b692c8ea0e13ed8feeb1f7c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/hidden-passion-nums/hidden-passion-1.md": {
+    "mtime": 1778438661.4399173,
+    "hash": "8f25e427ab79026a21e6bd14e71b218c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/hidden-passion-nums/hidden-passion-5.md": {
+    "mtime": 1778438661.4479508,
+    "hash": "bbdf341b5ed6809cc1857ab674e4c530"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-T.md": {
+    "mtime": 1778439532.206703,
+    "hash": "d172f47de825563c1e0e1bbd8aad55a0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-L.md": {
+    "mtime": 1778439532.1906989,
+    "hash": "fbed74516706c69a6543484eca81a5b6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-P.md": {
+    "mtime": 1778439532.197991,
+    "hash": "3ba74c2dff78a47b5ea0d51821197272"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-H.md": {
+    "mtime": 1778439532.1815689,
+    "hash": "4a7c08408d54b2b88858182a10cf7ad6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-Q.md": {
+    "mtime": 1778439532.1997051,
+    "hash": "9d620af9811719e69b2c492e06094e33"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-I.md": {
+    "mtime": 1778439532.1838076,
+    "hash": "0d66f5b9d2f478726cdaf80849f134ec"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-U.md": {
+    "mtime": 1778439532.208379,
+    "hash": "032f1caeafe8ce4082cd5dfc25308388"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-M.md": {
+    "mtime": 1778439532.192911,
+    "hash": "ed99dada273f614cb783cdcb4eb7108b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-F.md": {
+    "mtime": 1778439532.1768117,
+    "hash": "c7f660f5b4ad2a0a8492d7bec4ff10c8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-Z.md": {
+    "mtime": 1778439532.2170784,
+    "hash": "232819f13a4ee483ab4b66b3e1e656db"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-B.md": {
+    "mtime": 1778439532.1688035,
+    "hash": "36e817f15c0608e6cdc346a19ae4daf8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-C.md": {
+    "mtime": 1778439532.171213,
+    "hash": "eaf77a3ad1d4e409e2d2d51f8c7ff62a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-G.md": {
+    "mtime": 1778439532.1792963,
+    "hash": "683b67012cb4f802e322c0fd7892e755"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-X.md": {
+    "mtime": 1778439532.213286,
+    "hash": "10ccfe5419cdd418d5f6957c218877d0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-D.md": {
+    "mtime": 1778439532.1730115,
+    "hash": "80104294e63c432702a5d58784ac0169"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-E.md": {
+    "mtime": 1778439532.1745846,
+    "hash": "b579a1b502f5eb11013264def72c44c2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-Y.md": {
+    "mtime": 1778439532.2154155,
+    "hash": "1bb26398c211767e25fd0aa7dd95fed4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-A.md": {
+    "mtime": 1778439532.1670377,
+    "hash": "d2ae74528fd2aef06098a8c24a3f4b2d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-R.md": {
+    "mtime": 1778439532.2014797,
+    "hash": "580e630865e4f2de9592859cd89a5861"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-J.md": {
+    "mtime": 1778439532.1864867,
+    "hash": "5cfcda4cdecea7a1945e9d86cd92c78e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-V.md": {
+    "mtime": 1778439532.2099104,
+    "hash": "d4f896449eb7bd5eb5176d155785b558"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-N.md": {
+    "mtime": 1778439532.1946776,
+    "hash": "f944279a3d9255dd61f7244cc3340d1b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-W.md": {
+    "mtime": 1778439532.2114062,
+    "hash": "6f3957ebf8273d4cfc903db98e97c256"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-O.md": {
+    "mtime": 1778439532.1963117,
+    "hash": "46d6ebf3f5cf29004af13c8875451a67"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-S.md": {
+    "mtime": 1778439532.2046943,
+    "hash": "456afa8c47f7e07ca29c170ab29e61d0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/letters/letter-K.md": {
+    "mtime": 1778439532.1886656,
+    "hash": "f44e4919fc4bbf80079a037b079526b3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/expression-5.md": {
+    "mtime": 1778438643.0368416,
+    "hash": "0c913bc1a22aa233e63afb64f5fb15b4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/expression-1.md": {
+    "mtime": 1778438643.030145,
+    "hash": "dedfe9a71ed83252eed3ce263e86227b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/expression-22.md": {
+    "mtime": 1778438643.048547,
+    "hash": "9e8a895d6fe480e1297f001e5396a187"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/expression-4.md": {
+    "mtime": 1778438643.0352821,
+    "hash": "31e10c452d003a56879b4e16990aaca4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-4.md": {
+    "mtime": 1778438643.0180068,
+    "hash": "e472c2a23c6a65b6deec90c3fb8d8752"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/personal-year-4.md": {
+    "mtime": 1778438643.0836782,
+    "hash": "d0a17678730e54e9ba0a6dd76bc1bf95"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/soul-urge-1.md": {
+    "mtime": 1778438643.0509274,
+    "hash": "8010f275393f035142c0f54b552ef472"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/soul-urge-5.md": {
+    "mtime": 1778438643.0601811,
+    "hash": "43c6e3700897a141098e3e934555a22c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-1.md": {
+    "mtime": 1778438643.0137486,
+    "hash": "5d45d553797c7c8fbd51837e5b2e3939"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/personal-year-1.md": {
+    "mtime": 1778438643.0752227,
+    "hash": "b3d8e61ab187bd762b2fe4dd208f2f76"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/soul-urge-4.md": {
+    "mtime": 1778438643.058536,
+    "hash": "a715e176d5a869cc121dfd8e3f74dbcc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-5.md": {
+    "mtime": 1778438643.019308,
+    "hash": "766d85ff74f1c38ea38cd642c529a39d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/soul-urge-22.md": {
+    "mtime": 1778438643.0728931,
+    "hash": "a0d6dc8a43b331bf75208feb46e759f3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/personal-year-5.md": {
+    "mtime": 1778438643.0866723,
+    "hash": "3a5c6f6f1f01e5d0d7c19d7f54805e51"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-11.md": {
+    "mtime": 1778438643.0262012,
+    "hash": "4ad295e0ad347b85fab0008325f8779f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/soul-urge-11.md": {
+    "mtime": 1778438643.0706198,
+    "hash": "42df31808a68e6e036ccd6b8316dc7c4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-2.md": {
+    "mtime": 1778438643.015267,
+    "hash": "58c8a04462aca5e5f39a833566bc75ad"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/personal-year-2.md": {
+    "mtime": 1778438643.07806,
+    "hash": "49cdeb8f4a7fffb010ad6c59bb00d424"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/expression-9.md": {
+    "mtime": 1778438643.0442712,
+    "hash": "352058d8a9551695532bc06f2d3854c5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-22.md": {
+    "mtime": 1778438643.0275009,
+    "hash": "5c539d581dc519b91edee409c2742742"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/soul-urge-7.md": {
+    "mtime": 1778438643.0636327,
+    "hash": "bdd0a46c22b6b46618d3746f48ba8716"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-6.md": {
+    "mtime": 1778438643.0205083,
+    "hash": "f22f29268fc18cf88c2023a06278e297"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/personal-year-6.md": {
+    "mtime": 1778438643.0888696,
+    "hash": "218717987b43726e22ae28db5c299a90"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/soul-urge-3.md": {
+    "mtime": 1778438643.056871,
+    "hash": "112bfffae81614e509eeb883613dbebe"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-7.md": {
+    "mtime": 1778438643.021802,
+    "hash": "e189c9d7ef99bcfe55a063b49bb0b899"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/personal-year-7.md": {
+    "mtime": 1778438643.0907657,
+    "hash": "eaba4410d79fbbb2ad19e7cf4a3ef1d0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/soul-urge-2.md": {
+    "mtime": 1778438643.054792,
+    "hash": "9c31d9ae14e689d97cef40a9795ddfec"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-3.md": {
+    "mtime": 1778438643.016701,
+    "hash": "a152d476b0b4a7d2f6f1027dbe00dd30"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-33.md": {
+    "mtime": 1778438643.028768,
+    "hash": "0536f82d9250cff5a66c27a336266d12"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/personal-year-3.md": {
+    "mtime": 1778438643.080477,
+    "hash": "4607ce40990d40abe3c9636b18f6c9e8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/expression-8.md": {
+    "mtime": 1778438643.0420396,
+    "hash": "477875fa19d1be1c17d5159c8b77a040"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/soul-urge-6.md": {
+    "mtime": 1778438643.0618503,
+    "hash": "995693578d9a3fd34e668a796bd2a136"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/personal-year-8.md": {
+    "mtime": 1778438643.097698,
+    "hash": "11d34fe14d52a1a92cab35b09ff6251c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/expression-11.md": {
+    "mtime": 1778438643.0465422,
+    "hash": "cb5978d11f4b4b9550e0ad17d77076d5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-8.md": {
+    "mtime": 1778438643.0233572,
+    "hash": "32ebac28ed6d7b2d49950c06777e4f50"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/expression-3.md": {
+    "mtime": 1778438643.0332758,
+    "hash": "7f148e62c8c495529e520d63190297d1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/soul-urge-9.md": {
+    "mtime": 1778438643.0679305,
+    "hash": "71c1dd80e78c43e32e9418f90a29fa8d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/expression-7.md": {
+    "mtime": 1778438643.0401304,
+    "hash": "cd7775ddef3019c8fa7dadd22e4f3064"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/soul-urge-8.md": {
+    "mtime": 1778438643.065289,
+    "hash": "4d764803b8d27aba9a111d5a4037e3ac"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/expression-6.md": {
+    "mtime": 1778438643.0384517,
+    "hash": "568498833ece836212e080ac571f318c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/personal-year-9.md": {
+    "mtime": 1778438643.0997472,
+    "hash": "5a38c624c5b59f145f678ac927e544a7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/life-path-9.md": {
+    "mtime": 1778438643.0247931,
+    "hash": "74e516b81851729ec6d72e7bc120fb12"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/numbers/expression-2.md": {
+    "mtime": 1778438643.0314896,
+    "hash": "583bf5a0ed269e4738e7d69c34c286a5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic-debt/karmic-debt-19.md": {
+    "mtime": 1778439532.1505609,
+    "hash": "d14c76b8e50f249c6d3c66a5cbed9838"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic-debt/karmic-debt-13.md": {
+    "mtime": 1778439532.14542,
+    "hash": "e19ab06ac5426acd21b6d58d2500d58a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic-debt/karmic-debt-16.md": {
+    "mtime": 1778439532.1488488,
+    "hash": "9cbd0ba5402a26e77d7bff78b35aa5aa"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/karmic-debt/karmic-debt-14.md": {
+    "mtime": 1778439532.1472437,
+    "hash": "27f68d51af15913b4d376204cee6f8dd"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-13.md": {
+    "mtime": 1778438661.383386,
+    "hash": "8438a7db7e5bbc01c221c9713feadb91"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-7.md": {
+    "mtime": 1778438661.3710341,
+    "hash": "5ce2159c2829fd8d2e730518e5426e06"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-27.md": {
+    "mtime": 1778438661.409964,
+    "hash": "5bd2752c20afe970b02517eed04200b2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-23.md": {
+    "mtime": 1778438661.4018846,
+    "hash": "7f5814f46002e408ac093ecb8646d100"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-17.md": {
+    "mtime": 1778438661.3910248,
+    "hash": "31fa1f140b099dff1c5ddb7092b89f77"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-3.md": {
+    "mtime": 1778438661.364269,
+    "hash": "5632e88f04f6606471fb02720e17b8ed"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-22.md": {
+    "mtime": 1778438661.4000847,
+    "hash": "84b633545d25a479627b0956eefe95ac"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-16.md": {
+    "mtime": 1778438661.3892236,
+    "hash": "bcd988eec8fbd4675868c242c6b222df"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-2.md": {
+    "mtime": 1778438661.3629215,
+    "hash": "43fddb3e03d757000b991f8dd7ab2ce2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-12.md": {
+    "mtime": 1778438661.3804362,
+    "hash": "c55917b413f303b9f5c02b9f63093f25"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-6.md": {
+    "mtime": 1778438661.3691435,
+    "hash": "b19a9827d6922641a7a9a3fba37848fc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-26.md": {
+    "mtime": 1778438661.408086,
+    "hash": "cfc4399db5d4d81303d9a84400082e91"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-19.md": {
+    "mtime": 1778438661.395064,
+    "hash": "9b4a6478c53ee670662227713087ed71"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-29.md": {
+    "mtime": 1778438661.4131114,
+    "hash": "45b3500038656599f8e14ddd65383522"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-9.md": {
+    "mtime": 1778438661.3748186,
+    "hash": "87adbf3e48ca945f916fc235884cb064"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-28.md": {
+    "mtime": 1778438661.411647,
+    "hash": "b5cc61f2f0e5a5c48e80bad7265ddb62"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-8.md": {
+    "mtime": 1778438661.3728082,
+    "hash": "36c891be8b2f0a6187f503525eed396e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-18.md": {
+    "mtime": 1778438661.3933556,
+    "hash": "4aa2b6f1ba9f62214186735473f5f078"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-31.md": {
+    "mtime": 1778438661.4159331,
+    "hash": "532a93956afac74fdf76c662d7ef1921"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-21.md": {
+    "mtime": 1778438661.398247,
+    "hash": "05844305edf0cf146d58a4c306b6852d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-15.md": {
+    "mtime": 1778438661.3875713,
+    "hash": "9d1179c41a557bd338736e23fa031756"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-1.md": {
+    "mtime": 1778438661.3614116,
+    "hash": "5a365f3ce4b6decce1d38240afa39125"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-11.md": {
+    "mtime": 1778438661.3782067,
+    "hash": "22024b87daaad93158f7d9d4f9cde623"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-5.md": {
+    "mtime": 1778438661.3671126,
+    "hash": "b1f36e6a9b623f457bf3ba643bf46202"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-25.md": {
+    "mtime": 1778438661.4061747,
+    "hash": "d916b0462d6d898a551daba537b83b92"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-10.md": {
+    "mtime": 1778438661.3765445,
+    "hash": "26d51d7351bd710cb3d6c43f98f1f2a0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-4.md": {
+    "mtime": 1778438661.3655915,
+    "hash": "936f41093a663373471b931c67d01f85"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-24.md": {
+    "mtime": 1778438661.4037194,
+    "hash": "c5aa9936eda4d173215c307b04dab256"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-30.md": {
+    "mtime": 1778438661.4145398,
+    "hash": "aea374256e34268d8643ff44a32a39dc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-20.md": {
+    "mtime": 1778438661.396626,
+    "hash": "d3fbe98cfea7f60a777a4b761358dcd4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/birthday/birthday-14.md": {
+    "mtime": 1778438661.3853924,
+    "hash": "2781a78cbf004971d1016e80f844e48f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/personal-month/personal-month-7.md": {
+    "mtime": 1778439532.1624696,
+    "hash": "285cf717faff8aa74ec91f2c922d325d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/personal-month/personal-month-3.md": {
+    "mtime": 1778439532.1558053,
+    "hash": "750cca87da5835275301554a9486e5e2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/personal-month/personal-month-2.md": {
+    "mtime": 1778439532.154217,
+    "hash": "59d9ca9ea38ef6c99228b7e000e5cdbe"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/personal-month/personal-month-6.md": {
+    "mtime": 1778439532.160975,
+    "hash": "148bc99fd8018a3cbc4c683bafba4a5f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/personal-month/personal-month-9.md": {
+    "mtime": 1778439532.1654017,
+    "hash": "e5537eefa6ead7169f41d7d475c6d3b0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/personal-month/personal-month-8.md": {
+    "mtime": 1778439532.1639714,
+    "hash": "1b061670fd03b89f6665efd8850ab42b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/personal-month/personal-month-1.md": {
+    "mtime": 1778439532.1523602,
+    "hash": "a537bb6bf635a4f4b0645c72d08215d7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/personal-month/personal-month-5.md": {
+    "mtime": 1778439532.1594856,
+    "hash": "768537ab90e5eb53aab6aaf11f6d2b65"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/personal-month/personal-month-4.md": {
+    "mtime": 1778439532.1576765,
+    "hash": "5430e32e1e5638e48b09ca7b708794f8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/planets/saturn.md": {
+    "mtime": 1778438654.163934,
+    "hash": "d0d863ff115796fad8cb064cf92e1133"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/planets/uranus.md": {
+    "mtime": 1778438654.1582184,
+    "hash": "534ece955796c85ef017c38bc0c55b8c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/planets/neptune.md": {
+    "mtime": 1778438654.1625104,
+    "hash": "a418b3c8790af0abf1bf5dc5e5210915"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/planets/moon.md": {
+    "mtime": 1778438654.155385,
+    "hash": "e1cb183fbc0ee1c6d18cc27ab79bd844"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/planets/sun.md": {
+    "mtime": 1778438654.153935,
+    "hash": "93ce411cb894a3777fd725780f8f8f2c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/planets/mars.md": {
+    "mtime": 1778438654.1652386,
+    "hash": "394e049e3edd6df0990305c7af51d077"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/planets/venus.md": {
+    "mtime": 1778438654.161164,
+    "hash": "6530dead914f72669587f27acc28f97b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/planets/jupiter.md": {
+    "mtime": 1778438654.1567788,
+    "hash": "66fd51479d4905fec77d80917c3ff597"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/planets/mercury.md": {
+    "mtime": 1778438654.1597216,
+    "hash": "fd7a33223957e0101d03c73d59eac9cc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/challenge/challenge-2.md": {
+    "mtime": 1778439532.1229196,
+    "hash": "d6cb2adb7d15bf4b2d2029f55690d9e6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/challenge/challenge-3.md": {
+    "mtime": 1778439532.1254547,
+    "hash": "4e8d978c2f1d3b7580dd58ee058afe5a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/challenge/challenge-4.md": {
+    "mtime": 1778439532.1269767,
+    "hash": "b01541d8b1566f6ab3b8cd67bb4eb439"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/challenge/challenge-0.md": {
+    "mtime": 1778439532.1185029,
+    "hash": "570b9bffe3635c9ad5bfd79842bc3ee7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/challenge/challenge-1.md": {
+    "mtime": 1778439532.1200032,
+    "hash": "e657c49325f4f7fe239da72c8fb70f7b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/compassion.md": {
+    "mtime": 1778438654.184524,
+    "hash": "70d9b0eb1283b13cd7293aa03e5e6fdf"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/nurturing.md": {
+    "mtime": 1778438654.174013,
+    "hash": "a3f059e5b8336c2fb2304256660058ba"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/creativity.md": {
+    "mtime": 1778438654.1693165,
+    "hash": "019232a8366332c9b49aa40539071305"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/spirituality.md": {
+    "mtime": 1778438654.1760151,
+    "hash": "0d57fe1ae3b2fa493d06cd59ea908e19"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/harmony.md": {
+    "mtime": 1778438654.1884074,
+    "hash": "8477fdd45bed57534a2f1ce2bcdc1db9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/intuition.md": {
+    "mtime": 1778438654.181169,
+    "hash": "971d46d4f7770f51adbb9a1e42c02847"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/power.md": {
+    "mtime": 1778438654.1956851,
+    "hash": "286c9550830af07bd9f8c89c7bb0d5b2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/responsibility.md": {
+    "mtime": 1778438654.1922023,
+    "hash": "a0a05c0d2d2631d8deaf2819fbf900a9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/wisdom.md": {
+    "mtime": 1778438654.193894,
+    "hash": "91a11f280c2bc38e1592c0b68ff71e9d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/cooperation.md": {
+    "mtime": 1778438654.1678574,
+    "hash": "e946a9219e10704026b6c546daac3c88"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/completion.md": {
+    "mtime": 1778438654.1794524,
+    "hash": "c0f8cbea7fa50b65bb779ac575efd688"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/stability.md": {
+    "mtime": 1778438654.1707706,
+    "hash": "da11cac7208cdd6fd8a8fe436e6a1ab7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/humanitarianism.md": {
+    "mtime": 1778438654.1973655,
+    "hash": "76a86791df25ad77e87ed32155fd8071"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/manifestation.md": {
+    "mtime": 1778438654.1828675,
+    "hash": "ada8d2f74dcc1966cfe71329287c55f7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/independence.md": {
+    "mtime": 1778438654.166552,
+    "hash": "0294eccbf8abaf004763b91ed67a85e0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/leadership.md": {
+    "mtime": 1778438654.18639,
+    "hash": "c8e6e342331237012cddb27b6a651e18"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/freedom.md": {
+    "mtime": 1778438654.1722412,
+    "hash": "e64c0214293db41b69d1d5b0d53da474"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/ambition.md": {
+    "mtime": 1778438654.1776545,
+    "hash": "af4d4c7d8af2caf247bbfcfb36e5c11f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/keywords/adventure.md": {
+    "mtime": 1778438654.1901445,
+    "hash": "9226d41c0d10033f3a9efdd806f27b5e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle/pinnacle-7.md": {
+    "mtime": 1778439532.1364865,
+    "hash": "f5e163cb409e41ae0de87a88bdaf4c33"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle/pinnacle-3.md": {
+    "mtime": 1778439532.1309545,
+    "hash": "996a52f6166fd147e3588012f3dce113"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle/pinnacle-2.md": {
+    "mtime": 1778439532.12971,
+    "hash": "b33d9c98e41a539f020f72b0f870aadf"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle/pinnacle-6.md": {
+    "mtime": 1778439532.134953,
+    "hash": "8bf3615b3cfbe13f12ac6aa133a28957"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle/pinnacle-22.md": {
+    "mtime": 1778439532.1437156,
+    "hash": "29bb8064a3bc3b950485912a4d7365c1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle/pinnacle-9.md": {
+    "mtime": 1778439532.1405776,
+    "hash": "401d5f506fa7a8b825517d919d35e997"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle/pinnacle-8.md": {
+    "mtime": 1778439532.138707,
+    "hash": "f90261024c58baa0faf3214cc6133ddb"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle/pinnacle-11.md": {
+    "mtime": 1778439532.142116,
+    "hash": "c68ab3922210e9dac70b34f7100616f9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle/pinnacle-1.md": {
+    "mtime": 1778439532.1284165,
+    "hash": "1bcbf87b272468b15ac8f1df58d9ba73"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle/pinnacle-5.md": {
+    "mtime": 1778439532.1334677,
+    "hash": "c913e469640a17c998f7a1e4eb15c823"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/numerology/pinnacle/pinnacle-4.md": {
+    "mtime": 1778439532.1321537,
+    "hash": "cc0f0ac0170c04a6a39b9584020573fe"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/rat-yin.md": {
+    "mtime": 1778439555.7668483,
+    "hash": "704ac0d4a80d1dd2f15a62573890f73d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/monkey-yang.md": {
+    "mtime": 1778439555.778195,
+    "hash": "72045aa09c93f7a7a5337d6d47b5d41b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/horse-element.md": {
+    "mtime": 1778439555.758913,
+    "hash": "d35c9c936dfd00a48899af29408f79d3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/dragon-yang.md": {
+    "mtime": 1778439555.771958,
+    "hash": "ed18eded8fe4f2d7e8aac3bbe2ceefc5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/horse-yang.md": {
+    "mtime": 1778439555.774865,
+    "hash": "305d9996952a450ae49db1e02d472988"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/monkey-element.md": {
+    "mtime": 1778439555.7617047,
+    "hash": "45280c168fa95d817b58441c4f1d930d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/goat-yin.md": {
+    "mtime": 1778439555.776492,
+    "hash": "ee4b47a7b3b7e1f6f785892b0b9d5a64"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/pig-yin.md": {
+    "mtime": 1778439555.7849944,
+    "hash": "20369ac435fc017bcd116ef1f1046bfe"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/snake-yin.md": {
+    "mtime": 1778439555.7733452,
+    "hash": "ee474774786437578a4145f4b73ae6c3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/tiger-yang.md": {
+    "mtime": 1778439555.769253,
+    "hash": "dceab9f05295d83bf0e1b028ed135048"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/ox-element.md": {
+    "mtime": 1778439555.7521226,
+    "hash": "c06787f700e2d3b9264b8279d9c8a5fc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/ox-yang.md": {
+    "mtime": 1778439555.7680216,
+    "hash": "c7ecc41145dd2c06cb53fc6d730638f6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/dragon-element.md": {
+    "mtime": 1778439555.7563293,
+    "hash": "d3a347e2c447316fed176c58b129b77a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/rat-element.md": {
+    "mtime": 1778439555.7506635,
+    "hash": "1a003d5cda2a5e5c0e862ff2176519c0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/snake-element.md": {
+    "mtime": 1778439555.7576513,
+    "hash": "04028bee17d92919ad27c93b1b1113e0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/dog-element.md": {
+    "mtime": 1778439555.764363,
+    "hash": "6c5b16641e5f887131e6d4dd3c1ef3d0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/tiger-element.md": {
+    "mtime": 1778439555.7535036,
+    "hash": "bb783103a5b94daa721b1c0dd2294108"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/pig-element.md": {
+    "mtime": 1778439555.7656047,
+    "hash": "c8e329b1dbdcb4573db15d1c358a4c28"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/rooster-element.md": {
+    "mtime": 1778439555.7631238,
+    "hash": "c7f1c1901ebfc26632931ed2633d12fc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/rabbit-element.md": {
+    "mtime": 1778439555.7549605,
+    "hash": "48bcd8603c6e1b310626dce0bb2ad4c7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/goat-element.md": {
+    "mtime": 1778439555.7603097,
+    "hash": "2f12672f7eead682d534dca8e7a34244"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/dog-yang.md": {
+    "mtime": 1778439555.7817192,
+    "hash": "bad6c59d7821460bbe74200473216584"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/rabbit-yin.md": {
+    "mtime": 1778439555.7705512,
+    "hash": "f20ff7ee8f7ac5e46caac169dccaadee"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/chinese-zodiac/detail/rooster-yin.md": {
+    "mtime": 1778439555.7799127,
+    "hash": "c39f4a6a14c3f2c0db24d2f1136799f5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/profile-form.md": {
+    "mtime": 1778401117.3686132,
+    "hash": "671dfbc4d8536e4d7d23984e24d8b135"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/narration-player.md": {
+    "mtime": 1778401117.370051,
+    "hash": "74d0eb0c37d20c8ca46bba6157692d06"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/unlock-flow.md": {
+    "mtime": 1778400360.428572,
+    "hash": "e675082ea54acec3de82c669c6043615"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/service-worker.md": {
+    "mtime": 1778400360.4299817,
+    "hash": "5c5dd5cb2f8233a49367670f3dfc9afd"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/narrate.md": {
+    "mtime": 1778400360.4243531,
+    "hash": "1b1ef9c0d93ae26ad68a40a78a3838b3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/numerology-calculation.md": {
+    "mtime": 1778401117.3672404,
+    "hash": "b6dbefedd2e0784f534f876693e78942"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/cube-animation.md": {
+    "mtime": 1778401117.3727527,
+    "hash": "9429a0c440f71989a0a9a3646f3f5b16"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/payment-gate.md": {
+    "mtime": 1778401117.3714368,
+    "hash": "62a8ecea92787add47e063b939bfe2ec"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/dodo-webhook.md": {
+    "mtime": 1778400360.4257064,
+    "hash": "2197623e2de823dc13583c628dda5022"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/resend-events.md": {
+    "mtime": 1778400360.4271405,
+    "hash": "5d7ca564b0d89f2dd3d1be9d7b0ea48e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/auth-flow.md": {
+    "mtime": 1778401117.3658364,
+    "hash": "53d81b597835b88ae1d5f94506b41913"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/features/lock-screen.md": {
+    "mtime": 1778401117.3740616,
+    "hash": "4439a686068a172d76e66b2c97ed0a2c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/vat-compliance.md": {
+    "mtime": 1778439572.2099845,
+    "hash": "48de8adde1bd07dd3617566c181c7927"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/security-policy.md": {
+    "mtime": 1778439572.2179174,
+    "hash": "38dc058bf10a7e2271fd86227b23a739"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/age-restriction.md": {
+    "mtime": 1778439572.225176,
+    "hash": "246874be2e163bfc79b3ac7f19226afc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/geo-availability.md": {
+    "mtime": 1778439572.228482,
+    "hash": "19f4b790ab143bbb4b2a0278364d9ef5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/privacy-policy.md": {
+    "mtime": 1778439572.21476,
+    "hash": "d078dca9b19713bc1e190e9aa8c8b50e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/merchant-of-record.md": {
+    "mtime": 1778439572.2080696,
+    "hash": "08ff63a0f178e40803d2175674a896e2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/revenue-model.md": {
+    "mtime": 1778439572.2020662,
+    "hash": "43531c615151394229e320042e4d3e82"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/gdpr-compliance.md": {
+    "mtime": 1778439572.213203,
+    "hash": "83ea6b91528fe5546c967b23b2161fb8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/cookie-policy.md": {
+    "mtime": 1778439572.2214348,
+    "hash": "efa0b26e49a39261c54100fe89baba57"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/currency-support.md": {
+    "mtime": 1778439572.2303085,
+    "hash": "845936a371374b3ec3b0e0a5d498e3c3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/price-point.md": {
+    "mtime": 1778439572.2037425,
+    "hash": "fd1270bc424d42f297660583f184fb68"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/data-retention.md": {
+    "mtime": 1778439572.2196817,
+    "hash": "5f161dbb72be6a9cc9681fe1796a9c64"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/one-time-payment.md": {
+    "mtime": 1778439572.2058928,
+    "hash": "d553fbbf7647093977ced459d64ecbc2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/refund-policy.md": {
+    "mtime": 1778439572.211657,
+    "hash": "039271ae56f0afeee5100b89c61a4ad4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/business/terms-of-service-doc.md": {
+    "mtime": 1778439572.2163732,
+    "hash": "b5e549b1acf6a8ef935c74f4e9df222a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/sounds/elevenlabs-voice.md": {
+    "mtime": 1778439572.2637415,
+    "hash": "fa6f7c9cac3705118b9437734bfeffb8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/sounds/audio-player.md": {
+    "mtime": 1778439572.2654526,
+    "hash": "8921a093c5674cb10ee01d62ad648bd9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/sounds/narration-mp3.md": {
+    "mtime": 1778439572.2601318,
+    "hash": "356fd0b3455819fc54aae6e1467d80c6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/sounds/welcome-mp3.md": {
+    "mtime": 1778439572.258353,
+    "hash": "7400ca9e7731148ca2a11e2a488aa60b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/sounds/background-music.md": {
+    "mtime": 1778439572.2620478,
+    "hash": "08729efacd8683ba6c9fc7f7639b8c3e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/colors/color-9.md": {
+    "mtime": 1778439572.248713,
+    "hash": "a7badf0b9a554ed41161aaa748f31f61"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/colors/color-8.md": {
+    "mtime": 1778439572.2464726,
+    "hash": "eabff50bba123502fbf62f510812727c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/colors/color-3.md": {
+    "mtime": 1778439572.2352507,
+    "hash": "142a00dd9613cde9c362f29fa0c6f1d4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/colors/color-7.md": {
+    "mtime": 1778439572.2442815,
+    "hash": "bab2a16c779386c6f42f309b25bd3fc6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/colors/color-6.md": {
+    "mtime": 1778439572.241761,
+    "hash": "1ff417dd69aad5c2d6391af781c1313e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/colors/color-2.md": {
+    "mtime": 1778439572.233549,
+    "hash": "d57849062fb03ccf8f98c710fbf6201c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/colors/color-5.md": {
+    "mtime": 1778439572.2389555,
+    "hash": "d393724bce5a51eb08964c90e874931e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/colors/color-1.md": {
+    "mtime": 1778439572.2320604,
+    "hash": "d840cc2e00614cfcb42a772f70ae66b0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/colors/color-4.md": {
+    "mtime": 1778439572.2370062,
+    "hash": "069d987da5cbbca69b9a19485c6bb603"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/fonts/system-font.md": {
+    "mtime": 1778439572.252709,
+    "hash": "fad7222f5e8b28dc77de872ebc15363c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/fonts/monospace-font.md": {
+    "mtime": 1778439572.2557936,
+    "hash": "fba4d0c90aabd8e3a4d4f798b82f8792"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/content/fonts/cinzel-decorative.md": {
+    "mtime": 1778439572.250577,
+    "hash": "1d08da47b037c245fca290393ccd5cf3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-012.md": {
+    "mtime": 1778400346.8520038,
+    "hash": "a723b9bd4a40a3789b78430167704f93"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-002.md": {
+    "mtime": 1778400346.8385642,
+    "hash": "e37dd88383fe037451433c6835a1daae"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-016.md": {
+    "mtime": 1778400346.8571603,
+    "hash": "ad99168b458a70e02c984d7ca5afdb26"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-006.md": {
+    "mtime": 1778400346.8440142,
+    "hash": "94db2f7a62c6943a3b6e5da8232a4b95"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-017.md": {
+    "mtime": 1778400346.8585618,
+    "hash": "791358b14f486fde4819b1a7ce5724ba"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-007.md": {
+    "mtime": 1778400346.8453953,
+    "hash": "4ee829cbf86b9678662834ac2c221f58"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-013.md": {
+    "mtime": 1778400346.8532853,
+    "hash": "cbf1b7c2595885af5f2efb2a5879f275"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-003.md": {
+    "mtime": 1778400346.8400154,
+    "hash": "9f7c8050e227446eec60610db7370df6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-018.md": {
+    "mtime": 1778400346.8602042,
+    "hash": "dfe3ecf6407d0c7d252d1c449a56d194"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-008.md": {
+    "mtime": 1778400346.8467138,
+    "hash": "d42f9a13c44f77ddb2771582393f9069"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-009.md": {
+    "mtime": 1778400346.848013,
+    "hash": "fb84fda0dac6cbf5c24987fd4df682e8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-014.md": {
+    "mtime": 1778400346.8545117,
+    "hash": "9a06b314bb9c80b13313287c1c2b28e9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-004.md": {
+    "mtime": 1778400346.8413684,
+    "hash": "62d74d53144375dd4257e2a49677583a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-010.md": {
+    "mtime": 1778400346.849329,
+    "hash": "4cbcae37e9812ed5e73d06e0970a6283"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-011.md": {
+    "mtime": 1778400346.850658,
+    "hash": "e311c82352fcd960374a5ca0786b72a3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-001.md": {
+    "mtime": 1778400346.8371847,
+    "hash": "eeaabb006d54b0004e01e918d68c9740"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-015.md": {
+    "mtime": 1778400346.8558154,
+    "hash": "a67ca6fc38666bf259499ddb594003b6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/ADR-005.md": {
+    "mtime": 1778400346.8427446,
+    "hash": "4bc33ceaee31d555dceb10d46b06c15b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/rls-has-paid-guard.md": {
+    "mtime": 1778439446.789829,
+    "hash": "d961ea14def76a11b869daa1913ddf6c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/session-log-protocol.md": {
+    "mtime": 1778439446.799453,
+    "hash": "615047c50e6e24e82874935d2ea31105"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/sentry-eu-gdpr.md": {
+    "mtime": 1778439446.7938616,
+    "hash": "3f7f44715d9b7942189314ac377d8f9d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/github-pages-cdn.md": {
+    "mtime": 1778439446.7859125,
+    "hash": "9ce8612b7b55429a7b8aacfdb54079c5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/dodo-eu-mor.md": {
+    "mtime": 1778439446.7812834,
+    "hash": "85f33d1492b6f6eeb8df7da97784843c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/custom-auth-domain-deferred.md": {
+    "mtime": 1778439446.8076758,
+    "hash": "aadfdccc08c4de5bcdff49a086c52f70"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/twa-no-billing.md": {
+    "mtime": 1778439446.8059068,
+    "hash": "bca7d2f07e4db6ab5500ef2af00a3da9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/posthog-eu-gdpr.md": {
+    "mtime": 1778439446.7972145,
+    "hash": "75b2669dde2cadcdb133a3108c7d6e49"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/obsidian-first-boot.md": {
+    "mtime": 1778439446.802402,
+    "hash": "4b5e75533c961e86e2850939e5556b35"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/dodo-vat-handling.md": {
+    "mtime": 1778439446.7830963,
+    "hash": "52a322420953b38d145237ff2719fbad"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/vercel-downgrade.md": {
+    "mtime": 1778439446.804189,
+    "hash": "2d08428f0b5e2043cdb8b5a1c28a99bc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/decisions/sub/supabase-free-pause-risk.md": {
+    "mtime": 1778439446.7877703,
+    "hash": "7240e5adf2b42382679e47eca63a0dec"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/face-5.md": {
+    "mtime": 1778438094.8341663,
+    "hash": "7989ee42ac4d061df4b50bd1bf4c19db"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/face-1.md": {
+    "mtime": 1778438094.8290045,
+    "hash": "e5aabe61b07d0da2287a85a17b063599"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/share-feature.md": {
+    "mtime": 1778438094.8441446,
+    "hash": "22addd295d0b8eb6406b620137501ca8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/face-4.md": {
+    "mtime": 1778438094.8329318,
+    "hash": "dfbef5dc3261a20e7a9758f06165eb34"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/export-feature.md": {
+    "mtime": 1778438094.8427036,
+    "hash": "46b7b76ac77e67e228301dd83a65289a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/cube-home.md": {
+    "mtime": 1778438094.8276086,
+    "hash": "78b11709bb910e9885e81a27d3ccaa64"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/face-9.md": {
+    "mtime": 1778438094.839613,
+    "hash": "a9ff24d3d90e0d90f8c8195949f2d761"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/magic-link-login.md": {
+    "mtime": 1778438094.8456123,
+    "hash": "f95b4a4817aada21d68c5bfd055f45cb"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/loading-screen.md": {
+    "mtime": 1778438094.8488567,
+    "hash": "ffd08d152605dc247daf095518bd0bf1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/settings-page.md": {
+    "mtime": 1778438094.8410392,
+    "hash": "3a227127364c00d2dd8bbf1b6e6b8dfe"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/profile-setup.md": {
+    "mtime": 1778438094.8261693,
+    "hash": "68b5227669295e9fa5bd883689f15b0a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/face-8.md": {
+    "mtime": 1778438094.838164,
+    "hash": "cd025dd7b4703716e150a1f95c957d43"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/google-login.md": {
+    "mtime": 1778438094.8473678,
+    "hash": "947bc5834db84983f2dccc33d0f66192"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/face-3.md": {
+    "mtime": 1778438094.831613,
+    "hash": "0af7096c109f5e2c419fbdc67d973f6f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/face-7.md": {
+    "mtime": 1778438094.8368223,
+    "hash": "d09f143a084cc504503124e2b862b888"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/onboarding.md": {
+    "mtime": 1778438094.824666,
+    "hash": "e4db85c3df9b9cad512433327064b598"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/face-6.md": {
+    "mtime": 1778438094.8354037,
+    "hash": "b810a8a396e0435d5f141051c8d03fb4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/face-2.md": {
+    "mtime": 1778438094.8303308,
+    "hash": "e027327a15249a0775560a6ed4102784"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/narrate-btn.md": {
+    "mtime": 1778438654.2136724,
+    "hash": "47438538642bb158d69e9aacbded05dc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/profile-avatar.md": {
+    "mtime": 1778438654.2299337,
+    "hash": "0cc957bb2d7910516b9ca74456ac3586"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/calculation-btn.md": {
+    "mtime": 1778438654.2031004,
+    "hash": "c56cf30631b82d37f248ab69be387de4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/unlock-overlay.md": {
+    "mtime": 1778438654.2111473,
+    "hash": "cdafdc5b19145bfba29304b142c61566"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/name-input.md": {
+    "mtime": 1778438654.2061143,
+    "hash": "ce3bca5e43e4f0e90c0e0f9d0ebdd245"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/vimeo-player.md": {
+    "mtime": 1778438654.2182267,
+    "hash": "204f803be599f6e22b6810cc8c3e611f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/magic-link-banner.md": {
+    "mtime": 1778438654.233707,
+    "hash": "26154aa880d555087969a18241932271"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/cube-glow.md": {
+    "mtime": 1778438654.1990983,
+    "hash": "63d0f350f68f8f14adcaf18240af65e1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/share-btn.md": {
+    "mtime": 1778438654.2232773,
+    "hash": "51e8feea17f41f10eabbe9bf4801a8c8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/face-labels.md": {
+    "mtime": 1778438654.2007442,
+    "hash": "2314a438448b53a2800cabd1a4339fc6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/sign-out-btn.md": {
+    "mtime": 1778438654.2318769,
+    "hash": "efadfb79950748dd23d59a64098402c5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/dob-input.md": {
+    "mtime": 1778438654.2078125,
+    "hash": "63c6577a8e53df3fc56235cafad57ff2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/export-btn.md": {
+    "mtime": 1778438654.2261448,
+    "hash": "fb914998c5331a353bfeb07359860542"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/progress-bar.md": {
+    "mtime": 1778438654.2210586,
+    "hash": "28b53f8a1fe207d2ec3ef2d135f3ec0a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/music-toggle.md": {
+    "mtime": 1778438654.2159483,
+    "hash": "b4022a95da0fd3de980b77f5a8286c5d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/app-sections/ui-elements/reset-btn.md": {
+    "mtime": 1778438654.2046554,
+    "hash": "2a84febebee0a0e744f12c6a4b6603a1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/data-safety-form.md": {
+    "mtime": 1778438290.6282017,
+    "hash": "a8059206c7cd50bb42be4487269d67c8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/target-audience.md": {
+    "mtime": 1778438290.6396267,
+    "hash": "cb3a666338848f8a8038e3968a62716f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/app-category.md": {
+    "mtime": 1778438290.640965,
+    "hash": "6523257ff1f440066b7c06c80fde7dda"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/screenshots-prep.md": {
+    "mtime": 1778438290.632483,
+    "hash": "4e9a9e1e1143c9f6226671ee644df8da"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/production-rollout.md": {
+    "mtime": 1778438290.636779,
+    "hash": "cb5bcc9d8052a626250c4a9074976170"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/identity-verification.md": {
+    "mtime": 1778438290.64544,
+    "hash": "90dbd26c311fff6d90b8be50e397fd99"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/aab-upload.md": {
+    "mtime": 1778438290.6440055,
+    "hash": "dbd7065a3a45e3d90a8506e6f9f5d8f9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/twa-asset-links.md": {
+    "mtime": 1778438290.642528,
+    "hash": "238c9d1ab315ad0023b040b5fe2fe269"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/app-review-checklist.md": {
+    "mtime": 1778438290.6381998,
+    "hash": "27e3d7c763a17dc5ac6ed03055c1ff19"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/feature-graphic.md": {
+    "mtime": 1778438290.6338415,
+    "hash": "e0049d24f36538c59b8b28585ae03631"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/store-listing.md": {
+    "mtime": 1778438290.6310756,
+    "hash": "d72204291c7fb55cd8e686b3d803572c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/content-rating.md": {
+    "mtime": 1778438290.629673,
+    "hash": "38d2c0c0b71ef30e63d3e112b7b2971a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/closed-testing-track.md": {
+    "mtime": 1778438290.6352644,
+    "hash": "6c24a4d56442b777469a8d695f3b0aec"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/tablet-screenshots.md": {
+    "mtime": 1778439446.7572317,
+    "hash": "b17738ebed9318d0d01a8e183c06f125"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/full-desc-4000.md": {
+    "mtime": 1778439446.7614014,
+    "hash": "e20c5022e046ab13d18887dc26443312"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/app-icon-192.md": {
+    "mtime": 1778439446.7515247,
+    "hash": "b98bd941fbe7b25faadff54713d1dab1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/short-desc-80.md": {
+    "mtime": 1778439446.7595177,
+    "hash": "05405fc854260b5543a7a7464541b9bd"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/review-guidelines.md": {
+    "mtime": 1778439446.775816,
+    "hash": "3ab23e837c808ed1c46611f04322d3d5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/intellectual-property.md": {
+    "mtime": 1778439446.779474,
+    "hash": "d97b389c0c63907b338beafac73c51f7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/app-icon-512.md": {
+    "mtime": 1778439446.7490358,
+    "hash": "71bcd762a1c8ed4c992ba8181ee5f8b9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/data-collection.md": {
+    "mtime": 1778439446.766408,
+    "hash": "c9fbaac46990655fa35c9b3c6f94ef6e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/payment-disclosure.md": {
+    "mtime": 1778439446.77272,
+    "hash": "a93686207e3b899168a9472aab9ef28c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/impersonation-check.md": {
+    "mtime": 1778439446.7777448,
+    "hash": "d3c7bb0a4c1cf05531aaea6dd2a75614"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/terms-of-service.md": {
+    "mtime": 1778439446.741883,
+    "hash": "c939f02ecedee1c7ba1cf37eb9ddced9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/entertainment-note.md": {
+    "mtime": 1778439446.7644086,
+    "hash": "116b6ffe1ef581faa3d152e8ee8de34e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/support-email.md": {
+    "mtime": 1778439446.7450266,
+    "hash": "f7b57a6f1db2fada15803e7f066d2d2e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/crash-reporting.md": {
+    "mtime": 1778439446.7679818,
+    "hash": "d71694715e29686d05ced77443bf9d2f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/analytics-disclosure.md": {
+    "mtime": 1778439446.7697964,
+    "hash": "e26a2f7f899d3da39c32708f2b7e262f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/privacy-policy-url.md": {
+    "mtime": 1778439446.7396467,
+    "hash": "e0c416c800126dbf9a4e77944dfa43bd"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/requirements/phone-screenshots.md": {
+    "mtime": 1778439446.7543902,
+    "hash": "be3cbeda024947f4d9abb4e697c9ca13"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/play-store/policy/google-play-requirements-checklist.md": {
+    "mtime": 1778440690.7582726,
+    "hash": "258f4006601b633185ccbe966a7862da"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing/supabase-pro-upgrade.md": {
+    "mtime": 1778401117.385617,
+    "hash": "64b3306812591761596d9fe6723ae73a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing/entertainment-disclaimer.md": {
+    "mtime": 1778401117.3842227,
+    "hash": "614f91795f8cbe70b84b6afc8bb0cf9e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing/play-store-listing.md": {
+    "mtime": 1778401117.381989,
+    "hash": "28e7b91934dc402b99f3353514766dbc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing/closed-testing.md": {
+    "mtime": 1778401117.3831294,
+    "hash": "17a805eacfd12c9ccdcc0ce1e65a380b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-ox.md": {
+    "mtime": 1778438082.105206,
+    "hash": "c26011bca3dfcecab4d34568688128ae"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-scorpio.md": {
+    "mtime": 1778438082.1356497,
+    "hash": "60ee0a5a01c2f1cc097998505ae3c93e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-libra.md": {
+    "mtime": 1778438082.1330729,
+    "hash": "87ccd245506d4508aff2c5d4d52c02bb"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-gemini.md": {
+    "mtime": 1778438082.1261797,
+    "hash": "be6c2855013f70caec9f0647d58b98b4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-capricorn.md": {
+    "mtime": 1778438082.1425667,
+    "hash": "7588603681c393c669259e8adc9b030c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-sagittarius.md": {
+    "mtime": 1778438082.1388648,
+    "hash": "144f2052316dfced55180bb9820fcb01"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-pisces.md": {
+    "mtime": 1778438082.1473012,
+    "hash": "55d4f2c857b48fb8700e2a1d57a23b3d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-goat.md": {
+    "mtime": 1778438082.1148968,
+    "hash": "7e99ff745e134356c0a11d5260ac171a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-dragon.md": {
+    "mtime": 1778438082.109621,
+    "hash": "3d103bb12a0af3c0a1bc1a7db88e929f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-rooster.md": {
+    "mtime": 1778438082.118306,
+    "hash": "8085877f1082c49f9d4078f97921c917"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-taurus.md": {
+    "mtime": 1778438082.124768,
+    "hash": "3568ac559a61b4a0a2a197c030e10191"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-cancer.md": {
+    "mtime": 1778438082.1280377,
+    "hash": "77fd3ef255562a160f5ab8163256511c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-pig.md": {
+    "mtime": 1778438082.1217527,
+    "hash": "51cd27077c5b50e93770b0efeecf76a7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-monkey.md": {
+    "mtime": 1778438082.1166458,
+    "hash": "86a4374f7529c39cead4f8075c9c2f1a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-horse.md": {
+    "mtime": 1778438082.113046,
+    "hash": "9b4a467c4c39cf191911c3605f8ca13c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-dog.md": {
+    "mtime": 1778438082.120158,
+    "hash": "49db4a30abbdf0e82c69f056337a5e82"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-aries.md": {
+    "mtime": 1778438082.1233552,
+    "hash": "0f3d922aaef8ff293bb3ed7d9be63690"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-tiger.md": {
+    "mtime": 1778438082.1068254,
+    "hash": "a49168b5530698b03db61b9ad99c3b83"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-aquarius.md": {
+    "mtime": 1778438082.1450224,
+    "hash": "7c261a67407716056f60da60c5686b49"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-virgo.md": {
+    "mtime": 1778438082.131194,
+    "hash": "ba6fa5bfd0a123a6844dd1760cb7c3c7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/astrology-leo.md": {
+    "mtime": 1778438082.1297016,
+    "hash": "f07014b12b594c139f5bdf3d76540f51"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-snake.md": {
+    "mtime": 1778438082.1112936,
+    "hash": "1966366ffe485b19749e374832dcdcc2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-rabbit.md": {
+    "mtime": 1778438082.1082478,
+    "hash": "d6e57fb9d52453625abf4e5be18fc007"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/chinese-zodiac-rat.md": {
+    "mtime": 1778438082.1036625,
+    "hash": "6a648fc9e2a30c6be53884439a563fe2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/elements/metal.md": {
+    "mtime": 1778438654.242704,
+    "hash": "33ed512204cc713a992cfd952d92da39"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/elements/earth.md": {
+    "mtime": 1778438654.2405977,
+    "hash": "219ad6f20ecec060978ac45b46662591"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/elements/water.md": {
+    "mtime": 1778438654.2445183,
+    "hash": "03e032fced7671f50aadf0086d559dcb"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/elements/wood.md": {
+    "mtime": 1778438654.235976,
+    "hash": "4e1c523eb29240c9704581c8c3599385"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/cube-faces/elements/fire.md": {
+    "mtime": 1778438654.2382588,
+    "hash": "3e55d4aebb37f9fe4e77f5d4691982ce"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/social-media-plan.md": {
+    "mtime": 1778438290.6502392,
+    "hash": "0fd0a65b3b14bea261783635b2000b2b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/launch-strategy.md": {
+    "mtime": 1778438290.64699,
+    "hash": "dba4657a07f66c43f6a2a39f9d7b8576"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/app-store-copy.md": {
+    "mtime": 1778438290.6523037,
+    "hash": "8ccf60384c38053a9fd7371a5a804510"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/press-kit.md": {
+    "mtime": 1778438290.6628194,
+    "hash": "8a600d2585a420e9eebf9a22cc3a9558"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/beta-feedback.md": {
+    "mtime": 1778438290.6612883,
+    "hash": "0015d4b7027d531cbac1f36dcd5325f3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/pricing-strategy.md": {
+    "mtime": 1778438290.654054,
+    "hash": "8c71c8847699c4bfe005f8f596399cc0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/target-demographics.md": {
+    "mtime": 1778438290.6559129,
+    "hash": "4b2357a49b58621fa9077b09836172c1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/tester-recruitment.md": {
+    "mtime": 1778438290.6484678,
+    "hash": "40b9d44aa5ea7f78e765f6f092e71cef"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/brand-voice.md": {
+    "mtime": 1778438290.6575928,
+    "hash": "78337fabfffde10eda33b120a0c8fb02"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/launch-email.md": {
+    "mtime": 1778438290.659451,
+    "hash": "ada4254954d1825865ecc7484cf7efe5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/copy/short-description.md": {
+    "mtime": 1778439446.7173815,
+    "hash": "380de3f2f06b6e2d561c25a916c5f1f1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/copy/category-secondary.md": {
+    "mtime": 1778439446.7300706,
+    "hash": "71f0f5ae581e06af1564632bde0e1a4a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/copy/category-primary.md": {
+    "mtime": 1778439446.7283492,
+    "hash": "28b932e4e6a422c59a2f4d2e3dbecf1e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/copy/whats-new.md": {
+    "mtime": 1778439446.7229514,
+    "hash": "44c11a2ef87efb006f6536bae0b34be8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/copy/age-rating.md": {
+    "mtime": 1778439446.7316673,
+    "hash": "f2d1f9a51684844df86c571c95682ab9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/copy/full-description.md": {
+    "mtime": 1778439446.7190876,
+    "hash": "f013595b25c1c4e905c31735a5b30880"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/copy/subtitle.md": {
+    "mtime": 1778439446.7262647,
+    "hash": "df6f1c9361d1fe2525660d6a3d52b0fc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/copy/content-warnings.md": {
+    "mtime": 1778439446.7348683,
+    "hash": "5f57f5250872e32499471050c6c7311c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/copy/keywords-field.md": {
+    "mtime": 1778439446.7212207,
+    "hash": "71516366e9aadef4bca0c129419390ef"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/copy/promo-text.md": {
+    "mtime": 1778439446.7245054,
+    "hash": "6ceadee368ee1f2d9535195f01b32470"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/product-hunt.md": {
+    "mtime": 1778439446.7139688,
+    "hash": "4d5014a569fe10656cbc4c6ac2e532df"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/instagram.md": {
+    "mtime": 1778439446.6945786,
+    "hash": "429f1c2e2a84201fb6c1dc7a2c4c8ea4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/tiktok.md": {
+    "mtime": 1778439446.696133,
+    "hash": "31c9a1a727b7abed001dd1f2669e08e6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/linkedin.md": {
+    "mtime": 1778439446.7043288,
+    "hash": "f154926df95e010132e5777f9a55a252"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/facebook.md": {
+    "mtime": 1778439446.6989694,
+    "hash": "3b00f621f6ab9fdee68439de32824cfa"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/app-store-optimisation.md": {
+    "mtime": 1778439446.7157562,
+    "hash": "c045e602e3ae0ba39dd9be0d82ed9588"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/seo-blog.md": {
+    "mtime": 1778439446.7111168,
+    "hash": "422d468e7292ae7c2a3975abd2a9756e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/google-ads.md": {
+    "mtime": 1778439446.7056057,
+    "hash": "f665d800c3f2fccb880342f252534a2b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/reddit.md": {
+    "mtime": 1778439446.7016904,
+    "hash": "f2b7f057704ea6027040bc9e30860445"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/youtube.md": {
+    "mtime": 1778439446.6975033,
+    "hash": "9b4bf11171fd62eae2e952d678a61f17"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/twitter-x.md": {
+    "mtime": 1778439446.700355,
+    "hash": "3fb373deb07b969ed8478c4fe27894e2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/pinterest.md": {
+    "mtime": 1778439446.7029672,
+    "hash": "4082495899a0d95500da8f54269fcd97"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/app-store-ads.md": {
+    "mtime": 1778439446.7069068,
+    "hash": "9e97fb95bb884f0944ff7aceb8f5df3d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/influencer.md": {
+    "mtime": 1778439446.7083147,
+    "hash": "a237bcdbe1afbacc2368b8f0c4e57c39"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/press-release.md": {
+    "mtime": 1778439446.7125275,
+    "hash": "489082e222989c188e404794bb7434b5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/marketing-detail/channels/email-list.md": {
+    "mtime": 1778439446.7096887,
+    "hash": "18cb63eaf8930b93715360cbc3ea817f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/session-may-10-pm.md": {
+    "mtime": 1778438290.6936533,
+    "hash": "93061d046af6c1592ad31f70eefe9d51"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/session-may-10-am.md": {
+    "mtime": 1778438290.6918657,
+    "hash": "16e82e9561ddc4788388cafee925072d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/twa-detection.md": {
+    "mtime": 1778438290.6984842,
+    "hash": "266c9f703b799aef48f813900230a492"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/session-may-09.md": {
+    "mtime": 1778438290.6897705,
+    "hash": "4ca99c2f927a2111d54dab2e6d8b01b0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/posthog-instruments.md": {
+    "mtime": 1778438290.705761,
+    "hash": "0c5a9091bf95c4e86e2a8865f8602499"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/assetlinks-setup.md": {
+    "mtime": 1778438290.7013083,
+    "hash": "6d2996a2c3e601b1f9e92a50bd17d1f0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/session-may-08-pm.md": {
+    "mtime": 1778438290.6846445,
+    "hash": "541e692a000b8a0c08fb973d8f061eaf"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/session-may-08-eve.md": {
+    "mtime": 1778438290.686955,
+    "hash": "7d5d26ce1b79356c536c717aa59e11bd"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/brand-cyan-update.md": {
+    "mtime": 1778438290.6954312,
+    "hash": "18053f3183be206f3766dfddb748036b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/resend-webhook.md": {
+    "mtime": 1778438290.7034287,
+    "hash": "cf764893531a8f041baef51980e7f99c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/commits/9ed130b.md": {
+    "mtime": 1778439456.2582598,
+    "hash": "e5de58ad8b7aedb07e6c25f18e7cd9a4"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/commits/aae5618.md": {
+    "mtime": 1778439456.2649014,
+    "hash": "8d2a76f3f3bf84698e62012f932f681a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/commits/094cb78.md": {
+    "mtime": 1778439456.2623186,
+    "hash": "24866634a4fb14f13dc1c794f13f665e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/commits/0cd3f9c.md": {
+    "mtime": 1778439456.2554367,
+    "hash": "59d383b3ff8b1c8e601e01c8e111b5c3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/commits/d298804.md": {
+    "mtime": 1778439456.2568395,
+    "hash": "a27c0175fef81da083b8126674565854"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/commits/723b2d5.md": {
+    "mtime": 1778439456.2610102,
+    "hash": "c6b6026ac523058d0ba71b46a3a69986"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/commits/4064ae4.md": {
+    "mtime": 1778439456.263642,
+    "hash": "12d336820a17450e15b3a9f06a078bc9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/commits/e5467d5.md": {
+    "mtime": 1778439456.2596939,
+    "hash": "4b51e1faa6dd9d6ee02642691144f42c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/brief-archive/commits/af5a3f3.md": {
+    "mtime": 1778439456.2540069,
+    "hash": "9a0b5103d86afaff44e2f09aa7c01a12"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/resend.md": {
+    "mtime": 1778400346.8714602,
+    "hash": "5648d62279a2e8c9bfe3d0a21b19e58f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/pwa-install.md": {
+    "mtime": 1778438094.856176,
+    "hash": "acc119a4214f13de604a1b52e2006f56"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/version-sync.md": {
+    "mtime": 1778438094.8609493,
+    "hash": "5fe1c5b974655fe688e0a8afed025921"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/jwt-validation.md": {
+    "mtime": 1778401117.3807597,
+    "hash": "78ecd6b31f5c56236bf3b968561ecd96"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/android.md": {
+    "mtime": 1778400346.86811,
+    "hash": "60779d98635fbca43a7443006c9ef7db"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/github-pages.md": {
+    "mtime": 1778401117.3753908,
+    "hash": "962b0f92e83801e0d4551b1c8f0bfe02"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/magic-link.md": {
+    "mtime": 1778401117.3768554,
+    "hash": "887615c73c8b29936f771f4cd7ff3ef3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/rate-limiting.md": {
+    "mtime": 1778401117.3794594,
+    "hash": "3af25651ee80ed54857f7cc12f38ae73"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/elevenlabs.md": {
+    "mtime": 1778400346.8661408,
+    "hash": "b0751d3cf6aed9651c257cea0d0535e2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/assetlinks.md": {
+    "mtime": 1778438094.8533535,
+    "hash": "84d2588b98279f2589aeadd53943ef72"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/pre-commit-hook.md": {
+    "mtime": 1778438094.8501987,
+    "hash": "2d17981e351efa8317baa3387229a69e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/sentry.md": {
+    "mtime": 1778400346.8631165,
+    "hash": "13fb7831ed234214e5503049267036e9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/manifest-json.md": {
+    "mtime": 1778438094.8546786,
+    "hash": "b1389908f9dc9762f752d50e8ad8255e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/csp-headers.md": {
+    "mtime": 1778438094.85936,
+    "hash": "37975f3feb4936ea06de7d5c4e6a8325"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/supabase.md": {
+    "mtime": 1778400346.8616323,
+    "hash": "a9e586238b69f873978ec388a6377a23"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/cloudflare.md": {
+    "mtime": 1778400346.8697767,
+    "hash": "0d83fda7948dcce8466f0ff9d80fb63d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/github-actions.md": {
+    "mtime": 1778438094.8516097,
+    "hash": "1a4cb2be9725913804acd18ff1600bc3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog.md": {
+    "mtime": 1778400346.8647096,
+    "hash": "00e2a3357bc0012cf4353010c6dfc37b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/error-boundary.md": {
+    "mtime": 1778438094.857886,
+    "hash": "d16c2910e26184f59133da3f51316d45"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/google-oauth.md": {
+    "mtime": 1778401117.3782518,
+    "hash": "68e95f853d7d1f903e03e58af5822e03"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/sentry-detail/sentry-release.md": {
+    "mtime": 1778439572.1756454,
+    "hash": "26c2f8ce678b0343be7097724c3031cb"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/sentry-detail/sentry-sourcemaps.md": {
+    "mtime": 1778439572.1785796,
+    "hash": "0a65a198366da3c817c0a0d4edc93b89"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/sentry-detail/sentry-alerts.md": {
+    "mtime": 1778439572.1843967,
+    "hash": "07cccf53a3d98eb7371209f6b1753fe1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/sentry-detail/sentry-dsn.md": {
+    "mtime": 1778439572.1770632,
+    "hash": "e92a55f2145aaae2322acfc2bee4e965"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/sentry-detail/sentry-javascript-6.md": {
+    "mtime": 1778439572.1883807,
+    "hash": "f54815049fa08b768b657316406539ea"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/sentry-detail/sentry-performance.md": {
+    "mtime": 1778439572.185815,
+    "hash": "62a7e5b59ad06d99f9e8c5c999d78821"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/sentry-detail/sentry-csp.md": {
+    "mtime": 1778439572.1870906,
+    "hash": "fd6de6e48f4e4e7d41d670e57e08fceb"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/sentry-detail/sentry-breadcrumbs.md": {
+    "mtime": 1778439572.1800632,
+    "hash": "62f833703eba6097e777e8b0872e4018"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/sentry-detail/sentry-user-context.md": {
+    "mtime": 1778439572.1815155,
+    "hash": "fc4122b4137cca5979a86de3eb1747cd"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/sentry-detail/sentry-replay.md": {
+    "mtime": 1778439572.1829724,
+    "hash": "441c7b071afbf6ed3454c2d9cb8d7ba6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/unlock-triggered.md": {
+    "mtime": 1778439555.8039749,
+    "hash": "0dc3e072c51a26dd3691c66575a03f92"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/narrate-succeeded.md": {
+    "mtime": 1778439555.7886708,
+    "hash": "23c0757e4ac8149aa0c7d4ec629c8cef"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/profile-updated.md": {
+    "mtime": 1778439555.8153312,
+    "hash": "f5c77331006ae77b4bb0962fce76124b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/payment-started.md": {
+    "mtime": 1778439555.8000188,
+    "hash": "a023e975ec49564259f5b77565123707"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/payment-completed.md": {
+    "mtime": 1778439555.8021486,
+    "hash": "3593fdd9256672e81c7b33348320e60f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/sign-in.md": {
+    "mtime": 1778439555.7983148,
+    "hash": "30c0580cf9886b008a3a345ad386e730"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/narrate-failed.md": {
+    "mtime": 1778439555.7906766,
+    "hash": "8dc318277e1fda0dc53ce2bffb258baf"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/narrate-played.md": {
+    "mtime": 1778439555.793069,
+    "hash": "ee12d3e241f66e4392c08242af6cfe11"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/export-triggered.md": {
+    "mtime": 1778439555.8059626,
+    "hash": "99ad17cd38dfb8189e74e930306e75f9"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/sign-up.md": {
+    "mtime": 1778439555.796545,
+    "hash": "cc289b1f6e36a3861213228307c85b6d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/narrate-requested.md": {
+    "mtime": 1778439555.7868447,
+    "hash": "3adf3a6cc0a3ce569c1e41b53f7f7569"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/page-view.md": {
+    "mtime": 1778439555.7948432,
+    "hash": "ec1d968f7e1ca13d72633fbcb151123c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/cube-calculated.md": {
+    "mtime": 1778439555.8113654,
+    "hash": "b324170792a24fbcfd78b8a1e4909d62"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/face-viewed.md": {
+    "mtime": 1778439555.8134134,
+    "hash": "b93977a3fbc23ca0af3d4f08c36216be"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/posthog-events/share-triggered.md": {
+    "mtime": 1778439555.8088317,
+    "hash": "e3fce59f1eb859a36166be68b68d922e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/supabase-detail/table-rate-counters.md": {
+    "mtime": 1778439555.8193414,
+    "hash": "e34f41ffc95298a02581ac400bbf14fa"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/supabase-detail/rls-profiles.md": {
+    "mtime": 1778439555.8270316,
+    "hash": "584ad947a6ad4a136edac34bbf05c67f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/supabase-detail/supabase-auth-config.md": {
+    "mtime": 1778439555.8354795,
+    "hash": "26ca3d23df9c53ba74f49c9a749010e8"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/supabase-detail/rls-rate-counters.md": {
+    "mtime": 1778439555.8286827,
+    "hash": "78e5658a9307d4217777a39982a60e06"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/supabase-detail/storage-bucket.md": {
+    "mtime": 1778439555.8320246,
+    "hash": "887946d38c380937918952d6be04385a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/supabase-detail/col-bucket-key.md": {
+    "mtime": 1778439555.8245668,
+    "hash": "b7270c15bd3a0f48d3d81aba91f73e64"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/supabase-detail/col-has-paid.md": {
+    "mtime": 1778439555.8222868,
+    "hash": "4051521b2bc62c3af4ab669663ad656b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/supabase-detail/table-profiles.md": {
+    "mtime": 1778439555.8171043,
+    "hash": "584ad947a6ad4a136edac34bbf05c67f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/supabase-detail/auth-users.md": {
+    "mtime": 1778439555.8302758,
+    "hash": "88365a2b0b949b9a16c04061c4cae869"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/edge-functions/dodo-welcome-email.md": {
+    "mtime": 1778439572.1962206,
+    "hash": "1939bafe3b8b2fa782b18924cc290094"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/edge-functions/resend-complaint-handler.md": {
+    "mtime": 1778439572.1990898,
+    "hash": "675d568558367d39d4b6686fd3ad1acc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/edge-functions/narrate-elevenlabs-call.md": {
+    "mtime": 1778439572.192594,
+    "hash": "5ec38cc749b48a3fa47a57629e023c8a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/edge-functions/dodo-signature-verify.md": {
+    "mtime": 1778439572.1938796,
+    "hash": "dcff22c010cdb1b8a332383ca60eaa44"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/edge-functions/narrate-rate-limit.md": {
+    "mtime": 1778439572.1898572,
+    "hash": "b2b549115bbb59129cbb494ae662848c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/edge-functions/narrate-jwt-verify.md": {
+    "mtime": 1778439572.1912744,
+    "hash": "e1a200d7747feeda5e88947ead28211d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/edge-functions/resend-bounce-handler.md": {
+    "mtime": 1778439572.197598,
+    "hash": "83832ded27ddaceb1444bc68d7c71d64"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/edge-functions/dodo-has-paid-update.md": {
+    "mtime": 1778439572.19507,
+    "hash": "e1ff559d5e0527e2e9691059ed41e998"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/tech/edge-functions/resend-sentry-log.md": {
+    "mtime": 1778439572.200545,
+    "hash": "b78c7aec7f3355a4af51e34280908672"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-8.md": {
+    "mtime": 1778439543.6337647,
+    "hash": "9782f7c1c2a84a6636d0d9778b353255"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-9.md": {
+    "mtime": 1778439543.6350894,
+    "hash": "96e9a754194b6b6a14b8df24c418bdf1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-2.md": {
+    "mtime": 1778439543.624085,
+    "hash": "3585b952cd33a8767c9bcdb1880a869a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-11.md": {
+    "mtime": 1778439543.637585,
+    "hash": "55189a32a034b72f1b52d6c5d7601b27"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-6.md": {
+    "mtime": 1778439543.6297,
+    "hash": "1b7d4211d1127e009fde1ee76cd0c956"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-7.md": {
+    "mtime": 1778439543.6321912,
+    "hash": "f07d0898042bbbcc4b522ccb3b787612"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-3.md": {
+    "mtime": 1778439543.6255472,
+    "hash": "01aece608b36eba3b929992f611ac19c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-10.md": {
+    "mtime": 1778439543.6363077,
+    "hash": "30972d8be27e7559f9fc044dc0e21b0b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-4.md": {
+    "mtime": 1778439543.6268797,
+    "hash": "494bf4c3114ece459a499995d00dc6dc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-1.md": {
+    "mtime": 1778439543.622676,
+    "hash": "ec624321535d2eec0e755a35035cd664"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-12.md": {
+    "mtime": 1778439543.6389592,
+    "hash": "3a858d3f95b8086f8d6809b27f71ff4a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/houses/house-5.md": {
+    "mtime": 1778439543.6282716,
+    "hash": "603f8ecc8292f855a7fa32483245df76"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/modalities/cardinal.md": {
+    "mtime": 1778439543.6595883,
+    "hash": "bfb1d11bef19ac067705f51f16ddc6b6"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/modalities/mutable.md": {
+    "mtime": 1778439543.663164,
+    "hash": "632dfcdbb5db1024488b39fffc89af7c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/modalities/fixed.md": {
+    "mtime": 1778439543.6614163,
+    "hash": "2fbf08869b6a0e9992886965e955b25a"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/taurus-ruler.md": {
+    "mtime": 1778439543.6665297,
+    "hash": "3267ca3806c6cb9cf7afbbb09724f14e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/aries-ruler.md": {
+    "mtime": 1778439543.6648188,
+    "hash": "eeb8b77474d419bec9e0e0da8a72e02b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/scorpio-ruler.md": {
+    "mtime": 1778439543.6782591,
+    "hash": "6326afd6c471129e12d0e364d1b9282c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/leo-ruler.md": {
+    "mtime": 1778439543.6719558,
+    "hash": "fb6022313392ba7498cd7bd7bfaebcb5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/pisces-ruler.md": {
+    "mtime": 1778439543.6868894,
+    "hash": "b89915ecf7d6e8c4bfebdf111f61fbcc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/virgo-ruler.md": {
+    "mtime": 1778439543.6742702,
+    "hash": "6c1a49c012e2132e056996417575c30f"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/capricorn-ruler.md": {
+    "mtime": 1778439543.6822844,
+    "hash": "b2e004afb34a1d5dfabf001835064bb7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/sagittarius-ruler.md": {
+    "mtime": 1778439543.6801844,
+    "hash": "7ad3d5032d4af7967eb7eb8ac82a785e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/libra-ruler.md": {
+    "mtime": 1778439543.6762354,
+    "hash": "0ac296c4ea1e2a36665535dd5e7e759b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/cancer-ruler.md": {
+    "mtime": 1778439543.6698728,
+    "hash": "1fa090778f81926630fd8ccc99ab71a3"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/gemini-ruler.md": {
+    "mtime": 1778439543.6681523,
+    "hash": "7ef7360b351d2a473a03268f5781131e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/sign-detail/aquarius-ruler.md": {
+    "mtime": 1778439543.6840389,
+    "hash": "05307a1fb0799b2ae8db28d2854780cb"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/elements/fire-signs.md": {
+    "mtime": 1778439543.652836,
+    "hash": "cfe85ca1b6d7bb43c8f1bdc90d9a36b1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/elements/water-signs.md": {
+    "mtime": 1778439543.6578948,
+    "hash": "7514cb93ce593a4bca2308f0436ae3c5"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/elements/earth-signs.md": {
+    "mtime": 1778439543.6547956,
+    "hash": "8dd7698af5d1be95ecf8d291f1c22449"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/elements/air-signs.md": {
+    "mtime": 1778439543.6563401,
+    "hash": "008c71ac994cf8cff1f70d69a13aa094"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/planets/venus-astro.md": {
+    "mtime": 1778439543.6959417,
+    "hash": "8074825a98df175d565e3f413315e16d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/planets/moon-astro.md": {
+    "mtime": 1778439543.6923227,
+    "hash": "e2659a4280754ae1728fc67d99b6f556"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/planets/mercury-astro.md": {
+    "mtime": 1778439543.6943564,
+    "hash": "574b4b7c0ac69d643570131bbb295b23"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/planets/neptune-astro.md": {
+    "mtime": 1778439543.7073176,
+    "hash": "4211653a0b266d08e2a493596eb131dc"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/planets/uranus-astro.md": {
+    "mtime": 1778439543.7037709,
+    "hash": "d5a2198f7e559eb6a883c849c9a2cad1"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/planets/sun-astro.md": {
+    "mtime": 1778439543.6894298,
+    "hash": "ccb7c0da113f643fac24f7739cd9fb34"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/planets/jupiter-astro.md": {
+    "mtime": 1778439543.6992617,
+    "hash": "2984403051be8ee02a721eceedcdeb7c"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/planets/pluto-astro.md": {
+    "mtime": 1778439543.7093558,
+    "hash": "e8b35e10c7aa9a8a229abfc104606519"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/planets/saturn-astro.md": {
+    "mtime": 1778439543.7008886,
+    "hash": "da6a13cd74858657fc659f77cd35c403"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/planets/mars-astro.md": {
+    "mtime": 1778439543.6976306,
+    "hash": "9c97861ed97577caf45fa94ed74ea978"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/aspects/sextile.md": {
+    "mtime": 1778439543.6414762,
+    "hash": "db57cc2e087cd55acff63d5dbd2e0850"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/aspects/square.md": {
+    "mtime": 1778439543.64267,
+    "hash": "23f89f3e9a068e8e30ec3914ac1b8e5b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/aspects/sesquiquadrate.md": {
+    "mtime": 1778439543.6502502,
+    "hash": "1fed3c845023a510e02b24e145914d12"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/aspects/conjunction.md": {
+    "mtime": 1778439543.6402247,
+    "hash": "adb830907fdde7875e0c9ed1d8eb38eb"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/aspects/semisextile.md": {
+    "mtime": 1778439543.6483362,
+    "hash": "d1fa67d31a68f4a29d1cab8654bacabd"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/aspects/opposition.md": {
+    "mtime": 1778439543.6453547,
+    "hash": "9cb7ed039eaebd61a1d4ec1cb2fe79d2"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/aspects/quincunx.md": {
+    "mtime": 1778439543.6468136,
+    "hash": "967e6571f700eada5c539080232a6109"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/astrology/aspects/trine.md": {
+    "mtime": 1778439543.6439943,
+    "hash": "203a365c5d8bafced48ad58c7e881681"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/bsd-sed-rule.md": {
+    "mtime": 1778438290.6692545,
+    "hash": "81f0b38adb25bf15b5b5ac5ea5ff401b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/mobile-css-rule.md": {
+    "mtime": 1778438290.6710603,
+    "hash": "202888367ac6f11ac6b46e06e51d9a7d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/pwa-debug.md": {
+    "mtime": 1778438290.6778712,
+    "hash": "ab73314315933e114a4100a3e609f769"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/branch-awareness.md": {
+    "mtime": 1778438290.672806,
+    "hash": "e62b09795985fae26086a53754a6461d"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/str-replace-rule.md": {
+    "mtime": 1778438290.6650696,
+    "hash": "cdb3fb9d9051cba4c601b4fa15612346"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/supabase-mcp-vs-cli.md": {
+    "mtime": 1778438290.6798127,
+    "hash": "a58372da131f35511761dda4b455ad09"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/commit-convention.md": {
+    "mtime": 1778438290.6760738,
+    "hash": "1ad070ef3cc247f2e167f0887a759ba0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/sw-sync-rule.md": {
+    "mtime": 1778438290.6671708,
+    "hash": "60b33b4b5179d96950df0459f138437b"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/revert-strategy.md": {
+    "mtime": 1778438290.6744266,
+    "hash": "1bab3f0ff6d739d4f6e3ef3790dcb974"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/sub/mobile-first-responses.md": {
+    "mtime": 1778439446.8188994,
+    "hash": "6eef5b5d98ab085e6a98c1ad546cc3f7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/sub/no-whole-file-read.md": {
+    "mtime": 1778439446.809634,
+    "hash": "392de5d7d8ea504283f9321b06394c62"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/sub/verify-run-calculation.md": {
+    "mtime": 1778439446.813757,
+    "hash": "a7a92906e6196c658907ce5f0d929252"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/sub/never-no-verify.md": {
+    "mtime": 1778439446.816606,
+    "hash": "ad11f8b7c9ee7feff8c42e6d6a9a15fe"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/sub/buddy-tone.md": {
+    "mtime": 1778439446.8215647,
+    "hash": "e69c4086034cd9621009bb1e74b60b96"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/sub/search-before-answer.md": {
+    "mtime": 1778439446.8282359,
+    "hash": "a1b640e82ad1048fe39b52a1a8ff093e"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/sub/permanent-fix-first.md": {
+    "mtime": 1778439446.8264568,
+    "hash": "590b95bab15ad1475c8f032c6ffb00a7"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/sub/no-option-pickers.md": {
+    "mtime": 1778439446.8233352,
+    "hash": "257132099223c682fd46f763978da417"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/sub/one-commit-per-change.md": {
+    "mtime": 1778439446.8116062,
+    "hash": "a97a5d63bc41238de65e021b26576af0"
+  },
+  "/Users/qnc/Projects/quantumcube/vault/operating/sub/autonomous-greenlight.md": {
+    "mtime": 1778439446.8248541,
+    "hash": "4111843d375812d3872d10da66171ec5"
+  },
+  "/Users/qnc/Projects/quantumcube/More backgrounds/pexels-haseeb-syed-2150151139-35198179.jpg": {
+    "mtime": 1776359574.3961139,
+    "hash": "36c547c1b978f9f0c3352baddda02d1d"
+  },
+  "/Users/qnc/Projects/quantumcube/More backgrounds/pexels-kate-holovacheva-1824230-5726190.jpg": {
+    "mtime": 1776359574.3988812,
+    "hash": "34c2102d09e119e40b391b462cd78222"
+  },
+  "/Users/qnc/Projects/quantumcube/More backgrounds/olena-bohovyk-Cq5NaI0yKBE-unsplash.jpg": {
+    "mtime": 1776359574.3945103,
+    "hash": "521d791705309fcfea8eae6c2ecbc01d"
+  },
+  "/Users/qnc/Projects/quantumcube/screenshots/supabase-auth-rate-limits-screenshot.png": {
+    "mtime": 1776498354.0649648,
+    "hash": "4e5797db475478f4da3971950bb5427f"
+  },
+  "/Users/qnc/Projects/quantumcube/screenshots/resend-quantumcube-verified-viewport.png": {
+    "mtime": 1776502749.7812536,
+    "hash": "490ef400d160ccc411061159b8f6d5be"
+  },
+  "/Users/qnc/Projects/quantumcube/screenshots/resend-quantumcube-domain-verified.png": {
+    "mtime": 1776502728.2147076,
+    "hash": "889e3de2336f26a907aada32f6b16c16"
+  },
+  "/Users/qnc/Projects/quantumcube/screenshots/supabase-profiles-has-paid-true.png": {
+    "mtime": 1776508472.254097,
+    "hash": "1568ea1fec9347d86b87f3cbf9a7c168"
+  },
+  "/Users/qnc/Projects/quantumcube/screenshots/supabase-smtp-resend-saved.png": {
+    "mtime": 1776503062.488765,
+    "hash": "1060e0dc500f6dacb0cfc88e5df23bf8"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/10 Inch Tablet Screenshots/Tablet - Intro page.jpg": {
+    "mtime": 1778501128.216113,
+    "hash": "8046689dfbde72a1c979b199abbfdaaf"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/10 Inch Tablet Screenshots/Tablet - Landing page.jpg": {
+    "mtime": 1778501128.224416,
+    "hash": "70541699f6cb153f596eef2e1dc48696"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/10 Inch Tablet Screenshots/10 Inch Tablet - Landing page.jpg": {
+    "mtime": 1778501128.224416,
+    "hash": "70541699f6cb153f596eef2e1dc48696"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/10 Inch Tablet Screenshots/10-Inch Tablet - SignUp Page.jpg": {
+    "mtime": 1778500361.788736,
+    "hash": "df97147003f508d9a7cbc1c46235a864"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/10 Inch Tablet Screenshots/Tablet -.jpg": {
+    "mtime": 1778501128.232406,
+    "hash": "d543cda2dea9f361c01e124c9eb68902"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/10 Inch Tablet Screenshots/10 Inch Tablet -.jpg": {
+    "mtime": 1778501128.232406,
+    "hash": "d543cda2dea9f361c01e124c9eb68902"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/10 Inch Tablet Screenshots/Tablet - SignUp Page.jpg": {
+    "mtime": 1778500361.788736,
+    "hash": "df97147003f508d9a7cbc1c46235a864"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/10 Inch Tablet Screenshots/Tablet - Results Explained Page.jpg": {
+    "mtime": 1778501128.241961,
+    "hash": "23853de2ff8198e57b51333be89d590a"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/10 Inch Tablet Screenshots/10 Inch Tablet - Intro page.jpg": {
+    "mtime": 1778501128.216113,
+    "hash": "8046689dfbde72a1c979b199abbfdaaf"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/10 Inch Tablet Screenshots/10 Inch Tablet - Results Explained Page.jpg": {
+    "mtime": 1778501128.241961,
+    "hash": "23853de2ff8198e57b51333be89d590a"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/Feature Graphic/YOUR COSMIC PROFILE SIMPLIFIED (1).png": {
+    "mtime": 1778496515.196395,
+    "hash": "54fe98b71dc66d21f4b26599aff9ecb6"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/Feature Graphic/pexels-lucas-pilon-ferro-51318148-8137081.jpg": {
+    "mtime": 1778492381.204133,
+    "hash": "e8a2213e82ba8ea68094320b9845d755"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/Phone Screenshots/Screenshot 2026-05-11 at 13.24.22.png": {
+    "mtime": 1778498668.1793423,
+    "hash": "a3e3093ed1e4a6e1e4909c7098af071f"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/Phone Screenshots/Screenshot_20260511_125733_com_andr oid_chrome_SameTaskWebApkActivity.jpg": {
+    "mtime": 1778497204.261671,
+    "hash": "e54a6de0759412fb1db5a3422233d3a9"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/Phone Screenshots/Screenshot_20260511_115230_com_andr oid_chrome_SameTaskWebApkActivity.jpg": {
+    "mtime": 1778493855.912077,
+    "hash": "0e0f854eb2b08f42ed5869ae02f2a8d4"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/Phone Screenshots/Screenshot_20260511_115250_com_andr oid_chrome_SameTaskWebApkActivity.jpg": {
+    "mtime": 1778493845.490371,
+    "hash": "1becdc7512f0cf2702dbcc4e4856497d"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/Phone Screenshots/Screenshot_20260511_115450_com_andr oid_chrome_SameTaskWebApkActivity.jpg": {
+    "mtime": 1778493839.632904,
+    "hash": "8d5689e8a93d6fb0af5342b40edaa24d"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/Phone Screenshots/Screenshot_20260511_125823_com_andr oid_chrome_SameTaskWebApkActivity.jpg": {
+    "mtime": 1778497211.749387,
+    "hash": "1179bec3954745dc39d702516b415d3a"
+  },
+  "/Users/qnc/Projects/quantumcube/Playstore Screenshots/Phone Screenshots/Screenshot_20260511_115240_com_andr oid_chrome_SameTaskWebApkActivity.jpg": {
+    "mtime": 1778493849.741992,
+    "hash": "2fd70b9c5589c9c64af0dc0e8b569d34"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC - White spaced.png": {
+    "mtime": 1777543821.0,
+    "hash": "b638f13828387894a59e1576d395d5aa"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC - Black & Light.png": {
+    "mtime": 1777534477.0,
+    "hash": "8e15c56a8707e1df45e9a817d0005f6d"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC - Black spaced.png": {
+    "mtime": 1777543821.0,
+    "hash": "41b485a7c528f33abca168a78ae941c8"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC Full White Text.png": {
+    "mtime": 1777874704.0,
+    "hash": "58f89ec16dee669bfbed647e9e5d8364"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC White Text.png": {
+    "mtime": 1777874704.0,
+    "hash": "7ab99b1e1c79c0f1946c96b3cdd54854"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC Black BG.png": {
+    "mtime": 1777874672.0,
+    "hash": "4663a81cff3d1e9a9d3d26b0a62e45c8"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC - Stars.png": {
+    "mtime": 1777534477.0,
+    "hash": "350b24f45813e8602ff2e4f762e11c10"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC - White.png": {
+    "mtime": 1777534477.0,
+    "hash": "a95e2c48378e08c63503fc90a44d7d36"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC - Solid.png": {
+    "mtime": 1777534276.0,
+    "hash": "f632f0bffba14c5f23a896bbf9f36bf6"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC Black Text.png": {
+    "mtime": 1777874704.0,
+    "hash": "5512059e778a7320e94fe41fc605c665"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC Full Black Text.png": {
+    "mtime": 1777874672.0,
+    "hash": "2a8f33fffa21937c072f7629b339b999"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC - Black.png": {
+    "mtime": 1777534477.0,
+    "hash": "ee8d63d92a78fc8835c2ec375c549d97"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC Full Black BG.png": {
+    "mtime": 1777874672.0,
+    "hash": "13b40a7be32d464d624f99b5c82546c3"
+  },
+  "/Users/qnc/Projects/quantumcube/brand/QC - Solid Spaced.png": {
+    "mtime": 1777543992.748767,
+    "hash": "112ef9899812cc1b95d4cc419b0255b6"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/qc-apple-touch-180.png": {
+    "mtime": 1777544163.5700052,
+    "hash": "43147609e77dfd96d8ffa14d9530778f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/qc-icon-192-maskable.png": {
+    "mtime": 1778442665.4354606,
+    "hash": "e07041c3eef86bfa31fe956be98da88f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/qc-icon-192.png": {
+    "mtime": 1777544163.3298528,
+    "hash": "6bdc2379c1ae26ecc5b5b1f91caa7e72"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/cube-background.jpg": {
+    "mtime": 1776359574.399662,
+    "hash": "d496d5e370826fb9e50e282d24d1c8bd"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/qc-wordmark-email.png": {
+    "mtime": 1777544472.3764265,
+    "hash": "422c8769b9941fd2625aaac54dfeb008"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/qc-icon-512-maskable.png": {
+    "mtime": 1777544163.4961987,
+    "hash": "bf599a1deaaa5f226524121b7068a23c"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/qc-favicon-32.png": {
+    "mtime": 1777544163.6988018,
+    "hash": "35026a179f53a60800fd09670c60bcc6"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/qc-icon-512.png": {
+    "mtime": 1777544163.412524,
+    "hash": "bf599a1deaaa5f226524121b7068a23c"
+  },
+  "/Users/qnc/Projects/quantumcube/android/store_icon.png": {
+    "mtime": 1778320427.6453578,
+    "hash": "82c247b3f28b79780d769dce89ca2ac4"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/mipmap-mdpi/ic_launcher.png": {
+    "mtime": 1778320427.645315,
+    "hash": "e7ec9e2f6c51744edc71e05bd6f06714"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/mipmap-mdpi/ic_maskable.png": {
+    "mtime": 1778320428.3799274,
+    "hash": "a1f204f6d947dba45e6a604562999c25"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/mipmap-hdpi/ic_launcher.png": {
+    "mtime": 1778320427.6453114,
+    "hash": "c0c0a5fd18dc5b7c29f172b8541dad96"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/mipmap-hdpi/ic_maskable.png": {
+    "mtime": 1778320428.379928,
+    "hash": "2b7c87d8316ae1acd509a0401f71501d"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png": {
+    "mtime": 1778320427.645343,
+    "hash": "a7896cb79f8ae2b0851a01f7c7de925d"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/mipmap-xxxhdpi/ic_maskable.png": {
+    "mtime": 1778320428.3799267,
+    "hash": "629c632ce743bc86cc8808fdde4274a4"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png": {
+    "mtime": 1778320427.6453133,
+    "hash": "46d059f412198ad660d88fc0e30eb53f"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/mipmap-xxhdpi/ic_maskable.png": {
+    "mtime": 1778320428.3798776,
+    "hash": "ca71781009e7e20d2d5f2c5c602f21ee"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/drawable-xhdpi/splash.png": {
+    "mtime": 1778320427.9825165,
+    "hash": "da903094d35fbe40e872aaccb4d4894c"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/drawable-xxhdpi/splash.png": {
+    "mtime": 1778320427.9825394,
+    "hash": "7e20c30f28ecaf0f9faad6a251af8d5b"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/drawable-hdpi/splash.png": {
+    "mtime": 1778320427.9826221,
+    "hash": "341ab6988ec12e56e7a54a6f5c2a7a0f"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/drawable-mdpi/splash.png": {
+    "mtime": 1778320427.9825075,
+    "hash": "2259b4fdaa32225a73192ca3d249c381"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png": {
+    "mtime": 1778320427.6453907,
+    "hash": "63ef39ecd3c8786d1d3d3c830daa4eed"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/mipmap-xhdpi/ic_maskable.png": {
+    "mtime": 1778320428.3798423,
+    "hash": "a1a0a2f904585a611c7478d2d1cd9a55"
+  },
+  "/Users/qnc/Projects/quantumcube/android/app/src/main/res/drawable-xxxhdpi/splash.png": {
+    "mtime": 1778320427.982578,
+    "hash": "31d48d7d512ce7b05fed17ae019cfd58"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Reveal my cube.mp3": {
+    "mtime": 1776601574.8683395,
+    "hash": "9aec74e17d806e3e100402c90cb4e2ab"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Back to signup.wav": {
+    "mtime": 1776533899.9757082,
+    "hash": "c83f470080866f8cc1fc27bf7e6955dc"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Select cube side.mp3": {
+    "mtime": 1776601649.459504,
+    "hash": "19429c51fa4103cd9e8640293980b1f2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Payment.mp3": {
+    "mtime": 1776542355.082793,
+    "hash": "1024a63dc05b930f911ad54eece73b7f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Reveal Result 1.mp3": {
+    "mtime": 1776601657.4223983,
+    "hash": "500e114ea7e114d7f8efec3df639569f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Reveal Result 3.mp3": {
+    "mtime": 1776601601.2682846,
+    "hash": "e2d65072aae787b059269a171f0e09fb"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Reveal Result 2.mp3": {
+    "mtime": 1776602221.3088524,
+    "hash": "f30fde58de661d77dbfcee97036e08ae"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Music/ES_Across the Meadow - Hanna Lindgren.mp3": {
+    "mtime": 1776359743.3304358,
+    "hash": "b15ab8406e0982cd1cd470d1c9765fa6"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Music/bgMusic.mp3": {
+    "mtime": 1776533899.9692233,
+    "hash": "296a296362b5e1d54093af6dfbf2b371"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Music/ES_Tranquil Dawn - Amber Glow.mp3": {
+    "mtime": 1776359743.3662984,
+    "hash": "6d6ffe8af96864072edde1cd5c198ab7"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Music/ambient.mp3": {
+    "mtime": 1776359743.375367,
+    "hash": "076100633d5fd23ccabf75deabea1b83"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Music/ES_Subterranean Room - Hanna Lindgren.mp3": {
+    "mtime": 1776359743.3562443,
+    "hash": "55d53701615fb93489a941ba2da25f88"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_virgo_career.mp3": {
+    "mtime": 1776859090.5204306,
+    "hash": "82e89b7abb7f5570e5d763d530583557"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_33_v1.mp3": {
+    "mtime": 1776790747.6842623,
+    "hash": "c2ffc702fc940a9dec2e21975bdc8366"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_3_v3.mp3": {
+    "mtime": 1778303335.4301033,
+    "hash": "0e546385aa78dfb6f27735a1bd9223bd"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_5_v2.mp3": {
+    "mtime": 1776790709.8371577,
+    "hash": "be39351085abf29c54e3f04a7d44e668"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_dragon_career.mp3": {
+    "mtime": 1776859174.6725717,
+    "hash": "30f802a0d2e76eb2a8501fb60db55df2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_9_v2.mp3": {
+    "mtime": 1776790863.8133857,
+    "hash": "9edb575f9d8bf3e99404c7f02c6b0164"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_11_v3.mp3": {
+    "mtime": 1776783994.2778223,
+    "hash": "71698f552cc3d5ba6be2fb6de1aecf44"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_6_v1.mp3": {
+    "mtime": 1776790936.6704104,
+    "hash": "2b6ba73e0a2c0ec9792b11915f676bd0"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_5_v2.mp3": {
+    "mtime": 1776790842.882784,
+    "hash": "0fd5fd486936157e860588ae55d8da4e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_dragon_shadow.mp3": {
+    "mtime": 1776859171.9680636,
+    "hash": "556fab5cad2747d7beb7ce872a9c4f08"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_6_v3.mp3": {
+    "mtime": 1776790528.2811608,
+    "hash": "57e07ff5d8cf9584cadd5b10f7e0f1b6"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_virgo_shadow.mp3": {
+    "mtime": 1776859087.6355844,
+    "hash": "d00d0f0554690e5cc2d1f162019c0046"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_aries_love.mp3": {
+    "mtime": 1776859050.4408658,
+    "hash": "7954e7fe86dc2c547a4ba03145e991a8"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_virgo_core.mp3": {
+    "mtime": 1778303519.7466388,
+    "hash": "10863154b06488b0c1915baea7b2e383"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rooster_love.mp3": {
+    "mtime": 1776859211.091185,
+    "hash": "ab2f14f4965cee9d4e87a2a1c8ee6cb9"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_7_v2.mp3": {
+    "mtime": 1776790790.8156643,
+    "hash": "c9f78f05f90e1640834f606ee1c9e6ed"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_9_v2.mp3": {
+    "mtime": 1778303439.894694,
+    "hash": "931241129ba3d747e3995b0cce189048"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_9_v3.mp3": {
+    "mtime": 1776790734.2945242,
+    "hash": "01a4eac04b8f1702099e5871bb6cff63"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_7_v3.mp3": {
+    "mtime": 1776790792.757848,
+    "hash": "339d42af0409ee360e3e6cf6bd81a40e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_3_v1.mp3": {
+    "mtime": 1778305909.9102814,
+    "hash": "8e45b27f8188a0ea282a7afffc4724e3"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_6_v2.mp3": {
+    "mtime": 1776790526.0858252,
+    "hash": "d189183cab473dce2ac8f09d612f5b0b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_5_v3.mp3": {
+    "mtime": 1778303456.9151454,
+    "hash": "5cb0310ed9ef9cafc7f2fc0f82631b8a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_scorpio_shadow.mp3": {
+    "mtime": 1776859103.1226516,
+    "hash": "2f36b2d0fe842592e3702771e4f028e3"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_11_v2.mp3": {
+    "mtime": 1776790539.9241445,
+    "hash": "c116f31fea990fa6f07d7c97c0537c90"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_sagittarius_love.mp3": {
+    "mtime": 1776859112.1679385,
+    "hash": "7916dc65d58f013077ed3605c82b0bef"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_9_v3.mp3": {
+    "mtime": 1776790865.472269,
+    "hash": "8cca80b58aa6343669c7b83e5d502ecd"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_scorpio_career.mp3": {
+    "mtime": 1776859105.9956293,
+    "hash": "273caa10bbd1092354e283fcb0302541"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_5_v3.mp3": {
+    "mtime": 1778303428.8833392,
+    "hash": "b9e442c748469f78bb6bc5fe0155e6cf"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_6_v1.mp3": {
+    "mtime": 1776790646.0464773,
+    "hash": "ab96733b48cb6a5a7d8bb50a57e73459"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_3_v2.mp3": {
+    "mtime": 1778305882.7192757,
+    "hash": "15ecb432a53b3a605ceca97e41b17402"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_33_v2.mp3": {
+    "mtime": 1778303447.7052698,
+    "hash": "f0b94d19f5ea0e070e63f16e5a877c26"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_6_v3.mp3": {
+    "mtime": 1776790650.1422231,
+    "hash": "7bb865501062960415bb45e95f1601ab"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_5_v1.mp3": {
+    "mtime": 1776790707.853321,
+    "hash": "fc6aecb0c529291a58a6906b1ae3c41e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_aquarius_shadow.mp3": {
+    "mtime": 1776859126.331923,
+    "hash": "e47599cfd77454803c5567e9007c7ea7"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_9_v1.mp3": {
+    "mtime": 1776790862.0905921,
+    "hash": "d37cfad40c6058bd2c5fb0a5542818e1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rat_core.mp3": {
+    "mtime": 1776859139.133982,
+    "hash": "083ea03e3bcba45bf4ae63937e63903c"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_monkey_str.mp3": {
+    "mtime": 1776859199.124775,
+    "hash": "3a544680c8e1841bdeb77cc6fb5ece5a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_aries_str.mp3": {
+    "mtime": 1776859047.3673599,
+    "hash": "4760a84dae1ad4baa32db96af5135d48"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_6_v2.mp3": {
+    "mtime": 1776790938.336822,
+    "hash": "fde2c607c23b8c0e717b27c8eac69cde"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_aquarius_career.mp3": {
+    "mtime": 1776859129.3860936,
+    "hash": "46e53d42517294b716053ed33d19de75"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_5_v1.mp3": {
+    "mtime": 1776790841.1362162,
+    "hash": "d7543cbed6f9f011069a95cde8136113"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_3_v3.mp3": {
+    "mtime": 1776790880.3291602,
+    "hash": "e00761c66b1bc4785bcec0ffa4b4eab5"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_scorpio_love.mp3": {
+    "mtime": 1776859104.6093128,
+    "hash": "8106e82cecb0fbdb884f7ef720c4bf5c"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_pisces_str.mp3": {
+    "mtime": 1776859132.5986593,
+    "hash": "4403435d519c47f0e92f31500de8d6c9"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_leo_love.mp3": {
+    "mtime": 1776859081.6226153,
+    "hash": "f44c556dd750848a58c4b183b0c48a64"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_7_v1.mp3": {
+    "mtime": 1776790788.8901389,
+    "hash": "cab0ba137397de805df5373542755cb0"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_dragon_str.mp3": {
+    "mtime": 1776859170.6420698,
+    "hash": "2cc7e44cd0e59acfd6c747aa8d53280d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_9_v1.mp3": {
+    "mtime": 1776790730.771736,
+    "hash": "ba07bd2c06b9f87030fbff730f79df40"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pc_3_v1.mp3": {
+    "mtime": 1778303499.781999,
+    "hash": "36bfc1219a65d1e9db818c84f3a7e0aa"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_goat_core.mp3": {
+    "mtime": 1776859191.0201852,
+    "hash": "4c2542114ced9948fd38a210fb70fb56"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rooster_str.mp3": {
+    "mtime": 1776859208.236494,
+    "hash": "c69b63f685e718bc1d2bb58bf0684cf5"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_6_v1.mp3": {
+    "mtime": 1776790522.898269,
+    "hash": "e534af11cc9827100f16ac99c1978d9a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_3_v2.mp3": {
+    "mtime": 1778305911.840892,
+    "hash": "0937e7f0d525c4605bfc195741a030ec"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_monkey_love.mp3": {
+    "mtime": 1776859203.6385388,
+    "hash": "0ed76af9aa4c9d5e4b80b40df293a345"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_6_v3.mp3": {
+    "mtime": 1776790939.921533,
+    "hash": "0271024afdfa7018617a1a16f73f0f54"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_11_v1.mp3": {
+    "mtime": 1778303308.3062446,
+    "hash": "26e166db78b92b53bf58c1e99495891a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_3_v1.mp3": {
+    "mtime": 1778303330.2611225,
+    "hash": "5fb370d4bbc66d1bf8f94c54e024f0a8"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_6_v2.mp3": {
+    "mtime": 1778303411.2473893,
+    "hash": "ed61ced12f7620e9a69b1d02741790b1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_33_v3.mp3": {
+    "mtime": 1778303450.3455286,
+    "hash": "aa55a0ff78398d14355da182fabc2902"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_snake_str.mp3": {
+    "mtime": 1776859177.7125669,
+    "hash": "b11bb8daf1dc820ff373ca2884d072af"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_8_v3.mp3": {
+    "mtime": 1776790661.4621274,
+    "hash": "e60e14bde41f89ec63fac8795ab25ced"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_5_v1.mp3": {
+    "mtime": 1776790777.53588,
+    "hash": "3e23a3b31875a6793ccb96985fc2b61c"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_scorpio_core.mp3": {
+    "mtime": 1776859100.1951215,
+    "hash": "ad884aca84ce5249b656ad73737ab204"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_33_v3.mp3": {
+    "mtime": 1776790683.4779031,
+    "hash": "a2c8c38ef2780b660c7d62c6f338cee9"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_snake_shadow.mp3": {
+    "mtime": 1776859179.0490303,
+    "hash": "c388ebcd035c47d70b3ded7d046a18b8"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_tiger_str.mp3": {
+    "mtime": 1776859156.0774884,
+    "hash": "f33ddc694531de31d94aa4b993c63080"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_7_v1.mp3": {
+    "mtime": 1778303464.0602965,
+    "hash": "8bb9ce5147b3fac7a061b35fe546b707"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_leo_core.mp3": {
+    "mtime": 1776859077.2154078,
+    "hash": "2bc5f7f96e339ee848644bba58cdc137"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_4_v2.mp3": {
+    "mtime": 1776790928.3446476,
+    "hash": "e298e064e9b2db71ec395a4e0049c798"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_1_v3.mp3": {
+    "mtime": 1776790870.5272682,
+    "hash": "4e00eebec86c0cb61ec7c9a22e04ce46"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rooster_career.mp3": {
+    "mtime": 1776859212.4525194,
+    "hash": "5c725d96c69216e87ecc8c5694c2e1d1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_ox_shadow.mp3": {
+    "mtime": 1778303526.2973552,
+    "hash": "6058f34092081d143b5c27fc3368a340"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_8_v2.mp3": {
+    "mtime": 1776790948.1802,
+    "hash": "392f2a11bf4d4ebef848589f04c54e34"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_snake_career.mp3": {
+    "mtime": 1776859182.0744884,
+    "hash": "5fc7b1e185c095ce3691cdbbc75b67bf"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rat_love.mp3": {
+    "mtime": 1776859144.1567693,
+    "hash": "2b4ab164045affa281f897a810036d8b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rooster_shadow.mp3": {
+    "mtime": 1776859209.518525,
+    "hash": "07d49459d2bbe7ec84ac1efd2fc47427"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_ox_career.mp3": {
+    "mtime": 1776859152.754143,
+    "hash": "e1881f61daa1dad471265e46adcec62e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_9_v1.mp3": {
+    "mtime": 1776790800.765591,
+    "hash": "da3caf18fbf07f0cae4215d007c12408"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_4_v3.mp3": {
+    "mtime": 1776790638.7827916,
+    "hash": "0e82054655ed037f4beb9a8550c1b762"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_7_v1.mp3": {
+    "mtime": 1778305893.5681136,
+    "hash": "b34f4b45fdd502f4c68dffc4c3aa5168"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_1_v1.mp3": {
+    "mtime": 1778303314.3617606,
+    "hash": "4b89addce5b5cf2edfec0873438064dc"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_4_v2.mp3": {
+    "mtime": 1778303403.969488,
+    "hash": "364492b3dcef49d258ee222381144b6d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_8_v1.mp3": {
+    "mtime": 1776790530.487115,
+    "hash": "53678b0aa3feac385efcb3e3020be121"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_cancer_str.mp3": {
+    "mtime": 1776859070.8068368,
+    "hash": "c7b8ebf8b22bf69df7a3f944d053032b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_8_v3.mp3": {
+    "mtime": 1776790949.715442,
+    "hash": "58326527b87a31f315c8472a27caadec"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_4_v1.mp3": {
+    "mtime": 1778303295.4916515,
+    "hash": "74e889e303845492804d1c5cc89c38db"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_1_v2.mp3": {
+    "mtime": 1776790868.7970104,
+    "hash": "40513f69af524bc0a876e119a14d5d1a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_4_v3.mp3": {
+    "mtime": 1776790929.9344158,
+    "hash": "c4ef61c306a0d2587b3c13b3ede2a2f1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_goat_love.mp3": {
+    "mtime": 1776859194.9895375,
+    "hash": "b75d97d2f40bf6508373d37912be948f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_33_v2.mp3": {
+    "mtime": 1776790681.428545,
+    "hash": "2b4c00b224d01b75e6b09a971b651cf8"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_8_v2.mp3": {
+    "mtime": 1776790659.4051807,
+    "hash": "440332673b67e310dc62979c00652f78"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pc_1_v1.mp3": {
+    "mtime": 1776859030.888181,
+    "hash": "ab4dcbba6551a374d6c327b2936d1801"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_monkey_core.mp3": {
+    "mtime": 1776859197.741725,
+    "hash": "6d6a212ac68f5a4d3b42fa8b3566aac6"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/welcome.mp3": {
+    "mtime": 1777834894.8128934,
+    "hash": "b941180b58724cd6fe8fcaa07d3b69fa"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_aries_core.mp3": {
+    "mtime": 1776859045.6839995,
+    "hash": "26d5e60c03b0aa094954610de345d81f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_5_v2.mp3": {
+    "mtime": 1776790779.5790427,
+    "hash": "e3079817756c99254ceb831fe37eab61"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_7_v2.mp3": {
+    "mtime": 1776790853.885565,
+    "hash": "ee61d166237f98358176e8ba50936500"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_virgo_love.mp3": {
+    "mtime": 1776859089.1357248,
+    "hash": "74fcaf5af4fe6b9fd0f3a7e7c2e68a3d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_4_v1.mp3": {
+    "mtime": 1776790926.6788146,
+    "hash": "867f96616469f855384c92e6b7a49d44"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_taurus_shadow.mp3": {
+    "mtime": 1776859056.7665977,
+    "hash": "bd52da14d967b5d469a0de6bbd9f205a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_4_v3.mp3": {
+    "mtime": 1776790520.428331,
+    "hash": "023d461aa319b470e93887b1e7f626aa"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rooster_core.mp3": {
+    "mtime": 1776859206.8909378,
+    "hash": "8ae16e61d3a3feccd9b1adc2995f82bd"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_8_v1.mp3": {
+    "mtime": 1776790946.3898072,
+    "hash": "2bc9803b56ede6e17a6c537200d670a1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_8_v3.mp3": {
+    "mtime": 1776784001.6665561,
+    "hash": "e9d98dc833f88fc6dfc4084283d7f3bc"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_9_v2.mp3": {
+    "mtime": 1776790805.741745,
+    "hash": "35f6c5e46f17c81661638bbc1473d749"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_1_v3.mp3": {
+    "mtime": 1778303319.9581592,
+    "hash": "b2b5404dfaf519822f17692147c0984d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_taurus_career.mp3": {
+    "mtime": 1776859060.0200574,
+    "hash": "eaff6888e59cfa66666886c3df214208"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_7_v2.mp3": {
+    "mtime": 1778303434.485189,
+    "hash": "6ece2921f1b1e71f9ba52dcd5da1c7c1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_7_v3.mp3": {
+    "mtime": 1778305896.031148,
+    "hash": "11e12391215272b2ff698cc7759069b2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_4_v1.mp3": {
+    "mtime": 1776790634.7169774,
+    "hash": "c7af4b46c8ab4adeaf9e496ab51304fc"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_1_v2.mp3": {
+    "mtime": 1778303317.4305756,
+    "hash": "43b0aa660fcac80adfb6dd87a6e512af"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_sagittarius_core.mp3": {
+    "mtime": 1776859107.6189895,
+    "hash": "3eed5be1c682964c4f7a7c957fdbcd47"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_9_v3.mp3": {
+    "mtime": 1776790807.929851,
+    "hash": "2128142f984b7f874e72a19cc9117e07"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_8_v2.mp3": {
+    "mtime": 1776783964.5661268,
+    "hash": "bc7cd3bd0a809d8bbe55b0aabaef265d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_1_v1.mp3": {
+    "mtime": 1778305903.0101674,
+    "hash": "2f7af418cf7b83737bde9521bffb653a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_capricorn_str.mp3": {
+    "mtime": 1776859116.9687734,
+    "hash": "d7d0b2fbb9757c6d00cf41215ee96b9a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_4_v2.mp3": {
+    "mtime": 1776783991.0446653,
+    "hash": "e1aadd0092d43eee8c035810dd0a5bab"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_7_v3.mp3": {
+    "mtime": 1776790855.4863048,
+    "hash": "f9868385831999441b8b08ad9be61e4f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_33_v1.mp3": {
+    "mtime": 1776790679.614203,
+    "hash": "32e1ff263f7f4c53819051bb2f7a51ad"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_5_v3.mp3": {
+    "mtime": 1776790781.67356,
+    "hash": "4744b0fc0f251d2cf1166c1ba7d42029"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_8_v1.mp3": {
+    "mtime": 1776790657.5275526,
+    "hash": "7e4a4e298cd9a5753cd0de6d601b29df"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_5_v2.mp3": {
+    "mtime": 1778305918.6652856,
+    "hash": "addfce087c301dd6ee7350b1b78b6761"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rabbit_career.mp3": {
+    "mtime": 1776859167.56337,
+    "hash": "5242500f059347301e911f8aa5ee154b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_22_v2.mp3": {
+    "mtime": 1778303393.3509905,
+    "hash": "0a8e26457d63ebc62fe30020786b2260"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_11_v2.mp3": {
+    "mtime": 1776790811.8238428,
+    "hash": "9e49e494a05ca9adcc1d852b8f9dd234"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_11_v2.mp3": {
+    "mtime": 1776790738.1872985,
+    "hash": "542b0e5b9ad4cad0d72ccab7dd403476"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pc_5_v1.mp3": {
+    "mtime": 1778303504.1526518,
+    "hash": "817a57807ccdcbe6d840d76e1e0b4787"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_9_v1.mp3": {
+    "mtime": 1778303375.4782922,
+    "hash": "dd846300f40839b0067eb4492bc44409"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rabbit_shadow.mp3": {
+    "mtime": 1776859164.8174436,
+    "hash": "90bb09fbab62db9144e0a79f62eef228"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pc_9_v1.mp3": {
+    "mtime": 1778303512.8029828,
+    "hash": "5e0d29e5dd229db57426056e873ec236"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_5_v1.mp3": {
+    "mtime": 1778303344.955965,
+    "hash": "9b73fdf48c8d6bcbe95d8d161e548413"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_9_v2.mp3": {
+    "mtime": 1776790908.2126088,
+    "hash": "9194623b50547bae1d463f713997777f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_9_v3.mp3": {
+    "mtime": 1776790909.8313007,
+    "hash": "bc4ccb050be5c77745f00b0d09f06a0a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_tiger_shadow.mp3": {
+    "mtime": 1776859157.4477584,
+    "hash": "af75da695573343bf008607db1f8cd8f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_3_v1.mp3": {
+    "mtime": 1776790695.8871324,
+    "hash": "5de7098d0de4efd776b8f6c9f7e582a2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_pig_str.mp3": {
+    "mtime": 1776859222.3809192,
+    "hash": "05291b2cc67bc5c999636ca79fae6e7f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_1_v1.mp3": {
+    "mtime": 1776790753.5688047,
+    "hash": "df1c1bcc396b87f0e17771b0279869ac"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_11_v3.mp3": {
+    "mtime": 1778303442.6649876,
+    "hash": "ceeacf16548e3af850bc6b792f080399"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rabbit_str.mp3": {
+    "mtime": 1776859163.44737,
+    "hash": "f355589681022d1f2f32c0ca0bc6995a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_11_v3.mp3": {
+    "mtime": 1776790813.769701,
+    "hash": "d05e2fb30c959cc3cd16aae7bdc42827"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_22_v3.mp3": {
+    "mtime": 1778303396.2795715,
+    "hash": "61faaa905a583b461407b500062e0330"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_5_v3.mp3": {
+    "mtime": 1776790890.2586548,
+    "hash": "0f2a44ff0d00e5b349cb18b80d457dd0"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rabbit_love.mp3": {
+    "mtime": 1776859166.2846768,
+    "hash": "66e9d40570a617fde1ad3853c329b232"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_33_v1.mp3": {
+    "mtime": 1776790548.9981868,
+    "hash": "75e42d8234a660800ed627ffcab04a53"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_tiger_career.mp3": {
+    "mtime": 1776859160.296327,
+    "hash": "5fd49dd9e30eb824bfec47063f0e36ad"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_3_v1.mp3": {
+    "mtime": 1776790831.1020207,
+    "hash": "113b9774a3d3073fe87c1b0d7ca02f5d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_33_v3.mp3": {
+    "mtime": 1776783996.798862,
+    "hash": "b6adeddd4f97665c0e7c771c6ead25fa"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_3_v3.mp3": {
+    "mtime": 1776790834.5366747,
+    "hash": "85ac37190052f0e02121faae46e10507"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_5_v1.mp3": {
+    "mtime": 1776790886.9506702,
+    "hash": "2aba13a15aba81109f94c7556642f984"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_22_v1.mp3": {
+    "mtime": 1778303390.90083,
+    "hash": "490fb7015af106f94f176b48c3fe3051"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_11_v1.mp3": {
+    "mtime": 1776790809.6236546,
+    "hash": "c17b44ca36e3d3cd2ccc35b4b2132aa5"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_11_v1.mp3": {
+    "mtime": 1776790735.94327,
+    "hash": "d08b6268d976db4a1bdc188c3a705a3f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_1_v3.mp3": {
+    "mtime": 1776790757.8022082,
+    "hash": "eb232e9af1e37a50a3cd882c8268b425"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_9_v2.mp3": {
+    "mtime": 1778303378.1684394,
+    "hash": "b247e76b60fbee86d65cc52eed4164e5"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_cancer_core.mp3": {
+    "mtime": 1776859069.2701616,
+    "hash": "4482ee19b15b63d251cf4e55c4c00ef2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_3_v3.mp3": {
+    "mtime": 1778305891.153583,
+    "hash": "69181f69c5e7c2c13dbfd5d531f4ff4a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_5_v2.mp3": {
+    "mtime": 1778303347.6807504,
+    "hash": "97f5e5f96da26e948545a45cb32a0e8b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_gemini_core.mp3": {
+    "mtime": 1776859061.7526815,
+    "hash": "00de74eca73ad40635cc3b6ac0e6eb7f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_9_v1.mp3": {
+    "mtime": 1778303495.189704,
+    "hash": "68f6c33ba0f96ac26dcdf4c9e6ac9613"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_5_v3.mp3": {
+    "mtime": 1778303350.086873,
+    "hash": "74062eed0b47f03c9052417c74350fe4"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_3_v2.mp3": {
+    "mtime": 1776790697.9404783,
+    "hash": "67c0698d728c8fee078f8395e45698aa"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_9_v3.mp3": {
+    "mtime": 1778305888.331192,
+    "hash": "9dc4b1945029c050d492c6167a2c32c2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_1_v2.mp3": {
+    "mtime": 1776790755.745312,
+    "hash": "32605f75823e512bc41c1be3af67e473"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_3_v2.mp3": {
+    "mtime": 1776790832.762793,
+    "hash": "0ebc2cc034ff584db1432b8e2ebad6cc"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_33_v2.mp3": {
+    "mtime": 1776790551.504158,
+    "hash": "af50930b6e06785879803f80dca3764f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_gemini_str.mp3": {
+    "mtime": 1778303517.6756754,
+    "hash": "1433278ca753d6304390753404436bc3"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_sagittarius_str.mp3": {
+    "mtime": 1776859109.193456,
+    "hash": "f28699e69d97e6f5e0f5c5d42af34427"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_cancer_love.mp3": {
+    "mtime": 1776859074.1262338,
+    "hash": "649e8f34fad53817eef369e5cd83d69b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_gemini_love.mp3": {
+    "mtime": 1776859066.2409666,
+    "hash": "44846d0ce1fa9e0c935f19d01a8f36e9"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_1_v3.mp3": {
+    "mtime": 1776790689.047735,
+    "hash": "7a39dbdf5ea83cad3b6d819a3cd493b8"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_2_v1.mp3": {
+    "mtime": 1778303398.7430751,
+    "hash": "8438aa2d4eb423169906d1d04710baf0"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_7_v2.mp3": {
+    "mtime": 1778303362.8405879,
+    "hash": "2e1b94a1397ba9caf77714b402082f73"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_3_v3.mp3": {
+    "mtime": 1776790769.5385203,
+    "hash": "a126a85d6c2f1219ad21a980b843d945"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_1_v3.mp3": {
+    "mtime": 1776790824.582961,
+    "hash": "01b62b1c7dea911f7214e8b3b3ff402a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_dog_str.mp3": {
+    "mtime": 1776859215.356463,
+    "hash": "2cd5486733b7756fac3c67c99e7cbdb7"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_7_v1.mp3": {
+    "mtime": 1778303490.7449653,
+    "hash": "3a25ca6a29ce3bcc68445c25ece04d41"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_2_v2.mp3": {
+    "mtime": 1776783982.736724,
+    "hash": "0dae94313f3b321826640f0e41ba4ebf"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_2_v3.mp3": {
+    "mtime": 1776790507.997779,
+    "hash": "963c93308e96bb3b9369ce8c12a09e92"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_2_v1.mp3": {
+    "mtime": 1776790916.575798,
+    "hash": "a11f79d48f48b9e0bf72415f0675dbc1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_1_v2.mp3": {
+    "mtime": 1776790822.7436435,
+    "hash": "9edf1edac7017ae6c2894e73a68ce31e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_goat_shadow.mp3": {
+    "mtime": 1776859193.5440092,
+    "hash": "5051e6b86cb2e69cd4f81757f15fc5f1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_3_v2.mp3": {
+    "mtime": 1776790767.5182095,
+    "hash": "de7b91eb77a8ffb9562f40f0050fb95e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_7_v3.mp3": {
+    "mtime": 1778305885.484262,
+    "hash": "3321abbe2d05dbac1002783c39956e66"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_1_v2.mp3": {
+    "mtime": 1776790687.170879,
+    "hash": "83a5659c40e5fe5368ea78854f7dcf42"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_11_v1.mp3": {
+    "mtime": 1778303418.602764,
+    "hash": "d704136966ceaf16f9bf82adb17c6560"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_goat_career.mp3": {
+    "mtime": 1776859196.2236311,
+    "hash": "5370109a2f283412c75f0b56f3e22886"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_11_v3.mp3": {
+    "mtime": 1776790672.6112568,
+    "hash": "fcc069f504e3658ed5311cad8ef13cc1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_7_v1.mp3": {
+    "mtime": 1778303360.3150237,
+    "hash": "d0fa7bbc6fced83cc250f6939a158a41"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_2_v2.mp3": {
+    "mtime": 1776790625.5911362,
+    "hash": "ecbfbca587852b4ce56840b00f344360"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pc_7_v1.mp3": {
+    "mtime": 1778303508.6889737,
+    "hash": "8141ba429a5e4d0b93e1b4e898f9e285"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_2_v3.mp3": {
+    "mtime": 1776790919.9267268,
+    "hash": "32966e280312b681781179b01d70c381"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_2_v1.mp3": {
+    "mtime": 1776790505.3019402,
+    "hash": "c3d415eb7aa0f4aaf922788d7763071b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_7_v2.mp3": {
+    "mtime": 1778303493.000636,
+    "hash": "118e5ba5eab04c4d1499139998f22091"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_ox_str.mp3": {
+    "mtime": 1776859148.5313013,
+    "hash": "73b441cb1563da96629a7546c41b0818"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_7_v3.mp3": {
+    "mtime": 1776790900.0398138,
+    "hash": "e2cc960e8bfc9c0597c0dcd57a9688c8"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_2_v2.mp3": {
+    "mtime": 1776790918.2784927,
+    "hash": "647f1d8f28552755ba6bb4e19d1476c7"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_1_v1.mp3": {
+    "mtime": 1776790821.2201097,
+    "hash": "f31243d13a597a0bb50ca4d7c6777897"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_3_v1.mp3": {
+    "mtime": 1776790765.5934854,
+    "hash": "9aefabf859147a10bf8746115d54eb53"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_horse_str.mp3": {
+    "mtime": 1776859185.149089,
+    "hash": "27de45039cde7b03bca9a54d99730957"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rabbit_core.mp3": {
+    "mtime": 1776859161.9170153,
+    "hash": "adcdd0da1dd89348016b0af8c1a6c03c"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_2_v3.mp3": {
+    "mtime": 1776790627.6047578,
+    "hash": "69906aebd75b030b6354835efef074a2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_1_v1.mp3": {
+    "mtime": 1778303423.3995538,
+    "hash": "b1e6830be64efde7f2b77bad6fee56ee"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_scorpio_str.mp3": {
+    "mtime": 1776859101.6859002,
+    "hash": "a522c8ebe0a90010d0e263a2a8c45c36"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_11_v2.mp3": {
+    "mtime": 1776790670.682898,
+    "hash": "57bca3ac935dab60e6bdcead94535fdd"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_7_v3.mp3": {
+    "mtime": 1776790944.8312461,
+    "hash": "e8ba91ca91b66433218287d1af8fb0dd"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_2_v2.mp3": {
+    "mtime": 1778305907.7169368,
+    "hash": "0fa155c8806fa81ddbcf814a1e9228f0"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_7_v1.mp3": {
+    "mtime": 1776783985.3689167,
+    "hash": "7f03bba6403c82f63fbdf0473cbcd857"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pc_2_v1.mp3": {
+    "mtime": 1778303497.6225183,
+    "hash": "80604178b613cc4926833e4ee2f74ba2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_7_v2.mp3": {
+    "mtime": 1776790653.8224838,
+    "hash": "0eb8cd19564115aabcbb09bb44daaa3e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_2_v1.mp3": {
+    "mtime": 1778303322.4569247,
+    "hash": "745b7d7f1d99104d36cc95792bd28053"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_22_v2.mp3": {
+    "mtime": 1776790676.0259366,
+    "hash": "a482b073d8485062eb3414277f1465e2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_22_v3.mp3": {
+    "mtime": 1776790677.8933423,
+    "hash": "3f709fde4852e51e44724faebe5e7b08"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rat_shadow.mp3": {
+    "mtime": 1776859142.620072,
+    "hash": "b1a6ff9b2118e6f96edf09efd441e16e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_8_v1.mp3": {
+    "mtime": 1776790857.0057924,
+    "hash": "64790307da33ecf70519c2d14d3e898b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_4_v1.mp3": {
+    "mtime": 1776790701.5121458,
+    "hash": "f65e579f5ca23f13dd96e4612bf3833a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_7_v3.mp3": {
+    "mtime": 1778303416.1507125,
+    "hash": "9ea1affff969e0878f697ecd7ebc2a3c"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_pisces_shadow.mp3": {
+    "mtime": 1776859134.0756373,
+    "hash": "ad2a5671695cf4bf2619189b836d1d7d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_aries_shadow.mp3": {
+    "mtime": 1776859048.8872545,
+    "hash": "e5954f4c08d125028d40d27ee73c0bf1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_6_v1.mp3": {
+    "mtime": 1776790783.212259,
+    "hash": "86964ded1566849f23c74e26c24dbef4"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_8_v1.mp3": {
+    "mtime": 1776790725.0271616,
+    "hash": "22d336af4546b75142146f574ac68686"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rat_career.mp3": {
+    "mtime": 1776859145.5280056,
+    "hash": "b6c3b35bcc2f93ba21e223dd16bd33bf"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_aries_career.mp3": {
+    "mtime": 1778305922.8640804,
+    "hash": "332d1a0e4d9967673600ce00e43f7ca3"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_2_v3.mp3": {
+    "mtime": 1776790875.6485455,
+    "hash": "388826e72b0a793ce4aa9f70144fc7e1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_7_v2.mp3": {
+    "mtime": 1776790943.1605756,
+    "hash": "46b2e0ecbead490bf854dd641fe17733"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_aquarius_core.mp3": {
+    "mtime": 1776859123.0706418,
+    "hash": "925b8d8b1d9837cb8e021719a9531831"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_libra_str.mp3": {
+    "mtime": 1776859093.8518844,
+    "hash": "9722b906938f2ea9b944ba6f60acc78b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_4_v1.mp3": {
+    "mtime": 1776790836.1728613,
+    "hash": "e5484dac4d1388768767b1ec86d901dd"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_pisces_career.mp3": {
+    "mtime": 1776859137.314691,
+    "hash": "982864f90d476d661c4ad1f443581c56"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_aquarius_str.mp3": {
+    "mtime": 1776859124.8562636,
+    "hash": "36371c903a6f296efdbb7f932f81c441"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_4_v3.mp3": {
+    "mtime": 1778307984.457664,
+    "hash": "a44682b7aa8ce0599003390d8635a957"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_7_v2.mp3": {
+    "mtime": 1776783975.5455334,
+    "hash": "4fd4159539215e74c7feea5b02beeba8"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_2_v1.mp3": {
+    "mtime": 1778305905.156878,
+    "hash": "1f0d52210a0cb758434a309df3a8402d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_8_v3.mp3": {
+    "mtime": 1776790729.2161949,
+    "hash": "d9ffc6338f08d611864a4ca313e7c88d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_6_v3.mp3": {
+    "mtime": 1776790787.246054,
+    "hash": "45e7c9af9a0821928e718acfd7524f23"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_goat_str.mp3": {
+    "mtime": 1776859192.3536527,
+    "hash": "cef20b5a3808f5bae1019ea2f9217b07"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_2_v2.mp3": {
+    "mtime": 1778303324.914063,
+    "hash": "f1a04c71072b4d8c70b99b9a2226cb84"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_7_v1.mp3": {
+    "mtime": 1778303413.3176801,
+    "hash": "93edd4ac6ec7a9df0f1434a4b637c81d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_4_v3.mp3": {
+    "mtime": 1776790706.171422,
+    "hash": "16301ffcc6b6c41754ca2fcf0ccef0d5"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_snake_love.mp3": {
+    "mtime": 1776859180.6216865,
+    "hash": "9879c48f17de651b55b1ae660aa0e12e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_8_v3.mp3": {
+    "mtime": 1778303466.6429224,
+    "hash": "3fa8788ee25a6f50621f070a282f7e17"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_22_v1.mp3": {
+    "mtime": 1778303420.959487,
+    "hash": "4a5b3681e9bebb2f338fda487cb25288"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_8_v2.mp3": {
+    "mtime": 1776790858.6491985,
+    "hash": "eac78d58c8d4cb11a785969aab8deee1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_dog_love.mp3": {
+    "mtime": 1776859217.9525952,
+    "hash": "5218dbe070218e175419481b8a881736"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_4_v2.mp3": {
+    "mtime": 1776790703.5063932,
+    "hash": "950007f517da9069f4579d4913109c1b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_2_v3.mp3": {
+    "mtime": 1778303327.6490998,
+    "hash": "21dfa1e1dd2c6f82063a05a18f273d89"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_horse_career.mp3": {
+    "mtime": 1776859189.484714,
+    "hash": "c445cd3b06757ce4ca2bdba94a82187b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_6_v2.mp3": {
+    "mtime": 1776790785.2438002,
+    "hash": "78b2f83de5d9080e929550546054cb4a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_8_v2.mp3": {
+    "mtime": 1776790726.9654503,
+    "hash": "b6327720dab7ee87ac9660c73ea905d2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_dragon_core.mp3": {
+    "mtime": 1776859169.1518078,
+    "hash": "c1a9aafd8ee7ecfd45c3eecc5c41ec28"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_7_v3.mp3": {
+    "mtime": 1778303298.9489772,
+    "hash": "ce0e4baa69ea0dd52867aaa17645df32"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_horse_shadow.mp3": {
+    "mtime": 1776859186.5241473,
+    "hash": "66b2568d46065d08913f9f52f44b6ff9"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_taurus_love.mp3": {
+    "mtime": 1776859058.358797,
+    "hash": "c4aafbb97d4a8a40350ceb5b0093b725"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_7_v1.mp3": {
+    "mtime": 1776790941.4805095,
+    "hash": "d67f9dab707f1369b0e742e1cb1bc640"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_4_v2.mp3": {
+    "mtime": 1776790837.8861563,
+    "hash": "18759f219fbe11004da1ee86ed3f00dc"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_9_v2.mp3": {
+    "mtime": 1776783988.247745,
+    "hash": "e146299363058619a12cc66221f84f65"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_gemini_shadow.mp3": {
+    "mtime": 1776859064.738588,
+    "hash": "9a4d336096bafc64753134a12704249f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_snake_core.mp3": {
+    "mtime": 1776859176.332171,
+    "hash": "cd03e20a8cdc4a9daa626dcab646fbb2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_5_v1.mp3": {
+    "mtime": 1778303406.177429,
+    "hash": "740cb4c3962a4d23191b79ce84b043b2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_6_v3.mp3": {
+    "mtime": 1776790717.6506872,
+    "hash": "a80e1aeb12483c802461793be6fc2842"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_8_v3.mp3": {
+    "mtime": 1776790798.666907,
+    "hash": "860d450ac1beaa494abee1f96ef01c64"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_4_v3.mp3": {
+    "mtime": 1776790775.0896645,
+    "hash": "519b7b4ffe877bae7a17ee9fc74d659a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_9_v1.mp3": {
+    "mtime": 1776790663.13763,
+    "hash": "dab584452794e8468f8b1677a3377b3e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_6_v3.mp3": {
+    "mtime": 1778308455.736701,
+    "hash": "dd6626a7571e6e05c18adc2c1ff4de1f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_5_v2.mp3": {
+    "mtime": 1776783972.7806468,
+    "hash": "3362af5d809abf094e6cce6c4a1a808a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_gemini_career.mp3": {
+    "mtime": 1776859067.7231016,
+    "hash": "8eb6ae1b8aae9a477a99658e56d3de2d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_22_v1.mp3": {
+    "mtime": 1776790815.5115924,
+    "hash": "ac4c63f53692adff9d079233622ff225"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_monkey_shadow.mp3": {
+    "mtime": 1776859200.6446676,
+    "hash": "015ec20d2d40fa2eae3228d7d3e381a2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_11_v1.mp3": {
+    "mtime": 1778303382.9253194,
+    "hash": "c583ddf7a43ed2de9bd726a70aed4868"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_5_v3.mp3": {
+    "mtime": 1776783978.8899114,
+    "hash": "16fd28602b5a51d0fcb3e201bed1bb78"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_dragon_love.mp3": {
+    "mtime": 1776859173.407358,
+    "hash": "08f2ab96979a4d1a10126f3ce85acc3d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_6_v2.mp3": {
+    "mtime": 1776790848.6642213,
+    "hash": "65fdfabbff59f5d01199ea3801fc2d90"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_22_v1.mp3": {
+    "mtime": 1776790741.765615,
+    "hash": "5f37d5f3be55ec43eb445862c8f6875e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_5_v1.mp3": {
+    "mtime": 1776790931.6058583,
+    "hash": "0dee8c16b41a29738d8322a69b58da75"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_4_v2.mp3": {
+    "mtime": 1776790773.0920765,
+    "hash": "46e20389051b2e71bb443dddaadd253f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_taurus_core.mp3": {
+    "mtime": 1776859053.718988,
+    "hash": "15d024151bde15db7b32fcaffae49078"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_8_v2.mp3": {
+    "mtime": 1776790796.6911416,
+    "hash": "3393071f70ec7cd30ca48326495b287f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_6_v2.mp3": {
+    "mtime": 1776790715.4943838,
+    "hash": "6ad5feda7d8f0c5697df3e243e281da7"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_dog_core.mp3": {
+    "mtime": 1778303530.7419453,
+    "hash": "8799faab72ecd1046a731aa23ffe5e89"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_monkey_career.mp3": {
+    "mtime": 1776859205.123161,
+    "hash": "a45bb385b2ac82901c9a20e23686d5a9"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_9_v3.mp3": {
+    "mtime": 1778303305.1850495,
+    "hash": "963707c2e82e7092636a356a6bf03323"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_9_v1.mp3": {
+    "mtime": 1776790951.7231815,
+    "hash": "5e94d7312a358bd8770875ac0235dd0e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_9_v3.mp3": {
+    "mtime": 1776790955.42983,
+    "hash": "00d695f5a8de1e3caaaa6d2d029f8d18"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_9_v1.mp3": {
+    "mtime": 1778303301.9058406,
+    "hash": "8c86d4df830e5ccae314356cac32d2f2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_5_v2.mp3": {
+    "mtime": 1778303408.4534662,
+    "hash": "1f90ea2d19edf7f9d8ee8ffd1a349efa"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_9_v2.mp3": {
+    "mtime": 1776790665.1260595,
+    "hash": "aa60c34a2659040700cb192015b997af"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_5_v3.mp3": {
+    "mtime": 1776790935.049455,
+    "hash": "f4fceb1b8cffbf7538387d725390aa37"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_22_v3.mp3": {
+    "mtime": 1778303445.0154636,
+    "hash": "eab195f1eabdecb0cfaf9982d3631abe"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_11_v3.mp3": {
+    "mtime": 1778303388.4598877,
+    "hash": "7fbce1e46c1cc5b09faea0abb9a9895b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_22_v3.mp3": {
+    "mtime": 1776790819.6976926,
+    "hash": "c6548637baa14a0d64a631a2dd065fbf"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_5_v1.mp3": {
+    "mtime": 1776783999.086553,
+    "hash": "4285a241a2adcc1d845ee4046e75ee70"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_22_v2.mp3": {
+    "mtime": 1776790817.8000178,
+    "hash": "0faee89786e9ba410259fe8e88cf04a5"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_11_v2.mp3": {
+    "mtime": 1778303385.736582,
+    "hash": "292cbd342a4a23e626e60ee1a3292e73"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_6_v1.mp3": {
+    "mtime": 1778303459.2430916,
+    "hash": "c778c5b29cff5d3f8175f0da563bd8c5"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_22_v2.mp3": {
+    "mtime": 1776790743.7827513,
+    "hash": "5f233cee663ac05d47d22c3a68f3271a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_5_v2.mp3": {
+    "mtime": 1776790933.2668107,
+    "hash": "c39f4f6fe2436e8a4fc14fa2477d9a6c"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_9_v3.mp3": {
+    "mtime": 1776790667.1259675,
+    "hash": "e445af0a99f989ef3d58c6ef088cae8d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_4_v1.mp3": {
+    "mtime": 1776790771.1444056,
+    "hash": "51d814de43ec22cc4390b4700e8df331"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_aquarius_love.mp3": {
+    "mtime": 1776859127.8495994,
+    "hash": "78ce214e55854f9d262c6038481b0512"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_8_v1.mp3": {
+    "mtime": 1776790794.6288145,
+    "hash": "6ff0c7573bdc9e93f0b6c48c0f65ac58"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_6_v1.mp3": {
+    "mtime": 1776790713.4954343,
+    "hash": "54c45cbd3a6defa3f7c68971c926a1ff"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_5_v3.mp3": {
+    "mtime": 1776790644.332503,
+    "hash": "d4ab1f805179ea0c0f55ecd0cdcaf72f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_9_v2.mp3": {
+    "mtime": 1776790953.442972,
+    "hash": "b87a98938add874ce276015f3ff87ab7"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_horse_core.mp3": {
+    "mtime": 1776859183.75831,
+    "hash": "5c2501d0d4a95de262ab4c3515374b30"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_2_v2.mp3": {
+    "mtime": 1776790692.5568697,
+    "hash": "0361b05577e7f083f745480c80ac84f9"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_4_v3.mp3": {
+    "mtime": 1778303342.8893292,
+    "hash": "0eeff82172e5ac63b171e7b20b8ee520"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_libra_career.mp3": {
+    "mtime": 1776859098.497927,
+    "hash": "1aa0b7bdc74ebf3c5e78c6d07a16c16a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_2_v2.mp3": {
+    "mtime": 1776790827.7527068,
+    "hash": "9334014c6ffa25d018ffe7082b794376"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_1_v1.mp3": {
+    "mtime": 1776790911.5163586,
+    "hash": "88fd42f156d06625c5817e552cfbaa79"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_1_v3.mp3": {
+    "mtime": 1776790502.7259727,
+    "hash": "442418c8fa7ef31025c53968bfb3b19a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_libra_shadow.mp3": {
+    "mtime": 1776859095.5192542,
+    "hash": "a1e852a4a20b8d274ea1cdfc892a4ba1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_8_v3.mp3": {
+    "mtime": 1778303372.9732168,
+    "hash": "206deb932ea3f446fe8ce4938acc6d9b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_8_v2.mp3": {
+    "mtime": 1778303370.2572222,
+    "hash": "1b0eb412e5ccd58ad0ffc7113c9c25a6"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_pisces_core.mp3": {
+    "mtime": 1778303522.2584903,
+    "hash": "59440402378519acd7656b1ad88ddca6"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_1_v2.mp3": {
+    "mtime": 1778303288.5900583,
+    "hash": "6a05fce71963d54557e99df75edc943e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_4_v1.mp3": {
+    "mtime": 1778305914.172548,
+    "hash": "c0039bf84847b8cd52cf6a52f09f9f8f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_sagittarius_shadow.mp3": {
+    "mtime": 1776859110.6671934,
+    "hash": "65f48f717658ef440e7bf06428f456f6"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_2_v3.mp3": {
+    "mtime": 1778303452.4633121,
+    "hash": "5a7087a062cfe83723e523f3ccb94ff4"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_cancer_shadow.mp3": {
+    "mtime": 1776859072.4674733,
+    "hash": "d150b5a727b759eca234a08c0154b75a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_tiger_core.mp3": {
+    "mtime": 1776859154.5392556,
+    "hash": "bc0d22580840a8a4bef07078cad240ed"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_8_v1.mp3": {
+    "mtime": 1776790901.529193,
+    "hash": "c197c97bc53ba6676fcdb03ffebd8d0a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_capricorn_core.mp3": {
+    "mtime": 1776859115.3684406,
+    "hash": "d5957e36e9003d2f9d1fdafa02faa08c"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_libra_core.mp3": {
+    "mtime": 1776859092.3253179,
+    "hash": "8fa139dc6bc20427989241f670bbf05a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_4_v2.mp3": {
+    "mtime": 1778303340.082782,
+    "hash": "8275e34312efcd73d85b8fe74fc95535"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_rat_str.mp3": {
+    "mtime": 1776859140.9793446,
+    "hash": "dae991b56f256ad455355658346cf644"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_1_v1.mp3": {
+    "mtime": 1776790618.1388118,
+    "hash": "06a7726fc63bca2649fe098074d71e38"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_2_v3.mp3": {
+    "mtime": 1776790694.3745112,
+    "hash": "87717f2bd0c1947205ce9cd602fce450"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_cancer_career.mp3": {
+    "mtime": 1776859075.6325374,
+    "hash": "2faf7e8f4e854e8c1ea0d701d43acdf4"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_sagittarius_career.mp3": {
+    "mtime": 1776859113.797711,
+    "hash": "0181708a32e1eb9f4f75bb68b1a26aae"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_dog_shadow.mp3": {
+    "mtime": 1776859216.5416048,
+    "hash": "21340b157900a875316c437e7ec04e3a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_su_2_v1.mp3": {
+    "mtime": 1776790690.6223905,
+    "hash": "df1ff9cc60331f8db2a10a214b210e4c"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_1_v3.mp3": {
+    "mtime": 1776790621.9503703,
+    "hash": "ff93287403eea84a3296f2fe096483ea"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_8_v3.mp3": {
+    "mtime": 1776790904.9628296,
+    "hash": "b5241f0bd1eeeba9035237fac7cbcc13"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_pig_love.mp3": {
+    "mtime": 1776859225.0712984,
+    "hash": "c8cabc0e61a5fad9aa0aee013a50c9ae"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_hp_2_v1.mp3": {
+    "mtime": 1776790826.1144898,
+    "hash": "9cf1b37c55680a06d6a25a353cbdaf46"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_dog_career.mp3": {
+    "mtime": 1776859219.2701313,
+    "hash": "469c1159d335ea2081fc326bb79802d3"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_1_v2.mp3": {
+    "mtime": 1776790913.203232,
+    "hash": "35db37d29c563414bd2509fecb2e9ed9"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_4_v3.mp3": {
+    "mtime": 1776790885.2945068,
+    "hash": "e4d80449aed1a9b1840aa619430dbbd7"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pc_4_v1.mp3": {
+    "mtime": 1778303501.9747465,
+    "hash": "5a9c7dc0740a94d558f8068e71d110cd"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_pig_career.mp3": {
+    "mtime": 1776859226.2478235,
+    "hash": "d79eb958de506e6787cb5b69b34cd000"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_8_v1.mp3": {
+    "mtime": 1778303367.6978345,
+    "hash": "7e64ec6338c3f1c7708067bda535100a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_4_v2.mp3": {
+    "mtime": 1778305916.5902913,
+    "hash": "5035c7cdaa6834e701484d0b0842f16d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_1_v1.mp3": {
+    "mtime": 1776783970.1952648,
+    "hash": "fd21ce5183b3009fbc56dad5550b5833"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_1_v3.mp3": {
+    "mtime": 1776790914.9775827,
+    "hash": "dc2247dad0aacad452ff19f06ecc9725"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_8_v2.mp3": {
+    "mtime": 1776790903.2238245,
+    "hash": "4d71448f4d5d1452ef9e8b82e1ca82c1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_pig_shadow.mp3": {
+    "mtime": 1776859223.6208215,
+    "hash": "5882ad9402c386375e441111d0f74caf"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_1_v2.mp3": {
+    "mtime": 1776790619.895604,
+    "hash": "1239fa3632217ba31ea869282ff6f109"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_leo_str.mp3": {
+    "mtime": 1776859078.743408,
+    "hash": "3b75e073d3b384db09effad8c3126718"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pc_8_v1.mp3": {
+    "mtime": 1778303510.7557166,
+    "hash": "43110561af9d03ad6c10c18d3a4d8463"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_4_v1.mp3": {
+    "mtime": 1778303337.783667,
+    "hash": "0faf648a5127671ae9a700af92487ee8"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_ox_core.mp3": {
+    "mtime": 1778307989.0687034,
+    "hash": "86650a5da3a231570f97afc5be6930ed"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_pig_core.mp3": {
+    "mtime": 1776859220.922045,
+    "hash": "f51a42cccc49f9d4c0e579cb8b0edc9f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_2_v1.mp3": {
+    "mtime": 1776790759.7804654,
+    "hash": "263779e70ef4414e4b5fe80216ee8a45"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_3_v2.mp3": {
+    "mtime": 1776790923.416483,
+    "hash": "5333194a487112bf17f2a36439eda714"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_6_v3.mp3": {
+    "mtime": 1776790895.1676455,
+    "hash": "c1228ca6afe6b7d598b70732b8d40547"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_22_v1.mp3": {
+    "mtime": 1778303311.5549355,
+    "hash": "ae3a873eae1b13f43c4a1c43ee1acb22"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_3_v3.mp3": {
+    "mtime": 1776790632.9315095,
+    "hash": "8b5d96b5935852f5090c2e82d92f49d7"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_leo_shadow.mp3": {
+    "mtime": 1776859080.1751697,
+    "hash": "c390f733fd3911eeab4c1924057df524"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_3_v2.mp3": {
+    "mtime": 1776790630.9815364,
+    "hash": "aedc0cd034ab6b60a302d21c55e29c4e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_6_v1.mp3": {
+    "mtime": 1778303352.5552473,
+    "hash": "8aec215460f1dea50c788091b4bca070"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_ox_love.mp3": {
+    "mtime": 1778305927.5183823,
+    "hash": "f08a47e83bf6fcd29dd8d331469954d7"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_6_v2.mp3": {
+    "mtime": 1778305920.7264512,
+    "hash": "f6ac601ffaac697da9b53a5c18baded9"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_3_v1.mp3": {
+    "mtime": 1776790510.5242882,
+    "hash": "97901c99f9594f2d82e4be076f6c762f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_leo_career.mp3": {
+    "mtime": 1776859082.9927769,
+    "hash": "4ded7c6294e303903792bed77c9bffda"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_3_v3.mp3": {
+    "mtime": 1776790925.1408627,
+    "hash": "fe93a85f9788228f32148b999fda0bd0"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pc_6_v1.mp3": {
+    "mtime": 1778303506.4661329,
+    "hash": "85850f57f30e884641ae9905c4d37f3f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_2_v2.mp3": {
+    "mtime": 1776790761.7279997,
+    "hash": "e75bd62a96937a499867931ac05c78f2"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_py_3_v1.mp3": {
+    "mtime": 1776790921.6848888,
+    "hash": "b628609e61d273e64e757e2f3403b9e1"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_3_v3.mp3": {
+    "mtime": 1778303292.0088472,
+    "hash": "1373cb991f7ea434c71c1d4b050311f5"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_horse_love.mp3": {
+    "mtime": 1776859188.07453,
+    "hash": "9e8ef7236b6a32cbba6d54da35394be5"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_22_v2.mp3": {
+    "mtime": 1776790544.5932922,
+    "hash": "e60e9be8b9a84347d43b566dba7fc55e"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_6_v3.mp3": {
+    "mtime": 1778303357.9836636,
+    "hash": "31d90e25a435941eaa4c3e052f1a758a"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_capricorn_love.mp3": {
+    "mtime": 1776859119.9644816,
+    "hash": "2285ccca8e9d3bff8f3b105dff64bd5f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_bd_6_v2.mp3": {
+    "mtime": 1778303355.2510495,
+    "hash": "1172dbed730f6804afb22cd33bd0997c"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_capricorn_shadow.mp3": {
+    "mtime": 1776859118.4982111,
+    "hash": "7b7eeb3a54a0c3486af52c63f71e1892"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_ex_3_v1.mp3": {
+    "mtime": 1778303401.1410227,
+    "hash": "14f951c96b46984f96e55c8294ffeef6"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_22_v3.mp3": {
+    "mtime": 1776790546.9353206,
+    "hash": "7af3a66c336178d295b0aecf85a39c66"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_libra_love.mp3": {
+    "mtime": 1776859097.0520866,
+    "hash": "93886818b078a70877f7d246afbdc437"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_virgo_str.mp3": {
+    "mtime": 1776859086.0873716,
+    "hash": "faada6edd9a805d9f491a6890732564d"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_lp_3_v2.mp3": {
+    "mtime": 1776790512.8881257,
+    "hash": "6efdaf9105f68cd8956cbfde8c8f694f"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_kl_6_v1.mp3": {
+    "mtime": 1778303486.5845437,
+    "hash": "f2765877d45f148b0926a16d82a6f97b"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_pisces_love.mp3": {
+    "mtime": 1776859135.7973258,
+    "hash": "86f9d3e8388081992f8edbc03eabff14"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_capricorn_career.mp3": {
+    "mtime": 1776859121.3662906,
+    "hash": "63b4ea987340751ed0a692b6defb2161"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/west_taurus_str.mp3": {
+    "mtime": 1776859055.3379571,
+    "hash": "39c914d576c044245001d6e3de8e8201"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/num_pe_2_v3.mp3": {
+    "mtime": 1776790763.813431,
+    "hash": "a79db3bdf38203df5be484034cf75ddf"
+  },
+  "/Users/qnc/Projects/quantumcube/docs/Sounds/Narration/chin_tiger_love.mp3": {
+    "mtime": 1776859158.9716017,
+    "hash": "00e5460916a92ab1c95d8d9ad68e7ecc"
+  }
+}
