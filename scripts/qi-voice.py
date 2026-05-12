@@ -16,6 +16,7 @@ def read_key(f):
 DEEPGRAM_KEY   = read_key('deepgram_api_key')
 ELEVENLABS_KEY = read_key('elevenlabs_api_key')
 ANTHROPIC_KEY  = open(os.path.expanduser('~/.config/anthropic/key')).read().strip()
+TAVILY_KEY     = read_key('tavily_api_key')
 QI_VOICE       = 'giAoKpl5weRTCJK7uB9b'  # Owen
 
 QI_SYSTEM = """You are QI — Quantum Integrator. Personal AI for Ronnie, founder of Quantum Cube.
@@ -82,10 +83,41 @@ def speak(text):
     except Exception as e:
         print(f"  [speak error: {e}]")
 
+# ── Tavily web search ────────────────────────────────────────────────────────
+def web_search(query):
+    if not TAVILY_KEY:
+        return None
+    import urllib.request
+    payload = json.dumps({"api_key": TAVILY_KEY, "query": query,
+                          "search_depth": "basic", "max_results": 3}).encode()
+    req = urllib.request.Request(
+        "https://api.tavily.com/search", data=payload,
+        headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=10) as r:
+            results = json.loads(r.read()).get("results", [])
+        return "\n".join(f"- {r['title']}: {r['content'][:200]}" for r in results[:3])
+    except Exception as e:
+        return None
+
+SEARCH_TRIGGERS = ["latest", "news", "today", "current", "who is", "what is",
+                   "how much", "price", "weather", "score", "when did",
+                   "recently", "2026", "2025", "war", "stock", "rate"]
+
+def needs_search(text):
+    t = text.lower()
+    return any(w in t for w in SEARCH_TRIGGERS)
+
 # ── Claude ────────────────────────────────────────────────────────────────────
 def think(user_input):
     import urllib.request
-    conversation.append({"role": "user", "content": user_input})
+    # Web search if needed
+    search_ctx = ""
+    if needs_search(user_input) and TAVILY_KEY:
+        results = web_search(user_input)
+        if results:
+            search_ctx = f"\n\n[Live web search results]:\n{results}\n[End search results]"
+    conversation.append({"role": "user", "content": user_input + search_ctx})
     payload = json.dumps({
         "model": "claude-sonnet-4-20250514",
         "max_tokens": 150,
