@@ -10,6 +10,9 @@ Stop: Ctrl+C
 import os, sys, json, time, threading, tempfile, subprocess
 import urllib.request, urllib.parse
 
+# ── State ───────────────────────────────────────────────────────────────────────
+QI_SPEAKING = False  # mute mic while Owen talks
+
 # ── Keys ──────────────────────────────────────────────────────────────────────
 def read_key(f):
     try: return open(os.path.expanduser(f"~/.config/qi/{f}")).read().strip()
@@ -42,9 +45,11 @@ conversation = [{"role": "user", "content": "QI, introduce yourself briefly."}]
 
 # ── ElevenLabs TTS ────────────────────────────────────────────────────────────
 def speak(text):
+    global QI_SPEAKING
+    QI_SPEAKING = True
     print(f"\n  QI: {text}\n")
     if not ELEVENLABS_KEY:
-        print("  [no ElevenLabs key]"); return
+        QI_SPEAKING = False; print("  [no ElevenLabs key]"); return
     try:
         payload = json.dumps({
             "text": text,
@@ -64,6 +69,8 @@ def speak(text):
         os.unlink(f.name)
     except Exception as e:
         print(f"  [speak error: {e}]")
+    finally:
+        QI_SPEAKING = False
 
 # ── Claude API ────────────────────────────────────────────────────────────────
 def think(user_input):
@@ -122,7 +129,7 @@ def listen_and_transcribe(callback):
         d = json.loads(msg)
         try:
             t = d['channel']['alternatives'][0]['transcript']
-            if t.strip() and d.get('is_final'):
+            if t.strip() and d.get('is_final') and not QI_SPEAKING:
                 print(f"\n  You: {t}")
                 callback(t)
         except: pass
