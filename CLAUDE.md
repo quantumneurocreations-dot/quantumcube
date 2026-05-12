@@ -31,9 +31,10 @@ Static HTML on GitHub Pages (built from `main:/docs`, custom domain via Cloudfla
 
 1. Read `CHAT_KICKOFF.md` end to end.
 2. Run the boot sequence at the top of that doc.
-3. Skim `PROJECT_BRIEF.md` for current state.
-4. Read the relevant `.claude/skills/*.md` for the task at hand.
-5. Then start work.
+3. **Read `NORTH_STAR.md`** — primary goal, guardrails, daily priorities. Every session starts here.
+4. Skim `PROJECT_BRIEF.md` for current state.
+5. Read the relevant `.claude/skills/*.md` for the task at hand.
+6. Then start work.
 
 ## Critical invariants
 
