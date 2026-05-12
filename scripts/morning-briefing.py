@@ -10,7 +10,7 @@ import os, sys, json, urllib.request, urllib.parse, datetime
 
 # ── Config ────────────────────────────────────────────────────────────────────
 SUPABASE_URL     = "https://auth.quantumcube.app"
-SUPABASE_REST    = "https://fqqdldvnxupzxvvbyvjm.supabase.co/rest/v1"
+SUPABASE_REST    = "https://auth.quantumcube.app/rest/v1"
 SUPABASE_KEY     = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
 POSTHOG_KEY      = os.environ.get("POSTHOG_API_KEY", "")
 POSTHOG_HOST     = "https://eu.posthog.com"

@@ -17,7 +17,7 @@ const DASH    = path.join(__dirname, 'qi-dashboard.html');
 // ── Keys (loaded from ~/.config/qi/) ─────────────────────────────────────────
 const readKey = f => { try { return fs.readFileSync(path.join(process.env.HOME,'.config','qi',f),'utf8').trim(); } catch{ return ''; } };
 
-const SUPABASE_URL  = 'https://fqqdldvnxupzxvvbyvjm.supabase.co';
+const SUPABASE_URL  = 'https://auth.quantumcube.app';
 const SUPABASE_KEY  = readKey('supabase_service_role') || process.env.SUPABASE_SERVICE_ROLE_KEY;
 const POSTHOG_KEY   = readKey('posthog_api_key')       || process.env.POSTHOG_API_KEY;
 const SENTRY_TOKEN  = readKey('sentry_auth_token')     || process.env.SENTRY_AUTH_TOKEN;
