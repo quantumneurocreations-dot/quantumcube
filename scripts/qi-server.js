@@ -98,9 +98,24 @@ async function getSentry() {
   return { count: r.length, top: r[0]?.title || null };
 }
 
+// ── Play Store stats ──────────────────────────────────────────────────────────
+const { execSync } = require('child_process');
+function getPlayStats() {
+  try {
+    const out = execSync(
+      'python3 /Users/qnc/Projects/quantumcube/scripts/qi-play-stats.py',
+      { timeout: 10000, encoding: 'utf8' }
+    );
+    return JSON.parse(out);
+  } catch (e) {
+    return { installs: null, testers: null, error: 'unavailable' };
+  }
+}
+
 // ── Briefing builder ──────────────────────────────────────────────────────────
 async function buildBriefing() {
   const [cust, sessions, sentry] = await Promise.all([getCustomers(), getSessions(), getSentry()]);
+  const play = getPlayStats();
   const daysLeft  = Math.max(0, Math.ceil((GOAL_DATE - new Date()) / 864e5));
   const remaining = GOAL_CUST - (cust.total || 0);
   const runRate   = daysLeft > 0 ? (remaining / daysLeft).toFixed(1) : '0';
@@ -120,6 +135,7 @@ async function buildBriefing() {
     goal: { target: GOAL_CUST, pct, daysLeft, runRate },
     sessions,
     sentry,
+    play,
     action,
     keys: {
       supabase: !!SUPABASE_KEY,
