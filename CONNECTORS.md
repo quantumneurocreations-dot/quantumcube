@@ -153,3 +153,11 @@ This file is the memory that prevents asking the user things we already know.
   - `https://fqqdldvnxupzxvvbyvjm.supabase.co/auth/v1/callback` (keep as fallback)
   - `https://auth.quantumcube.app/auth/v1/callback` (custom domain, added 2026-05-11)
 - **MCP:** No direct MCP — use Claude in Chrome (`tabs_context_mcp` → navigate → `computer`) to automate dashboard changes
+
+
+## GOOGLE PLAY BILLING
+
+- **Service fee:** 15% (enrolled in reduced fee program, confirmed 9 May 2026)
+- Standard rate is 30%; QNC qualifies for 15% on first $1M/year
+- **Strategy:** Web app uses Dodo Payments; Google Play TWA will use Google Play Billing at 15% (pre-production task)
+- ECLP not needed — Play Billing covers global distribution cleanly
