@@ -161,3 +161,8 @@ This file is the memory that prevents asking the user things we already know.
 - Standard rate is 30%; QNC qualifies for 15% on first $1M/year
 - **Strategy:** Web app uses Dodo Payments; Google Play TWA will use Google Play Billing at 15% (pre-production task)
 - ECLP not needed — Play Billing covers global distribution cleanly
+
+## QI VOICE
+
+- **QI Voice:** Owen · voice ID `giAoKpl5weRTCJK7uB9b` · model `eleven_turbo_v2_5` · stability 0.5 · similarity_boost 0.75 · speed 1.0
+- **Narration Voice:** Valory · voice ID `VhxAIIZM8IRmnl5fyeyk` — Quantum Cube app narration only, never use for QI
