@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QI — Quantum Integrator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cyan:    #0cc0df;
+  --cyan2:   #7dd4fc;
+  --dim:     rgba(12,192,223,0.35);
+  --dimmer:  rgba(12,192,223,0.12);
+  --bg:      #030508;
+  --panel:   rgba(12,192,223,0.04);
+  --border:  rgba(12,192,223,0.15);
+  --green:   #22d3a0;
+  --amber:   #f59e0b;
+  --red:     #f43f5e;
+  --mono:    'Share Tech Mono', monospace;
+  --serif:   'Cinzel', serif;
+  --display: 'Cinzel Decorative', serif;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--cyan);
+  font-family: var(--mono);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ── Star field ─────────────────────────────────────────────────────── */
+#stars {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(1px 1px at 20% 30%, rgba(12,192,223,.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 10%, rgba(125,212,252,.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 70%, rgba(12,192,223,.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 10% 85%, rgba(125,212,252,.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 60%, rgba(12,192,223,.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 20%, rgba(255,255,255,.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 45%, rgba(12,192,223,.4) 0%, transparent 100%),
+    radial-gradient(600px 600px at 50% 50%, rgba(12,192,223,.03) 0%, transparent 70%),
+    var(--bg);
+}
+
+/* Scan line overlay */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.08) 2px, rgba(0,0,0,.08) 4px);
+}
+
+/* ── Grid layout ─────────────────────────────────────────────────────── */
+#app {
+  position: relative; z-index: 2;
+  display: grid;
+  grid-template-rows: 64px 1fr 44px;
+  grid-template-columns: 280px 1fr 280px;
+  height: 100vh;
+  gap: 1px;
+  padding: 12px;
+  gap: 10px;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+#header {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  backdrop-filter: blur(8px);
+}
+
+#header .title {
+  font-family: var(--display);
+  font-size: 18px;
+  letter-spacing: 0.2em;
+  color: var(--cyan);
+  text-shadow: 0 0 20px var(--cyan), 0 0 40px rgba(12,192,223,.4);
+}
+
+#header .subtitle {
+  font-family: var(--serif);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--dim);
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+#header .right {
+  text-align: right;
+  font-size: 11px;
+  color: var(--dim);
+  line-height: 1.6;
+}
+
+#clock {
+  font-size: 20px;
+  color: var(--cyan2);
+  font-family: var(--mono);
+  text-shadow: 0 0 10px rgba(125,212,252,.5);
+}
+
+/* ── Panels ──────────────────────────────────────────────────────────── */
+.panel {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.panel::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.5;
+}
+
+.panel-label {
+  font-family: var(--serif);
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.panel-label::before {
+  content: '';
+  display: inline-block; width: 6px; height: 6px;
+  border: 1px solid var(--cyan);
+  transform: rotate(45deg);
+}
+
+/* ── Center orb ──────────────────────────────────────────────────────── */
+#center {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative;
+}
+
+#orb-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+
+.center-content {
+  position: relative; z-index: 2;
+  text-align: center;
+}
+
+.qi-label {
+  font-family: var(--display);
+  font-size: 11px;
+  letter-spacing: 0.5em;
+  color: var(--dim);
+  margin-bottom: 8px;
+}
+
+.big-revenue {
+  font-family: var(--display);
+  font-size: clamp(36px, 5vw, 64px);
+  color: var(--cyan);
+  text-shadow: 0 0 30px var(--cyan), 0 0 60px rgba(12,192,223,.4), 0 0 100px rgba(12,192,223,.2);
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.revenue-label {
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--dim);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+.goal-ring {
+  margin: 24px auto 0;
+  width: 180px;
+}
+
+.goal-track {
+  width: 100%; height: 3px;
+  background: var(--dimmer);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.goal-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--cyan2));
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--cyan);
+  transition: width 1.5s cubic-bezier(.22,1,.36,1);
+  width: 0%;
+}
+
+.goal-meta {
+  display: flex; justify-content: space-between;
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--dim);
+}
+
+.days-ring {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.days-big {
+  font-size: 48px;
+  font-family: var(--display);
+  color: var(--cyan2);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(125,212,252,.5);
+}
+
+.days-label {
+  font-size: 9px;
+  letter-spacing: 0.5em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ── Left panel: System status ───────────────────────────────────────── */
+.stat-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--dimmer);
+  font-size: 11px;
+}
+
+.stat-row:last-child { border-bottom: none; }
+
+.stat-key { color: var(--dim); }
+
+.stat-val {
+  color: var(--cyan);
+  font-weight: bold;
+}
+
+.stat-val.ok   { color: var(--green); }
+.stat-val.warn { color: var(--amber); }
+.stat-val.bad  { color: var(--red); }
+
+.big-stat {
+  margin: 10px 0 4px;
+  font-size: 38px;
+  font-family: var(--display);
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(12,192,223,.4);
+  line-height: 1;
+}
+
+.big-stat-label { font-size: 9px; letter-spacing: 0.3em; color: var(--dim); }
+
+.delta-row {
+  display: flex; gap: 12px; margin-top: 10px;
+}
+
+.delta-item {
+  flex: 1; text-align: center;
+  padding: 8px 4px;
+  border: 1px solid var(--border);
+  background: var(--dimmer);
+}
+
+.delta-num { font-size: 20px; font-family: var(--display); color: var(--cyan2); }
+.delta-lbl { font-size: 8px; color: var(--dim); letter-spacing: 0.3em; margin-top: 2px; }
+
+/* ── Right panel ─────────────────────────────────────────────────────── */
+.metric-block { margin-bottom: 18px; }
+.metric-title { font-size: 9px; letter-spacing: 0.35em; color: var(--dim); margin-bottom: 6px; text-transform: uppercase; }
+.metric-value { font-size: 28px; font-family: var(--display); color: var(--cyan); line-height: 1; }
+.metric-sub   { font-size: 10px; color: var(--dim); margin-top: 3px; }
+
+/* ── Action box ──────────────────────────────────────────────────────── */
+.action-box {
+  margin-top: 16px;
+  border: 1px solid rgba(12,192,223,.3);
+  background: rgba(12,192,223,.06);
+  padding: 10px 12px;
+}
+
+.action-label {
+  font-size: 8px; letter-spacing: 0.4em;
+  color: var(--cyan); text-transform: uppercase; margin-bottom: 6px;
+}
+
+.action-text { font-size: 11px; color: var(--cyan2); line-height: 1.5; }
+
+/* ── Footer ──────────────────────────────────────────────────────────── */
+#footer {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  font-size: 10px;
+  color: var(--dim);
+  overflow: hidden;
+}
+
+.footer-tag {
+  flex-shrink: 0;
+  font-family: var(--serif);
+  letter-spacing: 0.3em;
+  color: var(--cyan);
+  font-size: 9px;
+}
+
+#log-ticker {
+  flex: 1; overflow: hidden; white-space: nowrap;
+}
+
+.log-line {
+  display: inline-block;
+  animation: ticker 30s linear infinite;
+  padding-left: 100%;
+}
+
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse-dot 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Loading state ───────────────────────────────────────────────────── */
+.loading { animation: blink 1.2s step-end infinite; }
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+/* ── Refresh indicator ───────────────────────────────────────────────── */
+#refresh-bar {
+  position: fixed; bottom: 0; left: 0; height: 2px;
+  background: var(--cyan); box-shadow: 0 0 6px var(--cyan);
+  width: 100%; transform-origin: left;
+  transition: transform 30s linear;
+  transform: scaleX(0);
+}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<div id="refresh-bar"></div>
+
+<div id="app">
+
+  <!-- Header -->
+  <header id="header">
+    <div>
+      <div class="title">QI — QUANTUM INTEGRATOR</div>
+      <div class="subtitle">Quantum Cube Mission Control</div>
+    </div>
+    <div id="clock">00:00:00</div>
+    <div class="right">
+      <div id="last-update" style="font-size:9px">Fetching data...</div>
+      <div style="margin-top:3px; font-size:9px; letter-spacing:.15em">QUANTUMCUBE.APP</div>
+    </div>
+  </header>
+
+  <!-- Left panel: Customer stats -->
+  <aside class="panel" id="left-panel">
+    <div class="panel-label">Customer Intel</div>
+
+    <div class="big-stat" id="total-customers">—</div>
+    <div class="big-stat-label">PAYING CUSTOMERS</div>
+
+    <div class="delta-row">
+      <div class="delta-item">
+        <div class="delta-num" id="today-delta">—</div>
+        <div class="delta-lbl">Today</div>
+      </div>
+      <div class="delta-item">
+        <div class="delta-num" id="week-delta">—</div>
+        <div class="delta-lbl">7 Days</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <div class="stat-row">
+        <span class="stat-key">Revenue total</span>
+        <span class="stat-val" id="revenue-total">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">Remaining to goal</span>
+        <span class="stat-val" id="remaining">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">Daily run rate needed</span>
+        <span class="stat-val" id="run-rate">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">Sessions yesterday</span>
+        <span class="stat-val" id="sessions">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">Pageviews yesterday</span>
+        <span class="stat-val" id="pageviews">—</span>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div class="stat-row">
+        <span class="stat-key">Supabase</span>
+        <span class="stat-val" id="key-supabase">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">PostHog</span>
+        <span class="stat-val" id="key-posthog">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">Sentry</span>
+        <span class="stat-val" id="key-sentry">—</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Center: orb + revenue + goal -->
+  <main class="panel" id="center">
+    <canvas id="orb-canvas"></canvas>
+    <div class="center-content">
+      <div class="qi-label">◆ QUANTUM INTEGRATOR ◆</div>
+      <div class="big-revenue" id="big-revenue">$0</div>
+      <div class="revenue-label">Total Revenue</div>
+
+      <div class="goal-ring">
+        <div class="goal-track">
+          <div class="goal-fill" id="goal-fill"></div>
+        </div>
+        <div class="goal-meta">
+          <span id="goal-pct">0%</span>
+          <span>Target: 500 customers</span>
+        </div>
+      </div>
+
+      <div class="days-ring">
+        <div class="days-big" id="days-left">—</div>
+        <div class="days-label">Days to August 15</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Right panel: Sentry + Play Store + Action -->
+  <aside class="panel" id="right-panel">
+    <div class="panel-label">System Status</div>
+
+    <div class="metric-block">
+      <div class="metric-title">Sentry — New Issues (24h)</div>
+      <div class="metric-value" id="sentry-count">—</div>
+      <div class="metric-sub" id="sentry-top">Loading...</div>
+    </div>
+
+    <div class="metric-block">
+      <div class="metric-title">Goal Progress</div>
+      <div class="metric-value" id="goal-customers">—</div>
+      <div class="metric-sub">of 500 paying customers</div>
+    </div>
+
+    <div class="metric-block">
+      <div class="metric-title">Play Store</div>
+      <div class="metric-value" style="font-size:16px; color: var(--amber)">Closed Testing</div>
+      <div class="metric-sub">14-day clock: pending 12 testers</div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-label">◈ Today's One Action</div>
+      <div class="action-text" id="action-text">Loading briefing...</div>
+    </div>
+  </aside>
+
+  <!-- Footer ticker -->
+  <footer id="footer">
+    <div class="status-dot"></div>
+    <span class="footer-tag">QI LIVE</span>
+    <div id="log-ticker">
+      <span class="log-line" id="ticker-text">
+        SYSTEM ONLINE · QUANTUM CUBE COMMAND · QUANTUMCUBE.APP · REFRESHING EVERY 30 SECONDS · NORTH STAR: 500 CUSTOMERS BY AUG 15 2026
+      </span>
+    </div>
+    <span id="refresh-countdown" style="flex-shrink:0; font-size:9px; letter-spacing:.15em">Next: 30s</span>
+  </footer>
+
+</div>
+
+<script>
+// ── Clock ──────────────────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('en-ZA', { hour12: false });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── Orb particle system ────────────────────────────────────────────────
+const canvas = document.getElementById('orb-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const N = 120;
+const R = 140;
+
+function resize() {
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+for (let i = 0; i < N; i++) {
+  const theta = Math.random() * Math.PI * 2;
+  const phi   = Math.acos(2 * Math.random() - 1);
+  particles.push({
+    theta, phi,
+    speed:  (Math.random() - 0.5) * 0.003,
+    size:   Math.random() * 1.5 + 0.5,
+    alpha:  Math.random() * 0.6 + 0.3,
+    r:      R + (Math.random() - 0.5) * 30,
+  });
+}
+
+function drawOrb() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const t  = Date.now() / 4000;
+
+  // Glow core
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.6);
+  grad.addColorStop(0, 'rgba(12,192,223,0.06)');
+  grad.addColorStop(1, 'transparent');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, R * 0.6, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Particles
+  particles.forEach(p => {
+    p.theta += p.speed;
+    const rotated = p.theta + t * 0.3;
+    const x = cx + p.r * Math.sin(p.phi) * Math.cos(rotated);
+    const y = cy + p.r * Math.sin(p.phi) * Math.sin(rotated) * 0.45;
+    const z = p.r * Math.cos(p.phi);
+    const depthAlpha = (z + p.r) / (2 * p.r);
+
+    ctx.beginPath();
+    ctx.arc(x, y, p.size * depthAlpha, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(12,192,223,${p.alpha * depthAlpha})`;
+    ctx.fill();
+  });
+
+  // Connect nearby particles (constellation effect)
+  ctx.strokeStyle = 'rgba(12,192,223,0.06)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i < particles.length; i++) {
+    const pi = particles[i];
+    const rotI = pi.theta + t * 0.3;
+    const xi = cx + pi.r * Math.sin(pi.phi) * Math.cos(rotI);
+    const yi = cy + pi.r * Math.sin(pi.phi) * Math.sin(rotI) * 0.45;
+    for (let j = i + 1; j < particles.length; j++) {
+      const pj = particles[j];
+      const rotJ = pj.theta + t * 0.3;
+      const xj = cx + pj.r * Math.sin(pj.phi) * Math.cos(rotJ);
+      const yj = cy + pj.r * Math.sin(pj.phi) * Math.sin(rotJ) * 0.45;
+      const d  = Math.hypot(xi - xj, yi - yj);
+      if (d < 55) {
+        ctx.globalAlpha = (1 - d / 55) * 0.4;
+        ctx.beginPath(); ctx.moveTo(xi, yi); ctx.lineTo(xj, yj); ctx.stroke();
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  requestAnimationFrame(drawOrb);
+}
+drawOrb();
+
+// ── Counter animation ──────────────────────────────────────────────────
+function animateCount(el, to, prefix='', suffix='', duration=1200) {
+  const start = performance.now();
+  const from = parseInt(el.textContent.replace(/[^0-9]/g,'')) || 0;
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = prefix + Math.round(from + (to - from) * ease).toLocaleString() + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ── Data fetch + render ────────────────────────────────────────────────
+let refreshTimer = 30;
+
+function val(v, fallback='—') {
+  return v != null ? v : fallback;
+}
+
+async function fetchBriefing() {
+  try {
+    const r = await fetch('/api/briefing');
+    const d = await r.json();
+    render(d);
+  } catch(e) {
+    document.getElementById('action-text').textContent = 'Server not responding — is qi-server.js running?';
+  }
+}
+
+function render(d) {
+  // Revenue + customers
+  const rev = d.revenue != null ? d.revenue : 0;
+  document.getElementById('big-revenue').textContent = '$' + rev.toLocaleString();
+  animateCount(document.getElementById('total-customers'), d.customers.total ?? 0);
+  animateCount(document.getElementById('today-delta'), d.customers.today ?? 0);
+  animateCount(document.getElementById('week-delta'),  d.customers.week  ?? 0);
+  document.getElementById('revenue-total').textContent = d.revenue != null ? '$' + d.revenue.toLocaleString() : '—';
+  document.getElementById('remaining').textContent     = d.goal.target - (d.customers.total ?? 0);
+  document.getElementById('run-rate').textContent      = d.goal.runRate + '/day';
+
+  // Sessions
+  document.getElementById('sessions').textContent   = val(d.sessions?.sessions);
+  document.getElementById('pageviews').textContent  = val(d.sessions?.pageviews);
+
+  // Goal bar
+  const pct = d.goal.pct ?? 0;
+  document.getElementById('goal-fill').style.width  = pct + '%';
+  document.getElementById('goal-pct').textContent   = pct + '%';
+  document.getElementById('goal-customers').textContent = val(d.customers.total, '—');
+  animateCount(document.getElementById('days-left'), d.goal.daysLeft ?? 0);
+
+  // Sentry
+  const sc = d.sentry?.count;
+  const sentryEl = document.getElementById('sentry-count');
+  sentryEl.textContent = val(sc);
+  sentryEl.className = 'metric-value' + (sc === 0 ? ' ok' : sc > 0 ? ' bad' : '');
+  document.getElementById('sentry-top').textContent = sc === 0 ? 'All clear ✓' : (d.sentry?.top ?? '—');
+
+  // Keys
+  const kEl = (id, ok) => {
+    const el = document.getElementById(id);
+    el.textContent = ok ? 'Connected ✓' : 'Key missing';
+    el.className   = 'stat-val ' + (ok ? 'ok' : 'warn');
+  };
+  kEl('key-supabase', d.keys.supabase);
+  kEl('key-posthog',  d.keys.posthog);
+  kEl('key-sentry',   d.keys.sentry);
+
+  // Action
+  document.getElementById('action-text').textContent = d.action;
+
+  // Ticker
+  document.getElementById('ticker-text').textContent =
+    `SYSTEM ONLINE · ${d.date.toUpperCase()} · REVENUE: $${rev.toLocaleString()} · ${d.customers.total ?? '?'} CUSTOMERS · ${d.goal.daysLeft} DAYS TO AUG 15 · ${d.action.toUpperCase()}`;
+
+  document.getElementById('last-update').textContent = 'Last update: ' + new Date().toLocaleTimeString('en-ZA');
+}
+
+// ── Refresh countdown ──────────────────────────────────────────────────
+function startRefreshBar() {
+  const bar = document.getElementById('refresh-bar');
+  bar.style.transition = 'none';
+  bar.style.transform  = 'scaleX(1)';
+  setTimeout(() => {
+    bar.style.transition = 'transform 30s linear';
+    bar.style.transform  = 'scaleX(0)';
+  }, 50);
+}
+
+function tick() {
+  refreshTimer--;
+  document.getElementById('refresh-countdown').textContent = `Next: ${refreshTimer}s`;
+  if (refreshTimer <= 0) {
+    refreshTimer = 30;
+    fetchBriefing();
+    startRefreshBar();
+  }
+}
+
+// ── Init ───────────────────────────────────────────────────────────────
+fetchBriefing();
+startRefreshBar();
+setInterval(tick, 1000);
+</script>
+</body>
+</html>
