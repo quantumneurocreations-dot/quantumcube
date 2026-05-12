@@ -28,11 +28,14 @@ VOICE RULES — follow exactly:
 
 Mission: 500 paying customers by August 15 2026. Currently 3."""
 
-conversation  = []
-audio_queue   = queue.Queue()   # sentences waiting to be spoken
-last_spoke_at = 0
-COOLDOWN      = 2.5
-MIN_WORDS     = 3
+conversation   = []
+audio_queue    = queue.Queue()
+last_spoke_at  = 0
+COOLDOWN       = 2.5
+MIN_WORDS      = 2
+pending_text   = ""
+pending_timer  = None
+RESPONSE_DELAY = 1.2
 
 # ── Audio player thread ───────────────────────────────────────────────────────
 current_audio = None
@@ -48,9 +51,13 @@ def audio_player():
 
 def _speak_sentence(text):
     global current_audio, last_spoke_at
+    set_mic(False)   # mute mic BEFORE Owen speaks
+    notify_dashboard(True)
     if not text.strip() or not ELEVENLABS_KEY:
         print(f"\n  QI: {text}")
         last_spoke_at = time.time()
+        set_mic(True)
+        notify_dashboard(False)
         return
     try:
         import urllib.request
@@ -193,16 +200,32 @@ def think_and_stream(user_input):
     if full_reply:
         conversation.append({"role": "assistant", "content": full_reply})
 
-# ── Handle user input ─────────────────────────────────────────────────────────
-def handle_input(text):
-    text = text.strip()
-    if time.time() - last_spoke_at < COOLDOWN:
-        return
-    if len(text.split()) < MIN_WORDS:
+# ── Handle user input — with response buffer ─────────────────────────────────
+def respond_now():
+    global pending_text, pending_timer
+    text = pending_text.strip()
+    pending_text = ""
+    pending_timer = None
+    if not text or len(text.split()) < MIN_WORDS:
         return
     print(f"\n  You: {text}")
-    stop_speaking()
     threading.Thread(target=think_and_stream, args=(text,), daemon=True).start()
+
+def handle_input(text):
+    global pending_text, pending_timer
+    text = text.strip()
+    if not text: return
+    if time.time() - last_spoke_at < COOLDOWN:
+        return
+    # Cancel existing timer — more speech is coming
+    if pending_timer:
+        pending_timer.cancel()
+    # Append to buffer
+    pending_text = (pending_text + " " + text).strip() if pending_text else text
+    print(f"  [heard: {pending_text[:70]}]")
+    # Start fresh timer — respond after 1.2s of silence
+    pending_timer = threading.Timer(RESPONSE_DELAY, respond_now)
+    pending_timer.start()
 
 # ── Deepgram listener ─────────────────────────────────────────────────────────
 def listen(callback):
