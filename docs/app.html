@@ -579,7 +579,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v242",
+      release: "quantum-cube@qc-v243",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3142,13 +3142,6 @@ function redeemCode(){
 function unlock(){
   if(!profileData){
     alert("Please enter your details on the first side first.");
-    return;
-  }
-  if(IS_TWA){
-    // Android TWA: external billing not available in-app — show disclosure
-    // before opening external browser for purchase (Google Play External
-    // Content Links Program requirement).
-    QC_DIALOG.open("twaRedirectOverlay");
     return;
   }
   // Skip the pre-payment overlay — lock card already shows price + features.
