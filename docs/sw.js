@@ -1,4 +1,4 @@
-const CACHE='qc-v241';
+const CACHE='qc-v242';
 const NARR_CACHE='qc-narration-v3';
 
 self.addEventListener('install', e => {
