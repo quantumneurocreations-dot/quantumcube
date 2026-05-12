@@ -150,3 +150,24 @@ mcp-obsidian: get CONNECTORS.md     → ALL service IDs, MCP map, golden rules �
 
 **KICKOFF-VERSION: 5.1.0** — previous 5.0.0 lacked CONNECTORS.md in boot.
 Re-upload this file to Claude Project knowledge to activate the v5.1.0 boot.
+
+---
+
+## BOOT SEQUENCE UPDATE (v5.2.0)
+
+NORTH_STAR.md is now a mandatory boot read.
+
+**Updated Step 2:**
+```
+mcp-obsidian: get SESSION_LOG.md    → read top entry only
+mcp-obsidian: get PROJECT_BRIEF.md  → app state, line refs, fragile areas
+mcp-obsidian: get CONNECTORS.md     → ALL service IDs, MCP map, golden rules
+mcp-obsidian: get NORTH_STAR.md     → primary goal + guardrails ← NEW
+```
+
+**Updated First Response Template — add this line under Docs read:**
+```
+• NORTH_STAR: [goal — 500 customers by Aug 15 | days remaining: N]
+```
+
+**KICKOFF-VERSION: 5.2.0** — added NORTH_STAR.md to mandatory boot reads.

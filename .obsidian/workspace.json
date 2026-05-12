@@ -192,6 +192,7 @@
   },
   "active": "43cd85dd90c12c16",
   "lastOpenFiles": [
+    "NORTH_STAR.md",
     "CONNECTORS.md",
     "Playstore Screenshots/10 Inch Tablet Screenshots/Tablet -.jpg",
     "Playstore Screenshots/10 Inch Tablet Screenshots/Tablet - SignUp Page.jpg",
@@ -236,7 +237,6 @@
     "vault/content/colors/color-1.md",
     "vault/business/currency-support.md",
     "vault/business/geo-availability.md",
-    "vault/business/age-restriction.md",
-    "vault/business/cookie-policy.md"
+    "vault/business/age-restriction.md"
   ]
 }
