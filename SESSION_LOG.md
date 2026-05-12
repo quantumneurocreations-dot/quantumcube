@@ -676,3 +676,98 @@ Claude Code audit findings: PLAY_STORE_PREP.md Section 15
 **Current HEAD:** `d21c799` | **SW:** qc-v242 | **Sentry:** quantum-cube@qc-v242
 
 **⚠️ PERMANENT RULE: Never use GitHub `push_files` or `create_or_update_file` MCP tools for files >10KB. Use Claude Code or Terminal only.**
+
+## 2026-05-12 Afternoon — TWA payment fix, Vimeo ratings, payment strategy locked (Chat Claude)
+
+**Goal:** Fix TWA payment flow, debug tester video issues, lock payment strategy.
+
+### Commits this session
+- `7970b92` — ⚠️ BAD PUSH (PLACEHOLDER content) — reverted immediately
+- `9cb79bc` — revert: restore app.html from PLACEHOLDER
+- `d21c799` — fix(ui): split lock screen "No Subscription · Yours Forever" onto two separate white-space:nowrap divs; bump qc-v241→qc-v242 (4 occurrences, faces 3/4/5/6)
+- `e2ae942` — fix(twa): remove IS_TWA payment block; Dodo opens inline on TWA; bump qc-v242→qc-v243
+
+**Current HEAD:** `e2ae942` | **SW:** qc-v243 | **Sentry:** quantum-cube@qc-v243
+
+---
+
+### Done
+
+**Lock screen text fix ✅**
+- Split `No Subscription · Yours Forever` into two `white-space:nowrap` divs on all 4 lock faces
+- Bad push incident (PLACEHOLDER) occurred during this fix — ~13 min downtime, recovered via Claude Code revert
+
+**TWA payment fix ✅**
+- Root cause: `IS_TWA` block in `unlock()` opened external Chrome browser for payment; browser has separate session from TWA → user sees Face 0 (not signed in)
+- Fix: removed entire `if(IS_TWA){...}` block — Dodo checkout now opens inline on both PWA and TWA
+- Orphaned code left in place (confirmTwaRedirect, cancelTwaRedirect, twaRedirectOverlay) — cleanup deferred to pre-production pass
+- IS_TWA const still defined (used at line 1092 for sessionStorage flag)
+- Payment confirmed working on both PWA and TWA ✅
+
+**Vimeo content ratings ✅**
+- All 5 videos had no content rating set — Vimeo warning: "Videos without a content rating can't be watched by some viewers"
+- Set all 5 to "All audiences" via Vimeo Share panel:
+  - 1183086210 — Introduction ✅
+  - 1183086853 — Numerology ✅
+  - 1183087269 — Results Explained ✅ (auto-applied via default)
+  - 1183087951 — Astrology & Horoscope ✅
+  - 1183103519 — Journey Complete ✅
+- Set "All audiences" as default for future videos
+
+**Tester status**
+- 16 testers invited, opt-in links sent
+- Waiting for 12 to opt in → 14-day clock starts
+- Videos confirmed playing on both PWA and TWA for majority of testers
+- Payment working on both PWA and TWA
+
+**ECLP investigation — decided NOT to pursue**
+- External Content Links Program: US-only, 2-week review, requires API integration code changes
+- Fees coming (20% on one-time purchases when Google starts charging)
+- Not worth the effort given 15% Play Billing alternative
+
+---
+
+### 🔴 PAYMENT STRATEGY — LOCKED
+
+| Platform | Payment method | Fee | Notes |
+|---|---|---|---|
+| Web app (PWA) | Dodo Payments | ~2.5% | Keep as-is, no Google involvement |
+| Google Play (TWA) | Google Play Billing | 15% | Implement pre-production |
+
+**Key facts:**
+- QNC enrolled in 15% reduced service fee (confirmed Play Console notification, 9 May 2026)
+- Standard rate is 30%; QNC qualifies at 15% on first $1M/year
+- $17 × 15% = $2.55 to Google → developer keeps $14.45 per Play Store sale
+- Google Play Billing implementation is a pre-production task — NOT needed for closed testing
+- ECLP not needed — Go global from day one via Play Billing
+
+---
+
+### Known issues / non-blocking
+
+**Gerda's music on TWA** — music doesn't play even when tapping music button directly
+- Music files confirmed accessible (200 OK on both ambient.mp3 and bgMusic.mp3)
+- Videos work for her now ✅
+- Likely TWA audio policy or device-specific issue
+- Non-blocking — 3 other testers confirmed everything working on regular app
+- Defer investigation unless more testers report it
+
+**CI failure email (7970b92)** — "Verify versions in sync: All jobs have failed"
+- This is from the bad PLACEHOLDER commit, not current state
+- Current HEAD e2ae942 at qc-v243 is correct — ignore this email
+
+**Multi-account session clash**
+- Having PWA and TWA open simultaneously causes session conflicts
+- Not a code bug — just test one at a time, clear cache between switches
+
+---
+
+### Pending (updated)
+
+- 🔲 **12 testers opt in** → 14-day clock starts (CRITICAL PATH — links sent, chasing)
+- 🔲 **Google Play Billing implementation** (pre-production, not urgent)
+- 🔲 **assetlinks.json second SHA-256** from Play App Signing (after AAB upload confirmed)
+- 🔲 **Orphaned TWA code cleanup** (confirmTwaRedirect, cancelTwaRedirect, twaRedirectOverlay) — pre-production
+- 🔲 **Music on TWA** (Gerda) — investigate if more testers report it
+- 🔲 **ECLP** — deprioritised, Google Play Billing is the better path
+- 🔲 **System upgrade + integrations** — next chat
