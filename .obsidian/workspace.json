@@ -192,6 +192,8 @@
   },
   "active": "43cd85dd90c12c16",
   "lastOpenFiles": [
+    "scripts/qi-security.py",
+    "scripts/qi-overnight.py",
     "scripts/qi-voice.py",
     "scripts/qi-morning-auto.sh",
     "scripts/qi-dashboard.html",
@@ -202,8 +204,6 @@
     "graphify-out/manifest.json",
     "graphify-out/graph.json",
     "graphify-out/cache/semantic/33bf8cc2bf53677bac9bd71b9de9ebcebe6ed1844509cee7a3b6f290cd9872e3.json",
-    "graphify-out/cache/semantic/6a70e78483ad36da58989dae75621202733634c8fd920292dbdd10a81f15f537.json",
-    "graphify-out/cache/semantic/7b6aa1703e7f641f8cfe33a0270f673c54dd9a04758010eb7c80351cd7cfbdc4.json",
     "NORTH_STAR.md",
     "CONNECTORS.md",
     "Playstore Screenshots/10 Inch Tablet Screenshots/Tablet -.jpg",
