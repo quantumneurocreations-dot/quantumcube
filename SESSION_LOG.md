@@ -638,3 +638,21 @@ Claude Code audit findings: PLAY_STORE_PREP.md Section 15
 - 🔲 Create review Gmail → set has_paid=true (Supabase)
 
 **Current HEAD:** `715067f` | **SW:** qc-v239 | **Sentry:** quantum-cube@qc-v239
+
+## 2026-05-12 — Google Play testers + reviewer Gmail (recovered from deleted chat)
+
+**Context:** Chat was accidentally deleted. Recovered via Supabase query + user recall.
+
+**Done (confirmed):**
+- ✅ **~15 tester emails sent** — closed testing Alpha track invites dispatched
+- ✅ **Reviewer Gmail created** — `qnc.review@gmail.com` / `QNC@Reviewer2026!`
+- ✅ **has_paid=true confirmed in Supabase** — profile row exists, created 2026-05-12 06:29 UTC, has_paid=true. Verified via SQL query.
+- ✅ **14-day tester clock** — check Play Console for exact start date
+
+**Still pending:**
+- 🔲 Confirm reviewer credentials added to Play Console → App content → App access → "Any other instructions"
+- 🔲 Confirm 12+ testers have opted in (not just invited) — Play Console shows opt-in count
+- 🔲 Preview and confirm closed testing release in Play Console
+- 🔲 Supabase SESSION_LOG updated (this entry)
+
+**Current HEAD:** `715067f` | **SW:** qc-v239 | **Sentry:** quantum-cube@qc-v239
