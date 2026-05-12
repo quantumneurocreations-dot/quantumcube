@@ -1,56 +1,66 @@
 #!/usr/bin/env python3
 """
 QI Voice Loop — Quantum Integrator
-Listens via Deepgram → thinks via Claude → speaks via Owen (ElevenLabs)
-Run: python3 scripts/qi-voice.py
-Say "QI" to wake, speak your request, QI responds.
+Deepgram ears · Claude mind · Owen voice
+Features: barge-in (interrupt Owen mid-sentence) + echo cancellation
+Run: qi   (alias in ~/.zshrc)
 Stop: Ctrl+C
 """
 
-import os, sys, json, time, threading, tempfile, subprocess
-import urllib.request, urllib.parse
+import os, sys, json, time, threading, tempfile, subprocess, difflib
 
-# ── State ───────────────────────────────────────────────────────────────────────
-QI_SPEAKING = False  # mute mic while Owen talks
-
-# ── Keys ──────────────────────────────────────────────────────────────────────
 def read_key(f):
     try: return open(os.path.expanduser(f"~/.config/qi/{f}")).read().strip()
-    except: return os.environ.get(f.upper().replace('-','_'), '')
+    except: return ''
 
 DEEPGRAM_KEY   = read_key('deepgram_api_key')
 ELEVENLABS_KEY = read_key('elevenlabs_api_key')
 ANTHROPIC_KEY  = open(os.path.expanduser('~/.config/anthropic/key')).read().strip()
 QI_VOICE       = 'giAoKpl5weRTCJK7uB9b'  # Owen
 
-# ── QI system prompt ──────────────────────────────────────────────────────────
-QI_SYSTEM = """You are QI — Quantum Integrator. You are the personal AI assistant for Ronnie, 
-founder of Quantum Cube (quantumcube.app). You are concise, direct, and mission-focused.
+QI_SYSTEM = """You are QI — Quantum Integrator. Personal AI for Ronnie, founder of Quantum Cube.
+Be concise — max 2-3 sentences for voice. Direct and mission-focused.
+North Star: 500 paying customers by August 15, 2026. Currently 3.
+Never say "as an AI". You are QI."""
 
-Your North Star: 500 paying customers by August 15, 2026. $17 one-time payment. Currently 3 paying customers.
+# ── State ─────────────────────────────────────────────────────────────────────
+conversation  = []
+recent_output = []        # what Owen said recently (for echo cancellation)
+audio_proc    = None      # current afplay process (killable for barge-in)
+speaking_lock = threading.Lock()
 
-Key facts you always know:
-- Quantum Cube is a numerology + astrology PWA, live at quantumcube.app
-- Play Store closed testing in progress — 14-day clock needs 12 testers to opt in first
-- Tech stack: Supabase (Postgres + Edge Functions), GitHub Pages, Dodo Payments, ElevenLabs narration
-- You speak through Owen's voice (ElevenLabs)
+# ── Echo cancellation ─────────────────────────────────────────────────────────
+def is_echo(text):
+    """Return True if text closely matches something Owen just said."""
+    cutoff = time.time() - 4.0  # ignore echoes within 4 seconds
+    for t, said in recent_output:
+        if t < cutoff:
+            continue
+        ratio = difflib.SequenceMatcher(None, text.lower(), said.lower()).ratio()
+        if ratio > 0.6:
+            return True
+    # Clean old entries
+    recent_output[:] = [(t, s) for t, s in recent_output if t > cutoff]
+    return False
 
-Rules:
-- Keep responses under 3 sentences for voice — you are being spoken aloud
-- Always tie recommendations back to the 500 customer goal
-- Never say "as an AI" or "I'm an AI" — you are QI
-- Be direct and confident, like a trusted COO"""
-
-conversation = [{"role": "user", "content": "QI, introduce yourself briefly."}]
+# ── Barge-in: kill Owen mid-sentence ─────────────────────────────────────────
+def stop_speaking():
+    global audio_proc
+    with speaking_lock:
+        if audio_proc and audio_proc.poll() is None:
+            audio_proc.terminate()
+            audio_proc = None
 
 # ── ElevenLabs TTS ────────────────────────────────────────────────────────────
 def speak(text):
-    global QI_SPEAKING
-    QI_SPEAKING = True
+    global audio_proc
+    stop_speaking()  # kill any previous audio first
     print(f"\n  QI: {text}\n")
+    recent_output.append((time.time(), text))
     if not ELEVENLABS_KEY:
-        QI_SPEAKING = False; print("  [no ElevenLabs key]"); return
+        return
     try:
+        import urllib.request
         payload = json.dumps({
             "text": text,
             "model_id": "eleven_turbo_v2_5",
@@ -64,31 +74,30 @@ def speak(text):
         with urllib.request.urlopen(req, timeout=20) as r:
             audio = r.read()
         f = tempfile.NamedTemporaryFile(suffix='.mp3', delete=False)
-        f.write(audio); f.close()
-        subprocess.run(['afplay', f.name], check=True)
-        os.unlink(f.name)
+        f.write(audio); fname = f.name; f.close()
+        with speaking_lock:
+            audio_proc = subprocess.Popen(['afplay', fname])
+        audio_proc.wait()
+        os.unlink(fname)
     except Exception as e:
         print(f"  [speak error: {e}]")
-    finally:
-        QI_SPEAKING = False
 
-# ── Claude API ────────────────────────────────────────────────────────────────
+# ── Claude ────────────────────────────────────────────────────────────────────
 def think(user_input):
+    import urllib.request
     conversation.append({"role": "user", "content": user_input})
     payload = json.dumps({
         "model": "claude-sonnet-4-20250514",
-        "max_tokens": 200,
+        "max_tokens": 150,
         "system": QI_SYSTEM,
-        "messages": conversation[-10:]  # keep last 10 turns
+        "messages": conversation[-10:]
     }).encode()
     req = urllib.request.Request(
         "https://api.anthropic.com/v1/messages",
         data=payload,
-        headers={
-            "x-api-key": ANTHROPIC_KEY,
-            "anthropic-version": "2023-06-01",
-            "Content-Type": "application/json"
-        }
+        headers={"x-api-key": ANTHROPIC_KEY,
+                 "anthropic-version": "2023-06-01",
+                 "Content-Type": "application/json"}
     )
     with urllib.request.urlopen(req, timeout=30) as r:
         result = json.loads(r.read())
@@ -96,92 +105,84 @@ def think(user_input):
     conversation.append({"role": "assistant", "content": reply})
     return reply
 
-# ── Deepgram live transcription ───────────────────────────────────────────────
-def listen_and_transcribe(callback):
-    """Stream mic audio to Deepgram, call callback(text) on each utterance."""
-    if not DEEPGRAM_KEY:
-        print("  [no Deepgram key — using keyboard fallback]")
-        return keyboard_fallback(callback)
+def handle_input(text):
+    if not text.strip() or len(text.strip()) < 3:
+        return
+    if is_echo(text):
+        print(f"  [echo filtered: {text[:40]}]")
+        return
+    stop_speaking()  # barge-in: interrupt Owen immediately
+    reply = think(text)
+    threading.Thread(target=speak, args=(reply,), daemon=True).start()
 
+# ── Deepgram live STT ─────────────────────────────────────────────────────────
+def listen(callback):
+    if not DEEPGRAM_KEY:
+        return keyboard_fallback(callback)
     try:
-        import websocket
-        import pyaudio
+        import websocket, pyaudio
     except ImportError:
-        print("  Installing audio deps...")
-        subprocess.run(['/opt/homebrew/opt/python@3.12/libexec/bin/pip3', 'install',
-                        'websocket-client', 'pyaudio', '--break-system-packages', '-q'])
+        subprocess.run(['/opt/homebrew/opt/python@3.12/libexec/bin/pip3',
+                        'install', 'websocket-client', 'pyaudio',
+                        '--break-system-packages', '-q'])
         import websocket, pyaudio
 
-    CHUNK  = 8000
-    FORMAT = pyaudio.paInt16
-    CHANS  = 1
-    RATE   = 16000
-
-    pa    = pyaudio.PyAudio()
-    stream = pa.open(format=FORMAT, channels=CHANS, rate=RATE,
+    RATE, CHUNK = 16000, 8000
+    pa     = pyaudio.PyAudio()
+    stream = pa.open(format=pyaudio.paInt16, channels=1, rate=RATE,
                      input=True, frames_per_buffer=CHUNK)
 
-    dg_url = (f"wss://api.deepgram.com/v1/listen"
-              f"?encoding=linear16&sample_rate={RATE}&channels={CHANS}"
-              f"&model=nova-3&language=en&punctuate=true&endpointing=800")
+    url = (f"wss://api.deepgram.com/v1/listen"
+           f"?encoding=linear16&sample_rate={RATE}&channels=1"
+           f"&model=nova-3&language=en&punctuate=true"
+           f"&endpointing=600&utterance_end_ms=1200")
 
     def on_message(ws, msg):
         d = json.loads(msg)
         try:
             t = d['channel']['alternatives'][0]['transcript']
-            if t.strip() and d.get('is_final') and not QI_SPEAKING:
-                print(f"\n  You: {t}")
+            if t.strip() and d.get('is_final'):
                 callback(t)
         except: pass
 
-    def on_error(ws, err): print(f"  [WS error: {err}]")
-    def on_close(ws, *a):  print("  [Deepgram closed]")
     def on_open(ws):
-        print("  QI is listening... (speak naturally, Ctrl+C to stop)\n")
-        def send_audio():
+        print("  QI is listening — speak anytime, interrupt anytime\n")
+        def stream_audio():
             while ws.sock and ws.sock.connected:
-                data = stream.read(CHUNK, exception_on_overflow=False)
-                ws.send(data, websocket.ABNF.OPCODE_BINARY)
-        threading.Thread(target=send_audio, daemon=True).start()
+                ws.send(stream.read(CHUNK, exception_on_overflow=False),
+                        websocket.ABNF.OPCODE_BINARY)
+        threading.Thread(target=stream_audio, daemon=True).start()
 
     ws = websocket.WebSocketApp(
-        dg_url,
+        url,
         header=[f"Authorization: Token {DEEPGRAM_KEY}"],
-        on_open=on_open, on_message=on_message,
-        on_error=on_error, on_close=on_close
+        on_open=on_open,
+        on_message=on_message,
+        on_error=lambda ws, e: print(f"  [WS: {e}]"),
+        on_close=lambda ws, *a: None
     )
     ws.run_forever()
     stream.stop_stream(); stream.close(); pa.terminate()
 
 def keyboard_fallback(callback):
-    """Text input fallback when no Deepgram key."""
-    print("  [Keyboard mode — type your message, Enter to send, 'quit' to exit]\n")
+    print("  [Keyboard mode — no Deepgram key]\n")
     while True:
         try:
-            text = input("  You: ").strip()
-            if text.lower() in ('quit', 'exit', 'bye'): break
-            if text: callback(text)
+            t = input("  You: ").strip()
+            if t.lower() in ('quit','exit'): break
+            if t: callback(t)
         except (EOFError, KeyboardInterrupt): break
 
 # ── Main ──────────────────────────────────────────────────────────────────────
-def handle_input(text):
-    if not text.strip(): return
-    reply = think(text)
-    speak(reply)
-
 if __name__ == '__main__':
     print("\n" + "─"*50)
     print("  QI — QUANTUM INTEGRATOR")
-    print("  Owen voice · Deepgram ears · Claude mind")
+    print("  Interrupt anytime — QI will stop and listen")
     print("─"*50 + "\n")
-
-    # Intro
-    intro = think("QI, introduce yourself briefly.")
-    speak(intro)
-
-    # Start listening
+    intro = think("Introduce yourself in one sentence.")
+    threading.Thread(target=speak, args=(intro,), daemon=True).start()
     try:
-        listen_and_transcribe(handle_input)
+        listen(handle_input)
     except KeyboardInterrupt:
-        speak("Going offline. Talk soon.")
+        stop_speaking()
         print("\n  QI offline.\n")
