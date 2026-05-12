@@ -40,3 +40,13 @@ Static HTML on GitHub Pages (built from `main:/docs`, custom domain via Cloudfla
 - `docs/sw.js` cache version (`qc-vNNN`) **must equal** the Sentry release tag in `docs/app.html` (`release: "quantum-cube@qc-vNNN"`). CI catches drift via `.github/workflows/verify-versions.yml`.
 - Edge functions all use `verify_jwt=false` with manual JWT validation — never flip this without reading the function's auth flow first.
 - `.supabase-env` and any `service_role` key never get committed. Anon key in HTML is expected and public.
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- ALWAYS read graphify-out/GRAPH_REPORT.md before reading any source files, running grep/glob searches, or answering codebase questions. The graph is your primary map of the codebase.
+- IF graphify-out/wiki/index.md EXISTS, navigate it instead of reading raw files
+- For cross-module "how does X relate to Y" questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over grep — these traverse the graph's EXTRACTED + INFERRED edges instead of scanning files
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
