@@ -73,6 +73,15 @@ def _speak_sentence(text):
         print(f"  [speak error: {e}]")
     finally:
         last_spoke_at = time.time()
+        notify_dashboard(False)
+
+def notify_dashboard(speaking: bool):
+    try:
+        import urllib.request
+        urllib.request.urlopen(
+            f"http://localhost:3001/api/speaking?state={'true' if speaking else 'false'}",
+            timeout=1)
+    except: pass
 
 def stop_speaking():
     global current_audio

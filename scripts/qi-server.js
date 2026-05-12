@@ -12,6 +12,7 @@ const path  = require('path');
 const url   = require('url');
 
 const PORT    = 3001;
+let QI_SPEAKING = false;  // set by voice script via POST /api/speaking
 const DASH    = path.join(__dirname, 'qi-dashboard.html');
 
 // ── Keys (loaded from ~/.config/qi/) ─────────────────────────────────────────
@@ -135,10 +136,24 @@ const server = http.createServer(async (req, res) => {
   if (pathname === '/api/briefing') {
     try {
       const data = await buildBriefing();
+    data.speaking = QI_SPEAKING;
       res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
       res.end(JSON.stringify(data));
     } catch(e) {
       res.writeHead(500); res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
+  if (pathname === '/api/speaking') {
+    if (req.method === 'POST') {
+      const u = new URL(req.url, 'http://localhost');
+      QI_SPEAKING = u.searchParams.get('state') === 'true';
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ speaking: QI_SPEAKING }));
+    } else {
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ speaking: QI_SPEAKING }));
     }
     return;
   }
