@@ -771,3 +771,32 @@ Claude Code audit findings: PLAY_STORE_PREP.md Section 15
 - 🔲 **Music on TWA** (Gerda) — investigate if more testers report it
 - 🔲 **ECLP** — deprioritised, Google Play Billing is the better path
 - 🔲 **System upgrade + integrations** — next chat
+
+## 2026-05-12 Evening — QI System build (Chat Claude)
+
+**Goal:** Build the Quantum Integrator (QI) — personal Jarvis system.
+
+**Done:**
+- ✅ **Graphify installed** — knowledge graph of codebase, 175 nodes 249 edges 14 communities. `graphify update .` after code changes (no API cost).
+- ✅ **NORTH_STAR.md created** — 500 customers by Aug 15, $8,500 gross, milestones, guardrails. Wired into CLAUDE.md + CHAT_KICKOFF v5.2.0.
+- ✅ **ANTHROPIC_API_KEY secured** — stored in `~/.config/anthropic/key`, never hardcoded.
+- ✅ **QI keys vault** — `~/.config/qi/` with chmod 700. All 4 keys stored securely via `read -rs` pattern.
+- ✅ **Morning briefing** — `scripts/morning-briefing.py` + `/morning-briefing` Claude Code command. Pulls Supabase/PostHog/Sentry, gives one daily action.
+- ✅ **QI Dashboard live** — `scripts/qi-server.js` + `scripts/qi-dashboard.html`. Dark sci-fi mission control at localhost:3001. Animated particle orb, live data, 30s auto-refresh.
+- ✅ **All 4 keys wired:** PostHog ✓ Sentry ✓ ElevenLabs ✓ Supabase ✓
+- ✅ **First real briefing:** 3 paying customers · $51 revenue · 24 sessions · 0 errors
+
+**Current HEAD:** `a743ff6` | **SW:** qc-v243 | **Sentry:** quantum-cube@qc-v243
+
+**QI naming convention locked:**
+- QI = Quantum Integrator (the Jarvis/personal agent)
+- Code = Claude Code (terminal coder)
+- Claude = this chat (strategy + MCPs)
+
+**To start QI:** `cd ~/Projects/quantumcube && node scripts/qi-server.js &` → open localhost:3001
+
+**Pending (QI phase 2):**
+- 🔲 Deepgram voice input (real-time STT so QI can hear you)
+- 🔲 Overnight cron tasks (Mac Mini stays on, runs scheduled jobs)
+- 🔲 War Room multi-agent dashboard
+- 🔲 gstack (Garry Tan's 23-tool Claude Code setup)

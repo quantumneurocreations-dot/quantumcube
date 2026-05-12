@@ -19,7 +19,7 @@ SENTRY_TOKEN     = os.environ.get("SENTRY_AUTH_TOKEN", "")
 SENTRY_ORG       = "quantum-neuro-creations"
 SENTRY_PROJECT   = "javascript"
 ELEVENLABS_KEY   = os.environ.get("ELEVENLABS_API_KEY", "")
-ELEVENLABS_VOICE = "VhxAIIZM8IRmnl5fyeyk"  # Valory
+ELEVENLABS_VOICE = "giAoKpl5weRTCJK7uB9b"  # Owen — QI voice  # Valory
 
 GOAL_CUSTOMERS   = 500
 GOAL_DATE        = datetime.date(2026, 8, 15)
