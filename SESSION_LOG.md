@@ -821,3 +821,23 @@ Claude Code audit findings: PLAY_STORE_PREP.md Section 15
 - 🔲 Overnight cron tasks (cron installed, needs task definitions)
 - 🔲 War Room multi-agent dashboard
 - 🔲 Security layer (prompt injection protection)
+
+## 2026-05-12 Night — QI system completion
+
+**Done:**
+- ✅ gstack wired into quantumcube project — /office-hours /review /ship /qa /cso all active
+- ✅ Overnight cron (2am): qi-overnight.py — pulls Supabase/PostHog/Sentry, saves report
+- ✅ Security cron (3am): qi-security.py — secrets scan, key permissions, prompt injection check
+- ✅ Security score: 100/100 — all key files chmod 600, .gitignore hardened
+- ✅ QI v4 voice loop: streaming sentence-by-sentence, filler words, 1.5s Deepgram endpointing
+- ✅ Tavily web search wired — QI answers live questions
+- ✅ All keys secured: Anthropic, Deepgram, ElevenLabs, PostHog, Sentry, Supabase, Tavily
+
+**Cron schedule:**
+- 2am: qi-overnight.py (data pull + report)
+- 3am: qi-security.py (security audit)
+- 7am: qi-morning-auto.sh (spoken briefing via Owen)
+
+**Note:** QI voice has echo feedback issue — fixed with headphones (mic picks up speakers). Code cooldown + min-words + streaming all in place.
+
+**Current HEAD:** `62ebb36` | **SW:** qc-v243
