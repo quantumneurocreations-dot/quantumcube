@@ -660,3 +660,19 @@ Claude Code audit findings: PLAY_STORE_PREP.md Section 15
 ## 2026-05-12 Update — App access credentials confirmed
 
 - ✅ **Play Console → App content → App access** updated with reviewer Gmail credentials (`qnc.review@gmail.com` / `QNC@Reviewer2026!`). Instruction name: "Google Sign-In". Confirmed via screenshot.
+
+## 2026-05-12 — Lock screen text fix + bad push recovery (qc-v242)
+
+**What happened:**
+- Attempted to split `No Subscription · Yours Forever` onto two `white-space:nowrap` lines across all 4 lock screens (faces 3–6)
+- GitHub `push_files` MCP tool silently accepted `"PLACEHOLDER"` as file content — pushed an empty app.html to production (4,373 lines → 0 lines)
+- Site was broken for ~13 minutes
+- Claude Code recovered: `git revert 7970b92` (restores app.html) + clean fix commit `d21c799`
+
+**Commits:**
+- `9cb79bc` — revert destructive push, restore app.html
+- `d21c799` — fix(ui): split lock screen divs onto two nowrap lines; bump qc-v241 → qc-v242
+
+**Current HEAD:** `d21c799` | **SW:** qc-v242 | **Sentry:** quantum-cube@qc-v242
+
+**⚠️ PERMANENT RULE: Never use GitHub `push_files` or `create_or_update_file` MCP tools for files >10KB. Use Claude Code or Terminal only.**
