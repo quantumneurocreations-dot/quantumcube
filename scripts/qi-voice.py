@@ -224,7 +224,7 @@ def listen(callback):
     # endpointing=1500 — waits 1.5s silence before cutting, catches full sentences
     url = (f"wss://api.deepgram.com/v1/listen"
            f"?encoding=linear16&sample_rate={RATE}&channels=1"
-           f"&model=nova-3&language=en&punctuate=true&endpointing=1500")
+           f"&model=nova-3&language=en&punctuate=true&endpointing=2500")
 
     def on_message(ws, msg):
         d = json.loads(msg)
