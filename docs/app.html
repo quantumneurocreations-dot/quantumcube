@@ -87,6 +87,13 @@ html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow
 .install-gate-btn:active{background:rgba(12,192,223,0.15);box-shadow:0 0 40px rgba(12,192,223,0.6)}
 .install-gate-a2hs{font-family:'Cinzel',serif;font-size:12px;letter-spacing:2px;color:rgba(255,255,255,0.85);line-height:1.7;max-width:300px;padding:16px 22px;border:1px solid rgba(255,255,255,0.2);border-radius:14px;background:rgba(5,5,15,0.5);text-transform:uppercase}
 .install-gate-a2hs strong{color:#0cc0df;font-weight:600}
+/* v270: install splash + spinner */
+#qcSplash{position:fixed;inset:0;z-index:10000;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity 0.6s ease}
+#qcSplash.fade-out{opacity:0;pointer-events:none}
+#qcInstallSpinner{display:none;flex-direction:column;align-items:center;gap:16px}
+.install-spin{width:44px;height:44px;border:3px solid rgba(255,255,255,0.12);border-top-color:#0cc0df;border-radius:50%;animation:qcSpin 0.85s linear infinite}
+.install-spin-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6)}
+@keyframes qcSpin{to{transform:rotate(360deg)}}
 
 /* ── 3D CUBE SCENE ── */
 #cubeScene{flex-shrink:0;height:220px;display:none;align-items:center;justify-content:center;perspective:600px;cursor:grab;user-select:none;position:relative;touch-action:pan-y;}
@@ -588,7 +595,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v269",
+      release: "quantum-cube@qc-v270",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -678,6 +685,17 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 </head>
 <body>
 <div id="stars"></div>
+<!-- v270: 2-second splash before install gate -->
+<div id="qcSplash">
+<div class="install-gate-inner">
+<div class="install-gate-logo-wrap">
+<div style="display:inline-block;text-align:center">
+<div class="logo-main"><span class="logo-q">QUANTUM</span></div>
+<div class="logo-main logo-c" style="text-align:right">CUBE</div>
+</div>
+</div>
+</div>
+</div>
 <div id="installGate" role="dialog" aria-label="Install Quantum Cube">
 <div class="install-gate-inner">
 <div class="install-gate-logo-wrap">
@@ -688,6 +706,11 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 </div>
 <p class="install-gate-sub">Your Cosmic Profile</p>
 <button id="installGateBtn" class="install-gate-btn" hidden type="button">Install</button>
+<!-- v270: spinner shown while installing -->
+<div id="qcInstallSpinner" aria-label="Installing">
+<div class="install-spin"></div>
+<p class="install-spin-label">Installing</p>
+</div>
 <div id="installGateA2HS" class="install-gate-a2hs">
 Tap your browser menu → <strong>Add to Home Screen</strong>
 </div>
@@ -2146,8 +2169,13 @@ function showFace(n){
   const app = document.getElementById('app');
   const gate = document.getElementById('installGate');
   if(app) app.style.display = 'none';
-  if(gate) gate.classList.add('show');
+  // v270: show body immediately (splash covers everything), then reveal gate after 2s
   document.body.style.opacity='1';
+  var _splash = document.getElementById('qcSplash');
+  setTimeout(function(){
+    if(_splash){ _splash.classList.add('fade-out'); setTimeout(function(){ if(_splash) _splash.style.display='none'; if(gate) gate.classList.add('show'); }, 600); }
+    else { if(gate) gate.classList.add('show'); }
+  }, 2000);
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'info', message:'gate shown', data:{ua:navigator.userAgent.slice(0,160)}}); } catch(_){}
 })();
 window.addEventListener('beforeinstallprompt', function(e){
@@ -2171,13 +2199,25 @@ var _qcUserTappedInstall = false;
   btn.onclick = async function(){
     if(!deferredInstall) return;
     _qcUserTappedInstall = true;
+    // v270: swap button for spinner immediately
+    var _ib = document.getElementById('installGateBtn');
+    var _is = document.getElementById('qcInstallSpinner');
+    if(_ib) _ib.style.display = 'none';
+    if(_is) _is.style.display = 'flex';
     try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'info', message:'install button tapped'}); } catch(_){}
     try {
       deferredInstall.prompt();
       const { outcome } = await deferredInstall.userChoice;
       try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'info', message:'userChoice: '+outcome}); } catch(_){}
       deferredInstall = null;
-      if(outcome === 'accepted') _qcShowInstalledState();
+      if(outcome === 'accepted'){
+        // v270: delay installed-state by 3.5s — lets PWA icon land on home screen before we tell the user to go look for it
+        setTimeout(_qcShowInstalledState, 3500);
+      } else {
+        // Dismissed — restore the button
+        if(_ib) _ib.style.display = '';
+        if(_is) _is.style.display = 'none';
+      }
     } catch(err) {
       console.error('[QC] install prompt error', err);
       try { if(window.Sentry) Sentry.captureException(err, { tags: { area: 'install-gate' } }); } catch(_){}
