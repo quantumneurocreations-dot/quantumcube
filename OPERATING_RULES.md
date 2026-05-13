@@ -169,3 +169,19 @@ Claude Code handles: file edits to app.html/sw.js, multi-step automation, instru
 **Why:** Chat Claude burns tokens on tool-loading, boot sequences, and context. Claude Code has persistent file access and doesn't eat the session budget. Violating this rule has cost us 20%+ of a session on 4-5 requests.
 
 **Trigger phrase:** "Hand to Claude Code" = write a tight brief and stop. Don't attempt the work in Chat Claude first.
+
+## BOOT — SENTRY CHECK (added 2026-05-13)
+
+Add this to every session boot after health check:
+
+```
+https://mcp.sentry.dev/mcp: search_events
+  org: quantum-neuro-creations
+  project: javascript
+  dataset: errors
+  statsPeriod: 24h
+  sort: -count()
+```
+
+Report: "🔴 N new Sentry issues since last session" or "✅ Sentry clean."
+If issues found → list title + count before asking what's the focus.
