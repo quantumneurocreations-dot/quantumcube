@@ -157,3 +157,15 @@ Any new service detail discovered (zone ID, project ID, config value, account de
 
 ### 5 — ONE QUESTION MAX PER BLOCKER
 Never ask 3 clarifying questions in a row. Pick the most important one, or assume + flag.
+
+## CLAUDE CODE RULE — TOKEN EFFICIENCY (added 2026-05-13)
+
+**Heavy lifting → Claude Code. Always.**
+
+Chat Claude (this session) handles: planning, MCP reads/writes, quick API calls, decisions, git commits, session logging.
+
+Claude Code handles: file edits to app.html/sw.js, multi-step automation, instrumentation sweeps, bug fixes, any task touching >20 lines of code.
+
+**Why:** Chat Claude burns tokens on tool-loading, boot sequences, and context. Claude Code has persistent file access and doesn't eat the session budget. Violating this rule has cost us 20%+ of a session on 4-5 requests.
+
+**Trigger phrase:** "Hand to Claude Code" = write a tight brief and stop. Don't attempt the work in Chat Claude first.
