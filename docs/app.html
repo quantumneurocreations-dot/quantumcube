@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com https://eu-assets.i.posthog.com https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vimeocdn.com https://*.clarity.ms; media-src 'self' blob:; connect-src 'self' https://auth.quantumcube.app https://*.ingest.de.sentry.io https://browser.sentry-cdn.com https://*.dodopayments.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.clarity.ms; frame-src https://player.vimeo.com https://*.dodopayments.com https://vimeo.com; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com https://eu-assets.i.posthog.com https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vimeocdn.com https://*.clarity.ms; media-src 'self' blob:; connect-src 'self' https://auth.quantumcube.app https://*.ingest.de.sentry.io https://browser.sentry-cdn.com https://*.dodopayments.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.clarity.ms; frame-src https://player.vimeo.com https://*.dodopayments.com https://vimeo.com; manifest-src 'self'; worker-src 'self' blob:; base-uri 'self'; form-action 'self'; object-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#05050f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -579,7 +579,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v243",
+      release: "quantum-cube@qc-v244",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -608,7 +608,19 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     console.log("[QC] Sentry initialised");
       window.addEventListener("securitypolicyviolation", function(e) {
         if (window.Sentry) {
-          Sentry.captureMessage("CSP violation: " + e.violatedDirective + " blocked " + e.blockedURI, "warning");
+          Sentry.captureMessage("CSP violation: " + e.violatedDirective + " blocked " + e.blockedURI, {
+            level: "warning",
+            extra: {
+              violatedDirective: e.violatedDirective,
+              effectiveDirective: e.effectiveDirective,
+              blockedURI: e.blockedURI,
+              sourceFile: e.sourceFile,
+              lineNumber: e.lineNumber,
+              columnNumber: e.columnNumber,
+              sample: e.sample,
+              disposition: e.disposition
+            }
+          });
         }
       });
   } catch(e) {
@@ -751,11 +763,9 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
   <p class="form-title" style="margin:0">Click On The Link To Verify Your Email</p>
   <p class="err-msg" id="resendMsg" role="status" aria-live="polite" style="display:none">Link resent</p>
 </div>
-<button type="button" class="calc-btn" id="resendBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleResendMagicLink()">Resend Email</button>
-<div style="margin:14px 24px 0 24px;text-align:center;">
-  <a href="#" id="alreadyVerifiedLink" onclick="event.preventDefault();haptic('light');handleAlreadyVerified();return false;" style="color:rgba(255,255,255,0.7);font-size:13px;text-decoration:underline;cursor:pointer;">Already verified your email? Tap here.</a>
-  <p id="alreadyVerifiedMsg" role="status" aria-live="polite" style="display:none;margin:8px 0 0 0;font-size:13px;color:rgba(255,255,255,0.85);"></p>
-</div>
+<button type="button" class="calc-btn" id="alreadyVerifiedBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleAlreadyVerified()">I've Verified — Continue</button>
+<p id="alreadyVerifiedMsg" role="status" aria-live="polite" style="display:none;margin:8px 24px 0 24px;text-align:center;font-size:13px;color:rgba(255,255,255,0.85);"></p>
+<button type="button" class="calc-btn" id="resendBtn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px);background:rgba(255,255,255,0.08);border:1px solid rgba(12,192,223,0.55);color:rgba(255,255,255,0.92);box-shadow:none" onclick="haptic(&apos;medium&apos;);handleResendMagicLink()">Resend Email</button>
 <button type="button" class="reset-btn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleBackToSignUp()" aria-label="Back to Sign Up">Back to<br>Sign Up</button>
 </div>
 <div class="face" id="face1" aria-label="Introduction">
@@ -1887,15 +1897,11 @@ function _qcStopMagicPoller(){
   _qcMagicLinkRequested = false;
 }
 
-// Android Chrome aggressively suspends the original tab when the magic link
-// opens in a new Chrome tab — onAuthStateChange's BroadcastChannel sync stops
-// firing and the poller's setInterval is paused. When the user returns to the
-// original tab, force a session check regardless of _qcMagicLinkRequested
-// (which may have been cleared by an earlier showFace transition or a partial
-// SIGNED_IN). If a session exists, re-fire SIGNED_IN via setSession().
-document.addEventListener('visibilitychange', async function(){
-  if(document.visibilityState !== 'visible') return;
-  if(currentFace !== 'CheckEmail') return;
+// Re-fire SIGNED_IN if a fresh session has landed in our storage. Bypasses
+// the _qcMagicLinkRequested gate (cleared too eagerly elsewhere) and the
+// returning-user concern doesn't apply here — if we're on CheckEmail with a
+// live session, the user did just click a magic link or wants to be moved on.
+async function _qcCheckSessionOnce(reason){
   try {
     const { data: { session } } = await sb.auth.getSession();
     if(session && session.access_token && session.refresh_token){
@@ -1904,9 +1910,50 @@ document.addEventListener('visibilitychange', async function(){
           access_token: session.access_token,
           refresh_token: session.refresh_token
         });
-      } catch(e) {}
+        try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'magic-link session recovered ('+reason+')'}); } catch(_){}
+        return true;
+      } catch(e) {
+        try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'warning', message:'setSession failed ('+reason+'): '+(e&&e.message||e)}); } catch(_){}
+      }
     }
-  } catch(e) {}
+  } catch(e) {
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'warning', message:'getSession failed ('+reason+'): '+(e&&e.message||e)}); } catch(_){}
+  }
+  return false;
+}
+
+// Android Chrome aggressively suspends the original tab when the magic link
+// opens in a new Chrome tab — onAuthStateChange's BroadcastChannel sync stops
+// firing and the poller's setInterval is paused. When the user returns to the
+// original tab, force a session check AND start a rapid 1s/15-attempt retry
+// burst — covers the case where Supabase's URL-detection settles a few hundred
+// ms after the tab regains focus.
+//
+// NOTE: this can only recover sessions in *this tab's* storage partition. If
+// the magic link opened in Gmail CCT or a separate Chrome instance with no
+// shared storage (common on TWA), getSession() will return null forever and
+// the user needs to either fall back to OTP code entry or use the "Resend
+// Email" path inside the same browser context.
+var _qcVisRapidTimer = null;
+document.addEventListener('visibilitychange', async function(){
+  if(document.visibilityState !== 'visible') return;
+  if(currentFace !== 'CheckEmail') return;
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'visibilitychange→CheckEmail rapid-check armed'}); } catch(_){}
+  if(await _qcCheckSessionOnce('visibilitychange')) return;
+  if(_qcVisRapidTimer){ clearInterval(_qcVisRapidTimer); _qcVisRapidTimer = null; }
+  var rapidAttempts = 0;
+  _qcVisRapidTimer = setInterval(async function(){
+    rapidAttempts++;
+    if(rapidAttempts > 15 || document.visibilityState !== 'visible' || currentFace !== 'CheckEmail'){
+      clearInterval(_qcVisRapidTimer);
+      _qcVisRapidTimer = null;
+      return;
+    }
+    if(await _qcCheckSessionOnce('vis-rapid#'+rapidAttempts)){
+      clearInterval(_qcVisRapidTimer);
+      _qcVisRapidTimer = null;
+    }
+  }, 1000);
 });
 
 function showFace(n){
@@ -3436,27 +3483,29 @@ function handleBackToSignUp(){
 }
 // Manual escape hatch from CheckEmail face. Some users land back on this
 // face after the magic link opened in a separate browser context (Gmail
-// CCT, Chrome Custom Tab) and BroadcastChannel never synced. Lets them
-// force a session check + re-fire SIGNED_IN.
+// CCT, Chrome Custom Tab) and BroadcastChannel never synced. Tries the
+// quick check, then a 5-attempt 1s burst so users tapping right after
+// returning from email don't get a false "no session" message on the
+// first attempt before tokens have propagated.
 async function handleAlreadyVerified(){
+  const btn = document.getElementById('alreadyVerifiedBtn');
   const msg = document.getElementById('alreadyVerifiedMsg');
+  if(btn){ btn.disabled = true; }
   if(msg){ msg.textContent = 'Checking…'; msg.style.display = 'block'; }
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    if(session && session.access_token && session.refresh_token){
-      try {
-        await sb.auth.setSession({
-          access_token: session.access_token,
-          refresh_token: session.refresh_token
-        });
-        if(msg){ msg.style.display = 'none'; }
-        return;
-      } catch(e) {}
-    }
-    if(msg){ msg.textContent = 'No verified session found yet — please check your email.'; msg.style.display = 'block'; }
-  } catch(e){
-    if(msg){ msg.textContent = 'No verified session found yet — please check your email.'; msg.style.display = 'block'; }
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'handleAlreadyVerified tapped'}); } catch(_){}
+  if(await _qcCheckSessionOnce('already-verified-tap')){
+    if(msg){ msg.style.display = 'none'; }
+    return;
   }
+  for(let i = 1; i <= 5; i++){
+    await new Promise(r => setTimeout(r, 1000));
+    if(await _qcCheckSessionOnce('already-verified-retry#'+i)){
+      if(msg){ msg.style.display = 'none'; }
+      return;
+    }
+  }
+  if(msg){ msg.textContent = "Still no verified session — tap the link in your email, then return here. If your email opened in a different browser, you'll need to verify there."; }
+  if(btn){ btn.disabled = false; }
 }
 
 async function handleResendMagicLink(){
@@ -3643,9 +3692,18 @@ async function exportMyData(){
 let _deleteArmed = false;
 let _deleteTimer = null;
 function armDeleteAccount(){
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'delete-account', level:'info', message:'armDeleteAccount entry; armed='+_deleteArmed}); } catch(_){}
   const btn = document.getElementById("deleteAccountBtn");
-  if (!btn) return;
-  if (_deleteArmed) { confirmDeleteAccount(); return; }
+  if (!btn) {
+    console.error("[QC] armDeleteAccount: #deleteAccountBtn not found in DOM");
+    try { if(window.Sentry) Sentry.captureMessage("armDeleteAccount: deleteAccountBtn missing", "error"); } catch(_){}
+    return;
+  }
+  if (_deleteArmed) {
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'delete-account', level:'info', message:'second tap → confirmDeleteAccount'}); } catch(_){}
+    confirmDeleteAccount();
+    return;
+  }
   _deleteArmed = true;
   btn.classList.add("armed");
   btn.textContent = "Tap again to confirm — permanent";
@@ -3660,10 +3718,12 @@ function armDeleteAccount(){
     btn.removeAttribute("aria-live");
     btn.removeAttribute("aria-label");
     _deleteTimer = null;
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'delete-account', level:'info', message:'arm window expired'}); } catch(_){}
   }, 5000);
 }
 
 async function confirmDeleteAccount(){
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'delete-account', level:'info', message:'confirmDeleteAccount entry'}); } catch(_){}
   if (_deleteTimer) { clearTimeout(_deleteTimer); _deleteTimer = null; }
   _deleteArmed = false;
   const btn = document.getElementById("deleteAccountBtn");
@@ -3674,7 +3734,7 @@ async function confirmDeleteAccount(){
     const { data: { session } } = await sb.auth.getSession();
     if (session) {
       const url = SUPABASE_URL + "/functions/v1/delete-account";
-      await fetch(url, {
+      const resp = await fetch(url, {
         method: "POST",
         headers: {
           "Authorization": "Bearer " + session.access_token,
@@ -3682,9 +3742,18 @@ async function confirmDeleteAccount(){
           "apikey": SUPABASE_ANON_KEY
         }
       });
+      try { if(window.Sentry) Sentry.addBreadcrumb({category:'delete-account', level:'info', message:'delete-account fn status '+resp.status}); } catch(_){}
+      if (!resp.ok) {
+        console.error("[QC] delete-account fn returned", resp.status);
+        try { if(window.Sentry) Sentry.captureMessage("delete-account fn returned "+resp.status, "error"); } catch(_){}
+      }
+    } else {
+      console.error("[QC] confirmDeleteAccount: no active session");
+      try { if(window.Sentry) Sentry.captureMessage("confirmDeleteAccount: no active session", "warning"); } catch(_){}
     }
   } catch(e){
-    console.warn("delete-account err", e);
+    console.error("[QC] delete-account err", e);
+    try { if(window.Sentry) Sentry.captureException(e); } catch(_){}
   }
   finally {
     // signOut can hang post-deletion (the user it would sign out is gone).
