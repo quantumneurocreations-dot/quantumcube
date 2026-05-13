@@ -154,6 +154,134 @@ def stop_speaking():
 SEARCH_WORDS = ["latest","news","today","current","war","price","weather",
                 "who is","what happened","score","recently","2026","2025","just"]
 
+# ── Chief of Staff briefing skill ────────────────────────────────────────────
+BRIEFING_TRIGGERS = [
+    "morning briefing", "morning brief", "chief of staff",
+    "top priorities", "what are my priorities", "what should i focus",
+    "what's the focus", "whats the focus", "daily brief",
+    "start my day", "kick off", "what's most important", "run my day",
+    "what do i need to do today", "priorities for today",
+]
+
+RESEARCH_TRIGGERS = [
+    "save a note", "save note", "research note", "add to research",
+    "note this down", "note that down", "remember this for research",
+    "log this", "save this insight", "write this down",
+]
+
+def is_briefing_request(text):
+    t = text.lower().strip()
+    return any(trigger in t for trigger in BRIEFING_TRIGGERS)
+
+def fetch_briefing_data():
+    """Pull live data from QI server for CoS briefing."""
+    try:
+        req = urllib.request.Request("http://localhost:3001/api/briefing")
+        with urllib.request.urlopen(req, timeout=5) as r:
+            return json.loads(r.read())
+    except:
+        return None
+
+def build_cos_prompt():
+    """Build Chief of Staff system prompt with live data injected."""
+    data = fetch_briefing_data()
+    if not data:
+        return (QI_SYSTEM + "\n\nDelivery mode: CHIEF OF STAFF BRIEFING.\n"
+                "Give exactly 3 voiced priorities. Each one sentence. "
+                "No data available — give strategic defaults based on the mission.")
+
+    customers   = data.get("customers", {}).get("total", "unknown")
+    days_left   = data.get("goal", {}).get("daysLeft", "?")
+    run_rate    = data.get("goal", {}).get("runRate", "?")
+    sentry      = data.get("sentry", {})
+    play        = data.get("play", {})
+    action      = data.get("action", "")
+    sessions    = data.get("sessions", {}).get("sessions", "?")
+
+    sentry_note = (f"{sentry.get('count', 0)} new Sentry errors"
+                   if sentry.get("count") else "no new Sentry errors")
+    play_note   = (f"{play.get('installs', '?')} Play Store installs, "
+                   f"{play.get('testers', '?')} testers opted in"
+                   if play.get("installs") is not None else "Play Store data loading")
+
+    context = f"""LIVE DATA:
+- Customers: {customers} / 500 goal
+- Days to goal: {days_left}
+- Run rate needed: {run_rate} sales/day
+- Sessions today: {sessions}
+- {sentry_note}
+- {play_note}
+- System recommendation: {action}"""
+
+    return (QI_SYSTEM + f"""
+
+{context}
+
+DELIVERY MODE: CHIEF OF STAFF - 3 PRIORITIES ONLY.
+Rules:
+- Speak exactly 3 priorities, numbered aloud: "First... Second... Third..."
+- Each priority: one sentence, max 12 words. Punchy, specific, actionable.
+- Ground each priority in the live data above.
+- End with: "That is your focus. Go."
+- No filler word at the start - begin directly with "First,"
+""")
+
+def run_cos_briefing():
+    """Execute Chief of Staff 3-priority morning briefing."""
+    import http.client
+    print("\n  [CoS] Running Chief of Staff briefing...")
+    system = build_cos_prompt()
+    trigger_msg = "Give me my Chief of Staff morning briefing. Three priorities. Go."
+
+    payload = json.dumps({
+        "model": "claude-haiku-4-5",
+        "max_tokens": 180,
+        "stream": True,
+        "system": system,
+        "messages": [{"role": "user", "content": trigger_msg}]
+    }).encode()
+
+    buffer = ""
+    try:
+        conn = http.client.HTTPSConnection("api.anthropic.com")
+        conn.request("POST", "/v1/messages", payload, {
+            "x-api-key": ANTHROPIC_KEY,
+            "anthropic-version": "2023-06-01",
+            "Content-Type": "application/json",
+            "Accept": "text/event-stream"
+        })
+        resp = conn.getresponse()
+        full = ""
+        for raw_line in resp:
+            line = raw_line.decode("utf-8").strip()
+            if not line.startswith("data:"): continue
+            data_str = line[5:].strip()
+            if data_str == "[DONE]": break
+            try:
+                chunk = json.loads(data_str)
+                if chunk.get("type") == "content_block_delta":
+                    token = chunk["delta"].get("text", "")
+                    buffer += token
+                    full   += token
+                    parts = SENTENCE_END.split(buffer)
+                    if len(parts) > 1:
+                        for sentence in parts[:-1]:
+                            s = sentence.strip()
+                            if s:
+                                print(f"\n  QI [CoS]: {s}")
+                                audio_queue.put(s)
+                        buffer = parts[-1]
+            except: pass
+        if buffer.strip():
+            print(f"\n  QI [CoS]: {buffer.strip()}")
+            audio_queue.put(buffer.strip())
+        if full:
+            conversation.append({"role": "user", "content": trigger_msg})
+            conversation.append({"role": "assistant", "content": full})
+    except Exception as e:
+        print(f"  [CoS] Error: {e}")
+        audio_queue.put("Chief of Staff briefing failed. Check the server.")
+
 def maybe_search(text):
     if not TAVILY_KEY or not any(w in text.lower() for w in SEARCH_WORDS):
         return ""
@@ -257,7 +385,29 @@ def respond_now():
         audio_queue.put("That input was flagged and blocked.")
         return
     print(f"\n  You: {clean}")
-    threading.Thread(target=think_and_stream, args=(clean,), daemon=True).start()
+    # Route to Chief of Staff briefing if triggered
+    if is_briefing_request(clean):
+        threading.Thread(target=run_cos_briefing, daemon=True).start()
+    # Route to research note save
+    elif any(t in clean.lower() for t in RESEARCH_TRIGGERS):
+        def save_research():
+            topic = "voice-note"
+            import subprocess, re
+            # Extract topic if user says "save note about X"
+            m = re.search(r'(?:about|on|re:|regarding)\s+(.+)', clean, re.IGNORECASE)
+            if m: topic = m.group(1).strip()[:60]
+            try:
+                subprocess.Popen(
+                    ["python3", "/Users/qnc/Projects/quantumcube/scripts/qi-research.py",
+                     "save", topic, clean],
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+                )
+                audio_queue.put(f"Got it. Saved to research notes under {topic}.")
+            except Exception as e:
+                audio_queue.put("Couldn't save that. Check the research script.")
+        threading.Thread(target=save_research, daemon=True).start()
+    else:
+        threading.Thread(target=think_and_stream, args=(clean,), daemon=True).start()
 
 def handle_input(text):
     global pending_text, pending_timer
