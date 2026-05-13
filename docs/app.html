@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v250",
+      release: "quantum-cube@qc-v251",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2115,6 +2115,7 @@ window.addEventListener('beforeinstallprompt', function(e){
       const { outcome } = await deferredInstall.userChoice;
       try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'info', message:'userChoice: '+outcome}); } catch(_){}
       deferredInstall = null;
+      if(outcome === 'accepted') _qcShowInstalledState();
     } catch(err) {
       console.error('[QC] install prompt error', err);
       try { if(window.Sentry) Sentry.captureException(err, { tags: { area: 'install-gate' } }); } catch(_){}
@@ -2122,12 +2123,15 @@ window.addEventListener('beforeinstallprompt', function(e){
   };
 })();
 window.addEventListener('appinstalled', function(){
-  const gate = document.getElementById('installGate');
-  const app = document.getElementById('app');
-  if(gate) gate.classList.remove('show');
-  if(app) app.style.display = '';
+  _qcShowInstalledState();
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'info', message:'appinstalled fired'}); } catch(_){}
 });
+function _qcShowInstalledState(){
+  var gate = document.getElementById('installGate');
+  if(!gate) return;
+  gate.innerHTML = '<div class="install-gate-inner"><div class="install-gate-logo-wrap"><div class="logo-main"><span class="logo-q">QUANTUM</span></div><div class="logo-main logo-c">CUBE</div></div><p class="install-gate-sub" style="margin-top:12px">Successfully installed</p><p style="font-family:Cinzel,serif;font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.7);line-height:1.8;margin:0">Find Quantum Cube on<br>your home screen to begin</p></div>';
+  gate.classList.add('show');
+}
 
 // NUMEROLOGY ENGINE
 const LV={A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,I:9,J:1,K:2,L:3,M:4,N:5,O:6,P:7,Q:8,R:9,S:1,T:2,U:3,V:4,W:5,X:6,Y:7,Z:8};

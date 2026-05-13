@@ -30,13 +30,7 @@ t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
 y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 })(window, document, "clarity", "script", "wmc5lrewut");
 </script>
-<script>
-(function(){
-  var mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  var standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-  if(mobile && !standalone) window.location.replace('/app.html');
-})();
-</script>
+<script src="/mobile-redirect.js"></script>
 </head>
 <body>
 <header class="site-header">
