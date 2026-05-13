@@ -1329,6 +1329,7 @@ window.QC_AUDIO = QC_AUDIO;
 (function(){
   function tryStart(){
     if(!QC_AUDIO._musicOn) return;
+    if(typeof currentFace === 'undefined' || currentFace === 0 || currentFace === 'CheckEmail') return;
     if(QC_AUDIO._music && !QC_AUDIO._music.paused && QC_AUDIO._music.currentTime > 0){
       document.removeEventListener("pointerdown", tryStart, true);
       document.removeEventListener("touchstart", tryStart, true);
