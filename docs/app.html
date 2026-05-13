@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v260",
+      release: "quantum-cube@qc-v261",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1331,6 +1331,12 @@ window.QC_AUDIO = QC_AUDIO;
 /* Music auto-start: retry on every gesture until audio actually plays */
 (function(){
   function tryStart(){
+    // v261: hard guard — never start music while the install gate is visible.
+    // The currentFace guard below should already catch this (currentFace stays
+    // 0 while gating), but the install Install button is itself a user gesture
+    // that satisfies Chrome's autoplay policy, and we'd rather be explicit
+    // than chase an edge case that bypasses the face check.
+    if(document.getElementById('installGate')?.classList.contains('show')) return;
     if(!QC_AUDIO._musicOn) return;
     if(typeof currentFace === 'undefined' || currentFace === 0 || currentFace === 'CheckEmail') return;
     if(QC_AUDIO._music && !QC_AUDIO._music.paused && QC_AUDIO._music.currentTime > 0){
