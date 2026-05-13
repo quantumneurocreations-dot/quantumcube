@@ -579,7 +579,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v244",
+      release: "quantum-cube@qc-v245",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1608,7 +1608,9 @@ async function fetchNarration(text){
     return URL.createObjectURL(blob);
   }catch(e){
     try { if(window.posthog) posthog.capture('narrate_api_failed', { error: String(e && e.message || e).slice(0,200), latency_ms: Date.now() - _narrateStart, reason: 'network_error' }); } catch(_){}
-    console.warn("narrate err", e); return null;
+    console.error("[QC] narrate err", e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'narrate' } }); } catch(_){}
+    return null;
   }
 }
 
@@ -1957,6 +1959,7 @@ document.addEventListener('visibilitychange', async function(){
 });
 
 function showFace(n){
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'nav', level:'info', message:'showFace('+n+') from '+currentFace}); } catch(_){}
   if(n === 'CheckEmail'){ _qcStartMagicPoller(); } else { _qcStopMagicPoller(); }
   if(window.QC_AUDIO && typeof n==="number" && n>=1 && n<=6) window.QC_AUDIO.play("select_side");
   if(typeof stopNarration==="function")stopNarration();
@@ -2796,6 +2799,7 @@ async function attemptPaymentUnlock(passedSession){
 
 async function handleDodoEvent(event){
   if (!event || !event.event_type) return;
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'dodo event: '+event.event_type}); } catch(_){}
   // checkout.redirect fires on successful payment before checkout.closed.
   // checkout.closed fires whether the user paid, cancelled, or hit X.
   // Either way: refetch profile and let RLS-backed has_paid be the truth.
@@ -2807,24 +2811,34 @@ async function handleDodoEvent(event){
     setTimeout(async () => {
       try {
         const { data: { session } } = await sb.auth.getSession();
-        if (!session || !session.user) return;
-        const { data: profile } = await sb
+        if (!session || !session.user) {
+          try { if(window.Sentry) Sentry.captureMessage('post-checkout: no session for profile sync', 'warning'); } catch(_){}
+          return;
+        }
+        const { data: profile, error } = await sb
           .from("profiles")
           .select("*")
           .eq("id", session.user.id)
           .single();
+        if (error) {
+          console.error("[QC] post-checkout profile sync error:", error);
+          try { if(window.Sentry) Sentry.captureMessage('post-checkout profile sync error: '+(error.message||error.code), 'error'); } catch(_){}
+        }
         if (profile) {
           if (typeof qcCurrentProfile !== "undefined") qcCurrentProfile = profile;
           if (typeof syncUnlockFromProfile === "function") {
             syncUnlockFromProfile(profile);
           }
+          try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'post-checkout synced; has_paid='+!!profile.has_paid}); } catch(_){}
         }
       } catch (e) {
-        console.error("post-checkout profile sync failed:", e);
+        console.error("[QC] post-checkout profile sync failed:", e);
+        try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'post-checkout' } }); } catch(_){}
       }
     }, 1500);
   } else if (event.event_type === "checkout.error") {
-    console.error("Dodo checkout error:", event);
+    console.error("[QC] Dodo checkout error:", event);
+    try { if(window.Sentry) Sentry.captureMessage('Dodo checkout.error: '+JSON.stringify(event).slice(0,500), 'error'); } catch(_){}
     alert("Payment could not be completed. Please try again.");
   }
 }
@@ -2869,14 +2883,17 @@ function _qcScaleDodoOverlay(){
 }
 
 async function launchDodo(){
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'launchDodo entry'}); } catch(_){}
   try {
     if (!ensureDodoSdk()) {
+      try { if(window.Sentry) Sentry.captureMessage('launchDodo: SDK not loaded', 'warning'); } catch(_){}
       alert("Payment system is loading. Please try again in a moment.");
       return;
     }
 
     const { data: { session } } = await sb.auth.getSession();
     if (!session || !session.user) {
+      try { if(window.Sentry) Sentry.captureMessage('launchDodo: no session at checkout', 'warning'); } catch(_){}
       alert("Please sign in before purchasing.");
       return;
     }
@@ -2922,13 +2939,15 @@ async function launchDodo(){
 
     if (!sessionRes.ok) {
       const errText = await sessionRes.text();
-      console.error("Session creation failed:", sessionRes.status, errText);
+      console.error("[QC] Session creation failed:", sessionRes.status, errText);
+      try { if(window.Sentry) Sentry.captureMessage('launchDodo: session fn '+sessionRes.status+' — '+errText.slice(0,300), 'error'); } catch(_){}
       alert("Could not start checkout. Please try again.");
       return;
     }
 
     const { checkout_url } = await sessionRes.json();
     if (!checkout_url) {
+      try { if(window.Sentry) Sentry.captureMessage('launchDodo: session fn returned no checkout_url', 'error'); } catch(_){}
       alert("Could not start checkout. Please try again.");
       return;
     }
@@ -2936,13 +2955,16 @@ async function launchDodo(){
     console.log("Opening Dodo overlay:", DODO_MODE, "mode");
     const SDK = window._dodoSDK || _resolveDodoSdk();
     if (!SDK) {
+      try { if(window.Sentry) Sentry.captureMessage('launchDodo: SDK unresolvable at open', 'error'); } catch(_){}
       alert("Payment system not ready. Please refresh and try again.");
       return;
     }
     _qcScaleDodoOverlay();
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'opening Dodo overlay ('+DODO_MODE+')'}); } catch(_){}
     SDK.Checkout.open({ checkoutUrl: checkout_url });
   } catch (e) {
-    console.error("launchDodo failed:", e);
+    console.error("[QC] launchDodo failed:", e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'launchDodo' } }); } catch(_){}
     alert("Could not start checkout. Please try again.");
   }
 }
@@ -3563,6 +3585,17 @@ async function handleResendMagicLink(){
   }, 1000);
 }
 
+// Records session-restore navigation decisions to Sentry so we can trace why
+// users (e.g. clinton.pretorius) land on the wrong face with empty form state.
+function _qcSessionNav(decision, ctx){
+  try {
+    if(window.Sentry){
+      Sentry.addBreadcrumb({category:'session-restore', level:'info', message:decision, data:ctx});
+      Sentry.captureMessage('session-restore nav: '+decision, { level: 'info', extra: ctx });
+    }
+  } catch(_){}
+}
+
 sb.auth.onAuthStateChange(async (event, session) => {
   if (_qcPendingPaymentUnlock && (event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
     attemptPaymentUnlock(session);
@@ -3580,7 +3613,10 @@ sb.auth.onAuthStateChange(async (event, session) => {
       profileRow = r.data || null;
       qcCurrentProfile = profileRow;
       syncUnlockFromProfile(qcCurrentProfile);
-    } catch(e) { console.error("profile fetch error:", e); }
+    } catch(e) {
+      console.error("[QC] profile fetch error:", e);
+      try { if(window.Sentry) Sentry.captureException(e); } catch(_){}
+    }
     // First-time signup on a device where the magic link opened in a separate
     // storage partition (Gmail Chrome Custom Tab, Android tab suspension):
     // QC_PENDING_KEY is empty AND profile row doesn't exist yet. Recover the
@@ -3604,18 +3640,32 @@ sb.auth.onAuthStateChange(async (event, session) => {
     // OAuth users with no DOB yet get email + name pre-filled, must add DOB manually.
     // Returning users with full profile get everything pre-filled.
     const formReady = populateFormFromProfile(profileRow, session.user);
-    if(currentFace === 0 || currentFace === 'CheckEmail'){
-      if(formReady){
-        try { runCalculation(); } catch(e) { showFace(1); }
-      } else if(!profileRow){
-        // Genuinely new user with no profile row — bounce to Face 0 so they
-        // can fill the form (this handles in-app browser magic-link landings
-        // where the new tab has no pending profile data). If a profile row
-        // exists but is incomplete (e.g. OAuth signup without DOB), leave the
-        // user wherever they are — initSupabaseSession() and the populated
-        // form fields will guide them.
-        showFace(0);
+    const navCtx = { currentFace, formReady, hasProfileRow: !!profileRow, hasProfileData: !!profileData };
+
+    // Run calculation whenever we have the data, regardless of current face.
+    // Without this, users who land on a locked face (3/4/5/6) post-magic-link
+    // have profileData=null and hit "Please enter your details" on unlock.
+    if(formReady && !profileData){
+      try {
+        runCalculation();
+        _qcSessionNav('formReady→runCalculation→showFace(1)', navCtx);
+      } catch(e) {
+        console.error("[QC] SIGNED_IN runCalculation:", e);
+        try { if(window.Sentry) Sentry.captureException(e); } catch(_){}
+        if(currentFace === 'CheckEmail' || currentFace === 0) showFace(1);
+        _qcSessionNav('formReady but runCalculation threw → fallback face(1)', navCtx);
       }
+    } else if(currentFace === 'CheckEmail'){
+      // Never strand the user on CheckEmail. If we have a profile row but
+      // form isn't ready (incomplete profile / OAuth without DOB), bounce
+      // to Face 0 so they can complete it.
+      showFace(0);
+      _qcSessionNav('CheckEmail + no formReady → showFace(0)', navCtx);
+    } else if(currentFace === 0 && !profileRow){
+      showFace(0);
+      _qcSessionNav('face 0 + new user → stay on showFace(0)', navCtx);
+    } else {
+      _qcSessionNav('no nav action (left user in place)', navCtx);
     }
   }
   if(event === "SIGNED_OUT"){
@@ -3682,7 +3732,11 @@ async function exportMyData(){
     dl.click();
     document.body.removeChild(dl);
     setTimeout(() => URL.revokeObjectURL(dl.href), 1000);
-  } catch(e){ console.warn("exportMyData err", e); alert("Export failed. Please try again."); }
+  } catch(e){
+    console.error("[QC] exportMyData err", e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'exportMyData' } }); } catch(_){}
+    alert("Export failed. Please try again.");
+  }
 }
 
 // Two-tap delete confirmation pattern.
@@ -3773,6 +3827,7 @@ async function confirmDeleteAccount(){
 document.addEventListener("DOMContentLoaded", () => { initSupabaseSession(); });
 
 function runCalculation(){
+try { if(window.Sentry) Sentry.addBreadcrumb({category:'calc', level:'info', message:'runCalculation entry'}); } catch(_){}
 const fn=document.getElementById("firstName").value.trim();
 const mn=document.getElementById("middleName").value.trim();
 const ln=document.getElementById("lastName").value.trim();
@@ -3783,7 +3838,7 @@ const day=parseInt(dayVal);
 const month=parseInt(monthVal);
 const year=parseInt(yearVal);
 const err=document.getElementById("errMsg");
-if(!fn||!ln||!dayVal||!monthVal||!yearVal||isNaN(day)||isNaN(month)||isNaN(year)){err.textContent="Please complete all fields";err.style.display="block";qcMarkInvalidFields();return}
+if(!fn||!ln||!dayVal||!monthVal||!yearVal||isNaN(day)||isNaN(month)||isNaN(year)){err.textContent="Please complete all fields";err.style.display="block";qcMarkInvalidFields();try { if(window.Sentry) Sentry.captureMessage('runCalculation: incomplete fields', { level: 'warning', extra: { fn:!!fn, ln:!!ln, dayVal, monthVal, yearVal } }); } catch(_){};return}
 var _today=new Date();
 var _dob=new Date(year,month-1,day);
 var _age=_today.getFullYear()-_dob.getFullYear();
@@ -3813,7 +3868,10 @@ const combo=getCombo(west.n,chin.n);
 const MONTHS=["","January","February","March","April","May","June","July","August","September","October","November","December"];
 profileData={fullName,day,month,year,CY,lifePath,birthday,expression,soulUrge,personality,matrix,passions,lessons,cycles,personalYr,west,chin,combo,dobStr:day+" "+MONTHS[month]+" "+year};
 // Always render results so faces 3-6 are populated; locked faces hide content via display:none anyway
-try { renderAllContent(); } catch(e){ console.warn('renderAllContent failed:', e); }
+try { renderAllContent(); } catch(e){
+  console.error('[QC] renderAllContent failed:', e);
+  try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'renderAllContent' } }); } catch(_){}
+}
 showFace(1);
 // Analytics: top-of-funnel event (no PII in properties)
 try { if(window.posthog) posthog.capture('cube_calculation_started', { life_path: lifePath, west_sign: west && west.n, chin_sign: chin && chin.n }); } catch(e){}
