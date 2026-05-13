@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v264",
+      release: "quantum-cube@qc-v265",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3618,7 +3618,10 @@ async function handleRevealClick(){
     // this, we'd silently re-fire signInWithOtp on a session that's already
     // valid and the UI would appear frozen. Persist the form fields to the
     // existing user's profile, then advance via runCalculation.
+    // v265: Sentry breadcrumb for session state
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'reveal', message: 'session check', data: { has_session: !!_revealSession, session_email: _revealSession?.user?.email?.slice(0,3) || null, form_email: em.slice(0,3) } }); } catch(_) {}
     if(_revealSession && _revealSession.user && _revealSession.user.email && _revealSession.user.email.toLowerCase() === em.toLowerCase()){
+      try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'reveal', message: 'branch: existing session matches — skip OTP' }); } catch(_) {}
       qcCurrentUser = _revealSession.user;
       updateSettingsLinkVisibility();
       try {
@@ -3630,33 +3633,27 @@ async function handleRevealClick(){
       try { runCalculation(); } catch(e) { showFace(1); }
       return;
     }
-    if(session && session.user && session.user.email && session.user.email.toLowerCase() === em.toLowerCase()){
-      qcCurrentUser = session.user;
-      updateSettingsLinkVisibility();
-      const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
-      qcCurrentProfile = profile || null;
-      syncUnlockFromProfile(qcCurrentProfile);
-      try { runCalculation(); } catch(e) { showFace(1); }
-      return;
-    }
     // If signed in but with a different email, sign out first so we can start fresh
-    if(session && session.user && session.user.email && session.user.email.toLowerCase() !== em.toLowerCase()){
+    if(_revealSession && _revealSession.user && _revealSession.user.email && _revealSession.user.email.toLowerCase() !== em.toLowerCase()){
+      try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'reveal', message: 'branch: session email mismatch — signing out' }); } catch(_) {}
       try { await sb.auth.signOut(); } catch(e) {}
       _revealSession = null;
     }
   } catch(e){}
   // v262 Fix 2: CCT-isolation detection. If a magic link was already
-  // requested in this session (qcLastMagicEmail set) but no session has
-  // materialised in this storage partition, the user came back here via
-  // a CCT/external-browser detour. Route them back to CheckEmail with a
-  // warning rather than silently dispatching another link that won't land
-  // in this storage either. First-time signup (qcLastMagicEmail null)
-  // bypasses this guard and continues to the normal signInWithOtp path.
-  if(qcLastMagicEmail && !_revealSession){
-    try { if(window.Sentry) Sentry.captureMessage('face0 submit — no session (CCT)', { level: 'warning', tags: { area: 'magic-link-cct' } }); } catch(_) {}
+  // requested for THIS SAME EMAIL but no session has materialised, the
+  // user came back here via a CCT/external-browser detour. Route them
+  // back to CheckEmail with a warning rather than silently dispatching
+  // another link that won't land in this storage either.
+  // v265 fix: must check email match — otherwise typing a NEW email after
+  // a previous attempt would incorrectly trigger this guard.
+  if(qcLastMagicEmail && qcLastMagicEmail.toLowerCase() === em.toLowerCase() && !_revealSession){
+    try { if(window.Sentry) Sentry.captureMessage('face0 submit — same email, no session (CCT guard)', { level: 'warning', tags: { area: 'magic-link-cct' }, extra: { email_hash: em.slice(0,3) } }); } catch(_) {}
     showCheckEmailScreen();
     return;
   }
+  // v265: reaching OTP dispatch — log it
+  try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'reveal', message: 'branch: dispatching OTP', data: { email_hash: em.slice(0,3), had_prior_magic: !!qcLastMagicEmail } }); } catch(_) {}
   if(btn){ btn.disabled = true; }
   qcLastMagicEmail = em;
   showCheckEmailScreen();
