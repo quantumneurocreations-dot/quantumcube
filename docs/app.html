@@ -579,7 +579,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v246",
+      release: "quantum-cube@qc-v247",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1994,6 +1994,13 @@ async function _qcCheckSessionOnce(reason){
 var _qcVisRapidTimer = null;
 document.addEventListener('visibilitychange', async function(){
   if(document.visibilityState !== 'visible') return;
+  // While a Dodo checkout overlay is open or post-close sync is in flight,
+  // returning to the tab must NOT trigger any auth side-effects — the unlock
+  // flow handles its own profile refetch and face restoration.
+  if(_qcDodoInFlight){
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'visibilitychange suppressed (Dodo in-flight)'}); } catch(_){}
+    return;
+  }
   if(currentFace !== 'CheckEmail') return;
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'visibilitychange→CheckEmail rapid-check armed'}); } catch(_){}
   if(await _qcCheckSessionOnce('visibilitychange')) return;
@@ -2698,6 +2705,14 @@ function ensureDodoSdk(){
 // listener to handle this race-free.
 let _qcPendingPaymentUnlock = false;
 let _qcUnlockInFlight = false;
+// Captured at launchDodo() entry so we can restore the user's face if the
+// overlay close drops them on face 0 (Dodo SDK occasionally triggers a
+// reinit/navigation on mobile webviews — see Bug v247).
+let _qcPreDodoFace = null;
+// True while a Dodo overlay is open or its post-close sync is in flight.
+// Visibility-driven handlers consult this and bail rather than triggering
+// auth or nav side-effects that race with the unlock sync.
+let _qcDodoInFlight = false;
 
 async function checkDodoReturn(){
   const params = new URLSearchParams(window.location.search);
@@ -2854,7 +2869,7 @@ async function attemptPaymentUnlock(passedSession){
 
 async function handleDodoEvent(event){
   if (!event || !event.event_type) return;
-  try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'dodo event: '+event.event_type}); } catch(_){}
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'dodo event: '+event.event_type+'; currentFace='+currentFace+'; preDodoFace='+_qcPreDodoFace}); } catch(_){}
   // checkout.redirect fires on successful payment before checkout.closed.
   // checkout.closed fires whether the user paid, cancelled, or hit X.
   // Either way: refetch profile and let RLS-backed has_paid be the truth.
@@ -2868,6 +2883,7 @@ async function handleDodoEvent(event){
         const { data: { session } } = await sb.auth.getSession();
         if (!session || !session.user) {
           try { if(window.Sentry) Sentry.captureMessage('post-checkout: no session for profile sync', 'warning'); } catch(_){}
+          _qcDodoInFlight = false;
           return;
         }
         const { data: profile, error } = await sb
@@ -2884,16 +2900,43 @@ async function handleDodoEvent(event){
           if (typeof syncUnlockFromProfile === "function") {
             syncUnlockFromProfile(profile);
           }
-          try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'post-checkout synced; has_paid='+!!profile.has_paid}); } catch(_){}
+          try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'post-checkout synced; has_paid='+!!profile.has_paid+'; currentFace='+currentFace}); } catch(_){}
+
+          // Bug v247: Dodo overlay close on mobile webview occasionally drops
+          // the user on face 0 with the form visible — looks like a sign-out.
+          // If has_paid is now true but we're stranded on face 0, route back
+          // to the face the user came from (or face 1 as a sensible default).
+          if (profile.has_paid === true && currentFace === 0) {
+            const target = (_qcPreDodoFace && _qcPreDodoFace !== 0 && _qcPreDodoFace !== 'CheckEmail') ? _qcPreDodoFace : 1;
+            try { if(window.Sentry) Sentry.captureMessage('post-checkout: rescuing user from face 0 → face '+target, { level: 'info', extra: { preDodoFace: _qcPreDodoFace, hasProfileData: !!profileData } }); } catch(_){}
+            // Make sure runCalculation has fired so locked content has data,
+            // otherwise showFace(content) shows an empty face.
+            if (!profileData && typeof populateFormFromProfile === 'function') {
+              const populated = populateFormFromProfile(profile, session.user);
+              if (populated && typeof runCalculation === 'function') {
+                try { runCalculation(); } catch(e) {
+                  console.error('[QC] post-checkout runCalculation:', e);
+                  try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'post-checkout-runcalc' } }); } catch(_){}
+                }
+              }
+            }
+            // runCalculation lands on face 1; only override if we want a different face
+            if (target !== 1) showFace(target);
+          } else if (profile.has_paid === true) {
+            try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'post-checkout: user on content face '+currentFace+', no nav needed'}); } catch(_){}
+          }
         }
       } catch (e) {
         console.error("[QC] post-checkout profile sync failed:", e);
         try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'post-checkout' } }); } catch(_){}
+      } finally {
+        _qcDodoInFlight = false;
       }
     }, 1500);
   } else if (event.event_type === "checkout.error") {
     console.error("[QC] Dodo checkout error:", event);
     try { if(window.Sentry) Sentry.captureMessage('Dodo checkout.error: '+JSON.stringify(event).slice(0,500), 'error'); } catch(_){}
+    _qcDodoInFlight = false;
     alert("Payment could not be completed. Please try again.");
   }
 }
@@ -2938,7 +2981,8 @@ function _qcScaleDodoOverlay(){
 }
 
 async function launchDodo(){
-  try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'launchDodo entry'}); } catch(_){}
+  _qcPreDodoFace = currentFace;
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'launchDodo entry; preDodoFace='+_qcPreDodoFace}); } catch(_){}
   try {
     if (!ensureDodoSdk()) {
       try { if(window.Sentry) Sentry.captureMessage('launchDodo: SDK not loaded', 'warning'); } catch(_){}
@@ -3015,6 +3059,7 @@ async function launchDodo(){
       return;
     }
     _qcScaleDodoOverlay();
+    _qcDodoInFlight = true;
     try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'opening Dodo overlay ('+DODO_MODE+')'}); } catch(_){}
     SDK.Checkout.open({ checkoutUrl: checkout_url });
   } catch (e) {
