@@ -959,3 +959,80 @@ Boot sequence is now CHAT_KICKOFF v5.2.0:
 4. NORTH_STAR.md ← NEW mandatory read
 
 First task next chat: test QI voice with the mic mute + buffer fixes. Then War Room agent planning.
+
+## 2026-05-13 — QI System Upgrade Session (Chat Claude)
+
+**Goal:** Complete QI system upgrades: auto-start, security layer, Chief of Staff briefing, research layer, Play Store stats integration.
+
+### ✅ DONE THIS SESSION
+
+- ✅ **#6 QI auto-start on login** — launchd plist created at `~/Library/LaunchAgents/com.quantumcube.qi-server.plist`. Node path `/Users/qnc/.nvm/versions/node/v24.15.0/bin/node`. KeepAlive=true. Verified running via `launchctl list | grep qi-server`. localhost:3001 survives reboots.
+- ✅ **#9 Prompt injection security layer** — `sanitize_input()` in `scripts/qi-voice.py`: 12 injection pattern classes blocked, Unicode abuse detection (>40% non-ASCII), 500-char cap, security events logged to `~/.config/qi/security.log`. Blocked inputs speak "That input was flagged and blocked." Commit `59f68f5`.
+- ✅ **#8 Chief of Staff morning briefing skill** — `run_cos_briefing()` in `scripts/qi-voice.py`. 15 trigger phrases ("morning briefing", "top priorities", "start my day", etc.). Fetches live data from `/api/briefing`. Delivers exactly 3 voiced priorities. Starts "First," ends "That is your focus. Go." Commit `4b413c8`.
+- ✅ **#7 Research layer** — `scripts/qi-research.py` (executable). Voice triggers: "save note", "note this down", "log this", etc. Saves to `~/.config/qi/research-notes/` as markdown. `export` command generates `~/Desktop/qi-research-export.md` for NotebookLM. Optional GDrive upload (needs `~/.config/qi/gdrive-token.json`). Wired into `respond_now()` routing. Commit `4b413c8`.
+- ⏳ **#4 Play Store install count** — `scripts/qi-play-stats.py` + `qi-server.js` updated. Service account `qi-play-reporting@quantum-cube-494914.iam.gserviceaccount.com`. Key at `~/.config/qi/play-service-account.json`. Both APIs enabled: `androidpublisher.googleapis.com` + `playdeveloperreporting.googleapis.com`. Play Console invite sent with "View app information and download bulk reports" permission. Still returning 404 — permission propagation in progress (15–60 min window). Run `python3 scripts/qi-play-stats.py` to confirm when ready. Commits `2ae007b`, `896c5f5`.
+
+**Commits this session:** `59f68f5` · `4b413c8` · `2ae007b` · `896c5f5`
+
+**Current HEAD:** `896c5f5` | **SW:** qc-v243 | **Sentry:** quantum-cube@qc-v243 | **Paying customers:** 3 | **Days to goal:** ~94
+
+---
+
+### 🔴 FULL REMAINING TODO LIST
+
+**QI System**
+- 🔲 **#1** Test QI voice live — mic mute + buffer fixes committed (`9aed0ae`, `5e5736b`), needs live test
+- 🔲 **#2** War Room dashboard — 7 named agents (Content, Analytics, Revenue, Developer, etc.), task board
+- 🔲 **#3** Ad performance in morning briefing — Google/Meta ROAS, spend, downloads (no API yet, parked)
+- ⏳ **#4** Play Store install count — run `python3 scripts/qi-play-stats.py` to confirm when Play Console permission propagates
+- 🔲 **#5** Overnight task instructions — tell QI before bed what to run at 3am
+
+**Google Play — critical path to 500 customers**
+- 🔲 **#10** Confirm 12+ testers opted in — check Play Console opt-in count (not just invited)
+- 🔲 **#11** Preview + confirm closed testing release in Play Console
+- 🔲 **#12** Google Play Billing implementation — required before production
+- 🔲 **#13** assetlinks.json second SHA-256 from Play App Signing tab
+- 🔲 **#14** Test Android auth on device — qc-v239 magic link fix
+- 🔲 **#15** Music on TWA (Gerda) — defer unless more testers report
+- 🔲 **#16** Orphaned TWA code cleanup (confirmTwaRedirect / cancelTwaRedirect / twaRedirectOverlay)
+
+**App / Code fixes (tester-reported)**
+- 🔲 **#17** Video spacing on phone
+- 🔲 **#18** "Reveal My Cube" button spacing
+- 🔲 **#19** Email page buttons (Continue/Google) shift left on wide screens — centering fix
+
+**⚠️ Infrastructure — time-sensitive**
+- 🔴 **#20** Sentry trial → free tier verify — **MAY 18 DEADLINE (5 days)**
+- 🔲 **#21** Google OAuth verification — still in Testing mode (only 3 users allowed)
+- 🔲 **#22** Privacy Policy — verify Supabase + Dodo Payments named explicitly
+
+**Post-launch cleanup**
+- 🔲 **#23** Dedupe `.scoreboard` duplicate CSS
+- 🔲 **#24** `git gc --aggressive` (repo 1.2GB)
+- 🔲 **#25** Delete test profile rows from Supabase
+- 🔲 **#26** Rotate leaked Dodo Test API + webhook secrets
+- 🔲 **#27** Refund second Live test payment
+- 🔲 **#28** DMARC `p=none` → `p=quarantine`
+- 🔲 **#29** Gmail 2FA on all 3 partner accounts
+
+**25 items remaining. Biggest urgencies: #20 Sentry (May 18), #10/#11 Play Store tester clock, #1 QI voice live test.**
+
+---
+
+### KEY FILE PATHS (QI system)
+- QI voice: `scripts/qi-voice.py`
+- QI server: `scripts/qi-server.js`
+- QI dashboard: `scripts/qi-dashboard.html`
+- Play stats: `scripts/qi-play-stats.py`
+- Research layer: `scripts/qi-research.py`
+- LaunchAgent: `~/Library/LaunchAgents/com.quantumcube.qi-server.plist`
+- Keys vault: `~/.config/qi/` (all chmod 600)
+- Play key: `~/.config/qi/play-service-account.json`
+- Security log: `~/.config/qi/security.log`
+- Research notes: `~/.config/qi/research-notes/`
+
+### 🚀 NEXT CHAT LEAD-IN
+1. Boot per CHAT_KICKOFF v5.2.0 — read SESSION_LOG → PROJECT_BRIEF → CONNECTORS → NORTH_STAR
+2. **Immediate: tester-reported app issues** (new chat for this)
+3. **After app fixes:** Continue upgrade list — #1 QI voice live test, #10 tester opt-in count, #20 Sentry deadline May 18
+
