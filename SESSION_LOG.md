@@ -1036,3 +1036,17 @@ First task next chat: test QI voice with the mic mute + buffer fixes. Then War R
 2. **Immediate: tester-reported app issues** (new chat for this)
 3. **After app fixes:** Continue upgrade list — #1 QI voice live test, #10 tester opt-in count, #20 Sentry deadline May 18
 
+
+## 2026-05-13 — Session cont.
+
+**Shipped qc-v244:**
+- Bug 1: magic link / TWA poller — `_qcCheckSessionOnce` helper, 1s×15 retry burst, "I've Verified — Continue" primary btn
+- Bug 2: delete button — Sentry breadcrumbs + captureMessage on silent failure paths  
+- Bug 3: Clarity CSP — `blob:` added to `worker-src`, richer violation reporting
+- UptimeRobot API key stored + CONNECTORS.md updated
+
+**Pending:**
+- UptimeRobot MCP connector (next session)
+- Play Store link monitor (Claude Code)
+- Isolated storage / Gmail CCT edge case — OTP or assetlinks deep-link (future sprint)
+- Sentry trial → free tier deadline: May 18 ⚠️
