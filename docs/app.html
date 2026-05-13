@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v262",
+      release: "quantum-cube@qc-v263",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3612,6 +3612,24 @@ async function handleRevealClick(){
   try {
     const { data: { session } } = await sb.auth.getSession();
     _revealSession = session;
+    // v263: Already authenticated — skip OTP entirely. Catches the case
+    // where SIGNED_IN landed the user on face 0 with an empty profile
+    // (name=null, dob=null) and they filled the form to continue. Without
+    // this, we'd silently re-fire signInWithOtp on a session that's already
+    // valid and the UI would appear frozen. Persist the form fields to the
+    // existing user's profile, then advance via runCalculation.
+    if(_revealSession && _revealSession.user){
+      qcCurrentUser = _revealSession.user;
+      updateSettingsLinkVisibility();
+      try {
+        const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
+        qcCurrentProfile = profile || null;
+        syncUnlockFromProfile(qcCurrentProfile);
+      } catch(_) {}
+      await saveProfileFromForm();
+      try { runCalculation(); } catch(e) { showFace(1); }
+      return;
+    }
     if(session && session.user && session.user.email && session.user.email.toLowerCase() === em.toLowerCase()){
       qcCurrentUser = session.user;
       updateSettingsLinkVisibility();
