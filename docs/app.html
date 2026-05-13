@@ -579,7 +579,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v245",
+      release: "quantum-cube@qc-v246",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1585,31 +1585,86 @@ function stopNarration(){
   if(window.QC_AUDIO && typeof QC_AUDIO.unduckMusic === "function") QC_AUDIO.unduckMusic();
 }
 
+const NARRATE_MAX_CHARS = 2400;
+
+// Splits long narration text into ≤NARRATE_MAX_CHARS chunks on sentence
+// boundaries so ElevenLabs doesn't truncate (combined-results face hits ~3k+
+// chars). Greedy: groups consecutive sentences until the next one would
+// overflow. If a single sentence is longer than the limit, falls back to a
+// whitespace split so we never produce an oversize chunk.
+function _qcSplitForNarration(text, maxLen){
+  maxLen = maxLen || NARRATE_MAX_CHARS;
+  if(text.length <= maxLen) return [text];
+  const sentences = text.match(/[^.!?]+[.!?]+[\s\n]*|[^.!?]+$/g) || [text];
+  const chunks = [];
+  let cur = '';
+  for(const s of sentences){
+    if(s.length > maxLen){
+      if(cur){ chunks.push(cur); cur = ''; }
+      let rest = s;
+      while(rest.length > maxLen){
+        let cut = rest.lastIndexOf(' ', maxLen);
+        if(cut <= 0) cut = maxLen;
+        chunks.push(rest.slice(0, cut));
+        rest = rest.slice(cut).replace(/^\s+/, '');
+      }
+      if(rest) cur = rest;
+    } else if((cur + s).length > maxLen){
+      chunks.push(cur);
+      cur = s;
+    } else {
+      cur += s;
+    }
+  }
+  if(cur) chunks.push(cur);
+  return chunks;
+}
+
+async function _qcFetchNarrationChunk(text){
+  const res = await fetch(NARRATE_URL, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ text: text, voice_id: VALORY_VOICE_ID })
+  });
+  if(!res.ok){
+    const err = new Error("narrate http " + res.status);
+    err.status = res.status;
+    throw err;
+  }
+  return await res.blob();
+}
+
 async function fetchNarration(text){
   if(!text) return null;
   const _narrateStart = Date.now();
-  try { if(window.posthog) posthog.capture('narrate_api_requested', { text_length: text.length }); } catch(e){}
+  const charCount = text.length;
+  const chunks = _qcSplitForNarration(text, NARRATE_MAX_CHARS);
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'narrate', level:'info', message:'fetchNarration: '+charCount+' chars → '+chunks.length+' chunk(s)'}); } catch(_){}
+  try { if(window.posthog) posthog.capture('narrate_api_requested', { text_length: charCount, chunk_count: chunks.length }); } catch(e){}
   try{
-    const res = await fetch(NARRATE_URL, {
-      method: "POST",
-      headers: {
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ text: text.slice(0,2400), voice_id: VALORY_VOICE_ID })
-    });
-    if(!res.ok){
-      try { if(window.posthog) posthog.capture('narrate_api_failed', { status: res.status, latency_ms: Date.now() - _narrateStart, reason: 'http_error' }); } catch(e){}
-      console.warn("narrate failed", res.status); return null;
+    const blobs = [];
+    for(let i = 0; i < chunks.length; i++){
+      const blob = await _qcFetchNarrationChunk(chunks[i]);
+      blobs.push(blob);
+      if(chunks.length > 1){
+        try { if(window.Sentry) Sentry.addBreadcrumb({category:'narrate', level:'info', message:'chunk '+(i+1)+'/'+chunks.length+' ok ('+chunks[i].length+' chars)'}); } catch(_){}
+      }
     }
-    const blob = await res.blob();
-    try { if(window.posthog) posthog.capture('narrate_api_succeeded', { latency_ms: Date.now() - _narrateStart, size_bytes: blob.size }); } catch(e){}
-    return URL.createObjectURL(blob);
+    // Raw MP3 blob concat works for HTML5 <audio> — MP3 frames are independently
+    // decodable and players treat sequential streams as continuous playback.
+    const finalType = (blobs[0] && blobs[0].type) || 'audio/mpeg';
+    const combined = blobs.length === 1 ? blobs[0] : new Blob(blobs, { type: finalType });
+    try { if(window.posthog) posthog.capture('narrate_api_succeeded', { latency_ms: Date.now() - _narrateStart, size_bytes: combined.size, chunk_count: chunks.length }); } catch(e){}
+    return URL.createObjectURL(combined);
   }catch(e){
-    try { if(window.posthog) posthog.capture('narrate_api_failed', { error: String(e && e.message || e).slice(0,200), latency_ms: Date.now() - _narrateStart, reason: 'network_error' }); } catch(_){}
+    const reason = e && e.status ? 'http_error' : 'network_error';
+    try { if(window.posthog) posthog.capture('narrate_api_failed', { status: e && e.status, error: String(e && e.message || e).slice(0,200), latency_ms: Date.now() - _narrateStart, reason: reason, chunk_count: chunks.length }); } catch(_){}
     console.error("[QC] narrate err", e);
-    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'narrate' } }); } catch(_){}
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'narrate' }, extra: { charCount, chunkCount: chunks.length } }); } catch(_){}
     return null;
   }
 }
