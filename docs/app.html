@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v256",
+      release: "quantum-cube@qc-v257",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2085,9 +2085,14 @@ function showFace(n){
 // real Install button if/when the event arrives.
 (function _qcInstallGateInit(){
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||('ontouchstart' in window&&window.innerWidth<=1024);
+  // v257: DO NOT consult IS_TWA here. The TWA self-detection at line 1110
+  // can latch onto a stale sessionStorage.qc_twa flag or a spoofable
+  // ?utm_source=android-twa URL param and stay true in a plain Chrome
+  // browser tab — that flipped isStandalone to true and revealed #app
+  // (the sign-up flash). The TWA wrapper reliably reports
+  // display-mode:standalone, which the first check covers.
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-    || window.navigator.standalone === true
-    || (typeof IS_TWA !== 'undefined' && IS_TWA);
+    || window.navigator.standalone === true;
   if(!isMobile || isStandalone){ var a=document.getElementById('app'); if(a) a.style.display=''; return; } // desktop or installed
   const app = document.getElementById('app');
   const gate = document.getElementById('installGate');
@@ -4400,7 +4405,17 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register('sw.js').catch(function(e){console.warn('SW register failed',e);});
   navigator.serviceWorker.addEventListener('message', function(e){
-    if(e.data && e.data.type === 'SW_UPDATED') window.location.reload();
+    if(!e.data || e.data.type !== 'SW_UPDATED') return;
+    // v257: suppress mid-load reload while the install gate is showing.
+    // Reloading at that moment causes a brief flash of the post-install
+    // success screen / fresh gate before the OS hands off to standalone.
+    // The next genuine launch picks up the new SW naturally.
+    var gate = document.getElementById('installGate');
+    if(gate && gate.classList.contains('show')){
+      try { if(window.Sentry) Sentry.addBreadcrumb({category:'sw', level:'info', message:'SW_UPDATED reload suppressed (install gate showing)'}); } catch(_){}
+      return;
+    }
+    window.location.reload();
   });
 }
 </script>
