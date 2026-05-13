@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v257",
+      release: "quantum-cube@qc-v258",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2109,11 +2109,18 @@ window.addEventListener('beforeinstallprompt', function(e){
   if(a2hs) a2hs.setAttribute('hidden','');
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'info', message:'beforeinstallprompt fired'}); } catch(_){}
 });
+// v258: Only the live user-initiated install tap should ever reach the
+// "Successfully installed" screen. The flag flips inside the actual
+// btn.onclick handler and _qcShowInstalledState refuses to run without it,
+// so a stale cached app.html mid-SW-update can't paint the success screen
+// before the new bundle takes over.
+var _qcUserTappedInstall = false;
 (function _qcInstallGateWire(){
   const btn = document.getElementById('installGateBtn');
   if(!btn) return;
   btn.onclick = async function(){
     if(!deferredInstall) return;
+    _qcUserTappedInstall = true;
     try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'info', message:'install button tapped'}); } catch(_){}
     try {
       deferredInstall.prompt();
@@ -2133,8 +2140,15 @@ window.addEventListener('appinstalled', function(){
 function _qcShowInstalledState(){
   var gate = document.getElementById('installGate');
   if(!gate) return;
+  if(!_qcUserTappedInstall){
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'warning', message:'_qcShowInstalledState blocked — user did not tap install'}); } catch(_){}
+    return;
+  }
+  if(!gate.classList.contains('show')){
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'warning', message:'_qcShowInstalledState blocked — gate not currently shown'}); } catch(_){}
+    return;
+  }
   gate.innerHTML = '<div class="install-gate-inner"><div class="install-gate-logo-wrap"><div style="display:inline-block;text-align:center"><div class="logo-main"><span class="logo-q">QUANTUM</span></div><div class="logo-main logo-c" style="text-align:right">CUBE</div></div></div><p class="install-gate-sub" style="margin-top:12px">Successfully installed</p><p style="font-family:Cinzel,serif;font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.7);line-height:1.8;margin:0">Find Quantum Cube on your home screen to begin</p></div>';
-  gate.classList.add('show');
 }
 
 // NUMEROLOGY ENGINE
