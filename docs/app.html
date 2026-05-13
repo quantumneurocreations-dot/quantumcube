@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v268",
+      release: "quantum-cube@qc-v269",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2027,27 +2027,45 @@ document.addEventListener('visibilitychange', async function(){
   }
   // v266: CCT recovery for Face 0. If user clicked magic link in Gmail CCT,
   // session landed in CCT's storage partition. When user returns to PWA on
-  // Face 0, check for any session that might have synced (rare but possible
-  // on same-origin contexts). If found + profile complete, advance to app.
+  // Face 0, check for any session that might have synced.
+  // v269: Add retry loop — session may not be written to storage immediately
+  // when CCT hands off. Check up to 4 times over 2 seconds.
   if(currentFace === 0){
-    try {
-      const { data: { session } } = await sb.auth.getSession();
-      if(session && session.user){
-        try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'visibilitychange Face0 session found'}); } catch(_){}
-        qcCurrentUser = session.user;
-        updateSettingsLinkVisibility();
-        const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
-        qcCurrentProfile = profile || null;
-        syncUnlockFromProfile(profile);
-        const formReady = populateFormFromProfile(profile, session.user);
-        if(formReady){
-          try { await saveProfileFromForm(); } catch(e) {}
-          try { runCalculation(); } catch(e) { showFace(1); }
+    const _tryFace0Recovery = async (attempt) => {
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        if(session && session.user){
+          const _em = session.user.email || '(no email)';
+          try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'visibilitychange Face0 session found', data: { attempt, email: _em.slice(0,8)+'…' } }); } catch(_){}
+          qcCurrentUser = session.user;
+          updateSettingsLinkVisibility();
+          const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
+          qcCurrentProfile = profile || null;
+          syncUnlockFromProfile(profile);
+          restorePendingProfile();
+          const formReady = populateFormFromProfile(profile, session.user);
+          if(formReady){
+            try { await saveProfileFromForm(); } catch(e) {}
+            try { runCalculation(); return true; } catch(e) { showFace(1); return true; }
+          } else {
+            try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'Face0 session found but form not ready — staying on Face 0'}); } catch(_){}
+          }
+          return true;
         }
+      } catch(e) {
+        try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'visibilitychange-face0' } }); } catch(_) {}
       }
-    } catch(e) {
-      try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'visibilitychange-face0' } }); } catch(_) {}
+      return false;
+    };
+    // Immediate check
+    if(await _tryFace0Recovery(1)) return;
+    // Retry loop: 4 attempts, 500ms apart (2 seconds total)
+    for(let i = 2; i <= 5; i++){
+      await new Promise(r => setTimeout(r, 500));
+      if(document.visibilityState !== 'visible' || currentFace !== 0) return;
+      if(await _tryFace0Recovery(i)) return;
     }
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'Face0 visibility recovery: no session after 5 attempts'}); } catch(_){}
     return;
   }
   if(currentFace !== 'CheckEmail') return;
@@ -3878,7 +3896,9 @@ function _qcSessionNav(decision, ctx){
 
 sb.auth.onAuthStateChange(async (event, session) => {
   if(event === "SIGNED_IN"){
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN fired', data: { hasSession: !!session, hasUser: !!(session && session.user) } }); } catch(_) {}
+    // v269: include email in breadcrumb for debugging which user landed
+    const _signedInEmail = session?.user?.email || '(no email)';
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN fired', data: { hasSession: !!session, hasUser: !!(session && session.user), email: _signedInEmail.slice(0,8)+'…', currentFace } }); } catch(_) {}
   }
   if (_qcPendingPaymentUnlock && (event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
     attemptPaymentUnlock(session);
@@ -3923,7 +3943,9 @@ sb.auth.onAuthStateChange(async (event, session) => {
     // OAuth users with no DOB yet get email + name pre-filled, must add DOB manually.
     // Returning users with full profile get everything pre-filled.
     const formReady = populateFormFromProfile(profileRow, session.user);
-    const navCtx = { currentFace, formReady, hasProfileRow: !!profileRow, hasProfileData: !!profileData };
+    // v269: include truncated email in navCtx for debugging
+    const _navEmail = session.user.email ? session.user.email.slice(0,8)+'…' : '(none)';
+    const navCtx = { currentFace, formReady, hasProfileRow: !!profileRow, hasProfileData: !!profileData, email: _navEmail };
 
     // Run calculation whenever we have the data, regardless of current face.
     // Without this, users who land on a locked face (3/4/5/6) post-magic-link
