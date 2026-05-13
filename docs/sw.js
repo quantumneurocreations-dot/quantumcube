@@ -1,4 +1,4 @@
-const CACHE='qc-v258';
+const CACHE='qc-v259';
 const NARR_CACHE='qc-narration-v3';
 
 self.addEventListener('install', e => {
@@ -16,6 +16,19 @@ self.addEventListener('install', e => {
         }
       }
     }catch(err){}
+    // v259: Pre-cache the app shell during install so the freshly-activated
+    // SW can serve the new app.html immediately on the first navigation.
+    // Without this, a race between activate-time cache deletion and the
+    // SW_UPDATED reload could briefly serve old cached content (the residual
+    // "Successfully installed" flash). cache:'reload' bypasses the browser
+    // HTTP cache so we always store the latest bundle, not a stale 304/200.
+    try {
+      const shell = await caches.open(CACHE);
+      await Promise.all([
+        shell.add(new Request('/app.html', { cache: 'reload' })),
+        shell.add(new Request('/styles.css', { cache: 'reload' }))
+      ].map(p => p.catch(() => {})));
+    } catch(err) {}
     self.skipWaiting();
   })());
 });
