@@ -192,6 +192,7 @@
   },
   "active": "43cd85dd90c12c16",
   "lastOpenFiles": [
+    "scripts/qi-research.py",
     "scripts/qi-play-stats.py",
     "scripts/qi-security.py",
     "scripts/qi-overnight.py",
@@ -203,7 +204,6 @@
     "graphify-out/graph.html",
     "graphify-out/GRAPH_REPORT.md",
     "graphify-out/manifest.json",
-    "graphify-out/graph.json",
     "NORTH_STAR.md",
     "CONNECTORS.md",
     "Playstore Screenshots/10 Inch Tablet Screenshots/Tablet -.jpg",
