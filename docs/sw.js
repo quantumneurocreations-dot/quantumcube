@@ -1,4 +1,4 @@
-const CACHE='qc-v249';
+const CACHE='qc-v250';
 const NARR_CACHE='qc-narration-v3';
 
 self.addEventListener('install', e => {
@@ -29,7 +29,11 @@ self.addEventListener('activate', e => {
       )
     )
   );
-  self.clients.claim();
+  self.clients.claim().then(() => {
+    self.clients.matchAll({ type: 'window' }).then(clients => {
+      clients.forEach(client => client.postMessage({ type: 'SW_UPDATED' }));
+    });
+  });
 });
 
 self.addEventListener('fetch', e => {
