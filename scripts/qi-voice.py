@@ -55,7 +55,7 @@ def read_key(f):
 
 DEEPGRAM_KEY   = read_key("deepgram_api_key")
 ELEVENLABS_KEY = read_key("elevenlabs_api_key")
-ANTHROPIC_KEY  = open(os.path.expanduser("~/.config/anthropic/key")).read().strip()
+ANTHROPIC_KEY  = read_key("anthropic_api_key")
 TAVILY_KEY     = read_key("tavily_api_key")
 QI_VOICE       = "giAoKpl5weRTCJK7uB9b"
 
