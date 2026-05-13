@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v261",
+      release: "quantum-cube@qc-v262",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3487,8 +3487,15 @@ async function saveProfileFromForm(){
   const fullName = [fn, mn, ln].filter(Boolean).join(" ");
   const dobIso = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
   try {
-    await sb.from("profiles").update({ name: fullName, dob: dobIso }).eq("id", qcCurrentUser.id);
-  } catch(e) { console.error("saveProfileFromForm error:", e); }
+    const { error } = await sb.from("profiles").update({ name: fullName, dob: dobIso }).eq("id", qcCurrentUser.id);
+    if (error) {
+      console.error("[QC] profile save returned error", error);
+      try { if(window.Sentry) Sentry.captureMessage('profile save error: '+(error.message||error.code), { level: 'error', tags: { area: 'profile-save' } }); } catch(_) {}
+    }
+  } catch(err) {
+    console.error('[QC] profile save failed', err);
+    try { if(window.Sentry) Sentry.captureException(err, { tags: { area: 'profile-save' } }); } catch(_) {}
+  }
 }
 
 // Populates Face 0 form fields from a profile row + auth user metadata.
@@ -3601,8 +3608,10 @@ async function handleRevealClick(){
   savePendingProfile(fn, mn, ln, d, m, y, em);
   // Short-circuit: if there's already an active session for THIS email,
   // skip the magic link and go straight to the app
+  let _revealSession = null;
   try {
     const { data: { session } } = await sb.auth.getSession();
+    _revealSession = session;
     if(session && session.user && session.user.email && session.user.email.toLowerCase() === em.toLowerCase()){
       qcCurrentUser = session.user;
       updateSettingsLinkVisibility();
@@ -3615,8 +3624,21 @@ async function handleRevealClick(){
     // If signed in but with a different email, sign out first so we can start fresh
     if(session && session.user && session.user.email && session.user.email.toLowerCase() !== em.toLowerCase()){
       try { await sb.auth.signOut(); } catch(e) {}
+      _revealSession = null;
     }
   } catch(e){}
+  // v262 Fix 2: CCT-isolation detection. If a magic link was already
+  // requested in this session (qcLastMagicEmail set) but no session has
+  // materialised in this storage partition, the user came back here via
+  // a CCT/external-browser detour. Route them back to CheckEmail with a
+  // warning rather than silently dispatching another link that won't land
+  // in this storage either. First-time signup (qcLastMagicEmail null)
+  // bypasses this guard and continues to the normal signInWithOtp path.
+  if(qcLastMagicEmail && !_revealSession){
+    try { if(window.Sentry) Sentry.captureMessage('face0 submit — no session (CCT)', { level: 'warning', tags: { area: 'magic-link-cct' } }); } catch(_) {}
+    showCheckEmailScreen();
+    return;
+  }
   if(btn){ btn.disabled = true; }
   qcLastMagicEmail = em;
   showCheckEmailScreen();
@@ -3638,6 +3660,8 @@ async function handleRevealClick(){
     _qcMagicLinkRequested = true;
     // Success: magic link dispatched. Interstitial + auto-advance land in next commit.
   } catch(e){
+    console.error('[QC] signInWithOtp (reveal) failed', e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'signInWithOtp', flow: 'reveal' } }); } catch(_){}
     if(err){
       err.textContent = "Could not send: " + (e.message || "Network error");
       err.style.display = "block";
@@ -3759,6 +3783,8 @@ async function handleResendMagicLink(){
     _qcMagicLinkRequested = true;
     if(msg){ msg.textContent = 'Link resent'; msg.classList.add('success'); msg.style.display = 'block'; }
   } catch(e){
+    console.error('[QC] signInWithOtp (resend) failed', e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'signInWithOtp', flow: 'resend' } }); } catch(_){}
     if(msg){ msg.classList.remove('success'); msg.textContent = 'Could not resend: ' + (e.message || 'Network error'); msg.style.display = 'block'; }
     if(btn) btn.disabled = false;
     return;
@@ -3791,6 +3817,9 @@ function _qcSessionNav(decision, ctx){
 }
 
 sb.auth.onAuthStateChange(async (event, session) => {
+  if(event === "SIGNED_IN"){
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN fired', data: { hasSession: !!session, hasUser: !!(session && session.user) } }); } catch(_) {}
+  }
   if (_qcPendingPaymentUnlock && (event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
     attemptPaymentUnlock(session);
   }
