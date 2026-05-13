@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v251",
+      release: "quantum-cube@qc-v252",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2084,7 +2084,7 @@ function showFace(n){
 // gate shows the Add-to-Home-Screen instruction by default and swaps in the
 // real Install button if/when the event arrives.
 (function _qcInstallGateInit(){
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||('ontouchstart' in window&&window.innerWidth<=1024);
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches
     || window.navigator.standalone === true
     || (typeof IS_TWA !== 'undefined' && IS_TWA);
