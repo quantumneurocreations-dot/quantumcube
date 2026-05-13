@@ -77,8 +77,9 @@ html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow
 /* ── MOBILE INSTALL GATE ── */
 /* Full-screen gate shown on mobile browsers when the PWA isn't installed.
    Desktop and standalone (installed PWA / TWA) bypass this and see #app. */
-#installGate{display:none;position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,rgba(5,5,15,0.5) 0%,rgba(5,5,15,0.85) 70%,rgba(5,5,15,0.96) 100%);align-items:center;justify-content:center;text-align:center;padding:max(40px,env(safe-area-inset-top)) 24px max(40px,env(safe-area-inset-bottom));font-family:'Cormorant Garamond',serif}
+#installGate{display:none;position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,rgba(5,5,15,0.5) 0%,rgba(5,5,15,0.85) 70%,rgba(5,5,15,0.96) 100%);align-items:center;justify-content:center;text-align:center;padding:max(40px,env(safe-area-inset-top)) 24px max(40px,env(safe-area-inset-bottom));font-family:'Cormorant Garamond',serif;opacity:0;transition:opacity 0.8s ease}
 #installGate.show{display:flex}
+#installGate.visible{opacity:1}
 .install-gate-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;max-width:420px;width:100%}
 @keyframes gateFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 .install-gate-logo-wrap{display:inline-block;animation:gateFloat 4s ease-in-out infinite;will-change:transform}
@@ -595,7 +596,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v270",
+      release: "quantum-cube@qc-v271",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -685,16 +686,9 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 </head>
 <body>
 <div id="stars"></div>
-<!-- v270: 2-second splash before install gate -->
+<!-- v271: splash icon — QC PNG, replaces text logo -->
 <div id="qcSplash">
-<div class="install-gate-inner">
-<div class="install-gate-logo-wrap">
-<div style="display:inline-block;text-align:center">
-<div class="logo-main"><span class="logo-q">QUANTUM</span></div>
-<div class="logo-main logo-c" style="text-align:right">CUBE</div>
-</div>
-</div>
-</div>
+<img src="/qc-icon-512.png" alt="Quantum Cube" style="width:120px;height:120px;border-radius:24px;animation:gateFloat 4s ease-in-out infinite;will-change:transform">
 </div>
 <div id="installGate" role="dialog" aria-label="Install Quantum Cube">
 <div class="install-gate-inner">
@@ -2173,8 +2167,12 @@ function showFace(n){
   document.body.style.opacity='1';
   var _splash = document.getElementById('qcSplash');
   setTimeout(function(){
-    if(_splash){ _splash.classList.add('fade-out'); setTimeout(function(){ if(_splash) _splash.style.display='none'; if(gate) gate.classList.add('show'); }, 600); }
-    else { if(gate) gate.classList.add('show'); }
+    if(_splash){ _splash.classList.add('fade-out'); setTimeout(function(){ if(_splash) _splash.style.display='none'; }, 600); }
+    if(gate){
+      gate.classList.add('show');
+      // v271: double-rAF trick — let display:flex apply first, then trigger opacity transition
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ gate.classList.add('visible'); }); });
+    }
   }, 2000);
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'info', message:'gate shown', data:{ua:navigator.userAgent.slice(0,160)}}); } catch(_){}
 })();
@@ -2211,8 +2209,8 @@ var _qcUserTappedInstall = false;
       try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'info', message:'userChoice: '+outcome}); } catch(_){}
       deferredInstall = null;
       if(outcome === 'accepted'){
-        // v270: delay installed-state by 3.5s — lets PWA icon land on home screen before we tell the user to go look for it
-        setTimeout(_qcShowInstalledState, 3500);
+        // v271: delay installed-state by 7s — lets PWA icon land on home screen before we tell the user to go look for it
+        setTimeout(_qcShowInstalledState, 7000);
       } else {
         // Dismissed — restore the button
         if(_ib) _ib.style.display = '';
