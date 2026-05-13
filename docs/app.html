@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v265",
+      release: "quantum-cube@qc-v266",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2023,6 +2023,31 @@ document.addEventListener('visibilitychange', async function(){
   // flow handles its own profile refetch and face restoration.
   if(_qcDodoInFlight){
     try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'visibilitychange suppressed (Dodo in-flight)'}); } catch(_){}
+    return;
+  }
+  // v266: CCT recovery for Face 0. If user clicked magic link in Gmail CCT,
+  // session landed in CCT's storage partition. When user returns to PWA on
+  // Face 0, check for any session that might have synced (rare but possible
+  // on same-origin contexts). If found + profile complete, advance to app.
+  if(currentFace === 0){
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if(session && session.user){
+        try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'visibilitychange Face0 session found'}); } catch(_){}
+        qcCurrentUser = session.user;
+        updateSettingsLinkVisibility();
+        const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
+        qcCurrentProfile = profile || null;
+        syncUnlockFromProfile(profile);
+        const formReady = populateFormFromProfile(profile, session.user);
+        if(formReady){
+          try { await saveProfileFromForm(); } catch(e) {}
+          try { runCalculation(); } catch(e) { showFace(1); }
+        }
+      }
+    } catch(e) {
+      try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'visibilitychange-face0' } }); } catch(_) {}
+    }
     return;
   }
   if(currentFace !== 'CheckEmail') return;
@@ -3491,6 +3516,9 @@ async function saveProfileFromForm(){
     if (error) {
       console.error("[QC] profile save returned error", error);
       try { if(window.Sentry) Sentry.captureMessage('profile save error: '+(error.message||error.code), { level: 'error', tags: { area: 'profile-save' } }); } catch(_) {}
+    } else {
+      // v266: log success for debugging profile persistence issues
+      try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'profile', message: 'profile save OK', data: { name_len: fullName.length, dob: dobIso } }); } catch(_) {}
     }
   } catch(err) {
     console.error('[QC] profile save failed', err);
@@ -3883,7 +3911,16 @@ sb.auth.onAuthStateChange(async (event, session) => {
     // Run calculation whenever we have the data, regardless of current face.
     // Without this, users who land on a locked face (3/4/5/6) post-magic-link
     // have profileData=null and hit "Please enter your details" on unlock.
+    // v266: await saveProfileFromForm first — the RLS recursion bug meant all
+    // existing profiles have name=null, dob=null. Must persist form data before
+    // runCalculation so subsequent session restores have valid profile data.
     if(formReady && !profileData){
+      try {
+        await saveProfileFromForm();
+      } catch(e) {
+        console.error("[QC] SIGNED_IN saveProfileFromForm:", e);
+        try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'signed-in-profile-save' } }); } catch(_){}
+      }
       try {
         runCalculation();
         _qcSessionNav('formReady→runCalculation→showFace(1)', navCtx);
@@ -3912,6 +3949,12 @@ sb.auth.onAuthStateChange(async (event, session) => {
     updateSettingsLinkVisibility();
     try { localStorage.removeItem(STORE_KEY); } catch(e) {}
     try { localStorage.removeItem(QC_PENDING_KEY); } catch(e) {}
+    // v266: unlock email field so new user can enter a different address
+    try {
+      const emEl = document.getElementById("email");
+      if(emEl){ emEl.value = ""; emEl.readOnly = false; emEl.style.opacity = ""; }
+    } catch(e) {}
+    qcLastMagicEmail = null;
   }
 });
 
@@ -3926,6 +3969,13 @@ async function signOut(){
   try { await sb.auth.signOut(); } catch(e) {}
   try { localStorage.removeItem(STORE_KEY); } catch(e) {}
   try { localStorage.removeItem(QC_PENDING_KEY); } catch(e) {}
+  // v266: reset email field to editable state before reload
+  // (populateFormFromProfile sets readOnly+opacity when logged in)
+  try {
+    const emEl = document.getElementById("email");
+    if(emEl){ emEl.value = ""; emEl.readOnly = false; emEl.style.opacity = ""; }
+  } catch(e) {}
+  qcLastMagicEmail = null;
   location.reload();
 }
 
