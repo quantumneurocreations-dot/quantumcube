@@ -72,7 +72,7 @@ html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow
 @keyframes twinkle{0%,100%{opacity:var(--lo,.05)}40%{opacity:var(--hi,.9)}60%{opacity:var(--hi,.9)}}
 
 /* ── APP SHELL ── */
-#app{min-height:100%;display:flex;flex-direction:column;overflow:visible;position:relative;z-index:1}
+#app{display:none;min-height:100%;display:flex;flex-direction:column;overflow:visible;position:relative;z-index:1}
 
 /* ── MOBILE INSTALL GATE ── */
 /* Full-screen gate shown on mobile browsers when the PWA isn't installed.
@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v254",
+      release: "quantum-cube@qc-v255",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2088,7 +2088,7 @@ function showFace(n){
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches
     || window.navigator.standalone === true
     || (typeof IS_TWA !== 'undefined' && IS_TWA);
-  if(!isMobile || isStandalone) return; // desktop or already installed — show #app as normal
+  if(!isMobile || isStandalone){ var a=document.getElementById('app'); if(a) a.style.display=''; return; } // desktop or installed
   const app = document.getElementById('app');
   const gate = document.getElementById('installGate');
   if(app) app.style.display = 'none';
