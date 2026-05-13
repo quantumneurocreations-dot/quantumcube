@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v266",
+      release: "quantum-cube@qc-v267",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3485,6 +3485,14 @@ function restorePendingProfile(){
     const raw = localStorage.getItem(QC_PENDING_KEY);
     if(!raw) return;
     const p = JSON.parse(raw);
+    // v267: TTL check — only restore if saved within the last hour.
+    // Prevents User A's email from appearing to User B on a shared device.
+    const PENDING_TTL_MS = 60 * 60 * 1000; // 1 hour
+    if(p.t && (Date.now() - p.t) > PENDING_TTL_MS){
+      try { localStorage.removeItem(QC_PENDING_KEY); } catch(_) {}
+      try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', message: 'pending profile expired, cleared' }); } catch(_) {}
+      return;
+    }
     const set = (id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.value=v;};
     set("firstName", p.firstName);
     set("middleName", p.middleName);
@@ -3739,6 +3747,15 @@ async function initSupabaseSession(){
   restorePendingProfile();
   // Populate form from profile/auth so returning users skip manual entry
   if(_initUser) populateFormFromProfile(_initProfile, _initUser);
+  // v267: if NO session and NO user, ensure email field is clean and editable.
+  // Catches edge cases where restorePendingProfile cleared expired data but
+  // browser autofill or other mechanisms might have populated the field.
+  if(!_initUser){
+    try {
+      const emEl = document.getElementById("email");
+      if(emEl && emEl.readOnly){ emEl.readOnly = false; emEl.style.opacity = ""; }
+    } catch(_) {}
+  }
   updateSettingsLinkVisibility();
   // Chunk 5b: if already signed in on page load, skip Face 0 entirely
   if(hasSession && currentFace === 0){
