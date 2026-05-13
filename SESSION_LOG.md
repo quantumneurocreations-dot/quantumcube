@@ -1050,3 +1050,79 @@ First task next chat: test QI voice with the mic mute + buffer fixes. Then War R
 - Play Store link monitor (Claude Code)
 - Isolated storage / Gmail CCT edge case — OTP or assetlinks deep-link (future sprint)
 - Sentry trial → free tier deadline: May 18 ⚠️
+
+
+## 2026-05-13 Evening — Auth flow overhaul + Anthropic billing crisis (Chat Claude + Claude Code)
+
+**Goal:** Fix all sign-up/auth bugs discovered by real TikTok users. Also resolved Anthropic billing crisis.
+
+---
+
+### 🚨 ANTHROPIC BILLING CRISIS — RESOLVED
+
+**Root cause:** `ANTHROPIC_API_KEY` in `~/.zshrc` pointed to "Codex's Individual Org". Claude Code read this env var and bypassed Max plan OAuth, billing per-token on Opus all day. ~$57 charged.
+
+**Fixes:**
+- ✅ Removed key from `~/.zshrc` + deleted `~/.config/anthropic/key`
+- ✅ `claude logout` + `claude login` via OAuth — now shows "Claude Max"
+- ✅ Auto-recharge OFF, $20 cap, old keys deleted
+- ✅ Partial refund $24.64 received — ~$38 outstanding, resets June 1
+- ✅ QI voice key moved to `~/.config/qi/anthropic_api_key` (qi-voice.py line 58 fixed)
+- ✅ Claude Code set back to Opus 4.7 via `~/.claude/settings.json`
+- ✅ `qc` alias added to `~/.zshrc` → `cd ~/Projects/quantumcube && claude`
+
+---
+
+### AUTH BUGS FIXED (qc-v264 through qc-v269)
+
+**v264** — Email-match check in reveal short-circuit  
+`if(_revealSession && _revealSession.user)` → added `.email === em` check. Prevented foreign session bypassing OTP for new emails.
+
+**v265** — CCT guard blocking new emails (Claude Code)  
+`if(qcLastMagicEmail && !_revealSession)` → added email match check. CCT guard was firing for ANY previous email, blocking new emails from reaching signInWithOtp.
+
+**v266** — Three auth flow bugs (Claude Code)  
+1. CCT isolation recovery: visibilitychange now handles Face 0 (not just CheckEmail)  
+2. Email lock on sign-out: sign-out now clears qcLastMagicEmail, resets readOnly=false + opacity  
+3. Profile persistence: SIGNED_IN handler now awaits saveProfileFromForm() before runCalculation()
+
+**v267** — Email cleanliness audit (Claude Code)  
+Found QC_PENDING_KEY in localStorage was persisting indefinitely → 1-hour TTL added. Was the real source of email leaking between users on shared devices.
+
+**v268** — CheckEmail buttons all white (Chat Claude)  
+Swapped both calc-btn elements on CheckEmail face to reset-btn. Prevents cyan .ready bleed from sign-up form validation affecting CheckEmail buttons.
+
+**v269** — CCT retry loop (Claude Code)  
+visibilitychange handler now retries up to 5× over 2 seconds. Fixes race condition where CCT session hadn't landed in storage by first check. Also adds restorePendingProfile() + truncated email in all Sentry breadcrumbs.
+
+---
+
+### SUPABASE FIX — RLS INFINITE RECURSION
+
+**Dropped** `users_update_own_profile` UPDATE policy (had recursive subquery on `profiles` inside `profiles` update).  
+**Replaced** with clean `auth.uid() = id` policy + `lock_has_paid` BEFORE UPDATE trigger.  
+Has_paid column is now protected via trigger (no recursion). All profile saves working.
+
+---
+
+### REAL USERS TODAY
+
+| Email | Status |
+|-------|--------|
+| tjaart51@gmail.com | TikTok ad user — OTP sent, never confirmed. Likely CCT bug. Magic link may be expired. |
+| keyzer.pretorius@gmail.com | **PAID customer** — name=null, dob=null (profile never saved due to RLS bug). |
+| madjadex@gmail.com (Jade) | Working ✅ after v269 |
+| codexsorcerer@gmail.com | Test account — working after all fixes |
+
+**All confirmed users had name=null, dob=null** — RLS recursion bug silently ate every profile save since launch. Fixed in v269.
+
+---
+
+### CURRENT HEAD: `052c701` | SW: qc-v269 | Sentry: quantum-cube@qc-v269
+
+**Pending:**
+- 🔲 Test v269 CCT flow on device — magic link → Gmail → return to app → should auto-advance in 1-2s
+- 🔲 Follow up tjaart51@gmail.com (TikTok user) — draft recovery email
+- 🔲 keyzer.pretorius@gmail.com (paid user) — profile incomplete, may need support
+- 🔲 Anthropic org rename: "Codex's Individual Org" → "Quantum Neuro Creations"
+- 🔲 $38.29 refund outstanding from Anthropic — resets June 1
