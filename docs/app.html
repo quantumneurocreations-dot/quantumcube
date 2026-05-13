@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded",function(){["firstName","lastName",
 --tshadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 2px 6px rgba(0,0,0,0.9);
 --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
 }
-html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:var(--bg);color:#fff;font-family:'Cormorant Garamond',serif}
+html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:var(--bg);color:#fff;font-family:'Cormorant Garamond',serif;opacity:0;transition:opacity 0.15s ease}
 #stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;background:#05050f url("cube-background.jpg") center center / cover no-repeat}
 .star{
   position:absolute;
@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v259",
+      release: "quantum-cube@qc-v260",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2093,11 +2093,12 @@ function showFace(n){
   // display-mode:standalone, which the first check covers.
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches
     || window.navigator.standalone === true;
-  if(!isMobile || isStandalone){ var a=document.getElementById('app'); if(a) a.style.display=''; return; } // desktop or installed
+  if(!isMobile || isStandalone){ var a=document.getElementById('app'); if(a) a.style.display=''; document.body.style.opacity='1'; return; } // desktop or installed
   const app = document.getElementById('app');
   const gate = document.getElementById('installGate');
   if(app) app.style.display = 'none';
   if(gate) gate.classList.add('show');
+  document.body.style.opacity='1';
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'install-gate', level:'info', message:'gate shown', data:{ua:navigator.userAgent.slice(0,160)}}); } catch(_){}
 })();
 window.addEventListener('beforeinstallprompt', function(e){
