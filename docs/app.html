@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v267",
+      release: "quantum-cube@qc-v268",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -780,9 +780,9 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
   <p class="form-title" style="margin:0">Click On The Link To Verify Your Email</p>
   <p class="err-msg" id="resendMsg" role="status" aria-live="polite" style="display:none">Link resent</p>
 </div>
-<button type="button" class="calc-btn" id="alreadyVerifiedBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleAlreadyVerified()">I've Verified — Continue</button>
+<button type="button" class="reset-btn" id="alreadyVerifiedBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleAlreadyVerified()">I've Verified — Continue</button>
 <p id="alreadyVerifiedMsg" role="status" aria-live="polite" style="display:none;margin:8px 24px 0 24px;text-align:center;font-size:13px;color:rgba(255,255,255,0.85);"></p>
-<button type="button" class="calc-btn" id="resendBtn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px);background:rgba(255,255,255,0.08);border:1px solid rgba(12,192,223,0.55);color:rgba(255,255,255,0.92);box-shadow:none" onclick="haptic(&apos;medium&apos;);handleResendMagicLink()">Resend Email</button>
+<button type="button" class="reset-btn" id="resendBtn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleResendMagicLink()">Resend Email</button>
 <button type="button" class="reset-btn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleBackToSignUp()" aria-label="Back to Sign Up">Back to<br>Sign Up</button>
 </div>
 <div class="face" id="face1" aria-label="Introduction">
