@@ -588,7 +588,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v253",
+      release: "quantum-cube@qc-v254",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2129,7 +2129,7 @@ window.addEventListener('appinstalled', function(){
 function _qcShowInstalledState(){
   var gate = document.getElementById('installGate');
   if(!gate) return;
-  gate.innerHTML = '<div class="install-gate-inner"><div class="install-gate-logo-wrap"><div style="display:inline-block;text-align:center"><div class="logo-main"><span class="logo-q">QUANTUM</span></div><div class="logo-main logo-c" style="text-align:right">CUBE</div></div></div><p class="install-gate-sub" style="margin-top:12px">Successfully installed</p><p style="font-family:Cinzel,serif;font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.7);line-height:1.8;margin:0">Quantum Cube was successfully installed on your phone</p></div>';
+  gate.innerHTML = '<div class="install-gate-inner"><div class="install-gate-logo-wrap"><div style="display:inline-block;text-align:center"><div class="logo-main"><span class="logo-q">QUANTUM</span></div><div class="logo-main logo-c" style="text-align:right">CUBE</div></div></div><p class="install-gate-sub" style="margin-top:12px">Successfully installed</p><p style="font-family:Cinzel,serif;font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.7);line-height:1.8;margin:0">Find Quantum Cube on your home screen to begin</p></div>';
   gate.classList.add('show');
 }
 
