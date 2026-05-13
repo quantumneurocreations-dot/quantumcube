@@ -188,3 +188,10 @@ This file is the memory that prevents asking the user things we already know.
 - **Mic device:** DIXON UM-20 USB (system default input)
 - **Keys vault:** `~/.config/qi/` (chmod 600 all files)
 - **Crons:** 2am overnight / 3am security / 7am briefing
+
+## UPTIMEROBOT
+
+- **Account:** quantumneurocreations@gmail.com
+- **Main API key:** `u3481167-eff9708257dbdf0694cc4cb3` (stored in `~/.config/qi/uptimerobot_api_key`)
+- **Status page:** https://stats.uptimerobot.com/azO4bPUJJQ
+- **MCP:** available in UptimeRobot dashboard (Integrations & API → MCP) — wire up next session
