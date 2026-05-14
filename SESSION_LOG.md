@@ -1234,3 +1234,130 @@ Has_paid column is now protected via trigger (no recursion). All profile saves w
 - crichter12@gmail.com
 - agenyaclinton6@gmail.com / agenyaclinton@gmail.com
 → All need to fill name + DOB on next open. v273 shows "Welcome back" hint.
+
+## 2026-05-14 Full Day — Auth root cause resolved, v275–v282, Play Store milestone, DB wipe, Claude Max upgrade
+
+**Goal:** Find and permanently fix auth root cause for closed-testing testers, get Google Play 14-day clock running, ship auth-stripped v282 for day-one tester access.
+
+---
+
+### 🔴 ROOT CAUSE: CCT Isolated Storage (confirmed)
+
+Chrome Custom Tab (CCT) — the in-app browser Gmail uses to open magic links — has **completely isolated localStorage** from the main Chrome session. `getSession()` was calling into Supabase's token-refresh path, which tried to write/read `localStorage`, but the CCT session could not see the localStorage written by the main Chrome tab. Result: deadlock / silent failure. OTP emails were arriving fine; the app just couldn't recover the session after the link was clicked.
+
+**Secondary problem:** 6 of 12 testers had stale `qc_last_magic` localStorage from previous test sessions. Old email in that key was triggering the CCT guard incorrectly.
+
+---
+
+### Auth overhaul — v275 through v281 (all committed + deployed)
+
+| Version | Commit | What changed |
+|---------|--------|--------------|
+| v275 | `d7bb68f` | Remove email readOnly (was blocking Android input); clear stale cross-account sessions; scroll validation errors into view |
+| v276 | `d1dcb2` | Add diagnostic Sentry captureMessages throughout reveal flow; add null-guards for rotateTo/applyRot; wrap showFace in try-catch |
+| v277 | `6d1dcb2` | Remove stale-session guard that was clearing form via SIGNED_OUT; add pre-validation diag breadcrumb |
+| v278 | `7d0e7c0` | Fix getSession() deadlock on token refresh — removed from hot path, replaced with localStorage direct-read |
+| v279 | `4af11e4` | Remove getSession() from reveal hot path entirely; persist qcLastMagicEmail for cross-session continuity |
+| v280 | `5ded698` | OTP code entry screen added; install gate auth bypass for direct app loads |
+| v281 | `b34b8ed` | Remove emailRedirectTo from signInWithOtp — OTP-only flow (no magic link redirect that opens CCT) |
+| v282 | `58c25a9` | **STRIP AUTH ENTIRELY from reveal** — name + DOB form only, no email input, no OTP, no Supabase session. runCalculation() runs immediately on Reveal tap. Payment gate blocks naturally (no session = has_paid false). |
+
+**v282 is the right call for day-one testing.** 14-day clock started May 14; testers can use the full app (minus paid content) without any auth friction. Google Play Billing implementation is pre-production, not needed for closed testing.
+
+---
+
+### 🗄️ Database wipe — completed
+
+All non-paid auth.users deleted from Supabase `fqqdldvnxupzxvvbyvjm`. Only `has_paid = true` accounts kept:
+
+| Email | has_paid | Name |
+|-------|----------|------|
+| quantumneurocreations@gmail.com | true | ronnie carl kelbrick |
+| booyens.michelle@gmail.com | true | Jaeger Tjaart Booyens |
+| qnc.review@gmail.com | true | QNC ReviewAccount |
+| keyzer.pretorius@gmail.com | true | Willem Keyzer Pretorius |
+
+Total: 4 records. Profiles cascade-deleted automatically on auth.users delete. DB is clean.
+
+---
+
+### 📋 Tester CSV created
+
+File: `/mnt/user-data/outputs/qnc_testers_emails.csv`  
+12 Gmail addresses for Google Play Console closed testing import:
+
+```
+gerda.jacobs21@gmail.com
+rkelbrickmail@gmail.com
+carlkelbrick@gmail.com
+madjadex@gmail.com
+charlheyns1@gmail.com
+charlheyns4@gmail.com
+keyzer.pretorius@gmail.com
+deswardt.ronelle@gmail.com
+crichter12@gmail.com
+l88040124@gmail.com
+xtremeproperties24@gmail.com
+noel92.nh@gmail.com
+```
+
+---
+
+### 🎯 Google Play milestone — screenshot confirmed May 14 ~18:45 SAST
+
+Play Console `quantumneurocreations@gmail.com` shows:
+
+- ✅ **Publish a closed testing release** — DONE (strikethrough)
+- ✅ **Have at least 12 testers opted-in to your closed test** — DONE (strikethrough)
+- ⭕ **Run your closed test with at least 12 testers, for at least 14 days** — IN PROGRESS
+
+**14-day clock started May 14, 2026. Apply for production access ~May 28.**
+
+No tester needs to do anything daily. Nobody opts out unless they deliberately go back to the invite link and tap "Leave the program." Uninstalling does NOT opt out.
+
+---
+
+### 💳 Claude Max $200/month plan upgrade
+
+Upgraded to Max $200 plan = **20× usage**. No token constraints on any future chat. This session is the first fully unconstrained session.
+
+---
+
+### 🩺 Health check — May 14 evening
+
+**Sentry (23 unresolved issues):**
+- Most are `reveal-diag:*` breadcrumbs (JAVASCRIPT-E/F/G/H/J/K etc.) — intentional diagnostic captureMessages added in v276 to trace the auth flow. These are NOT real errors; they're telemetry of the OTP/CCT flow that was active in v275–v281. Will resolve once breadcrumbs are cleaned from v283+.
+- JAVASCRIPT-A: "profile save error: infinite recursion" — 1 user, 22 hours ago. This was the RLS recursion bug fixed in v269. The event predates the fix; not a regression.
+- JAVASCRIPT-B: "For security purposes, you can only request this after 15 seconds" — Supabase OTP rate-limit hit by some testers rapidly re-tapping Reveal. Non-blocking; v282 removes auth entirely so this stops.
+- JAVASCRIPT-X: "launchDodo: no session at checkout" — 1 user, 1 hour ago. Expected: v282 has no auth session, so attempting payment correctly blocks. This is intended behavior for the 14-day test period.
+- JAVASCRIPT-3: "CSP violation: img-src blocked c.clarity.ms" — Microsoft Clarity beacon. Known; Clarity was deferred (ADR-011). Non-blocking.
+- JAVASCRIPT-7 + JAVASCRIPT-8: Session-restore nav breadcrumbs — diagnostic messages from restore flow. Not errors.
+
+**Action:** After v282 stabilises, resolve all `reveal-diag:*` issues as noise. Keep JAVASCRIPT-A and JAVASCRIPT-X for documentation.
+
+**Supabase:** ✅ 4 auth.users, all has_paid=true. RLS intact. DB clean.
+
+**UptimeRobot (24h):** ✅ 2 UP, 3 paused, 0 DOWN, 0 incidents. 100% uptime.
+
+---
+
+### 📋 Pending — ordered by urgency
+
+| # | Item | Urgency |
+|---|------|---------|
+| 1 | 🔴 Sentry free tier verify — **MAY 18 DEADLINE (4 days)** | CRITICAL |
+| 2 | Monitor tester engagement — ensure 12 stay opted in through May 28 | CRITICAL |
+| 3 | Push ≥1 update during 14-day window to show active development | HIGH |
+| 4 | Clean up reveal-diag Sentry breadcrumbs from code (v283+) | MEDIUM |
+| 5 | Resolve JAVASCRIPT-A, JAVASCRIPT-B, JAVASCRIPT-X in Sentry | MEDIUM |
+| 6 | Google Play Billing implementation (pre-production, not urgent) | MEDIUM |
+| 7 | Anthropic org rename: "Codex's Individual Org" → "Quantum Neuro Creations" | LOW |
+| 8 | $38.29 Anthropic refund outstanding — resets June 1 | LOW |
+| 9 | Follow up: tjaart51@gmail.com (TikTok user, OTP never confirmed) | LOW |
+| 10 | Follow up: keyzer.pretorius@gmail.com (paid, profile was empty pre-RLS fix — now has name) | LOW |
+
+---
+
+**Current HEAD:** `58c25a9` | **SW:** qc-v282 | **Sentry:** quantum-cube@qc-v282 | **Paying customers:** 4 | **DB:** 4 auth.users (all has_paid=true) | **Play Store:** 14-day clock running since May 14 → apply production May 28
+
+> **Related:** [[PROJECT_BRIEF]] · [[DECISIONS]] · [[CONNECTORS]] · [[NORTH_STAR]]
