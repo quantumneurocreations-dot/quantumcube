@@ -1126,3 +1126,78 @@ Has_paid column is now protected via trigger (no recursion). All profile saves w
 - 🔲 keyzer.pretorius@gmail.com (paid user) — profile incomplete, may need support
 - 🔲 Anthropic org rename: "Codex's Individual Org" → "Quantum Neuro Creations"
 - 🔲 $38.29 refund outstanding from Anthropic — resets June 1
+
+
+## 2026-05-14 — Install gate polish + PWA fixes + strategic review (Chat Claude)
+
+**Goal:** Polish the install experience — splash screen, spinner, loading states. Fix PWA splash color mismatch. Strategic review before going wide on ads.
+
+---
+
+### INSTALL GATE OVERHAUL (v270–v272 + manifest fix)
+
+**v270** — Install splash + spinner  
+- `#qcSplash` full-screen black overlay with QUANTUM CUBE text logo, shows for 2s on page load  
+- Spinner `#qcInstallSpinner` (.install-spin) replaces Install button on tap — cyan rotating arc, "INSTALLING" label  
+- 3.5s delay after `accepted` before `_qcShowInstalledState()` fires — buys time for icon to land on home screen  
+- If user dismisses Chrome prompt, button is restored and spinner hidden
+
+**v271** — Polish  
+- Splash now shows `qc-icon-512.png` (120px, border-radius 24px, floating animation) instead of text logo  
+- `#installGate` now has `opacity:0` by default + `.visible` class triggered via double-rAF for smooth fade-in  
+- Splash and gate cross-fade together (splash fades out as gate fades in) — no hard cut  
+- Spinner delay doubled to 7s (was 3.5s)
+
+**v272 — CRITICAL BUG FIX**  
+- `#qcSplash` had `display:flex` in CSS so it showed for ALL users including already-installed standalone users  
+- Installed users were stuck on black icon screen forever (couldn't access the app)  
+- Fix: added `if(sp) sp.style.display='none'` to the standalone/desktop early-return path in the IIFE
+
+**manifest.json — PWA splash color**  
+- `background_color` and `theme_color` changed from `#05050f` to `#000000` (pure black)  
+- Eliminates the visible blue-black mismatch on the native Android PWA launch splash  
+- New installs get this immediately; existing installs get it on Chrome's own manifest refresh cycle (days/weeks)
+
+---
+
+### STRATEGIC DISCUSSION
+
+**Android market:** Global Android ~72%, SA ~78%. US is the exception (~43% Android, ~57% iOS). For SA + global campaigns, Android-first is correct. Plenty of addressable market.
+
+**PWA real cons (beyond Play Store):**  
+- iOS: No `beforeinstallprompt`, manual A2HS, limited push notifications pre-iOS 16.4. iPhone-heavy US market partially unreachable  
+- Zero organic discovery — 100% dependent on paid/referral traffic  
+- Trust gap with less tech-savvy users vs native app store listing  
+- Storage can be evicted by browser; cache fragility  
+- TWA audio/media restrictions  
+
+**Readiness assessment:** Infrastructure solid enough to run paid ads now. Sentry catches issues, PostHog tracks sessions, SW handles updates silently. Auth bugs nailed (v264–v272 combined). The one risk mid-campaign is auth — now addressed.
+
+**Upcoming focus (tomorrow):**  
+- Wide + deep upgrade: AI agents/assistants, skill expansion, marketing system  
+- Financial backing confirmed — ads budget available, will find best channels and go all-in  
+- 12 Play Store tester opt-ins (critical path for production)  
+- Google Play Billing implementation
+
+---
+
+### CURRENT HEAD: `ce4eb4f` | SW/Sentry: `qc-v272` | manifest: #000000
+
+**Pending carried forward:**
+- 🔴 **Sentry trial → free tier — MAY 18 DEADLINE (4 days!)**
+- 🔲 Test v269 CCT flow on device (magic link → Gmail → auto-advance without close/reopen)
+- 🔲 Recovery email to tjaart51@gmail.com (TikTok user, never confirmed)
+- 🔲 keyzer.pretorius@gmail.com (paid user, profile empty — RLS bug pre-fix)
+- 🔲 Anthropic org rename: "Codex's Individual Org" → "Quantum Neuro Creations"
+- 🔲 $38.29 Anthropic refund outstanding — resets June 1
+- 🔲 12 Play Store testers opted in
+- 🔲 Google Play Billing implementation
+
+## 2026-05-14 Morning — Auth confirmed + small polish queue (Chat Claude)
+
+**Auth verdict from user:** Magic link flow confirmed working on two devices, multiple emails. Third email on same device goes stale — expected + acceptable behaviour. No fix needed.
+
+**Polish queue (deferred — no urgency):**
+- 🔲 Loading screen — user considering adding one
+- 🔲 Breathing space between pages — 1-2 spots need padding/margin review
+
