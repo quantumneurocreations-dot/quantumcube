@@ -596,7 +596,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v278",
+      release: "quantum-cube@qc-v279",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3708,26 +3708,15 @@ async function handleRevealClick(){
   savePendingProfile(fn, mn, ln, d, m, y, em);
   // Short-circuit: if there's already an active session for THIS email,
   // skip the magic link and go straight to the app
-  let _revealSession = null;
   try { if(window.Sentry) Sentry.captureMessage('reveal-diag: pre-session', { level: 'info' }); } catch(_) {}
-  try {
-    // v278: 5s timeout prevents deadlock when initSupabaseSession holds auth lock during token refresh
-    const { data: { session } } = await Promise.race([
-      sb.auth.getSession(),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('getSession-timeout-reveal')), 5000))
-    ]);
-    _revealSession = session;
-    // v263: Already authenticated — skip OTP entirely. Catches the case
-    // where SIGNED_IN landed the user on face 0 with an empty profile
-    // (name=null, dob=null) and they filled the form to continue. Without
-    // this, we'd silently re-fire signInWithOtp on a session that's already
-    // valid and the UI would appear frozen. Persist the form fields to the
-    // existing user's profile, then advance via runCalculation.
-    // v276: Sentry captureMessage for session state (breadcrumbs don't flush without error)
-    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: session-check', { level: 'info', extra: { hasSession: !!_revealSession, emailMatch: _revealSession?.user?.email?.toLowerCase() === em.toLowerCase() } }); } catch(_) {}
-    if(_revealSession && _revealSession.user && _revealSession.user.email && _revealSession.user.email.toLowerCase() === em.toLowerCase()){
-      try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'reveal', message: 'branch: existing session matches — skip OTP' }); } catch(_) {}
-      qcCurrentUser = _revealSession.user;
+  // v279: Use cached qcCurrentUser instead of sb.auth.getSession() — avoids
+  // holding the Supabase auth lock which causes a 5s timeout on every tap.
+  // qcCurrentUser is set by onAuthStateChange(SIGNED_IN) and initSupabaseSession.
+  let _hasMatchingSession = false;
+  if(qcCurrentUser && qcCurrentUser.email){
+    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: session-check', { level: 'info', extra: { hasSession: true, emailMatch: qcCurrentUser.email.toLowerCase() === em.toLowerCase() } }); } catch(_) {}
+    if(qcCurrentUser.email.toLowerCase() === em.toLowerCase()){
+      _hasMatchingSession = true;
       updateSettingsLinkVisibility();
       try {
         const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
@@ -3735,16 +3724,15 @@ async function handleRevealClick(){
         syncUnlockFromProfile(qcCurrentProfile);
       } catch(_) {}
       await saveProfileFromForm();
-      try { runCalculation(); } catch(e) { showFace(1); }
+      try { runCalculation(); } catch(e){ showFace(1); }
       return;
+    } else {
+      // Different email — sign out so OTP flow starts fresh
+      try { await sb.auth.signOut(); } catch(e){}
+      qcCurrentUser = null;
+      qcCurrentProfile = null;
     }
-    // If signed in but with a different email, sign out first so we can start fresh
-    if(_revealSession && _revealSession.user && _revealSession.user.email && _revealSession.user.email.toLowerCase() !== em.toLowerCase()){
-      try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'reveal', message: 'branch: session email mismatch — signing out' }); } catch(_) {}
-      try { await sb.auth.signOut(); } catch(e) {}
-      _revealSession = null;
-    }
-  } catch(e){}
+  }
   // v262 Fix 2: CCT-isolation detection. If a magic link was already
   // requested for THIS SAME EMAIL but no session has materialised, the
   // user came back here via a CCT/external-browser detour. Route them
@@ -3752,15 +3740,16 @@ async function handleRevealClick(){
   // another link that won't land in this storage either.
   // v265 fix: must check email match — otherwise typing a NEW email after
   // a previous attempt would incorrectly trigger this guard.
-  if(qcLastMagicEmail && qcLastMagicEmail.toLowerCase() === em.toLowerCase() && !_revealSession){
+  if(!_hasMatchingSession && qcLastMagicEmail && qcLastMagicEmail.toLowerCase() === em.toLowerCase()){
     try { if(window.Sentry) Sentry.captureMessage('reveal-diag: about-to-showCheckEmail (CCT)', { level: 'info' }); } catch(_) {}
     try { showCheckEmailScreen(); } catch(navErr) { console.error('[QC] showCheckEmailScreen failed (CCT path)', navErr); try { if(window.Sentry) Sentry.captureException(navErr, { tags: { area: 'reveal-nav' } }); } catch(_){} if(err){ err.textContent = 'Navigation error — please refresh'; err.style.display = 'block'; } return; }
     try { if(window.Sentry) Sentry.captureMessage('reveal-diag: showCheckEmail-done (CCT)', { level: 'info' }); } catch(_) {}
     return;
   }
-  // v276: reaching OTP dispatch
+  // v279: reaching OTP dispatch
   if(btn){ btn.disabled = true; }
   qcLastMagicEmail = em;
+  try { localStorage.setItem('qc_last_magic', JSON.stringify({ email: em, t: Date.now() })); } catch(_) {}
   try { if(window.Sentry) Sentry.captureMessage('reveal-diag: about-to-showCheckEmail (OTP)', { level: 'info' }); } catch(_) {}
   try { showCheckEmailScreen(); } catch(navErr) { console.error('[QC] showCheckEmailScreen failed (OTP path)', navErr); try { if(window.Sentry) Sentry.captureException(navErr, { tags: { area: 'reveal-nav' } }); } catch(_){} if(err){ err.textContent = 'Navigation error — please refresh'; err.style.display = 'block'; } if(btn){ btn.disabled = false; } return; }
   try { if(window.Sentry) Sentry.captureMessage('reveal-diag: showCheckEmail-done (OTP)', { level: 'info' }); } catch(_) {}
@@ -3823,6 +3812,18 @@ async function initSupabaseSession(){
       syncUnlockFromProfile(profile);
     }
   }catch(e){}
+  // v279: Restore persisted qcLastMagicEmail so CCT guard survives page reloads
+  try {
+    const _lmRaw = localStorage.getItem('qc_last_magic');
+    if(_lmRaw){
+      const _lm = JSON.parse(_lmRaw);
+      if(_lm && _lm.email && _lm.t && (Date.now() - _lm.t) < 3600000){
+        qcLastMagicEmail = _lm.email;
+      } else {
+        localStorage.removeItem('qc_last_magic');
+      }
+    }
+  } catch(_){}
   restorePendingProfile();
   // Populate form from profile/auth so returning users skip manual entry
   if(_initUser) populateFormFromProfile(_initProfile, _initUser);
@@ -3976,6 +3977,9 @@ sb.auth.onAuthStateChange(async (event, session) => {
     attemptPaymentUnlock(session);
   }
   if(event === "SIGNED_IN" && session && session.user){
+    // v279: Clear magic link state — OTP succeeded, no more CCT guard needed
+    qcLastMagicEmail = null;
+    try { localStorage.removeItem('qc_last_magic'); } catch(_) {}
     _qcMagicLinkRequested = false;
     qcCurrentUser = session.user;
     updateSettingsLinkVisibility();
