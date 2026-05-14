@@ -606,7 +606,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v280",
+      release: "quantum-cube@qc-v281",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3792,11 +3792,10 @@ async function handleRevealClick(){
   try { if(window.Sentry) Sentry.captureMessage('reveal-diag: about-to-showOtp (OTP)', { level: 'info' }); } catch(_) {}
   try { showOtpScreen(em); } catch(navErr) { console.error('[QC] showOtpScreen failed (OTP path)', navErr); try { if(window.Sentry) Sentry.captureException(navErr, { tags: { area: 'reveal-nav' } }); } catch(_){} if(err){ err.textContent = 'Navigation error — please refresh'; err.style.display = 'block'; } if(btn){ btn.disabled = false; } return; }
   try { if(window.Sentry) Sentry.captureMessage('reveal-diag: showOtp-done (OTP)', { level: 'info' }); } catch(_) {}
-  const redirectTo = window.location.origin + window.location.pathname;
   try {
     const result = await sb.auth.signInWithOtp({
       email: em,
-      options: { emailRedirectTo: redirectTo, data: {
+      options: { data: {
         marketing_consent: consent,
         pending_first_name: fn,
         pending_middle_name: mn,
