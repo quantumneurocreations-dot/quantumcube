@@ -596,7 +596,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v273",
+      release: "quantum-cube@qc-v274",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2128,7 +2128,7 @@ function showFace(n){
   const cs=document.getElementById('cubeScene');
   const ch=document.getElementById('faceLabelCard');
   const hideCube = (n===0 || n==='CheckEmail');
-  if(hideCube){cs.classList.remove('visible');if(ch)ch.style.display='none';}else{cs.classList.add('visible');if(ch)ch.style.display='block';}
+  if(hideCube){if(cs)cs.classList.remove('visible');if(ch)ch.style.display='none';}else{if(cs)cs.classList.add('visible');if(ch)ch.style.display='block';}
   // Music button: visible only on numeric faces 1-5 (not on 0, CheckEmail, 6, or 7)
   const mb=document.getElementById('musicBtn');
   if(mb){
@@ -3697,6 +3697,7 @@ async function handleRevealClick(){
   // Age error doesn't mark fields as invalid (the data IS entered, just out of range)
   if(err) err.style.display = "none";
   qcClearInvalidFields();
+  try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'reveal', message: 'reveal: form-valid' }); } catch(_) {}
   savePendingProfile(fn, mn, ln, d, m, y, em);
   // Short-circuit: if there's already an active session for THIS email,
   // skip the magic link and go straight to the app
@@ -3741,14 +3742,16 @@ async function handleRevealClick(){
   // a previous attempt would incorrectly trigger this guard.
   if(qcLastMagicEmail && qcLastMagicEmail.toLowerCase() === em.toLowerCase() && !_revealSession){
     try { if(window.Sentry) Sentry.captureMessage('face0 submit — same email, no session (CCT guard)', { level: 'warning', tags: { area: 'magic-link-cct' }, extra: { email_hash: em.slice(0,3) } }); } catch(_) {}
-    showCheckEmailScreen();
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'reveal', message: 'reveal: show-check-email-called (CCT path)' }); } catch(_) {}
+    try { showCheckEmailScreen(); } catch(navErr) { console.error('[QC] showCheckEmailScreen failed (CCT path)', navErr); try { if(window.Sentry) Sentry.captureException(navErr, { tags: { area: 'reveal-nav' } }); } catch(_){} if(err){ err.textContent = 'Navigation error — please refresh'; err.style.display = 'block'; } }
     return;
   }
   // v265: reaching OTP dispatch — log it
   try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'reveal', message: 'branch: dispatching OTP', data: { email_hash: em.slice(0,3), had_prior_magic: !!qcLastMagicEmail } }); } catch(_) {}
   if(btn){ btn.disabled = true; }
   qcLastMagicEmail = em;
-  showCheckEmailScreen();
+  try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'reveal', message: 'reveal: show-check-email-called (OTP path)' }); } catch(_) {}
+  try { showCheckEmailScreen(); } catch(navErr) { console.error('[QC] showCheckEmailScreen failed (OTP path)', navErr); try { if(window.Sentry) Sentry.captureException(navErr, { tags: { area: 'reveal-nav' } }); } catch(_){} if(err){ err.textContent = 'Navigation error — please refresh'; err.style.display = 'block'; } if(btn){ btn.disabled = false; } return; }
   const redirectTo = window.location.origin + window.location.pathname;
   try {
     const result = await sb.auth.signInWithOtp({
@@ -3765,6 +3768,7 @@ async function handleRevealClick(){
     });
     if(result && result.error) throw new Error(result.error.message || "Could not send");
     _qcMagicLinkRequested = true;
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'reveal', message: 'reveal: otp-dispatched' }); } catch(_) {}
     // Success: magic link dispatched. Interstitial + auto-advance land in next commit.
   } catch(e){
     console.error('[QC] signInWithOtp (reveal) failed', e);
