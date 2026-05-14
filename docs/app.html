@@ -609,7 +609,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v287",
+      release: "quantum-cube@qc-v288",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -4143,6 +4143,32 @@ function handleBackToSignUp(){
   if(window.QC_AUDIO) window.QC_AUDIO.play("back_to_signup");
   // Clear OTP timer
   if(qcOtpResendTimer){ clearInterval(qcOtpResendTimer); qcOtpResendTimer = null; }
+
+  // v288: Full sign-out to ensure clean slate for next sign-up
+  // Fire and forget — non-blocking, best effort
+  try { sb.auth.signOut(); } catch(_){}
+
+  // Clear all auth-related localStorage
+  try { localStorage.removeItem('qc_otp_email'); } catch(_){}
+  try { localStorage.removeItem(QC_PENDING_KEY); } catch(_){}
+  try { localStorage.removeItem('qc_last_magic'); } catch(_){}
+  try { localStorage.removeItem(STORE_KEY); } catch(_){}
+
+  // Reset auth state
+  qcCurrentUser = null;
+  qcCurrentProfile = null;
+  updateSettingsLinkVisibility();
+
+  // Clear form fields
+  ['firstName', 'middleName', 'lastName', 'dobDay', 'dobYear'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  const dobMonth = document.getElementById('dobMonth');
+  if(dobMonth) dobMonth.value = '';
+  const emailEl = document.getElementById('email');
+  if(emailEl){ emailEl.value = ''; emailEl.readOnly = false; emailEl.style.opacity = ''; }
+
   showFace(0);
 }
 // v283: Magic-link handlers removed — OTP-only flow now
