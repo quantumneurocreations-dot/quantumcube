@@ -596,7 +596,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v272",
+      release: "quantum-cube@qc-v273",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3822,6 +3822,14 @@ async function initSupabaseSession(){
       document.getElementById('dobYear')?.value);
     if(_formReady){
       try { runCalculation(); } catch(e) { showFace(1); }
+    } else {
+      // v273: returning authenticated user with incomplete profile (RLS save gap)
+      // Show a clear prompt so they know to fill in name + DOB to continue.
+      const errEl = document.getElementById('errMsg');
+      if(errEl){ errEl.textContent = "Welcome back! Please enter your name and date of birth to reveal your Cube."; errEl.style.display = "block"; errEl.style.color = "#0cc0df"; }
+      // Also unlock the email field so the form doesn't feel frozen
+      const emEl = document.getElementById('email');
+      if(emEl){ emEl.readOnly = false; emEl.style.opacity = ""; }
     }
   }
 }
