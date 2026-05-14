@@ -609,7 +609,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v286",
+      release: "quantum-cube@qc-v287",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1471,6 +1471,7 @@ document.addEventListener('visibilitychange', function(){
 /* v286: Google Identity Services (GSI) One Tap initialization */
 const GSI_CLIENT_ID = '886533964656-j8d17l8ij6u3q0i3bc8hgusr8od28c2h.apps.googleusercontent.com';
 let _qcGsiReady = false;
+let _qcGsiInProgress = false; // v287: flag to prevent onAuthStateChange from overriding GSI navigation
 
 document.addEventListener('DOMContentLoaded', function(){
   // Initialize GSI if available
@@ -1509,13 +1510,20 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 async function _qcHandleGoogleCredential(response){
+  // v287: breadcrumb at entry
+  try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: '_qcHandleGoogleCredential entry', data: { hasCredential: !!(response && response.credential) } }); } catch(_){}
+
   if(!response || !response.credential){
     console.error('[QC] GSI callback missing credential');
+    _qcGsiInProgress = false;
     const errEl = document.getElementById('errMsg');
     if(errEl){ errEl.textContent = 'Google sign-in failed. Please try again.'; errEl.style.display = 'block'; }
     return;
   }
   try {
+    // v287: breadcrumb before signInWithIdToken
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: 'calling signInWithIdToken' }); } catch(_){}
+
     // Sign in with the ID token
     const { data, error } = await sb.auth.signInWithIdToken({
       provider: 'google',
@@ -1524,14 +1532,33 @@ async function _qcHandleGoogleCredential(response){
     if(error) throw error;
     if(!data?.session?.user) throw new Error('No session returned');
     console.log('[QC] GSI signInWithIdToken succeeded');
+
+    // v287: breadcrumb after successful sign-in
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: 'signInWithIdToken succeeded', data: { userId: data.session.user.id?.slice(0,8) } }); } catch(_){}
+
     // Store user
     qcCurrentUser = data.session.user;
     updateSettingsLinkVisibility();
+
     // Save profile via direct REST (same pattern as OTP)
     await _qcSaveProfileDirect(data.session.access_token, data.session.user.id);
+
+    // v287: Fetch profile row to properly populate qcCurrentProfile and get DOB
+    let profileRow = null;
+    try {
+      const r = await sb.from("profiles").select("*").maybeSingle();
+      profileRow = r.data || null;
+      qcCurrentProfile = profileRow;
+      syncUnlockFromProfile(qcCurrentProfile);
+      try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: 'profile fetched', data: { hasRow: !!profileRow, hasDob: !!(profileRow && profileRow.dob) } }); } catch(_){}
+    } catch(e) {
+      console.error("[QC] GSI profile fetch:", e);
+    }
+
     // Restore any pending profile data and populate form
     restorePendingProfile();
-    populateFormFromProfile(null, data.session.user);
+    populateFormFromProfile(profileRow, data.session.user);
+
     // Check if form is ready (Google provides name but not DOB)
     const formReady = !!(
       document.getElementById('firstName')?.value &&
@@ -1540,10 +1567,22 @@ async function _qcHandleGoogleCredential(response){
       document.getElementById('dobMonth')?.value &&
       document.getElementById('dobYear')?.value
     );
+
+    // v287: breadcrumb before navigation decision
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: 'navigation decision', data: { formReady, currentFace } }); } catch(_){}
+
     if(formReady){
-      try { runCalculation(); } catch(e){ showFace(1); }
+      try {
+        runCalculation();
+        // v287: clear flag after successful navigation
+        _qcGsiInProgress = false;
+      } catch(e){
+        _qcGsiInProgress = false;
+        showFace(1);
+      }
     } else {
       // Stay on face0, prompt user to complete DOB
+      _qcGsiInProgress = false;
       const errEl = document.getElementById('errMsg');
       if(errEl){
         errEl.textContent = 'Welcome! Please enter your date of birth to continue.';
@@ -1552,6 +1591,7 @@ async function _qcHandleGoogleCredential(response){
       }
     }
   } catch(e){
+    _qcGsiInProgress = false;
     console.error('[QC] GSI signInWithIdToken failed', e);
     try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'gsi-signin' } }); } catch(_){}
     const errEl = document.getElementById('errMsg');
@@ -3718,12 +3758,15 @@ function populateFormFromProfile(profile, user){
   return hasAll;
 }
 
-// v286: GSI One Tap primary, OAuth redirect fallback
+// v287: GSI One Tap primary, OAuth redirect fallback
 async function handleGoogleSignIn(){
+  // v287: clear stale OTP email before starting GSI flow
+  try { localStorage.removeItem('qc_otp_email'); } catch(_){}
   // Try GSI One Tap first (no redirect, stays in app context)
   if(_qcGsiReady && typeof google !== 'undefined' && google.accounts && google.accounts.id){
     try {
       console.log('[QC] Triggering GSI prompt');
+      _qcGsiInProgress = true; // v287: set flag before prompt
       google.accounts.id.prompt((notification) => {
         if(notification.isNotDisplayed()){
           console.log('[QC] GSI prompt not displayed:', notification.getNotDisplayedReason());
@@ -4120,10 +4163,15 @@ sb.auth.onAuthStateChange(async (event, session) => {
   if(event === "SIGNED_IN"){
     // v269: include email in breadcrumb for debugging which user landed
     const _signedInEmail = session?.user?.email || '(no email)';
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN fired', data: { hasSession: !!session, hasUser: !!(session && session.user), email: _signedInEmail.slice(0,8)+'…', currentFace } }); } catch(_) {}
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN fired', data: { hasSession: !!session, hasUser: !!(session && session.user), email: _signedInEmail.slice(0,8)+'…', currentFace, gsiInProgress: _qcGsiInProgress } }); } catch(_) {}
   }
   if (_qcPendingPaymentUnlock && (event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
     attemptPaymentUnlock(session);
+  }
+  // v287: skip navigation logic if GSI is handling it
+  if(_qcGsiInProgress && event === "SIGNED_IN"){
+    console.log('[QC] onAuthStateChange: GSI in progress, skipping navigation');
+    return;
   }
   if(event === "SIGNED_IN" && session && session.user){
     // v283: Clean up stale magic-link localStorage
