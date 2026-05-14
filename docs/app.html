@@ -606,7 +606,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v282",
+      release: "quantum-cube@qc-v283",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -779,7 +779,7 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 <div class="form-group form-full" style="text-align:center"><label for="firstName" style="text-align:center;display:block">First Name</label><input type="text" id="firstName" placeholder="" autocomplete="given-name" required style="text-align:center"></div>
 <div class="form-group form-full" style="text-align:center"><label for="middleName" style="text-align:center;display:block">Middle Name &#8212; Optional</label><input type="text" id="middleName" placeholder="" autocomplete="additional-name" style="text-align:center"></div>
 <div class="form-group form-full" style="text-align:center"><label for="lastName" style="text-align:center;display:block">Last Name</label><input type="text" id="lastName" placeholder="" autocomplete="family-name" required style="text-align:center"></div>
-<!-- v282: email field removed — auth stripped from reveal flow -->
+<div class="form-group form-full" style="text-align:center"><label for="email" style="text-align:center;display:block">Email</label><input type="email" id="email" placeholder="" autocomplete="email" required style="text-align:center"></div>
 <div class="form-group" style="text-align:center"><label for="dobDay" style="text-align:center;display:block">Day</label><input type="number" id="dobDay" placeholder="" min="1" max="31" inputmode="numeric" required style="text-align:center" value="" oninput="if(parseInt(this.value)>31)this.value=31;if(parseInt(this.value)<1&&this.value!=='')this.value=1;"></div>
 <div class="form-group" style="text-align:center"><label for="dobMonth" style="text-align:center;display:block">Month</label><div class="sel-wrap"><select id="dobMonth" style="text-align:center"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select></div></div>
 <div class="form-group" style="text-align:center"><label for="dobYear" style="text-align:center;display:block">Year</label><input type="number" id="dobYear" placeholder="" min="1900" inputmode="numeric" required style="text-align:center" value="" oninput="var m=new Date().getFullYear()-1;if(parseInt(this.value)>m)this.value=m;if(parseInt(this.value)<1900&&this.value.length>=4)this.value=1900;"></div>
@@ -1987,163 +1987,42 @@ function onFaceShown(n){
 // Magic-link session poller. Some in-app browsers (Gmail/Outlook webviews) open
 // the magic link in a separate storage partition, so Supabase's cross-tab
 // broadcast never reaches this tab. While the user sits on CheckEmail, poll
-// getSession() every 2s; if a live session appears AND the user genuinely just
-// requested a magic link (not a cached session left over from a prior visit),
-// setSession() to re-fire onAuthStateChange (SIGNED_IN) — the existing handler
-// does the rest.
-var _qcMagicPoller = null;
-// Only set true after a successful signInWithOtp() call in handleRevealClick or
-// handleResendMagicLink. Without this gate, the poller would act on the cached
-// session of any returning user the moment CheckEmail is shown, re-firing
-// SIGNED_IN and bouncing them around the auth flow.
-var _qcMagicLinkRequested = false;
-function _qcStartMagicPoller(){
-  if(_qcMagicPoller) return;
-  var attempts = 0;
-  _qcMagicPoller = setInterval(async function(){
-    attempts++;
-    if(attempts > 30){
-      clearInterval(_qcMagicPoller);
-      _qcMagicPoller = null;
-      return;
-    }
-    if(!_qcMagicLinkRequested) return;
-    try {
-      const { data: { session } } = await sb.auth.getSession();
-      if(session && session.access_token && session.refresh_token){
-        clearInterval(_qcMagicPoller);
-        _qcMagicPoller = null;
-        _qcMagicLinkRequested = false;
-        try {
-          await sb.auth.setSession({
-            access_token: session.access_token,
-            refresh_token: session.refresh_token
-          });
-        } catch(e) {}
-      }
-    } catch(e) {}
-  }, 2000);
-}
-function _qcStopMagicPoller(){
-  if(_qcMagicPoller){
-    clearInterval(_qcMagicPoller);
-    _qcMagicPoller = null;
-  }
-  _qcMagicLinkRequested = false;
-}
+// v283: Magic-link poller removed — OTP-only flow doesn't need session polling
 
 // Re-fire SIGNED_IN if a fresh session has landed in our storage. Bypasses
-// the _qcMagicLinkRequested gate (cleared too eagerly elsewhere) and the
-// returning-user concern doesn't apply here — if we're on CheckEmail with a
-// live session, the user did just click a magic link or wants to be moved on.
-async function _qcCheckSessionOnce(reason){
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    if(session && session.access_token && session.refresh_token){
-      try {
-        await sb.auth.setSession({
-          access_token: session.access_token,
-          refresh_token: session.refresh_token
-        });
-        try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'magic-link session recovered ('+reason+')'}); } catch(_){}
-        return true;
-      } catch(e) {
-        try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'warning', message:'setSession failed ('+reason+'): '+(e&&e.message||e)}); } catch(_){}
-      }
-    }
-  } catch(e) {
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'warning', message:'getSession failed ('+reason+'): '+(e&&e.message||e)}); } catch(_){}
-  }
-  return false;
-}
+// v283: _qcCheckSessionOnce removed — OTP flow doesn't need session polling
 
-// Android Chrome aggressively suspends the original tab when the magic link
-// opens in a new Chrome tab — onAuthStateChange's BroadcastChannel sync stops
-// firing and the poller's setInterval is paused. When the user returns to the
-// original tab, force a session check AND start a rapid 1s/15-attempt retry
-// burst — covers the case where Supabase's URL-detection settles a few hundred
-// ms after the tab regains focus.
-//
-// NOTE: this can only recover sessions in *this tab's* storage partition. If
-// the magic link opened in Gmail CCT or a separate Chrome instance with no
-// shared storage (common on TWA), getSession() will return null forever and
-// the user needs to either fall back to OTP code entry or use the "Resend
-// Email" path inside the same browser context.
-var _qcVisRapidTimer = null;
+// v283: Visibility handler for returning authenticated users on Face 0
 document.addEventListener('visibilitychange', async function(){
   if(document.visibilityState !== 'visible') return;
   // While a Dodo checkout overlay is open or post-close sync is in flight,
-  // returning to the tab must NOT trigger any auth side-effects — the unlock
-  // flow handles its own profile refetch and face restoration.
-  if(_qcDodoInFlight){
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'visibilitychange suppressed (Dodo in-flight)'}); } catch(_){}
-    return;
-  }
-  // v266: CCT recovery for Face 0. If user clicked magic link in Gmail CCT,
-  // session landed in CCT's storage partition. When user returns to PWA on
-  // Face 0, check for any session that might have synced.
-  // v269: Add retry loop — session may not be written to storage immediately
-  // when CCT hands off. Check up to 4 times over 2 seconds.
-  if(currentFace === 0){
-    const _tryFace0Recovery = async (attempt) => {
-      try {
-        const { data: { session } } = await sb.auth.getSession();
-        if(session && session.user){
-          const _em = session.user.email || '(no email)';
-          try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'visibilitychange Face0 session found', data: { attempt, email: _em.slice(0,8)+'…' } }); } catch(_){}
-          qcCurrentUser = session.user;
-          updateSettingsLinkVisibility();
-          const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
-          qcCurrentProfile = profile || null;
-          syncUnlockFromProfile(profile);
-          restorePendingProfile();
-          const formReady = populateFormFromProfile(profile, session.user);
-          if(formReady){
-            try { await saveProfileFromForm(); } catch(e) {}
-            try { runCalculation(); return true; } catch(e) { showFace(1); return true; }
-          } else {
-            try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'Face0 session found but form not ready — staying on Face 0'}); } catch(_){}
-          }
-          return true;
-        }
-      } catch(e) {
-        try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'visibilitychange-face0' } }); } catch(_) {}
+  // returning to the tab must NOT trigger any auth side-effects
+  if(_qcDodoInFlight) return;
+  // Only handle Face 0 — returning user may have existing session
+  if(currentFace !== 0) return;
+  try {
+    const { data: { session } } = await Promise.race([
+      sb.auth.getSession(),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 3000))
+    ]);
+    if(session && session.user){
+      qcCurrentUser = session.user;
+      updateSettingsLinkVisibility();
+      const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
+      qcCurrentProfile = profile || null;
+      syncUnlockFromProfile(profile);
+      restorePendingProfile();
+      const formReady = populateFormFromProfile(profile, session.user);
+      if(formReady){
+        try { await saveProfileFromForm(); } catch(e) {}
+        try { runCalculation(); } catch(e) { showFace(1); }
       }
-      return false;
-    };
-    // Immediate check
-    if(await _tryFace0Recovery(1)) return;
-    // Retry loop: 4 attempts, 500ms apart (2 seconds total)
-    for(let i = 2; i <= 5; i++){
-      await new Promise(r => setTimeout(r, 500));
-      if(document.visibilityState !== 'visible' || currentFace !== 0) return;
-      if(await _tryFace0Recovery(i)) return;
     }
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'Face0 visibility recovery: no session after 5 attempts'}); } catch(_){}
-    return;
-  }
-  if(currentFace !== 'CheckEmail') return;
-  try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'visibilitychange→CheckEmail rapid-check armed'}); } catch(_){}
-  if(await _qcCheckSessionOnce('visibilitychange')) return;
-  if(_qcVisRapidTimer){ clearInterval(_qcVisRapidTimer); _qcVisRapidTimer = null; }
-  var rapidAttempts = 0;
-  _qcVisRapidTimer = setInterval(async function(){
-    rapidAttempts++;
-    if(rapidAttempts > 15 || document.visibilityState !== 'visible' || currentFace !== 'CheckEmail'){
-      clearInterval(_qcVisRapidTimer);
-      _qcVisRapidTimer = null;
-      return;
-    }
-    if(await _qcCheckSessionOnce('vis-rapid#'+rapidAttempts)){
-      clearInterval(_qcVisRapidTimer);
-      _qcVisRapidTimer = null;
-    }
-  }, 1000);
+  } catch(e) {}
 });
 
 function showFace(n){
-  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: showFace-entry', { level: 'info', extra: { n: String(n), currentFace: String(currentFace), targetExists: !!document.getElementById('face' + n) } }); } catch(_){}
-  if(n === 'CheckEmail'){ _qcStartMagicPoller(); } else { _qcStopMagicPoller(); }
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'nav', message:'showFace', data:{n:String(n)}}); } catch(_){}
   if(window.QC_AUDIO && typeof n==="number" && n>=1 && n<=6) window.QC_AUDIO.play("select_side");
   if(typeof stopNarration==="function")stopNarration();
   if(typeof pauseAllVideos==="function")pauseAllVideos();
@@ -3706,24 +3585,32 @@ async function handleGoogleSignIn(){
   }
 }
 
-// v282: Auth stripped from reveal flow — name + DOB only, no email
+// v283: OTP-only auth — no magic link redirects, no CCT localStorage issues
 async function handleRevealClick(){
-  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: ENTRY', { level: 'info' }); } catch(_) {}
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', message:'reveal-click'}); } catch(_) {}
   if(window.QC_AUDIO) window.QC_AUDIO.play("reveal_my_cube");
   const fn = document.getElementById("firstName").value.trim();
   const mn = document.getElementById("middleName").value.trim();
   const ln = document.getElementById("lastName").value.trim();
+  const em = document.getElementById("email").value.trim().toLowerCase();
   const d  = document.getElementById("dobDay").value.trim();
   const m  = document.getElementById("dobMonth").value;
   const y  = document.getElementById("dobYear").value.trim();
   const err = document.getElementById("errMsg");
-  if(!(fn && ln && d && m && y)){
+  // Validate all required fields
+  if(!(fn && ln && em && d && m && y)){
     if(err){
       err.textContent = "Please complete all fields";
       err.style.display = "block";
+      err.style.color = "";
       try { err.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(_) {}
     }
     qcMarkInvalidFields();
+    return;
+  }
+  // Basic email format check
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){
+    if(err){ err.textContent = "Please enter a valid email address"; err.style.display = "block"; err.style.color = ""; }
     return;
   }
   // Age gate: must be 18+
@@ -3733,16 +3620,40 @@ async function handleRevealClick(){
   var _mdiff=_today.getMonth()-_dob.getMonth();
   if(_mdiff<0||(_mdiff===0&&_today.getDate()<_dob.getDate())) _age--;
   if(_age<18){
-    if(err){ err.textContent="You must be 18 or older to use Quantum Cube"; err.style.display="block"; }
+    if(err){ err.textContent="You must be 18 or older to use Quantum Cube"; err.style.display="block"; err.style.color=""; }
     return;
   }
   if(err) err.style.display = "none";
   qcClearInvalidFields();
-  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: form-valid', { level: 'info' }); } catch(_) {}
-  // v282: Save pending profile locally (Supabase save wrapped to fail silently without auth)
-  savePendingProfile(fn, mn, ln, d, m, y, '');
-  // v282: Proceed directly to calculation — no auth required
-  try { runCalculation(); } catch(e){ showFace(1); }
+  // Save form to localStorage (survives app-switch to email)
+  savePendingProfile(fn, mn, ln, d, m, y, em);
+  // Persist email for OTP verify (survives page reload during email check)
+  try { localStorage.setItem('qc_otp_email', JSON.stringify({ email: em, t: Date.now() })); } catch(_){}
+  // Disable button during OTP request
+  const btn = document.getElementById("revealBtn");
+  if(btn){ btn.disabled = true; btn.textContent = "Sending code…"; }
+  try {
+    // v283: OTP-only, NO emailRedirectTo — user enters code manually
+    const { error } = await sb.auth.signInWithOtp({ email: em });
+    if(error) throw error;
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', message:'otp-sent', data:{email:em.slice(0,3)}}); } catch(_){}
+    // Show OTP entry screen
+    _qcShowOtpScreen(em);
+  } catch(e){
+    console.error('[QC] signInWithOtp failed', e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'signInWithOtp' } }); } catch(_){}
+    if(err){
+      const msg = e.message || '';
+      if(msg.includes('rate') || msg.includes('15 seconds')){
+        err.textContent = "Please wait a moment before trying again";
+      } else {
+        err.textContent = "Could not send code: " + (msg || "Network error");
+      }
+      err.style.display = "block";
+      err.style.color = "";
+    }
+    if(btn){ btn.disabled = false; btn.textContent = "Reveal My Cube"; }
+  }
 }
 
 function syncMarketingConsent(source){
@@ -3774,18 +3685,8 @@ async function initSupabaseSession(){
       syncUnlockFromProfile(profile);
     }
   }catch(e){}
-  // v279: Restore persisted qcLastMagicEmail so CCT guard survives page reloads
-  try {
-    const _lmRaw = localStorage.getItem('qc_last_magic');
-    if(_lmRaw){
-      const _lm = JSON.parse(_lmRaw);
-      if(_lm && _lm.email && _lm.t && (Date.now() - _lm.t) < 3600000){
-        qcLastMagicEmail = _lm.email;
-      } else {
-        localStorage.removeItem('qc_last_magic');
-      }
-    }
-  } catch(_){}
+  // v283: Clean up stale magic-link localStorage from pre-OTP versions
+  try { localStorage.removeItem('qc_last_magic'); } catch(_){}
   restorePendingProfile();
   // Populate form from profile/auth so returning users skip manual entry
   if(_initUser) populateFormFromProfile(_initProfile, _initUser);
@@ -3823,104 +3724,206 @@ async function initSupabaseSession(){
   }
 }
 
-// --- Chunk 5b helpers: interstitial + resend + auto-advance ---
-let qcLastMagicEmail = null;
-let qcResendCooldownTimer = null;
+// --- Chunk 5b helpers: OTP code entry (v283) ---
+let qcOtpResendTimer = null;
 
-// v282: Auth stripped — these functions are no longer needed
-// function showCheckEmailScreen(){ showFace('CheckEmail'); }
-// function showOtpScreen(email){ ... }
-// function _qcOtpInputHandler(){ ... }
-// async function _qcOtpVerify(){ ... }
-// async function _qcOtpResend(){ ... }
+function _qcShowOtpScreen(email){
+  // Display email on OTP screen
+  const emailEl = document.getElementById('qcOtpEmailDisplay');
+  if(emailEl) emailEl.textContent = email;
+  // Clear any previous input
+  for(let i=0; i<6; i++){
+    const d = document.getElementById('qcOtpD'+i);
+    if(d){ d.value = ''; }
+  }
+  const errEl = document.getElementById('qcOtpError');
+  if(errEl) errEl.style.display = 'none';
+  // Reset reveal button
+  const revBtn = document.getElementById('revealBtn');
+  if(revBtn){ revBtn.disabled = false; revBtn.textContent = 'Reveal My Cube'; }
+  // Wire up OTP input handlers
+  _qcWireOtpInputs();
+  // Show the face
+  showFace('OtpEntry');
+  // Focus first digit
+  setTimeout(()=>{ const d0 = document.getElementById('qcOtpD0'); if(d0) d0.focus(); }, 100);
+}
+
+function _qcWireOtpInputs(){
+  const digits = Array.from({length:6}, (_,i) => document.getElementById('qcOtpD'+i));
+  digits.forEach((el, i) => {
+    if(!el || el._qcWired) return;
+    el._qcWired = true;
+    el.addEventListener('input', e => {
+      const v = e.target.value.replace(/\D/g,'');
+      e.target.value = v.slice(-1);
+      if(v && i < 5) digits[i+1]?.focus();
+      if(digits.every(d => d && d.value.match(/\d/))) _qcOtpVerify();
+    });
+    el.addEventListener('keydown', e => {
+      if(e.key === 'Backspace' && !e.target.value && i > 0) digits[i-1]?.focus();
+    });
+    el.addEventListener('paste', e => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+      pasted.split('').forEach((ch, j) => { if(digits[j]) digits[j].value = ch; });
+      const next = Math.min(pasted.length, 5);
+      digits[next]?.focus();
+      if(pasted.length === 6) _qcOtpVerify();
+    });
+  });
+  // Wire verify button
+  const verifyBtn = document.getElementById('qcOtpVerifyBtn');
+  if(verifyBtn && !verifyBtn._qcWired){
+    verifyBtn._qcWired = true;
+    verifyBtn.addEventListener('click', () => { haptic('medium'); _qcOtpVerify(); });
+  }
+  // Wire resend link
+  const resendEl = document.getElementById('qcOtpResend');
+  if(resendEl && !resendEl._qcWired){
+    resendEl._qcWired = true;
+    resendEl.addEventListener('click', () => { haptic('light'); _qcOtpResend(); });
+  }
+}
+
+async function _qcOtpVerify(){
+  const code = Array.from({length:6}, (_,i) => {
+    const d = document.getElementById('qcOtpD'+i);
+    return d ? d.value : '';
+  }).join('');
+  if(code.length !== 6 || !/^\d{6}$/.test(code)) return;
+  // Get email from localStorage
+  let email = '';
+  try {
+    const raw = localStorage.getItem('qc_otp_email');
+    if(raw){ const p = JSON.parse(raw); email = p.email || ''; }
+  } catch(_){}
+  if(!email){
+    try { const pend = JSON.parse(localStorage.getItem(QC_PENDING_KEY) || '{}'); email = pend.email || ''; } catch(_){}
+  }
+  if(!email){
+    const errEl = document.getElementById('qcOtpError');
+    if(errEl){ errEl.textContent = 'Session expired — please go back and try again.'; errEl.style.display = 'block'; }
+    return;
+  }
+  const btn = document.getElementById('qcOtpVerifyBtn');
+  const errEl = document.getElementById('qcOtpError');
+  if(btn){ btn.disabled = true; btn.textContent = 'Verifying…'; }
+  if(errEl) errEl.style.display = 'none';
+  try {
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', message:'otp-verify-attempt'}); } catch(_){}
+    const { data, error } = await sb.auth.verifyOtp({ email, token: code, type: 'email' });
+    if(error) throw error;
+    if(!data?.session) throw new Error('No session returned');
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', message:'otp-verify-success'}); } catch(_){}
+    // Store session info locally
+    qcCurrentUser = data.session.user;
+    // Clear OTP email marker
+    try { localStorage.removeItem('qc_otp_email'); } catch(_){}
+    // Save profile via direct REST (NOT Supabase client to avoid getSession deadlock)
+    await _qcSaveProfileDirect(data.session.access_token, data.session.user.id);
+    // Clear pending profile
+    try { localStorage.removeItem(QC_PENDING_KEY); } catch(_){}
+    // Proceed to cube
+    updateSettingsLinkVisibility();
+    try { runCalculation(); } catch(e){ showFace(1); }
+  } catch(e){
+    console.error('[QC] verifyOtp failed', e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'verifyOtp' } }); } catch(_){}
+    const msg = e.message || '';
+    if(errEl){
+      if(msg.includes('expired') || msg.includes('invalid')){
+        errEl.textContent = 'Code expired or invalid — tap Resend to get a new one.';
+      } else {
+        errEl.textContent = msg || 'Verification failed. Please try again.';
+      }
+      errEl.style.display = 'block';
+    }
+    if(btn){ btn.disabled = false; btn.textContent = 'Verify'; }
+  }
+}
+
+// v283: Save profile via direct REST POST — bypasses Supabase JS client entirely
+async function _qcSaveProfileDirect(accessToken, userId){
+  const fn = document.getElementById('firstName')?.value.trim() || '';
+  const mn = document.getElementById('middleName')?.value.trim() || '';
+  const ln = document.getElementById('lastName')?.value.trim() || '';
+  const em = document.getElementById('email')?.value.trim().toLowerCase() || '';
+  const d  = document.getElementById('dobDay')?.value.trim() || '';
+  const m  = document.getElementById('dobMonth')?.value || '';
+  const y  = document.getElementById('dobYear')?.value.trim() || '';
+  if(!fn || !ln || !d || !m || !y) return;
+  const fullName = [fn, mn, ln].filter(Boolean).join(' ');
+  const dobIso = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  const consent = !!document.getElementById('marketingConsent')?.checked;
+  try {
+    const url = SUPABASE_URL + '/rest/v1/profiles?id=eq.' + userId;
+    const res = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + accessToken,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ name: fullName, dob: dobIso, email: em, marketing_consent: consent })
+    });
+    if(!res.ok){
+      const detail = await res.text();
+      throw new Error('Profile save failed: ' + res.status + ' ' + detail);
+    }
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'profile', message:'profile-save-direct-ok'}); } catch(_){}
+  } catch(e){
+    console.error('[QC] _qcSaveProfileDirect failed', e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'profile-save-direct' } }); } catch(_){}
+  }
+}
+
+async function _qcOtpResend(){
+  let email = '';
+  try {
+    const raw = localStorage.getItem('qc_otp_email');
+    if(raw){ const p = JSON.parse(raw); email = p.email || ''; }
+  } catch(_){}
+  if(!email){
+    try { const pend = JSON.parse(localStorage.getItem(QC_PENDING_KEY) || '{}'); email = pend.email || ''; } catch(_){}
+  }
+  if(!email) return;
+  const resendEl = document.getElementById('qcOtpResend');
+  if(resendEl) resendEl.textContent = 'Sending…';
+  try {
+    // v283: NO emailRedirectTo — OTP code only
+    const { error } = await sb.auth.signInWithOtp({ email });
+    if(error) throw error;
+    if(resendEl) resendEl.textContent = 'Sent! Check email';
+    // Start cooldown
+    let remaining = 60;
+    if(qcOtpResendTimer) clearInterval(qcOtpResendTimer);
+    qcOtpResendTimer = setInterval(() => {
+      remaining--;
+      if(remaining <= 0){
+        clearInterval(qcOtpResendTimer);
+        qcOtpResendTimer = null;
+        if(resendEl) resendEl.textContent = 'Resend code';
+      } else {
+        if(resendEl) resendEl.textContent = 'Resend (' + remaining + 's)';
+      }
+    }, 1000);
+  } catch(e){
+    console.error('[QC] OTP resend failed', e);
+    if(resendEl) resendEl.textContent = 'Failed — try again';
+    setTimeout(() => { if(resendEl) resendEl.textContent = 'Resend code'; }, 3000);
+  }
+}
 
 function handleBackToSignUp(){
   if(window.QC_AUDIO) window.QC_AUDIO.play("back_to_signup");
+  // Clear OTP timer
+  if(qcOtpResendTimer){ clearInterval(qcOtpResendTimer); qcOtpResendTimer = null; }
   showFace(0);
 }
-// Manual escape hatch from CheckEmail face. Some users land back on this
-// face after the magic link opened in a separate browser context (Gmail
-// CCT, Chrome Custom Tab) and BroadcastChannel never synced. Tries the
-// quick check, then a 5-attempt 1s burst so users tapping right after
-// returning from email don't get a false "no session" message on the
-// first attempt before tokens have propagated.
-async function handleAlreadyVerified(){
-  const btn = document.getElementById('alreadyVerifiedBtn');
-  const msg = document.getElementById('alreadyVerifiedMsg');
-  if(btn){ btn.disabled = true; }
-  if(msg){ msg.textContent = 'Checking…'; msg.style.display = 'block'; }
-  try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', level:'info', message:'handleAlreadyVerified tapped'}); } catch(_){}
-  if(await _qcCheckSessionOnce('already-verified-tap')){
-    if(msg){ msg.style.display = 'none'; }
-    return;
-  }
-  for(let i = 1; i <= 5; i++){
-    await new Promise(r => setTimeout(r, 1000));
-    if(await _qcCheckSessionOnce('already-verified-retry#'+i)){
-      if(msg){ msg.style.display = 'none'; }
-      return;
-    }
-  }
-  if(msg){ msg.textContent = "Still no verified session — tap the link in your email, then return here. If your email opened in a different browser, you'll need to verify there."; }
-  if(btn){ btn.disabled = false; }
-}
-
-async function handleResendMagicLink(){
-  const btn = document.getElementById('resendBtn');
-  const msg = document.getElementById('resendMsg');
-  if(!qcLastMagicEmail){
-    if(msg){ msg.textContent = 'No email on record. Please go back and try again.'; msg.style.display='block'; }
-    return;
-  }
-  if(btn && btn.disabled) return;
-  if(btn) btn.disabled = true;
-  if(msg){ msg.style.display = 'none'; }
-  const redirectTo = window.location.origin + window.location.pathname;
-  try {
-    const consent = !!document.getElementById('marketingConsent')?.checked;
-    const fn = document.getElementById('firstName')?.value.trim() || '';
-    const mn = document.getElementById('middleName')?.value.trim() || '';
-    const ln = document.getElementById('lastName')?.value.trim() || '';
-    const d  = document.getElementById('dobDay')?.value.trim() || '';
-    const m  = document.getElementById('dobMonth')?.value || '';
-    const y  = document.getElementById('dobYear')?.value.trim() || '';
-    const result = await sb.auth.signInWithOtp({
-      email: qcLastMagicEmail,
-      options: { emailRedirectTo: redirectTo, data: {
-        marketing_consent: consent,
-        pending_first_name: fn,
-        pending_middle_name: mn,
-        pending_last_name: ln,
-        pending_dob_day: d,
-        pending_dob_month: m,
-        pending_dob_year: y
-      } }
-    });
-    if(result && result.error) throw new Error(result.error.message || 'Could not send');
-    _qcMagicLinkRequested = true;
-    if(msg){ msg.textContent = 'Link resent'; msg.classList.add('success'); msg.style.display = 'block'; }
-  } catch(e){
-    console.error('[QC] signInWithOtp (resend) failed', e);
-    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'signInWithOtp', flow: 'resend' } }); } catch(_){}
-    if(msg){ msg.classList.remove('success'); msg.textContent = 'Could not resend: ' + (e.message || 'Network error'); msg.style.display = 'block'; }
-    if(btn) btn.disabled = false;
-    return;
-  }
-  // 60-second cooldown
-  let remaining = 60;
-  if(btn){ btn.textContent = 'Resend Email (' + remaining + 's)'; }
-  if(qcResendCooldownTimer) clearInterval(qcResendCooldownTimer);
-  qcResendCooldownTimer = setInterval(() => {
-    remaining -= 1;
-    if(remaining <= 0){
-      clearInterval(qcResendCooldownTimer);
-      qcResendCooldownTimer = null;
-      if(btn){ btn.disabled = false; btn.textContent = 'Resend Email'; }
-    } else {
-      if(btn){ btn.textContent = 'Resend Email (' + remaining + 's)'; }
-    }
-  }, 1000);
-}
+// v283: Magic-link handlers removed — OTP-only flow now
+// handleAlreadyVerified and handleResendMagicLink are dead code (faceCheckEmail unused)
 
 // Records session-restore navigation decisions to Sentry so we can trace why
 // users (e.g. clinton.pretorius) land on the wrong face with empty form state.
@@ -3943,10 +3946,8 @@ sb.auth.onAuthStateChange(async (event, session) => {
     attemptPaymentUnlock(session);
   }
   if(event === "SIGNED_IN" && session && session.user){
-    // v279: Clear magic link state — OTP succeeded, no more CCT guard needed
-    qcLastMagicEmail = null;
+    // v283: Clean up stale magic-link localStorage
     try { localStorage.removeItem('qc_last_magic'); } catch(_) {}
-    _qcMagicLinkRequested = false;
     qcCurrentUser = session.user;
     updateSettingsLinkVisibility();
     // Magic-link path: restore pending name+DOB from localStorage
@@ -4035,7 +4036,6 @@ sb.auth.onAuthStateChange(async (event, session) => {
       const emEl = document.getElementById("email");
       if(emEl){ emEl.value = ""; emEl.readOnly = false; emEl.style.opacity = ""; }
     } catch(e) {}
-    qcLastMagicEmail = null;
   }
 });
 
@@ -4050,13 +4050,12 @@ async function signOut(){
   try { await sb.auth.signOut(); } catch(e) {}
   try { localStorage.removeItem(STORE_KEY); } catch(e) {}
   try { localStorage.removeItem(QC_PENDING_KEY); } catch(e) {}
+  try { localStorage.removeItem('qc_otp_email'); } catch(e) {}
   // v266: reset email field to editable state before reload
-  // (populateFormFromProfile sets readOnly+opacity when logged in)
   try {
     const emEl = document.getElementById("email");
     if(emEl){ emEl.value = ""; emEl.readOnly = false; emEl.style.opacity = ""; }
   } catch(e) {}
-  qcLastMagicEmail = null;
   location.reload();
 }
 
