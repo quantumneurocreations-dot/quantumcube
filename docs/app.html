@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com https://eu-assets.i.posthog.com https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vimeocdn.com https://*.clarity.ms; media-src 'self' blob:; connect-src 'self' https://auth.quantumcube.app https://*.ingest.de.sentry.io https://browser.sentry-cdn.com https://*.dodopayments.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.clarity.ms; frame-src https://player.vimeo.com https://*.dodopayments.com https://vimeo.com; manifest-src 'self'; worker-src 'self' blob:; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com https://eu-assets.i.posthog.com https://*.clarity.ms https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vimeocdn.com https://*.clarity.ms; media-src 'self' blob:; connect-src 'self' https://auth.quantumcube.app https://*.ingest.de.sentry.io https://browser.sentry-cdn.com https://*.dodopayments.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.clarity.ms https://accounts.google.com; frame-src https://player.vimeo.com https://*.dodopayments.com https://vimeo.com https://accounts.google.com; manifest-src 'self'; worker-src 'self' blob:; base-uri 'self'; form-action 'self'; object-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#05050f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -41,6 +41,8 @@ document.addEventListener("DOMContentLoaded",function(){["firstName","lastName",
 <link rel="apple-touch-icon" href="/qc-apple-touch-180.png">
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Roboto:wght@500&display=swap" rel="stylesheet">
+<!-- v286: Google Identity Services for One Tap sign-in -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
@@ -607,7 +609,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v285",
+      release: "quantum-cube@qc-v286",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -682,6 +684,30 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 window.sb = sb;
 window.QC_SUPABASE_URL = SUPABASE_URL;
 window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
+
+// v286: Manual OAuth hash recovery — catches redirects that land in CCT/TWA
+// Runs before Supabase's detectSessionInUrl to handle isolated storage edge cases
+(async function _qcRecoverOAuthFromHash(){
+  const hash = window.location.hash;
+  if(!hash || !hash.includes('access_token=')) return;
+  try {
+    const params = new URLSearchParams(hash.slice(1));
+    const access_token = params.get('access_token');
+    const refresh_token = params.get('refresh_token');
+    if(!access_token) return;
+    // Clear hash immediately to prevent re-processing
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+    // Set session manually
+    const { data, error } = await sb.auth.setSession({ access_token, refresh_token });
+    if(error){ console.error('[QC] OAuth hash recovery failed', error); return; }
+    if(!data?.session?.user) return;
+    console.log('[QC] OAuth hash recovery succeeded');
+    // Mark that we recovered — onAuthStateChange will handle the rest
+    window._qcOAuthRecovered = true;
+  } catch(e){
+    console.error('[QC] OAuth hash recovery exception', e);
+  }
+})();
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/dodopayments-checkout@1.8.0/dist/index.js" defer></script>
@@ -1442,6 +1468,96 @@ document.addEventListener('visibilitychange', function(){
 });
 /* --- end QC SFX/Music --- */
 
+/* v286: Google Identity Services (GSI) One Tap initialization */
+const GSI_CLIENT_ID = '886533964656-j8d17l8ij6u3q0i3bc8hgusr8od28c2h.apps.googleusercontent.com';
+let _qcGsiReady = false;
+
+document.addEventListener('DOMContentLoaded', function(){
+  // Initialize GSI if available
+  if(typeof google !== 'undefined' && google.accounts && google.accounts.id){
+    try {
+      google.accounts.id.initialize({
+        client_id: GSI_CLIENT_ID,
+        callback: _qcHandleGoogleCredential,
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+      _qcGsiReady = true;
+      console.log('[QC] GSI initialized');
+    } catch(e){
+      console.warn('[QC] GSI init failed', e);
+    }
+  } else {
+    // GSI script may load late — retry after a short delay
+    setTimeout(function(){
+      if(typeof google !== 'undefined' && google.accounts && google.accounts.id){
+        try {
+          google.accounts.id.initialize({
+            client_id: GSI_CLIENT_ID,
+            callback: _qcHandleGoogleCredential,
+            auto_select: false,
+            cancel_on_tap_outside: true
+          });
+          _qcGsiReady = true;
+          console.log('[QC] GSI initialized (delayed)');
+        } catch(e){
+          console.warn('[QC] GSI delayed init failed', e);
+        }
+      }
+    }, 1000);
+  }
+});
+
+async function _qcHandleGoogleCredential(response){
+  if(!response || !response.credential){
+    console.error('[QC] GSI callback missing credential');
+    const errEl = document.getElementById('errMsg');
+    if(errEl){ errEl.textContent = 'Google sign-in failed. Please try again.'; errEl.style.display = 'block'; }
+    return;
+  }
+  try {
+    // Sign in with the ID token
+    const { data, error } = await sb.auth.signInWithIdToken({
+      provider: 'google',
+      token: response.credential
+    });
+    if(error) throw error;
+    if(!data?.session?.user) throw new Error('No session returned');
+    console.log('[QC] GSI signInWithIdToken succeeded');
+    // Store user
+    qcCurrentUser = data.session.user;
+    updateSettingsLinkVisibility();
+    // Save profile via direct REST (same pattern as OTP)
+    await _qcSaveProfileDirect(data.session.access_token, data.session.user.id);
+    // Restore any pending profile data and populate form
+    restorePendingProfile();
+    populateFormFromProfile(null, data.session.user);
+    // Check if form is ready (Google provides name but not DOB)
+    const formReady = !!(
+      document.getElementById('firstName')?.value &&
+      document.getElementById('lastName')?.value &&
+      document.getElementById('dobDay')?.value &&
+      document.getElementById('dobMonth')?.value &&
+      document.getElementById('dobYear')?.value
+    );
+    if(formReady){
+      try { runCalculation(); } catch(e){ showFace(1); }
+    } else {
+      // Stay on face0, prompt user to complete DOB
+      const errEl = document.getElementById('errMsg');
+      if(errEl){
+        errEl.textContent = 'Welcome! Please enter your date of birth to continue.';
+        errEl.style.display = 'block';
+        errEl.style.color = '#0cc0df';
+      }
+    }
+  } catch(e){
+    console.error('[QC] GSI signInWithIdToken failed', e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'gsi-signin' } }); } catch(_){}
+    const errEl = document.getElementById('errMsg');
+    if(errEl){ errEl.textContent = 'Google sign-in failed: ' + (e.message || 'Unknown error'); errEl.style.display = 'block'; errEl.style.color = ''; }
+  }
+}
 
 document.addEventListener('DOMContentLoaded', function(){
   document.querySelectorAll('.cube-face').forEach(function(face){
@@ -3602,7 +3718,35 @@ function populateFormFromProfile(profile, user){
   return hasAll;
 }
 
+// v286: GSI One Tap primary, OAuth redirect fallback
 async function handleGoogleSignIn(){
+  // Try GSI One Tap first (no redirect, stays in app context)
+  if(_qcGsiReady && typeof google !== 'undefined' && google.accounts && google.accounts.id){
+    try {
+      console.log('[QC] Triggering GSI prompt');
+      google.accounts.id.prompt((notification) => {
+        if(notification.isNotDisplayed()){
+          console.log('[QC] GSI prompt not displayed:', notification.getNotDisplayedReason());
+          // Fallback to OAuth redirect
+          _qcFallbackOAuth();
+        } else if(notification.isSkippedMoment()){
+          console.log('[QC] GSI prompt skipped:', notification.getSkippedReason());
+          // Fallback to OAuth redirect
+          _qcFallbackOAuth();
+        }
+        // If displayed, callback will handle success
+      });
+      return;
+    } catch(e){
+      console.warn('[QC] GSI prompt failed', e);
+    }
+  }
+  // GSI not available — fallback to OAuth redirect
+  _qcFallbackOAuth();
+}
+
+async function _qcFallbackOAuth(){
+  console.log('[QC] Falling back to OAuth redirect');
   try {
     const { error } = await sb.auth.signInWithOAuth({
       provider: 'google',
@@ -3612,13 +3756,12 @@ async function handleGoogleSignIn(){
       }
     });
     if(error){
-      console.error('Google sign-in error:', error);
+      console.error('[QC] OAuth fallback error:', error);
       const errEl = document.getElementById('errMsg');
       if(errEl){ errEl.textContent = 'Google sign-in failed. Try again or use email.'; errEl.style.display = 'block'; }
     }
-    // On success, browser redirects to Google then back to /app — onAuthStateChange handles the rest
   } catch(e){
-    console.error('Google sign-in exception:', e);
+    console.error('[QC] OAuth fallback exception:', e);
   }
 }
 
