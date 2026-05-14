@@ -96,15 +96,16 @@ html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow
 .install-spin-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6)}
 @keyframes qcSpin{to{transform:rotate(360deg)}}
 
-/* ── OTP CODE ENTRY (v280) ── */
-.qc-otp-inputs { display:flex; gap:0.5rem; justify-content:center; margin:1.5rem 0; }
+/* ── OTP CODE ENTRY (v284) ── */
+.qc-otp-inputs { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin:1.5rem 0; max-width:220px; margin-left:auto; margin-right:auto; }
 .qc-otp-digit {
   width:3rem; height:3.5rem; text-align:center; font-size:1.5rem; font-weight:bold;
   background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.2);
   border-radius:8px; color:#fff; caret-color:#0cc0df;
-  transition:border-color 0.2s;
+  transition:border-color 0.2s; flex:0 0 auto;
 }
 .qc-otp-digit:focus { outline:none; border-color:#0cc0df; }
+.qc-otp-email { font-size:13px; color:#0cc0df; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block; text-align:center; margin:0 0 14px 0; }
 
 /* ── 3D CUBE SCENE ── */
 #cubeScene{flex-shrink:0;height:220px;display:none;align-items:center;justify-content:center;perspective:600px;cursor:grab;user-select:none;position:relative;touch-action:pan-y;}
@@ -606,7 +607,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v283",
+      release: "quantum-cube@qc-v284",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -817,7 +818,7 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 <div class="glass-card" style="margin-top:8px">
   <p class="form-title" style="margin:0 0 14px 0">Enter Your Code</p>
   <p class="form-title" style="margin:0 0 8px 0;font-size:0.9em;opacity:0.85">We sent a 6-digit code to</p>
-  <p class="form-title" style="margin:0 0 14px 0;font-size:0.95em;color:#0cc0df" id="qcOtpEmailDisplay"></p>
+  <p class="qc-otp-email" id="qcOtpEmailDisplay"></p>
   <p style="margin:0 0 8px 0;font-size:0.75em;opacity:0.6;text-align:center">Check your spam folder if you don't see it.</p>
   <div class="qc-otp-inputs" id="qcOtpInputGroup">
     <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD0" autocomplete="one-time-code">
