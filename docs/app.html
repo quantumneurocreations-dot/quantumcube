@@ -609,7 +609,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v288",
+      release: "quantum-cube@qc-v289",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -624,6 +624,11 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
           if (/ResizeObserver loop limit exceeded/i.test(msg)) return null;
           if (/Non-Error promise rejection captured/i.test(msg)) return null;
           if (/Script error\.?/i.test(msg)) return null; // cross-origin script errors with no detail
+          // v289: Drop Supabase OTP rate-limit (expected user behaviour)
+          if (/For security purposes, you can only request this after/i.test(msg)) return null;
+          // v289: Drop transient network blips on auth fetch
+          var errName = (hint && hint.originalException && hint.originalException.name) || "";
+          if (/Failed to fetch/i.test(msg) && errName === "AuthRetryableFetchError") return null;
         } catch(_){}
         // Defence-in-depth: scrub anything that looks like a JWT or email from error payload
         try {
