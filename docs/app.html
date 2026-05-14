@@ -596,7 +596,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v276",
+      release: "quantum-cube@qc-v277",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3668,6 +3668,7 @@ async function handleGoogleSignIn(){
 }
 
 async function handleRevealClick(){
+  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: ENTRY', { level: 'info' }); } catch(_) {}
   if(window.QC_AUDIO) window.QC_AUDIO.play("reveal_my_cube");
   const fn = document.getElementById("firstName").value.trim();
   const mn = document.getElementById("middleName").value.trim();
@@ -3680,11 +3681,12 @@ async function handleRevealClick(){
   const emOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
   const btn = document.getElementById("revealBtn");
   const err = document.getElementById("errMsg");
+  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: pre-validation', { level: 'info', extra: { fn: fn, ln: ln, em: em, d: d, m: m, y: y, emOk: emOk } }); } catch(_) {}
   if(!(fn && ln && emOk && d && m && y)){
     if(err){
       err.textContent = "Please complete all fields";
       err.style.display = "block";
-      err.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      try { err.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(_) {}
     }
     qcMarkInvalidFields();
     return;
@@ -3800,23 +3802,9 @@ async function initSupabaseSession(){
   try{
     const { data: { session } } = await sb.auth.getSession();
     if(session && session.user){
-      // v275: Clear stale cross-account session before form population.
-      // If pending profile email differs from session email, sign out so
-      // form starts clean — prevents Android readOnly/stale prefill issues.
-      try {
-        const pendingRaw = localStorage.getItem('qc_pending_profile_v1');
-        if(pendingRaw){
-          const pending = JSON.parse(pendingRaw);
-          if(pending.email && pending.email.toLowerCase() !== session.user.email.toLowerCase()){
-            try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'init', message: 'stale session mismatch — signing out', data: { pending: pending.email.slice(0,3), session: session.user.email.slice(0,3) } }); } catch(_){}
-            await sb.auth.signOut();
-            // Skip rest of session init — form will be clean
-            restorePendingProfile();
-            updateSettingsLinkVisibility();
-            return;
-          }
-        }
-      } catch(_){}
+      // v277: Removed stale-session guard — it called signOut() which triggered
+      // SIGNED_OUT handler, clearing QC_PENDING_KEY AND emptying the email field.
+      // Email-mismatch signOut already exists in handleRevealClick where it belongs.
       qcCurrentUser = session.user;
       _initUser = session.user;
       hasSession = true;
