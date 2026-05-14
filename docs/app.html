@@ -607,7 +607,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v284",
+      release: "quantum-cube@qc-v285",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1303,7 +1303,16 @@ const QC_AUDIO = {
     });
     this._music = a;
   },
+  // v285: music only allowed inside cube (faces 1-6), not on signup/OTP screens
+  _isMusicAllowedFace: function(){
+    if(typeof currentFace === 'undefined') return false;
+    if(currentFace === 0 || currentFace === 'OtpEntry' || currentFace === 'CheckEmail') return false;
+    if(typeof currentFace === 'number' && currentFace >= 1 && currentFace <= 6) return true;
+    return false;
+  },
   startMusic: function(){
+    // v285: guard — no music on signup or OTP screens
+    if(!this._isMusicAllowedFace()) return;
     this._ensureMusic();
     const a = this._music; if(!a) return;
     this._musicOn = true;
@@ -1393,7 +1402,8 @@ window.QC_AUDIO = QC_AUDIO;
     // than chase an edge case that bypasses the face check.
     if(document.getElementById('installGate')?.classList.contains('show')) return;
     if(!QC_AUDIO._musicOn) return;
-    if(typeof currentFace === 'undefined' || currentFace === 0 || currentFace === 'CheckEmail') return;
+    // v285: no music on signup, OTP, or CheckEmail screens — only inside cube
+    if(!QC_AUDIO._isMusicAllowedFace()) return;
     if(QC_AUDIO._music && !QC_AUDIO._music.paused && QC_AUDIO._music.currentTime > 0){
       document.removeEventListener("pointerdown", tryStart, true);
       document.removeEventListener("touchstart", tryStart, true);
@@ -1408,6 +1418,28 @@ window.QC_AUDIO = QC_AUDIO;
   document.addEventListener("click", tryStart, true);
   document.addEventListener("keydown", tryStart, true);
 })();
+
+/* v285: pause music when app is minimized/backgrounded, resume only on allowed faces */
+document.addEventListener('visibilitychange', function(){
+  if(!window.QC_AUDIO) return;
+  if(document.hidden){
+    // App backgrounded — pause music
+    if(QC_AUDIO._music && !QC_AUDIO._music.paused){
+      QC_AUDIO._wasMusicOnBeforeHide = true;
+      QC_AUDIO._music.pause();
+    }
+  } else {
+    // App foregrounded — only resume on allowed faces
+    if(QC_AUDIO._wasMusicOnBeforeHide && QC_AUDIO._musicOn && QC_AUDIO._isMusicAllowedFace()){
+      QC_AUDIO._wasMusicOnBeforeHide = false;
+      if(QC_AUDIO._music){
+        QC_AUDIO._music.play().catch(()=>{});
+      } else {
+        QC_AUDIO.startMusic();
+      }
+    }
+  }
+});
 /* --- end QC SFX/Music --- */
 
 
@@ -2025,6 +2057,10 @@ document.addEventListener('visibilitychange', async function(){
 function showFace(n){
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'nav', message:'showFace', data:{n:String(n)}}); } catch(_){}
   if(window.QC_AUDIO && typeof n==="number" && n>=1 && n<=6) window.QC_AUDIO.play("select_side");
+  // v285: stop music when navigating to signup or OTP screens
+  if(window.QC_AUDIO && (n === 0 || n === 'OtpEntry' || n === 'CheckEmail')){
+    if(QC_AUDIO._music && !QC_AUDIO._music.paused) QC_AUDIO.stopMusic();
+  }
   if(typeof stopNarration==="function")stopNarration();
   if(typeof pauseAllVideos==="function")pauseAllVideos();
   if(typeof onFaceShown==="function")setTimeout(function(){onFaceShown(n)},10);
