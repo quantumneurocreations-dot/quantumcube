@@ -596,7 +596,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v274",
+      release: "quantum-cube@qc-v275",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3620,8 +3620,8 @@ function populateFormFromProfile(profile, user){
   const emailStr = (profile && profile.email) || (user && user.email) || "";
   if(emEl && !emEl.value && emailStr){
     emEl.value = emailStr;
-    emEl.readOnly = true;
-    emEl.style.opacity = "0.7";
+    // v275: Do NOT set readOnly — blocks keyboard input on Android Chrome
+    // for cross-device/cross-account scenarios
   }
   // DOB: only profile.dob (Google doesn't give DOB)
   if(profile && profile.dob){
@@ -3680,6 +3680,7 @@ async function handleRevealClick(){
     if(err){
       err.textContent = "Please complete all fields";
       err.style.display = "block";
+      err.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     qcMarkInvalidFields();
     return;
@@ -3795,6 +3796,23 @@ async function initSupabaseSession(){
   try{
     const { data: { session } } = await sb.auth.getSession();
     if(session && session.user){
+      // v275: Clear stale cross-account session before form population.
+      // If pending profile email differs from session email, sign out so
+      // form starts clean — prevents Android readOnly/stale prefill issues.
+      try {
+        const pendingRaw = localStorage.getItem('qc_pending_profile_v1');
+        if(pendingRaw){
+          const pending = JSON.parse(pendingRaw);
+          if(pending.email && pending.email.toLowerCase() !== session.user.email.toLowerCase()){
+            try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'init', message: 'stale session mismatch — signing out', data: { pending: pending.email.slice(0,3), session: session.user.email.slice(0,3) } }); } catch(_){}
+            await sb.auth.signOut();
+            // Skip rest of session init — form will be clean
+            restorePendingProfile();
+            updateSettingsLinkVisibility();
+            return;
+          }
+        }
+      } catch(_){}
       qcCurrentUser = session.user;
       _initUser = session.user;
       hasSession = true;
@@ -3807,6 +3825,9 @@ async function initSupabaseSession(){
   restorePendingProfile();
   // Populate form from profile/auth so returning users skip manual entry
   if(_initUser) populateFormFromProfile(_initProfile, _initUser);
+  // v275: Always ensure email field is editable after populate — defensive
+  // measure for cross-device scenarios where readOnly might block input.
+  try { const emEl = document.getElementById('email'); if(emEl){ emEl.readOnly = false; emEl.style.opacity = ''; } } catch(_){}
   // v267: if NO session and NO user, ensure email field is clean and editable.
   // Catches edge cases where restorePendingProfile cleared expired data but
   // browser autofill or other mechanisms might have populated the field.
