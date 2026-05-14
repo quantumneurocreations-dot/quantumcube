@@ -1201,3 +1201,36 @@ Has_paid column is now protected via trigger (no recursion). All profile saves w
 - 🔲 Loading screen — user considering adding one
 - 🔲 Breathing space between pages — 1-2 spots need padding/margin review
 
+
+## 2026-05-14 Morning — Critical: Reveal button broken for all users (Chat + Claude Code)
+
+**Symptom:** Reveal My Cube fires audio + haptic but app stays on Face 0. Affects all users post-reinstall. Multiple users reported.
+
+**Investigation (Chat Claude):**
+- Sentry: no JS errors in last 4h
+- Supabase: operational, RLS fine
+- Profiles check: 8+ users with name=null/dob=null from old RLS bug — root cause for earlier "grey button" issue, not this new one
+- v273 deployed: "Welcome back" hint for users with empty profiles — email unlocked
+- Identified silent throw risk in showFace() — cubeScene null-check missing
+
+**Root cause confirmed (Claude Code):**
+`showFace()` line ~2131: `cs.classList.remove('visible')` threw uncaught TypeError when `cubeScene` element was null/not-yet-rendered. Audio + haptic fire before this line — so it felt responsive — then execution stopped silently before face navigation happened.
+
+**v274 fixes (Claude Code):**
+1. Null-guard: `if(cs) cs.classList.remove/add(...)` — showFace never throws on missing elements
+2. try-catch around both showCheckEmailScreen() calls in handleRevealClick
+3. Sentry breadcrumbs: reveal:form-valid, reveal:show-check-email-called, reveal:otp-dispatched
+4. sw.js + Sentry release synced at qc-v274
+
+**CURRENT HEAD:** qc-v274 | All users should now be able to reveal
+
+**Affected users still needing follow-up (name=null/dob=null):**
+- rkelbrick@icloud.com
+- tjaart51@gmail.com
+- quinton.edwards@gmail.com
+- clinton.pretorius@gmail.com
+- l88040124@gmail.com
+- leochrisdt26@gmail.com
+- crichter12@gmail.com
+- agenyaclinton6@gmail.com / agenyaclinton@gmail.com
+→ All need to fill name + DOB on next open. v273 shows "Welcome back" hint.
