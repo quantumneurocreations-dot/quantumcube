@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com https://eu-assets.i.posthog.com https://*.clarity.ms https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vimeocdn.com https://*.clarity.ms; media-src 'self' blob:; connect-src 'self' https://auth.quantumcube.app https://*.ingest.de.sentry.io https://browser.sentry-cdn.com https://*.dodopayments.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.clarity.ms https://accounts.google.com; frame-src https://player.vimeo.com https://*.dodopayments.com https://vimeo.com https://accounts.google.com; manifest-src 'self'; worker-src 'self' blob:; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com https://eu-assets.i.posthog.com https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vimeocdn.com https://*.clarity.ms; media-src 'self' blob:; connect-src 'self' https://auth.quantumcube.app https://*.ingest.de.sentry.io https://browser.sentry-cdn.com https://*.dodopayments.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.clarity.ms; frame-src https://player.vimeo.com https://*.dodopayments.com https://vimeo.com; manifest-src 'self'; worker-src 'self' blob:; base-uri 'self'; form-action 'self'; object-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#05050f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded",function(){["firstName","lastName",
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Roboto:wght@500&display=swap" rel="stylesheet">
 <!-- v286: Google Identity Services for One Tap sign-in -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
@@ -554,7 +553,6 @@ input[type="number"]{-moz-appearance:textfield}
   .calc-btn{max-width:56.25%;margin-left:auto!important;margin-right:auto!important;display:block}
   .reset-btn{max-width:56.25%;margin-left:auto!important;margin-right:auto!important;display:block}
   .export-btn,.delete-btn{max-width:56.25%;margin-left:auto;margin-right:auto;display:block}
-  #googleSignInBtn{max-width:56.25%;margin-left:auto!important;margin-right:auto!important;display:flex!important}
   /* Vertically center the Pay $17 fullscreen overlay (the modal that fires
      when the user taps Unlock on a locked face). Base CSS uses
      justify-content:flex-start so the content stays scrollable on phones —
@@ -609,7 +607,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v292",
+      release: "quantum-cube@qc-v293",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -690,29 +688,6 @@ window.sb = sb;
 window.QC_SUPABASE_URL = SUPABASE_URL;
 window.QC_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 
-// v286: Manual OAuth hash recovery — catches redirects that land in CCT/TWA
-// Runs before Supabase's detectSessionInUrl to handle isolated storage edge cases
-(async function _qcRecoverOAuthFromHash(){
-  const hash = window.location.hash;
-  if(!hash || !hash.includes('access_token=')) return;
-  try {
-    const params = new URLSearchParams(hash.slice(1));
-    const access_token = params.get('access_token');
-    const refresh_token = params.get('refresh_token');
-    if(!access_token) return;
-    // Clear hash immediately to prevent re-processing
-    history.replaceState(null, '', window.location.pathname + window.location.search);
-    // Set session manually
-    const { data, error } = await sb.auth.setSession({ access_token, refresh_token });
-    if(error){ console.error('[QC] OAuth hash recovery failed', error); return; }
-    if(!data?.session?.user) return;
-    console.log('[QC] OAuth hash recovery succeeded');
-    // Mark that we recovered — onAuthStateChange will handle the rest
-    window._qcOAuthRecovered = true;
-  } catch(e){
-    console.error('[QC] OAuth hash recovery exception', e);
-  }
-})();
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/dodopayments-checkout@1.8.0/dist/index.js" defer></script>
@@ -805,8 +780,7 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 <div class="face active" id="face0" aria-label="Sign Up — Enter Your Details">
 
 <p class="form-title">Enter Your Details</p>
-<button type="button" id="googleSignInBtn" onclick="haptic('light');handleGoogleSignIn()" style="margin-top:8px;margin-left:24px;margin-right:24px;width:calc(100% - 48px);height:40px;background:#FFFFFF;border:1px solid #747775;border-radius:4px;color:#1F1F1F;font-family:'Roboto',sans-serif;font-weight:500;font-size:14px;line-height:20px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 12px;cursor:pointer;letter-spacing:0.25px"><svg width="20" height="20" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg><span>Continue with Google</span></button>
-<div class="glass-card" style="margin-top:24px">
+<div class="glass-card" style="margin-top:16px">
 <div class="form-row">
 <div class="form-group form-full" style="text-align:center"><label for="firstName" style="text-align:center;display:block">First Name</label><input type="text" id="firstName" placeholder="" autocomplete="given-name" required style="text-align:center"></div>
 <div class="form-group form-full" style="text-align:center"><label for="middleName" style="text-align:center;display:block">Middle Name &#8212; Optional</label><input type="text" id="middleName" placeholder="" autocomplete="additional-name" style="text-align:center"></div>
@@ -1472,129 +1446,6 @@ document.addEventListener('visibilitychange', function(){
   }
 });
 /* --- end QC SFX/Music --- */
-
-/* v286: Google Identity Services (GSI) One Tap initialization */
-const GSI_CLIENT_ID = '886533964656-j8d17l8ij6u3q0i3bc8hgusr8od28c2h.apps.googleusercontent.com';
-let _qcGsiReady = false;
-let _qcGsiInProgress = false; // v287: flag to prevent onAuthStateChange from overriding GSI navigation
-
-document.addEventListener('DOMContentLoaded', function(){
-  // Initialize GSI if available
-  if(typeof google !== 'undefined' && google.accounts && google.accounts.id){
-    try {
-      google.accounts.id.initialize({
-        client_id: GSI_CLIENT_ID,
-        callback: _qcHandleGoogleCredential,
-        auto_select: false,
-        cancel_on_tap_outside: true
-      });
-      _qcGsiReady = true;
-      console.log('[QC] GSI initialized');
-    } catch(e){
-      console.warn('[QC] GSI init failed', e);
-    }
-  } else {
-    // GSI script may load late — retry after a short delay
-    setTimeout(function(){
-      if(typeof google !== 'undefined' && google.accounts && google.accounts.id){
-        try {
-          google.accounts.id.initialize({
-            client_id: GSI_CLIENT_ID,
-            callback: _qcHandleGoogleCredential,
-            auto_select: false,
-            cancel_on_tap_outside: true
-          });
-          _qcGsiReady = true;
-          console.log('[QC] GSI initialized (delayed)');
-        } catch(e){
-          console.warn('[QC] GSI delayed init failed', e);
-        }
-      }
-    }, 1000);
-  }
-});
-
-async function _qcHandleGoogleCredential(response){
-  // v287: breadcrumb at entry
-  try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: '_qcHandleGoogleCredential entry', data: { hasCredential: !!(response && response.credential) } }); } catch(_){}
-
-  if(!response || !response.credential){
-    console.error('[QC] GSI callback missing credential');
-    _qcGsiInProgress = false;
-    const errEl = document.getElementById('errMsg');
-    if(errEl){ errEl.textContent = 'Google sign-in failed. Please try again.'; errEl.style.display = 'block'; }
-    return;
-  }
-  try {
-    // v287: breadcrumb before signInWithIdToken
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: 'calling signInWithIdToken' }); } catch(_){}
-
-    // Sign in with the ID token
-    const { data, error } = await sb.auth.signInWithIdToken({
-      provider: 'google',
-      token: response.credential
-    });
-    if(error) throw error;
-    if(!data?.session?.user) throw new Error('No session returned');
-    console.log('[QC] GSI signInWithIdToken succeeded');
-
-    // v287: breadcrumb after successful sign-in
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: 'signInWithIdToken succeeded', data: { userId: data.session.user.id?.slice(0,8) } }); } catch(_){}
-
-    // Store user
-    qcCurrentUser = data.session.user;
-    updateSettingsLinkVisibility();
-
-    // Save profile via direct REST (same pattern as OTP)
-    await _qcSaveProfileDirect(data.session.access_token, data.session.user.id);
-
-    // v287: Fetch profile row to properly populate qcCurrentProfile and get DOB
-    let profileRow = null;
-    try {
-      const r = await sb.from("profiles").select("*").maybeSingle();
-      profileRow = r.data || null;
-      qcCurrentProfile = profileRow;
-      syncUnlockFromProfile(qcCurrentProfile);
-      try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: 'profile fetched', data: { hasRow: !!profileRow, hasDob: !!(profileRow && profileRow.dob) } }); } catch(_){}
-    } catch(e) {
-      console.error("[QC] GSI profile fetch:", e);
-    }
-
-    // Restore any pending profile data and populate form
-    restorePendingProfile();
-    populateFormFromProfile(profileRow, data.session.user);
-
-    // v291: Always proceed to cube after GSI sign-in, even without DOB
-    // runCalculation() validates fields and shows face1 on success
-    // If DOB missing, it will show error but user is already authenticated
-    const hasName = !!(
-      document.getElementById('firstName')?.value &&
-      document.getElementById('lastName')?.value
-    );
-    const hasDob = !!(
-      document.getElementById('dobDay')?.value &&
-      document.getElementById('dobMonth')?.value &&
-      document.getElementById('dobYear')?.value
-    );
-
-    // v291: breadcrumb before navigation
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: 'navigation decision', data: { hasName, hasDob, currentFace } }); } catch(_){}
-
-    _qcGsiInProgress = false;
-    try {
-      runCalculation();
-    } catch(e){
-      // runCalculation failed (likely missing DOB) — go to face1 anyway
-      showFace(1);
-    }
-  } catch(e){
-    _qcGsiInProgress = false;
-    console.error('[QC] GSI signInWithIdToken failed', e);
-    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'gsi-signin' } }); } catch(_){}
-    const errEl = document.getElementById('errMsg');
-    if(errEl){ errEl.textContent = 'Google sign-in failed: ' + (e.message || 'Unknown error'); errEl.style.display = 'block'; errEl.style.color = ''; }
-  }
-}
 
 document.addEventListener('DOMContentLoaded', function(){
   document.querySelectorAll('.cube-face').forEach(function(face){
@@ -3755,56 +3606,6 @@ function populateFormFromProfile(profile, user){
   return hasAll;
 }
 
-// v287: GSI One Tap primary, OAuth redirect fallback
-async function handleGoogleSignIn(){
-  // v287: clear stale OTP email before starting GSI flow
-  try { localStorage.removeItem('qc_otp_email'); } catch(_){}
-  // Try GSI One Tap first (no redirect, stays in app context)
-  if(_qcGsiReady && typeof google !== 'undefined' && google.accounts && google.accounts.id){
-    try {
-      console.log('[QC] Triggering GSI prompt');
-      _qcGsiInProgress = true; // v287: set flag before prompt
-      google.accounts.id.prompt((notification) => {
-        if(notification.isNotDisplayed()){
-          console.log('[QC] GSI prompt not displayed:', notification.getNotDisplayedReason());
-          // Fallback to OAuth redirect
-          _qcFallbackOAuth();
-        } else if(notification.isSkippedMoment()){
-          console.log('[QC] GSI prompt skipped:', notification.getSkippedReason());
-          // Fallback to OAuth redirect
-          _qcFallbackOAuth();
-        }
-        // If displayed, callback will handle success
-      });
-      return;
-    } catch(e){
-      console.warn('[QC] GSI prompt failed', e);
-    }
-  }
-  // GSI not available — fallback to OAuth redirect
-  _qcFallbackOAuth();
-}
-
-async function _qcFallbackOAuth(){
-  console.log('[QC] Falling back to OAuth redirect');
-  try {
-    const { error } = await sb.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: 'https://quantumcube.app/app',
-        queryParams: { access_type: 'offline', prompt: 'consent' }
-      }
-    });
-    if(error){
-      console.error('[QC] OAuth fallback error:', error);
-      const errEl = document.getElementById('errMsg');
-      if(errEl){ errEl.textContent = 'Google sign-in failed. Try again or use email.'; errEl.style.display = 'block'; }
-    }
-  } catch(e){
-    console.error('[QC] OAuth fallback exception:', e);
-  }
-}
-
 // v283: OTP-only auth — no magic link redirects, no CCT localStorage issues
 async function handleRevealClick(){
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', message:'reveal-click'}); } catch(_) {}
@@ -4282,15 +4083,10 @@ sb.auth.onAuthStateChange(async (event, session) => {
   if(event === "SIGNED_IN"){
     // v269: include email in breadcrumb for debugging which user landed
     const _signedInEmail = session?.user?.email || '(no email)';
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN fired', data: { hasSession: !!session, hasUser: !!(session && session.user), email: _signedInEmail.slice(0,8)+'…', currentFace, gsiInProgress: _qcGsiInProgress } }); } catch(_) {}
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN fired', data: { hasSession: !!session, hasUser: !!(session && session.user), email: _signedInEmail.slice(0,8)+'…', currentFace } }); } catch(_) {}
   }
   if (_qcPendingPaymentUnlock && (event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
     attemptPaymentUnlock(session);
-  }
-  // v287: skip navigation logic if GSI is handling it
-  if(_qcGsiInProgress && event === "SIGNED_IN"){
-    console.log('[QC] onAuthStateChange: GSI in progress, skipping navigation');
-    return;
   }
   if(event === "SIGNED_IN" && session && session.user){
     // v283: Clean up stale magic-link localStorage
