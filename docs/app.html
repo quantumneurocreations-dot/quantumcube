@@ -96,6 +96,16 @@ html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow
 .install-spin-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6)}
 @keyframes qcSpin{to{transform:rotate(360deg)}}
 
+/* ── OTP CODE ENTRY (v280) ── */
+.qc-otp-inputs { display:flex; gap:0.5rem; justify-content:center; margin:1.5rem 0; }
+.qc-otp-digit {
+  width:3rem; height:3.5rem; text-align:center; font-size:1.5rem; font-weight:bold;
+  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.2);
+  border-radius:8px; color:#fff; caret-color:#0cc0df;
+  transition:border-color 0.2s;
+}
+.qc-otp-digit:focus { outline:none; border-color:#0cc0df; }
+
 /* ── 3D CUBE SCENE ── */
 #cubeScene{flex-shrink:0;height:220px;display:none;align-items:center;justify-content:center;perspective:600px;cursor:grab;user-select:none;position:relative;touch-action:pan-y;}
 #cubeScene.hidden{display:none!important}
@@ -596,7 +606,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v279",
+      release: "quantum-cube@qc-v280",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -800,6 +810,29 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 <button type="button" class="reset-btn" id="alreadyVerifiedBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleAlreadyVerified()">I've Verified — Continue</button>
 <p id="alreadyVerifiedMsg" role="status" aria-live="polite" style="display:none;margin:8px 24px 0 24px;text-align:center;font-size:13px;color:rgba(255,255,255,0.85);"></p>
 <button type="button" class="reset-btn" id="resendBtn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleResendMagicLink()">Resend Email</button>
+<button type="button" class="reset-btn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleBackToSignUp()" aria-label="Back to Sign Up">Back to<br>Sign Up</button>
+</div>
+<!-- v280: OTP code entry face -->
+<div class="face" id="faceOtpEntry" aria-label="Enter Your Code">
+<div class="glass-card" style="margin-top:8px">
+  <p class="form-title" style="margin:0 0 14px 0">Enter Your Code</p>
+  <p class="form-title" style="margin:0 0 8px 0;font-size:0.9em;opacity:0.85">We sent a 6-digit code to</p>
+  <p class="form-title" style="margin:0 0 14px 0;font-size:0.95em;color:#0cc0df" id="qcOtpEmailDisplay"></p>
+  <p style="margin:0 0 8px 0;font-size:0.75em;opacity:0.6;text-align:center">Check your spam folder if you don't see it.</p>
+  <div class="qc-otp-inputs" id="qcOtpInputGroup">
+    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD0" autocomplete="one-time-code">
+    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD1">
+    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD2">
+    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD3">
+    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD4">
+    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD5">
+  </div>
+  <p id="qcOtpError" style="color:#ff4444;display:none;font-size:0.85em;text-align:center;margin:0 0 8px 0"></p>
+</div>
+<button type="button" class="reset-btn" id="qcOtpVerifyBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)">Verify</button>
+<p style="margin:12px 24px 0 24px;font-size:0.8em;opacity:0.7;text-align:center">
+  Didn't get it? <span id="qcOtpResend" style="cursor:pointer;text-decoration:underline;color:#0cc0df">Resend code</span>
+</p>
 <button type="button" class="reset-btn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleBackToSignUp()" aria-label="Back to Sign Up">Back to<br>Sign Up</button>
 </div>
 <div class="face" id="face1" aria-label="Introduction">
@@ -2128,10 +2161,10 @@ function showFace(n){
     target.classList.add('active');
     target.scrollTop=0;  }
   currentFace=n;
-  // Hide cube on entry screen (face0) and interstitial; show elsewhere
+  // Hide cube on entry screen (face0) and interstitials; show elsewhere
   const cs=document.getElementById('cubeScene');
   const ch=document.getElementById('faceLabelCard');
-  const hideCube = (n===0 || n==='CheckEmail');
+  const hideCube = (n===0 || n==='CheckEmail' || n==='OtpEntry');
   if(hideCube){if(cs)cs.classList.remove('visible');if(ch)ch.style.display='none';}else{if(cs)cs.classList.add('visible');if(ch)ch.style.display='block';}
   // Music button: visible only on numeric faces 1-5 (not on 0, CheckEmail, 6, or 7)
   const mb=document.getElementById('musicBtn');
@@ -2154,6 +2187,12 @@ function showFace(n){
 // gate shows the Add-to-Home-Screen instruction by default and swaps in the
 // real Install button if/when the event arrives.
 (function _qcInstallGateInit(){
+  // v280: bypass gate entirely if URL contains an auth callback token
+  const _h = window.location.hash || '';
+  if(_h.includes('access_token=') || _h.includes('token_hash=') || _h.includes('type=magiclink') || _h.includes('type=recovery') || _h.includes('type=email')){
+    try { document.getElementById('qcSplash').style.display = 'none'; } catch(_) {}
+    return;
+  }
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||('ontouchstart' in window&&window.innerWidth<=1024);
   // v257: DO NOT consult IS_TWA here. The TWA self-detection at line 1110
   // can latch onto a stale sessionStorage.qc_twa flag or a spoofable
@@ -3741,18 +3780,18 @@ async function handleRevealClick(){
   // v265 fix: must check email match — otherwise typing a NEW email after
   // a previous attempt would incorrectly trigger this guard.
   if(!_hasMatchingSession && qcLastMagicEmail && qcLastMagicEmail.toLowerCase() === em.toLowerCase()){
-    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: about-to-showCheckEmail (CCT)', { level: 'info' }); } catch(_) {}
-    try { showCheckEmailScreen(); } catch(navErr) { console.error('[QC] showCheckEmailScreen failed (CCT path)', navErr); try { if(window.Sentry) Sentry.captureException(navErr, { tags: { area: 'reveal-nav' } }); } catch(_){} if(err){ err.textContent = 'Navigation error — please refresh'; err.style.display = 'block'; } return; }
-    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: showCheckEmail-done (CCT)', { level: 'info' }); } catch(_) {}
+    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: about-to-showOtp (CCT)', { level: 'info' }); } catch(_) {}
+    try { showOtpScreen(em); } catch(navErr) { console.error('[QC] showOtpScreen failed (CCT path)', navErr); try { if(window.Sentry) Sentry.captureException(navErr, { tags: { area: 'reveal-nav' } }); } catch(_){} if(err){ err.textContent = 'Navigation error — please refresh'; err.style.display = 'block'; } return; }
+    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: showOtp-done (CCT)', { level: 'info' }); } catch(_) {}
     return;
   }
   // v279: reaching OTP dispatch
   if(btn){ btn.disabled = true; }
   qcLastMagicEmail = em;
   try { localStorage.setItem('qc_last_magic', JSON.stringify({ email: em, t: Date.now() })); } catch(_) {}
-  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: about-to-showCheckEmail (OTP)', { level: 'info' }); } catch(_) {}
-  try { showCheckEmailScreen(); } catch(navErr) { console.error('[QC] showCheckEmailScreen failed (OTP path)', navErr); try { if(window.Sentry) Sentry.captureException(navErr, { tags: { area: 'reveal-nav' } }); } catch(_){} if(err){ err.textContent = 'Navigation error — please refresh'; err.style.display = 'block'; } if(btn){ btn.disabled = false; } return; }
-  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: showCheckEmail-done (OTP)', { level: 'info' }); } catch(_) {}
+  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: about-to-showOtp (OTP)', { level: 'info' }); } catch(_) {}
+  try { showOtpScreen(em); } catch(navErr) { console.error('[QC] showOtpScreen failed (OTP path)', navErr); try { if(window.Sentry) Sentry.captureException(navErr, { tags: { area: 'reveal-nav' } }); } catch(_){} if(err){ err.textContent = 'Navigation error — please refresh'; err.style.display = 'block'; } if(btn){ btn.disabled = false; } return; }
+  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: showOtp-done (OTP)', { level: 'info' }); } catch(_) {}
   const redirectTo = window.location.origin + window.location.pathname;
   try {
     const result = await sb.auth.signInWithOtp({
@@ -3868,6 +3907,110 @@ let qcResendCooldownTimer = null;
 function showCheckEmailScreen(){
   showFace('CheckEmail');
 }
+
+// v280: OTP code entry screen (replaces magic-link-only flow for PWA users)
+function showOtpScreen(email){
+  const display = document.getElementById('qcOtpEmailDisplay');
+  if(display) display.textContent = email || '';
+  // Clear all digit inputs
+  for(let i=0;i<6;i++){
+    const d = document.getElementById('qcOtpD'+i);
+    if(d){ d.value=''; d.style.borderColor=''; }
+  }
+  const err = document.getElementById('qcOtpError');
+  if(err) err.style.display='none';
+  const btn = document.getElementById('qcOtpVerifyBtn');
+  if(btn){ btn.disabled=false; btn.textContent='Verify'; }
+  showFace('OtpEntry');
+  // Auto-focus first digit after transition
+  setTimeout(()=>{ try{ document.getElementById('qcOtpD0').focus(); }catch(_){} }, 400);
+}
+
+function _qcOtpInputHandler(){
+  const digits = Array.from({length:6},(_,i)=>document.getElementById('qcOtpD'+i));
+  digits.forEach((el,i)=>{
+    if(!el) return;
+    el.addEventListener('input', e=>{
+      const val = e.target.value.replace(/\D/g,'');
+      e.target.value = val.slice(-1); // keep only last digit
+      if(val && i<5) digits[i+1].focus();
+      // auto-verify when all 6 filled
+      if(digits.every(d=>d&&d.value.match(/\d/))) _qcOtpVerify();
+    });
+    el.addEventListener('keydown', e=>{
+      if(e.key==='Backspace' && !e.target.value && i>0) digits[i-1].focus();
+    });
+    el.addEventListener('paste', e=>{
+      e.preventDefault();
+      const pasted = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+      pasted.split('').forEach((ch,j)=>{ if(digits[j]) digits[j].value=ch; });
+      const next = Math.min(pasted.length, 5);
+      digits[next].focus();
+      if(pasted.length===6) _qcOtpVerify();
+    });
+  });
+}
+
+async function _qcOtpVerify(){
+  const code = Array.from({length:6},(_,i)=>{ const d=document.getElementById('qcOtpD'+i); return d?d.value:''; }).join('');
+  if(code.length!==6||!/^\d{6}$/.test(code)) return;
+
+  const btn = document.getElementById('qcOtpVerifyBtn');
+  const err = document.getElementById('qcOtpError');
+  // Get email from the persisted pending profile
+  let email = '';
+  try{ const p=JSON.parse(localStorage.getItem(QC_PENDING_KEY)||'{}'); email=p.email||''; }catch(_){}
+  if(!email && qcLastMagicEmail) email = qcLastMagicEmail;
+
+  if(btn){ btn.disabled=true; btn.textContent='Verifying…'; }
+  if(err) err.style.display='none';
+
+  try {
+    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: otp-verify-attempt', { level: 'info', extra: { email: email.slice(0,3) } }); } catch(_) {}
+    const { data, error } = await sb.auth.verifyOtp({ email, token: code, type: 'email' });
+    if(error) throw error;
+    // SIGNED_IN handler will fire and take over — but as a fallback:
+    if(data?.session){
+      try { if(window.Sentry) Sentry.captureMessage('reveal-diag: otp-verify-success', { level: 'info' }); } catch(_) {}
+      qcCurrentUser = data.session.user;
+      qcLastMagicEmail = null;
+      try{ localStorage.removeItem('qc_last_magic'); }catch(_){}
+      updateSettingsLinkVisibility();
+      await saveProfileFromForm();
+      try{ runCalculation(); }catch(e){ showFace(1); }
+    }
+  } catch(e){
+    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: otp-verify-failed', { level: 'warning', extra: { error: e.message } }); } catch(_) {}
+    if(err){
+      err.textContent = e.message && e.message.includes('expired')
+        ? 'Code expired — tap Resend to get a new one.'
+        : (e.message || 'Invalid code. Please try again.');
+      err.style.display='block';
+    }
+    if(btn){ btn.disabled=false; btn.textContent='Verify'; }
+  }
+}
+
+async function _qcOtpResend(){
+  let email = '';
+  try{ const p=JSON.parse(localStorage.getItem(QC_PENDING_KEY)||'{}'); email=p.email||''; }catch(_){}
+  if(!email && qcLastMagicEmail) email = qcLastMagicEmail;
+  if(!email) return;
+
+  const resendEl = document.getElementById('qcOtpResend');
+  if(resendEl) resendEl.textContent = 'Sending…';
+
+  try {
+    const redirectTo = window.location.origin + window.location.pathname;
+    await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
+    if(resendEl) resendEl.textContent = 'Sent! Check email';
+    setTimeout(()=>{ if(resendEl) resendEl.textContent = 'Resend code'; }, 3000);
+  } catch(e) {
+    if(resendEl) resendEl.textContent = 'Failed — try again';
+    setTimeout(()=>{ if(resendEl) resendEl.textContent = 'Resend code'; }, 3000);
+  }
+}
+
 function handleBackToSignUp(){
   if(window.QC_AUDIO) window.QC_AUDIO.play("back_to_signup");
   showFace(0);
@@ -4227,7 +4370,13 @@ async function confirmDeleteAccount(){
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => { initSupabaseSession(); });
+document.addEventListener("DOMContentLoaded", () => {
+  initSupabaseSession();
+  // v280: OTP input handlers
+  _qcOtpInputHandler();
+  document.getElementById('qcOtpVerifyBtn')?.addEventListener('click', _qcOtpVerify);
+  document.getElementById('qcOtpResend')?.addEventListener('click', _qcOtpResend);
+});
 
 function runCalculation(){
 try { if(window.Sentry) Sentry.addBreadcrumb({category:'calc', level:'info', message:'runCalculation entry'}); } catch(_){}
