@@ -607,7 +607,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v293",
+      release: "quantum-cube@qc-v294",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1162,6 +1162,8 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 // STATE
 // ═══════════════════════════════════════════
 let currentFace=0,isUnlocked=false,profileData=null,deferredInstall=null;
+// v294: Review mode bypass for Play Store review
+let _qcReviewMode = false;
 // TWA detection — true when running inside the Android app wrapper
 const IS_TWA = (/Android/i.test(navigator.userAgent)) && (function(){
   try{
@@ -3245,6 +3247,8 @@ async function checkStoredUnlock(){
 }
 
 function syncUnlockFromProfile(profile){
+  // v294: Review mode bypasses payment check entirely
+  if(_qcReviewMode) return;
   const paid = !!(profile && profile.has_paid === true);
   if(paid){
     if(!isUnlocked){
@@ -4336,6 +4340,31 @@ async function confirmDeleteAccount(){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // v294: Review mode bypass for Google Play Store review
+  const urlParams = new URLSearchParams(window.location.search);
+  if(urlParams.get('review') === 'qncreview2026'){
+    _qcReviewMode = true;
+    // Clear the review param from URL
+    history.replaceState(null, '', window.location.pathname);
+    // Populate form silently
+    const set = (id, v) => { const el = document.getElementById(id); if(el) el.value = v; };
+    set('firstName', 'QNC');
+    set('middleName', '');
+    set('lastName', 'ReviewAccount');
+    set('email', 'qnc.review@gmail.com');
+    set('dobDay', '15');
+    set('dobMonth', '1');
+    set('dobYear', '1990');
+    // Grant full access (no auth, no payment check)
+    isUnlocked = true;
+    applyUnlockedState(false);
+    // Run calculation to populate cube content
+    setTimeout(() => {
+      try { runCalculation(); } catch(e) { showFace(1); }
+    }, 100);
+    console.log('[QC] Review mode activated');
+    return; // Skip normal auth init
+  }
   initSupabaseSession();
   // v282: OTP handlers removed — auth stripped from reveal flow
 });
