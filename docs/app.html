@@ -609,7 +609,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v289",
+      release: "quantum-cube@qc-v290",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3979,11 +3979,28 @@ function _qcShowOtpScreen(email){
 
 function _qcWireOtpInputs(){
   const digits = Array.from({length:6}, (_,i) => document.getElementById('qcOtpD'+i));
+
+  // v290: Helper to distribute pasted digits across all boxes
+  function distributePaste(pasted){
+    const clean = pasted.replace(/\D/g,'').slice(0,6);
+    if(clean.length < 2) return false; // not a paste
+    clean.split('').forEach((ch, j) => { if(digits[j]) digits[j].value = ch; });
+    const next = Math.min(clean.length, 5);
+    digits[next]?.focus();
+    if(clean.length === 6) _qcOtpVerify();
+    return true;
+  }
+
   digits.forEach((el, i) => {
     if(!el || el._qcWired) return;
     el._qcWired = true;
     el.addEventListener('input', e => {
       const v = e.target.value.replace(/\D/g,'');
+      // v290: Detect multi-char input (mobile paste via system menu)
+      if(v.length > 1){
+        distributePaste(v);
+        return;
+      }
       e.target.value = v.slice(-1);
       if(v && i < 5) digits[i+1]?.focus();
       if(digits.every(d => d && d.value.match(/\d/))) _qcOtpVerify();
@@ -4000,6 +4017,16 @@ function _qcWireOtpInputs(){
       if(pasted.length === 6) _qcOtpVerify();
     });
   });
+
+  // v290: Event delegation on container for paste (catches mobile system paste)
+  const container = document.getElementById('qcOtpInputGroup');
+  if(container && !container._qcWired){
+    container._qcWired = true;
+    container.addEventListener('paste', e => {
+      const pasted = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+      if(distributePaste(pasted)) e.preventDefault();
+    });
+  }
   // Wire verify button
   const verifyBtn = document.getElementById('qcOtpVerifyBtn');
   if(verifyBtn && !verifyBtn._qcWired){
