@@ -133,15 +133,20 @@ html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow
 .install-spin-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6)}
 @keyframes qcSpin{to{transform:rotate(360deg)}}
 
-/* ── OTP CODE ENTRY (v284) ── */
-.qc-otp-inputs { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin:1.5rem 0; max-width:220px; margin-left:auto; margin-right:auto; }
-.qc-otp-digit {
-  width:3rem; height:3.5rem; text-align:center; font-size:1.5rem; font-weight:bold;
+/* ── OTP CODE ENTRY (v296) ── */
+.qc-otp-inputs { position:relative; display:flex; gap:0.5rem; justify-content:center; margin:1.5rem auto; max-width:220px; }
+.qc-otp-display {
+  width:3rem; height:3.5rem; display:flex; align-items:center; justify-content:center;
+  font-size:1.5rem; font-weight:bold;
   background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.2);
-  border-radius:8px; color:#fff; caret-color:#0cc0df;
-  transition:border-color 0.2s; flex:0 0 auto;
+  border-radius:8px; color:#fff; transition:border-color 0.2s;
 }
-.qc-otp-digit:focus { outline:none; border-color:#0cc0df; }
+.qc-otp-display.active { border-color:#0cc0df; }
+.qc-otp-display.filled { border-color:rgba(255,255,255,0.4); }
+#qcOtpRealInput {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  opacity:0; font-size:1.5rem; z-index:2; cursor:text;
+}
 .qc-otp-email { font-size:13px; color:#0cc0df; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block; text-align:center; margin:0 0 14px 0; }
 
 /* ── 3D CUBE SCENE ── */
@@ -643,7 +648,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v295",
+      release: "quantum-cube@qc-v296",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -862,12 +867,13 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
   <p class="qc-otp-email" id="qcOtpEmailDisplay"></p>
   <p style="margin:0 0 8px 0;font-size:0.75em;opacity:0.6;text-align:center">Check your spam folder if you don't see it.</p>
   <div class="qc-otp-inputs" id="qcOtpInputGroup">
-    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD0" autocomplete="one-time-code">
-    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD1">
-    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD2">
-    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD3">
-    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD4">
-    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD5">
+    <input type="tel" id="qcOtpRealInput" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code">
+    <div class="qc-otp-display" id="qcOtpD0"></div>
+    <div class="qc-otp-display" id="qcOtpD1"></div>
+    <div class="qc-otp-display" id="qcOtpD2"></div>
+    <div class="qc-otp-display" id="qcOtpD3"></div>
+    <div class="qc-otp-display" id="qcOtpD4"></div>
+    <div class="qc-otp-display" id="qcOtpD5"></div>
   </div>
   <p id="qcOtpError" style="color:#ff4444;display:none;font-size:0.85em;text-align:center;margin:0 0 8px 0"></p>
 </div>
@@ -3792,10 +3798,12 @@ function _qcShowOtpScreen(email){
   // Display email on OTP screen
   const emailEl = document.getElementById('qcOtpEmailDisplay');
   if(emailEl) emailEl.textContent = email;
-  // Clear any previous input
+  // v296: Clear real input and display boxes
+  const realInput = document.getElementById('qcOtpRealInput');
+  if(realInput) realInput.value = '';
   for(let i=0; i<6; i++){
     const d = document.getElementById('qcOtpD'+i);
-    if(d){ d.value = ''; }
+    if(d){ d.textContent = ''; d.classList.remove('filled', 'active'); }
   }
   const errEl = document.getElementById('qcOtpError');
   if(errEl) errEl.style.display = 'none';
@@ -3806,67 +3814,45 @@ function _qcShowOtpScreen(email){
   _qcWireOtpInputs();
   // Show the face
   showFace('OtpEntry');
-  // Focus first digit
-  setTimeout(()=>{ const d0 = document.getElementById('qcOtpD0'); if(d0) d0.focus(); }, 100);
+  // Focus the real input
+  setTimeout(()=>{ const inp = document.getElementById('qcOtpRealInput'); if(inp) inp.focus(); }, 100);
 }
 
 function _qcWireOtpInputs(){
-  const digits = Array.from({length:6}, (_,i) => document.getElementById('qcOtpD'+i));
+  // v296: Single hidden input approach — handles paste/autofill reliably
+  const realInput = document.getElementById('qcOtpRealInput');
+  const displays = Array.from({length:6}, (_,i) => document.getElementById('qcOtpD'+i));
 
-  // v292: Fill all 6 boxes from a pasted/typed multi-char string
-  function fillFromPaste(str){
-    const clean = str.replace(/\D/g,'').slice(0,6);
-    if(clean.length < 1) return;
-    for(let j = 0; j < 6; j++){
-      if(digits[j]) digits[j].value = clean[j] || '';
+  function updateDisplays(){
+    const val = (realInput.value || '').replace(/\D/g,'').slice(0,6);
+    realInput.value = val; // enforce digits only
+    for(let i = 0; i < 6; i++){
+      const box = displays[i];
+      if(!box) continue;
+      box.textContent = val[i] || '';
+      box.classList.toggle('filled', !!val[i]);
+      box.classList.toggle('active', i === val.length && val.length < 6);
     }
-    const focusIdx = Math.min(clean.length, 5);
-    digits[focusIdx]?.focus();
-    if(clean.length === 6) setTimeout(() => _qcOtpVerify(), 50);
+    // Auto-verify when 6 digits entered
+    if(val.length === 6) setTimeout(() => _qcOtpVerify(), 50);
   }
 
-  digits.forEach((el, i) => {
-    if(!el || el._qcWired) return;
-    el._qcWired = true;
-
-    // v292: input event — detect paste (value.length > 1) or normal typing
-    el.addEventListener('input', e => {
-      const raw = e.target.value;
-      const v = raw.replace(/\D/g,'');
-      if(v.length > 1){
-        // Multi-char = paste via system menu or autocomplete
-        fillFromPaste(v);
-        return;
-      }
-      e.target.value = v.slice(-1);
-      if(v && i < 5) digits[i+1]?.focus();
-      if(digits.every(d => d && d.value.match(/\d/))) _qcOtpVerify();
+  if(realInput && !realInput._qcWired){
+    realInput._qcWired = true;
+    realInput.addEventListener('input', updateDisplays);
+    realInput.addEventListener('focus', updateDisplays);
+    realInput.addEventListener('blur', () => {
+      displays.forEach(d => d && d.classList.remove('active'));
     });
+  }
 
-    el.addEventListener('keydown', e => {
-      if(e.key === 'Backspace' && !e.target.value && i > 0) digits[i-1]?.focus();
-    });
-
-    // v292: explicit paste event (desktop, some mobile)
-    el.addEventListener('paste', e => {
-      e.preventDefault();
-      const pasted = (e.clipboardData || window.clipboardData)?.getData('text') || '';
-      fillFromPaste(pasted);
-    });
+  // Clicking any display box focuses the real input
+  displays.forEach(d => {
+    if(d && !d._qcWired){
+      d._qcWired = true;
+      d.addEventListener('click', () => realInput?.focus());
+    }
   });
-
-  // v292: container-level paste delegation
-  const container = document.getElementById('qcOtpInputGroup');
-  if(container && !container._qcWired){
-    container._qcWired = true;
-    container.addEventListener('paste', e => {
-      const pasted = (e.clipboardData || window.clipboardData)?.getData('text') || '';
-      if(pasted.replace(/\D/g,'').length >= 2){
-        e.preventDefault();
-        fillFromPaste(pasted);
-      }
-    });
-  }
 
   // Wire verify button
   const verifyBtn = document.getElementById('qcOtpVerifyBtn');
@@ -3883,10 +3869,9 @@ function _qcWireOtpInputs(){
 }
 
 async function _qcOtpVerify(){
-  const code = Array.from({length:6}, (_,i) => {
-    const d = document.getElementById('qcOtpD'+i);
-    return d ? d.value : '';
-  }).join('');
+  // v296: Read from single real input
+  const realInput = document.getElementById('qcOtpRealInput');
+  const code = (realInput?.value || '').replace(/\D/g,'').slice(0,6);
   if(code.length !== 6 || !/^\d{6}$/.test(code)) return;
 
   // Get email from localStorage
