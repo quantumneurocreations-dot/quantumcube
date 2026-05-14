@@ -3,6 +3,58 @@ tags: [core, session]
 ---
 # Session Log
 
+## 2026-05-14 Night — Full Play Console audit + auth rebuild wrap-up (v283–v299)
+
+**Goal:** Complete Play Console audit, ensure everything is in order for 14-day testing window, fix all outstanding UI/UX issues flagged by testers.
+
+**Done — Code (v283–v299):**
+- ✅ **v283** — OTP flow fully restored: email field back on face0, `signInWithOtp` (no redirect), `_qcOtpVerify` saves profile via direct REST PATCH (bypasses JS client deadlock), `qc_otp_email` stored in localStorage before OTP screen, ~250 lines of magic-link dead code removed
+- ✅ **v284** — OTP UI: 3+3 box layout, email truncation, paste support (`distributePaste` helper)
+- ✅ **v285** — Music: silent on face0 and faceOtpEntry, stops on `visibilitychange`
+- ✅ **v286** — Google GSI One Tap added: `signInWithIdToken`, `_qcGsiInProgress` flag, hash recovery IIFE
+- ✅ **v287** — GSI post-login face0 bounce fixed: always calls `runCalculation()` after GSI regardless of DOB state
+- ✅ **v288** — Back to Sign Up: ALL paths (face0/faceOtpEntry/face1) call `handleBackToSignUp()` → `signOut()` + clear all keys + reset form
+- ✅ **v289** — Sentry `beforeSend`: OTP rate-limit errors and `AuthRetryableFetchError` dropped; alert throttle 5min → 60min
+- ✅ **v290** — OTP paste improved: `type="tel"`, input event multi-char detection; GSI DOB always calls `runCalculation()`
+- ✅ **v291** — face1 Back to Sign Up unified. GSI DOB simplified: always `runCalculation()`, fallback `showFace(1)` if DOB missing
+- ✅ **v292** — CRITICAL: `_qcOtpVerify` 15s `Promise.race` timeout, `resetVerifyUI(msg)` on any error, "Code expired — tap Resend" message, Sentry breadcrumbs at every verify step
+- ✅ **v293** — Google Sign-In STRIPPED ENTIRELY: removed all GSI code, script tag, CSP entries for `accounts.google.com`
+- ✅ **v294** — Play Store reviewer bypass: `?review=qncreview2026` triggers `_qcReviewMode=true`, skips auth, full paid access auto-granted. DB: `qnc.review@gmail.com` DOB set to 1990-01-15
+- ✅ **v295** — DOB date validation: impossible dates blocked (dynamic max day per month, leap year handling, form submit guard)
+- ✅ **v296** — OTP autofill: single hidden input (`autocomplete="one-time-code"`, `type="tel"`, `maxlength="6"`) overlaid on 6 visual display divs. Standard Stripe/WhatsApp pattern
+- ✅ **v297** — Button glass: `.calc-btn` and `.reset-btn` get `background: rgba(4,15,30,0.55)` + `backdrop-filter: blur(12px)` for text legibility
+- ✅ **v298** — Button glass matched to glass-card: switched to `var(--glass)` + `backdrop-filter: blur(16px)`. OTP boxes also use `var(--glass)` + `var(--border)`. Consistent glass language throughout
+- ✅ **v299** — OTP screen: "Back to\nSign Up" → single-line "Back to Sign Up" (`white-space: nowrap`), `padding-bottom: 32px` added to OTP container
+
+**Done — Play Console audit (comprehensive):**
+- ✅ **Policy status** — No issues found
+- ✅ **App content** — 0 items needing attention; all 10 declarations complete (Content ratings, App access, Advertising ID, Data safety, Target audience, Privacy policy, Financial features, Health apps, Government apps, Ads)
+- ✅ **App Access updated** — Instruction renamed from "Google Sign-In" to "Reviewer Access". Instructions now explain OTP is normal auth method + provide bypass URL: *"Note: Normal sign-up requires a 6-digit OTP sent to the user's email. For review, use this bypass URL instead — no OTP or sign-in needed: Open https://quantumcube.app/app?review=qncreview2026 in Chrome. Full paid access is granted automatically."* Username: `qnc.review@gmail.com`, Password: `QNC@Reviewer2026!`
+- ✅ **Data Safety updated** — OAuth checkbox UNCHECKED (Google sign-in removed in v293). Only "Username and other authentication" (OTP) remains. Saved and submitted for review
+- ✅ **Store listing** — Live: name, short description (71/80), full description (859/4000), icon, feature graphic, 6 phone screenshots, 5 tablet screenshots
+- ✅ **Store settings** — Category: Lifestyle, Tags: Horoscope + Self-help, Email: support@quantumcube.app, Website: https://quantumcube.app, External marketing: ON
+- ✅ **App Integrity** — Automatic protection: ON, App signing: Google Play, Play Integrity API: not started (post-launch task)
+- ✅ **Closed testing — Alpha** — Active, 2 releases, last updated 12 May 2026
+- ✅ **Expert Approved** — Not eligible (18+ app) — correct, no action needed
+- ✅ **Publishing overview** — Changes sent for review (App Access + Data Safety)
+- ✅ **Inline installations** — Leave unchecked (not applicable for QC TWA)
+
+**Done — DB verification:**
+- ✅ `madjadex@gmail.com` (Jade Crystal) confirmed went through full OTP flow correctly — `confirmed_at` set, 3-minute gap between create and last sign-in = normal OTP check time
+
+**Decisions:**
+- 🔵 **DEFERRED: Play Integrity API** — prevents cracked APK sideloads bypassing `has_paid`. Free up to 10K calls/month. One Claude Code session post-launch. Can only be properly tested after production release
+- 🔵 **DEFERRED: Huawei AppGallery** — 400M+ active users, 3rd largest store globally. Huawei phones (post-2019) have no Google Play access. Honor phones are fine (full GMS since 2021). AppGallery submission is simple: register HUAWEI ID, upload existing APK, fill store details (same assets as Play Store). Half-day task post-launch
+- 🔵 **DEFERRED: OTP autofill (`autocomplete="one-time-code"`)** — code is in place (v296) but autofill suggestion not appearing on user's Samsung device. May be Samsung keyboard limitation or TWA context. Needs investigation next session
+
+**Critical dates:**
+- May 14 = Day 1 (14-day testing clock started)
+- May 27 = Day 14 → APPLY FOR PRODUCTION
+- May 28 = Expected approval = birthday 🎂
+
+**Current HEAD:** `5f0e75e` | **SW:** qc-v299 | **APP:** qc-v299 ✅ in sync
+
+
 ## 2026-05-11 Morning/Afternoon — Google Play Console setup (Chat Claude)
 
 **Goal:** Create app in Play Console, upload AAB, work through all store listing requirements.
