@@ -596,7 +596,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v277",
+      release: "quantum-cube@qc-v278",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3709,8 +3709,13 @@ async function handleRevealClick(){
   // Short-circuit: if there's already an active session for THIS email,
   // skip the magic link and go straight to the app
   let _revealSession = null;
+  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: pre-session', { level: 'info' }); } catch(_) {}
   try {
-    const { data: { session } } = await sb.auth.getSession();
+    // v278: 5s timeout prevents deadlock when initSupabaseSession holds auth lock during token refresh
+    const { data: { session } } = await Promise.race([
+      sb.auth.getSession(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('getSession-timeout-reveal')), 5000))
+    ]);
     _revealSession = session;
     // v263: Already authenticated — skip OTP entirely. Catches the case
     // where SIGNED_IN landed the user on face 0 with an empty profile
@@ -3800,7 +3805,11 @@ async function initSupabaseSession(){
   let _initProfile = null;
   let _initUser = null;
   try{
-    const { data: { session } } = await sb.auth.getSession();
+    // v278: 5s timeout prevents deadlock on concurrent token refresh
+    const { data: { session } } = await Promise.race([
+      sb.auth.getSession(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('getSession-timeout-init')), 5000))
+    ]);
     if(session && session.user){
       // v277: Removed stale-session guard — it called signOut() which triggered
       // SIGNED_OUT handler, clearing QC_PENDING_KEY AND emptying the email field.
