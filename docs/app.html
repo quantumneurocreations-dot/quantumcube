@@ -609,7 +609,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v291",
+      release: "quantum-cube@qc-v292",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -852,12 +852,12 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
   <p class="qc-otp-email" id="qcOtpEmailDisplay"></p>
   <p style="margin:0 0 8px 0;font-size:0.75em;opacity:0.6;text-align:center">Check your spam folder if you don't see it.</p>
   <div class="qc-otp-inputs" id="qcOtpInputGroup">
-    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD0" autocomplete="one-time-code">
-    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD1">
-    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD2">
-    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD3">
-    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD4">
-    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="qc-otp-digit" id="qcOtpD5">
+    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD0" autocomplete="one-time-code">
+    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD1">
+    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD2">
+    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD3">
+    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD4">
+    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="qc-otp-digit" id="qcOtpD5">
   </div>
   <p id="qcOtpError" style="color:#ff4444;display:none;font-size:0.85em;text-align:center;margin:0 0 8px 0"></p>
 </div>
@@ -3972,53 +3972,61 @@ function _qcShowOtpScreen(email){
 function _qcWireOtpInputs(){
   const digits = Array.from({length:6}, (_,i) => document.getElementById('qcOtpD'+i));
 
-  // v290: Helper to distribute pasted digits across all boxes
-  function distributePaste(pasted){
-    const clean = pasted.replace(/\D/g,'').slice(0,6);
-    if(clean.length < 2) return false; // not a paste
-    clean.split('').forEach((ch, j) => { if(digits[j]) digits[j].value = ch; });
-    const next = Math.min(clean.length, 5);
-    digits[next]?.focus();
-    if(clean.length === 6) _qcOtpVerify();
-    return true;
+  // v292: Fill all 6 boxes from a pasted/typed multi-char string
+  function fillFromPaste(str){
+    const clean = str.replace(/\D/g,'').slice(0,6);
+    if(clean.length < 1) return;
+    for(let j = 0; j < 6; j++){
+      if(digits[j]) digits[j].value = clean[j] || '';
+    }
+    const focusIdx = Math.min(clean.length, 5);
+    digits[focusIdx]?.focus();
+    if(clean.length === 6) setTimeout(() => _qcOtpVerify(), 50);
   }
 
   digits.forEach((el, i) => {
     if(!el || el._qcWired) return;
     el._qcWired = true;
+
+    // v292: input event — detect paste (value.length > 1) or normal typing
     el.addEventListener('input', e => {
-      const v = e.target.value.replace(/\D/g,'');
-      // v290: Detect multi-char input (mobile paste via system menu)
+      const raw = e.target.value;
+      const v = raw.replace(/\D/g,'');
       if(v.length > 1){
-        distributePaste(v);
+        // Multi-char = paste via system menu or autocomplete
+        fillFromPaste(v);
         return;
       }
       e.target.value = v.slice(-1);
       if(v && i < 5) digits[i+1]?.focus();
       if(digits.every(d => d && d.value.match(/\d/))) _qcOtpVerify();
     });
+
     el.addEventListener('keydown', e => {
       if(e.key === 'Backspace' && !e.target.value && i > 0) digits[i-1]?.focus();
     });
+
+    // v292: explicit paste event (desktop, some mobile)
     el.addEventListener('paste', e => {
       e.preventDefault();
-      const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
-      pasted.split('').forEach((ch, j) => { if(digits[j]) digits[j].value = ch; });
-      const next = Math.min(pasted.length, 5);
-      digits[next]?.focus();
-      if(pasted.length === 6) _qcOtpVerify();
+      const pasted = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+      fillFromPaste(pasted);
     });
   });
 
-  // v290: Event delegation on container for paste (catches mobile system paste)
+  // v292: container-level paste delegation
   const container = document.getElementById('qcOtpInputGroup');
   if(container && !container._qcWired){
     container._qcWired = true;
     container.addEventListener('paste', e => {
       const pasted = (e.clipboardData || window.clipboardData)?.getData('text') || '';
-      if(distributePaste(pasted)) e.preventDefault();
+      if(pasted.replace(/\D/g,'').length >= 2){
+        e.preventDefault();
+        fillFromPaste(pasted);
+      }
     });
   }
+
   // Wire verify button
   const verifyBtn = document.getElementById('qcOtpVerifyBtn');
   if(verifyBtn && !verifyBtn._qcWired){
@@ -4039,6 +4047,7 @@ async function _qcOtpVerify(){
     return d ? d.value : '';
   }).join('');
   if(code.length !== 6 || !/^\d{6}$/.test(code)) return;
+
   // Get email from localStorage
   let email = '';
   try {
@@ -4053,40 +4062,100 @@ async function _qcOtpVerify(){
     if(errEl){ errEl.textContent = 'Session expired — please go back and try again.'; errEl.style.display = 'block'; }
     return;
   }
+
   const btn = document.getElementById('qcOtpVerifyBtn');
   const errEl = document.getElementById('qcOtpError');
+  const startTime = Date.now();
+
+  // v292: Helper to reset UI on any failure
+  function resetVerifyUI(errorMsg){
+    if(btn){ btn.disabled = false; btn.textContent = 'Verify'; }
+    if(errEl){ errEl.textContent = errorMsg; errEl.style.display = 'block'; }
+  }
+
   if(btn){ btn.disabled = true; btn.textContent = 'Verifying…'; }
   if(errEl) errEl.style.display = 'none';
+
+  // v292: breadcrumb at start
+  try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'verify started', data:{email:email.slice(0,8)+'…', codeLen:code.length}}); } catch(_){}
+
+  // v292: 15-second timeout wrapper
+  let timeoutId = null;
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error('TIMEOUT')), 15000);
+  });
+
   try {
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', message:'otp-verify-attempt'}); } catch(_){}
-    const { data, error } = await sb.auth.verifyOtp({ email, token: code, type: 'email' });
+    // v292: breadcrumb before verifyOtp call
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'calling verifyOtp'}); } catch(_){}
+
+    // Race verifyOtp against timeout
+    const { data, error } = await Promise.race([
+      sb.auth.verifyOtp({ email, token: code, type: 'email' }),
+      timeoutPromise
+    ]);
+    clearTimeout(timeoutId);
+
+    // v292: breadcrumb after response
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'verifyOtp response', data:{hasError:!!error, hasData:!!data, elapsed:Date.now()-startTime}}); } catch(_){}
+
     if(error) throw error;
     if(!data?.session) throw new Error('No session returned');
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', message:'otp-verify-success'}); } catch(_){}
+
+    // v292: breadcrumb success
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'verify succeeded'}); } catch(_){}
+
     // Store session info locally
     qcCurrentUser = data.session.user;
     // Clear OTP email marker
     try { localStorage.removeItem('qc_otp_email'); } catch(_){}
+
+    // v292: breadcrumb before profile save
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'saving profile'}); } catch(_){}
+
     // Save profile via direct REST (NOT Supabase client to avoid getSession deadlock)
     await _qcSaveProfileDirect(data.session.access_token, data.session.user.id);
+
+    // v292: breadcrumb after profile save
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'profile saved'}); } catch(_){}
+
     // Clear pending profile
     try { localStorage.removeItem(QC_PENDING_KEY); } catch(_){}
+
     // Proceed to cube
     updateSettingsLinkVisibility();
+
+    // v292: breadcrumb before runCalculation
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'calling runCalculation'}); } catch(_){}
+
     try { runCalculation(); } catch(e){ showFace(1); }
+
   } catch(e){
+    clearTimeout(timeoutId);
     console.error('[QC] verifyOtp failed', e);
-    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'verifyOtp' } }); } catch(_){}
+
     const msg = e.message || '';
-    if(errEl){
-      if(msg.includes('expired') || msg.includes('invalid')){
-        errEl.textContent = 'Code expired or invalid — tap Resend to get a new one.';
-      } else {
-        errEl.textContent = msg || 'Verification failed. Please try again.';
+    const isTimeout = msg === 'TIMEOUT';
+    const isExpired = msg.toLowerCase().includes('expired') || msg.toLowerCase().includes('invalid');
+
+    // v292: Capture to Sentry with full context
+    try {
+      if(window.Sentry){
+        Sentry.captureException(e, {
+          tags: { area: 'verifyOtp', isTimeout, isExpired },
+          extra: { email: email.slice(0,8)+'…', elapsed: Date.now()-startTime, errorMsg: msg }
+        });
       }
-      errEl.style.display = 'block';
+    } catch(_){}
+
+    // v292: Show specific error messages
+    if(isTimeout){
+      resetVerifyUI('Verification timed out — please try again.');
+    } else if(isExpired){
+      resetVerifyUI('Code expired or invalid — tap Resend to get a new one.');
+    } else {
+      resetVerifyUI(msg || 'Verification failed. Please try again.');
     }
-    if(btn){ btn.disabled = false; btn.textContent = 'Verify'; }
   }
 }
 
