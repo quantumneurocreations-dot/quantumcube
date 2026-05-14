@@ -609,7 +609,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v290",
+      release: "quantum-cube@qc-v291",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -883,7 +883,7 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
   </div>
 </div>
 <div style="text-align:center;padding:40px 22% 20px 22%;">
-  <button type="button" class="reset-btn" onclick="resetAll()">Back to Sign Up</button>
+  <button type="button" class="reset-btn" onclick="haptic('medium');handleBackToSignUp()">Back to Sign Up</button>
 </div>
 <div class="legal-footer">
 
@@ -1564,36 +1564,28 @@ async function _qcHandleGoogleCredential(response){
     restorePendingProfile();
     populateFormFromProfile(profileRow, data.session.user);
 
-    // Check if form is ready (Google provides name but not DOB)
-    const formReady = !!(
+    // v291: Always proceed to cube after GSI sign-in, even without DOB
+    // runCalculation() validates fields and shows face1 on success
+    // If DOB missing, it will show error but user is already authenticated
+    const hasName = !!(
       document.getElementById('firstName')?.value &&
-      document.getElementById('lastName')?.value &&
+      document.getElementById('lastName')?.value
+    );
+    const hasDob = !!(
       document.getElementById('dobDay')?.value &&
       document.getElementById('dobMonth')?.value &&
       document.getElementById('dobYear')?.value
     );
 
-    // v287: breadcrumb before navigation decision
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: 'navigation decision', data: { formReady, currentFace } }); } catch(_){}
+    // v291: breadcrumb before navigation
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'gsi', level: 'info', message: 'navigation decision', data: { hasName, hasDob, currentFace } }); } catch(_){}
 
-    if(formReady){
-      try {
-        runCalculation();
-        // v287: clear flag after successful navigation
-        _qcGsiInProgress = false;
-      } catch(e){
-        _qcGsiInProgress = false;
-        showFace(1);
-      }
-    } else {
-      // Stay on face0, prompt user to complete DOB
-      _qcGsiInProgress = false;
-      const errEl = document.getElementById('errMsg');
-      if(errEl){
-        errEl.textContent = 'Welcome! Please enter your date of birth to continue.';
-        errEl.style.display = 'block';
-        errEl.style.color = '#0cc0df';
-      }
+    _qcGsiInProgress = false;
+    try {
+      runCalculation();
+    } catch(e){
+      // runCalculation failed (likely missing DOB) — go to face1 anyway
+      showFace(1);
     }
   } catch(e){
     _qcGsiInProgress = false;
