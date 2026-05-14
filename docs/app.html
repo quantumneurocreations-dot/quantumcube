@@ -33,7 +33,7 @@
 <link rel="manifest" href="/manifest.json">
 <script>
 function updateCalcBtnReady(){var fn=document.getElementById("firstName").value.trim();var ln=document.getElementById("lastName").value.trim();var em=document.getElementById("email")?document.getElementById("email").value.trim():"";var d=document.getElementById("dobDay").value.trim();var m=document.getElementById("dobMonth").value;var y=document.getElementById("dobYear").value.trim();var emOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);var ok=!!(fn&&ln&&emOk&&d&&m&&y);document.querySelectorAll(".calc-btn").forEach(function(b){b.classList.toggle("ready",ok);});}
-document.addEventListener("DOMContentLoaded",function(){["firstName","lastName","email","dobDay","dobYear"].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener("input",updateCalcBtnReady);});var dm=document.getElementById("dobMonth");if(dm)dm.addEventListener("change",updateCalcBtnReady);});
+document.addEventListener("DOMContentLoaded",function(){["firstName","lastName","dobDay","dobYear"].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener("input",updateCalcBtnReady);});var dm=document.getElementById("dobMonth");if(dm)dm.addEventListener("change",updateCalcBtnReady);});
 </script>
 
 <!-- Apple touch icon (inline SVG → data URI) -->
@@ -606,7 +606,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v281",
+      release: "quantum-cube@qc-v282",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -779,7 +779,7 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 <div class="form-group form-full" style="text-align:center"><label for="firstName" style="text-align:center;display:block">First Name</label><input type="text" id="firstName" placeholder="" autocomplete="given-name" required style="text-align:center"></div>
 <div class="form-group form-full" style="text-align:center"><label for="middleName" style="text-align:center;display:block">Middle Name &#8212; Optional</label><input type="text" id="middleName" placeholder="" autocomplete="additional-name" style="text-align:center"></div>
 <div class="form-group form-full" style="text-align:center"><label for="lastName" style="text-align:center;display:block">Last Name</label><input type="text" id="lastName" placeholder="" autocomplete="family-name" required style="text-align:center"></div>
-<div class="form-group form-full" style="text-align:center"><label for="email" style="text-align:center;display:block">Email</label><input type="email" id="email" placeholder="" autocomplete="email" inputmode="email" required style="text-align:center"></div>
+<!-- v282: email field removed — auth stripped from reveal flow -->
 <div class="form-group" style="text-align:center"><label for="dobDay" style="text-align:center;display:block">Day</label><input type="number" id="dobDay" placeholder="" min="1" max="31" inputmode="numeric" required style="text-align:center" value="" oninput="if(parseInt(this.value)>31)this.value=31;if(parseInt(this.value)<1&&this.value!=='')this.value=1;"></div>
 <div class="form-group" style="text-align:center"><label for="dobMonth" style="text-align:center;display:block">Month</label><div class="sel-wrap"><select id="dobMonth" style="text-align:center"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select></div></div>
 <div class="form-group" style="text-align:center"><label for="dobYear" style="text-align:center;display:block">Year</label><input type="number" id="dobYear" placeholder="" min="1900" inputmode="numeric" required style="text-align:center" value="" oninput="var m=new Date().getFullYear()-1;if(parseInt(this.value)>m)this.value=m;if(parseInt(this.value)<1900&&this.value.length>=4)this.value=1900;"></div>
@@ -3706,22 +3706,18 @@ async function handleGoogleSignIn(){
   }
 }
 
+// v282: Auth stripped from reveal flow — name + DOB only, no email
 async function handleRevealClick(){
   try { if(window.Sentry) Sentry.captureMessage('reveal-diag: ENTRY', { level: 'info' }); } catch(_) {}
   if(window.QC_AUDIO) window.QC_AUDIO.play("reveal_my_cube");
   const fn = document.getElementById("firstName").value.trim();
   const mn = document.getElementById("middleName").value.trim();
   const ln = document.getElementById("lastName").value.trim();
-  const em = document.getElementById("email").value.trim();
   const d  = document.getElementById("dobDay").value.trim();
   const m  = document.getElementById("dobMonth").value;
   const y  = document.getElementById("dobYear").value.trim();
-  const consent = !!document.getElementById("marketingConsent")?.checked;
-  const emOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
-  const btn = document.getElementById("revealBtn");
   const err = document.getElementById("errMsg");
-  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: pre-validation', { level: 'info', extra: { fn: fn, ln: ln, em: em, d: d, m: m, y: y, emOk: emOk } }); } catch(_) {}
-  if(!(fn && ln && emOk && d && m && y)){
+  if(!(fn && ln && d && m && y)){
     if(err){
       err.textContent = "Please complete all fields";
       err.style.display = "block";
@@ -3740,85 +3736,13 @@ async function handleRevealClick(){
     if(err){ err.textContent="You must be 18 or older to use Quantum Cube"; err.style.display="block"; }
     return;
   }
-  // Age error doesn't mark fields as invalid (the data IS entered, just out of range)
   if(err) err.style.display = "none";
   qcClearInvalidFields();
-  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: form-valid', { level: 'info', extra: { fn: !!fn, ln: !!ln, emOk, d: !!d, m: !!m, y: !!y, em: em.slice(0,3) } }); } catch(_) {}
-  savePendingProfile(fn, mn, ln, d, m, y, em);
-  // Short-circuit: if there's already an active session for THIS email,
-  // skip the magic link and go straight to the app
-  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: pre-session', { level: 'info' }); } catch(_) {}
-  // v279: Use cached qcCurrentUser instead of sb.auth.getSession() — avoids
-  // holding the Supabase auth lock which causes a 5s timeout on every tap.
-  // qcCurrentUser is set by onAuthStateChange(SIGNED_IN) and initSupabaseSession.
-  let _hasMatchingSession = false;
-  if(qcCurrentUser && qcCurrentUser.email){
-    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: session-check', { level: 'info', extra: { hasSession: true, emailMatch: qcCurrentUser.email.toLowerCase() === em.toLowerCase() } }); } catch(_) {}
-    if(qcCurrentUser.email.toLowerCase() === em.toLowerCase()){
-      _hasMatchingSession = true;
-      updateSettingsLinkVisibility();
-      try {
-        const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
-        qcCurrentProfile = profile || null;
-        syncUnlockFromProfile(qcCurrentProfile);
-      } catch(_) {}
-      await saveProfileFromForm();
-      try { runCalculation(); } catch(e){ showFace(1); }
-      return;
-    } else {
-      // Different email — sign out so OTP flow starts fresh
-      try { await sb.auth.signOut(); } catch(e){}
-      qcCurrentUser = null;
-      qcCurrentProfile = null;
-    }
-  }
-  // v262 Fix 2: CCT-isolation detection. If a magic link was already
-  // requested for THIS SAME EMAIL but no session has materialised, the
-  // user came back here via a CCT/external-browser detour. Route them
-  // back to CheckEmail with a warning rather than silently dispatching
-  // another link that won't land in this storage either.
-  // v265 fix: must check email match — otherwise typing a NEW email after
-  // a previous attempt would incorrectly trigger this guard.
-  if(!_hasMatchingSession && qcLastMagicEmail && qcLastMagicEmail.toLowerCase() === em.toLowerCase()){
-    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: about-to-showOtp (CCT)', { level: 'info' }); } catch(_) {}
-    try { showOtpScreen(em); } catch(navErr) { console.error('[QC] showOtpScreen failed (CCT path)', navErr); try { if(window.Sentry) Sentry.captureException(navErr, { tags: { area: 'reveal-nav' } }); } catch(_){} if(err){ err.textContent = 'Navigation error — please refresh'; err.style.display = 'block'; } return; }
-    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: showOtp-done (CCT)', { level: 'info' }); } catch(_) {}
-    return;
-  }
-  // v279: reaching OTP dispatch
-  if(btn){ btn.disabled = true; }
-  qcLastMagicEmail = em;
-  try { localStorage.setItem('qc_last_magic', JSON.stringify({ email: em, t: Date.now() })); } catch(_) {}
-  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: about-to-showOtp (OTP)', { level: 'info' }); } catch(_) {}
-  try { showOtpScreen(em); } catch(navErr) { console.error('[QC] showOtpScreen failed (OTP path)', navErr); try { if(window.Sentry) Sentry.captureException(navErr, { tags: { area: 'reveal-nav' } }); } catch(_){} if(err){ err.textContent = 'Navigation error — please refresh'; err.style.display = 'block'; } if(btn){ btn.disabled = false; } return; }
-  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: showOtp-done (OTP)', { level: 'info' }); } catch(_) {}
-  try {
-    const result = await sb.auth.signInWithOtp({
-      email: em,
-      options: { data: {
-        marketing_consent: consent,
-        pending_first_name: fn,
-        pending_middle_name: mn,
-        pending_last_name: ln,
-        pending_dob_day: d,
-        pending_dob_month: m,
-        pending_dob_year: y
-      } }
-    });
-    if(result && result.error) throw new Error(result.error.message || "Could not send");
-    _qcMagicLinkRequested = true;
-    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: otp-dispatched', { level: 'info' }); } catch(_) {}
-    // Success: magic link dispatched. Interstitial + auto-advance land in next commit.
-  } catch(e){
-    console.error('[QC] signInWithOtp (reveal) failed', e);
-    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'signInWithOtp', flow: 'reveal' } }); } catch(_){}
-    if(err){
-      err.textContent = "Could not send: " + (e.message || "Network error");
-      err.style.display = "block";
-    }
-  } finally {
-    if(btn){ btn.disabled = false; }
-  }
+  try { if(window.Sentry) Sentry.captureMessage('reveal-diag: form-valid', { level: 'info' }); } catch(_) {}
+  // v282: Save pending profile locally (Supabase save wrapped to fail silently without auth)
+  savePendingProfile(fn, mn, ln, d, m, y, '');
+  // v282: Proceed directly to calculation — no auth required
+  try { runCalculation(); } catch(e){ showFace(1); }
 }
 
 function syncMarketingConsent(source){
@@ -3903,112 +3827,12 @@ async function initSupabaseSession(){
 let qcLastMagicEmail = null;
 let qcResendCooldownTimer = null;
 
-function showCheckEmailScreen(){
-  showFace('CheckEmail');
-}
-
-// v280: OTP code entry screen (replaces magic-link-only flow for PWA users)
-function showOtpScreen(email){
-  const display = document.getElementById('qcOtpEmailDisplay');
-  if(display) display.textContent = email || '';
-  // Clear all digit inputs
-  for(let i=0;i<6;i++){
-    const d = document.getElementById('qcOtpD'+i);
-    if(d){ d.value=''; d.style.borderColor=''; }
-  }
-  const err = document.getElementById('qcOtpError');
-  if(err) err.style.display='none';
-  const btn = document.getElementById('qcOtpVerifyBtn');
-  if(btn){ btn.disabled=false; btn.textContent='Verify'; }
-  showFace('OtpEntry');
-  // Auto-focus first digit after transition
-  setTimeout(()=>{ try{ document.getElementById('qcOtpD0').focus(); }catch(_){} }, 400);
-}
-
-function _qcOtpInputHandler(){
-  const digits = Array.from({length:6},(_,i)=>document.getElementById('qcOtpD'+i));
-  digits.forEach((el,i)=>{
-    if(!el) return;
-    el.addEventListener('input', e=>{
-      const val = e.target.value.replace(/\D/g,'');
-      e.target.value = val.slice(-1); // keep only last digit
-      if(val && i<5) digits[i+1].focus();
-      // auto-verify when all 6 filled
-      if(digits.every(d=>d&&d.value.match(/\d/))) _qcOtpVerify();
-    });
-    el.addEventListener('keydown', e=>{
-      if(e.key==='Backspace' && !e.target.value && i>0) digits[i-1].focus();
-    });
-    el.addEventListener('paste', e=>{
-      e.preventDefault();
-      const pasted = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
-      pasted.split('').forEach((ch,j)=>{ if(digits[j]) digits[j].value=ch; });
-      const next = Math.min(pasted.length, 5);
-      digits[next].focus();
-      if(pasted.length===6) _qcOtpVerify();
-    });
-  });
-}
-
-async function _qcOtpVerify(){
-  const code = Array.from({length:6},(_,i)=>{ const d=document.getElementById('qcOtpD'+i); return d?d.value:''; }).join('');
-  if(code.length!==6||!/^\d{6}$/.test(code)) return;
-
-  const btn = document.getElementById('qcOtpVerifyBtn');
-  const err = document.getElementById('qcOtpError');
-  // Get email from the persisted pending profile
-  let email = '';
-  try{ const p=JSON.parse(localStorage.getItem(QC_PENDING_KEY)||'{}'); email=p.email||''; }catch(_){}
-  if(!email && qcLastMagicEmail) email = qcLastMagicEmail;
-
-  if(btn){ btn.disabled=true; btn.textContent='Verifying…'; }
-  if(err) err.style.display='none';
-
-  try {
-    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: otp-verify-attempt', { level: 'info', extra: { email: email.slice(0,3) } }); } catch(_) {}
-    const { data, error } = await sb.auth.verifyOtp({ email, token: code, type: 'email' });
-    if(error) throw error;
-    // SIGNED_IN handler will fire and take over — but as a fallback:
-    if(data?.session){
-      try { if(window.Sentry) Sentry.captureMessage('reveal-diag: otp-verify-success', { level: 'info' }); } catch(_) {}
-      qcCurrentUser = data.session.user;
-      qcLastMagicEmail = null;
-      try{ localStorage.removeItem('qc_last_magic'); }catch(_){}
-      updateSettingsLinkVisibility();
-      await saveProfileFromForm();
-      try{ runCalculation(); }catch(e){ showFace(1); }
-    }
-  } catch(e){
-    try { if(window.Sentry) Sentry.captureMessage('reveal-diag: otp-verify-failed', { level: 'warning', extra: { error: e.message } }); } catch(_) {}
-    if(err){
-      err.textContent = e.message && e.message.includes('expired')
-        ? 'Code expired — tap Resend to get a new one.'
-        : (e.message || 'Invalid code. Please try again.');
-      err.style.display='block';
-    }
-    if(btn){ btn.disabled=false; btn.textContent='Verify'; }
-  }
-}
-
-async function _qcOtpResend(){
-  let email = '';
-  try{ const p=JSON.parse(localStorage.getItem(QC_PENDING_KEY)||'{}'); email=p.email||''; }catch(_){}
-  if(!email && qcLastMagicEmail) email = qcLastMagicEmail;
-  if(!email) return;
-
-  const resendEl = document.getElementById('qcOtpResend');
-  if(resendEl) resendEl.textContent = 'Sending…';
-
-  try {
-    const redirectTo = window.location.origin + window.location.pathname;
-    await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
-    if(resendEl) resendEl.textContent = 'Sent! Check email';
-    setTimeout(()=>{ if(resendEl) resendEl.textContent = 'Resend code'; }, 3000);
-  } catch(e) {
-    if(resendEl) resendEl.textContent = 'Failed — try again';
-    setTimeout(()=>{ if(resendEl) resendEl.textContent = 'Resend code'; }, 3000);
-  }
-}
+// v282: Auth stripped — these functions are no longer needed
+// function showCheckEmailScreen(){ showFace('CheckEmail'); }
+// function showOtpScreen(email){ ... }
+// function _qcOtpInputHandler(){ ... }
+// async function _qcOtpVerify(){ ... }
+// async function _qcOtpResend(){ ... }
 
 function handleBackToSignUp(){
   if(window.QC_AUDIO) window.QC_AUDIO.play("back_to_signup");
@@ -4371,10 +4195,7 @@ async function confirmDeleteAccount(){
 
 document.addEventListener("DOMContentLoaded", () => {
   initSupabaseSession();
-  // v280: OTP input handlers
-  _qcOtpInputHandler();
-  document.getElementById('qcOtpVerifyBtn')?.addEventListener('click', _qcOtpVerify);
-  document.getElementById('qcOtpResend')?.addEventListener('click', _qcOtpResend);
+  // v282: OTP handlers removed — auth stripped from reveal flow
 });
 
 function runCalculation(){
