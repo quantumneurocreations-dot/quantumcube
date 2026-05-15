@@ -278,3 +278,10 @@ This file is the memory that prevents asking the user things we already know.
 - **Project:** qi-quantum-integrator
 - **Status:** ⏳ Awaiting Gmail API enable + first auth run
 - **Next:** GCP Console → Library → enable Gmail API → then run qi-gmail.py auth
+
+## QI GMAIL STATUS (updated 2026-05-15)
+
+- **Authenticated as:** quantumneurocreations@gmail.com (temporary — until qi@qncacademy.com created)
+- **Token:** `~/.config/qi/gmail_token.pickle` ✅ saved
+- **Auth flow:** External + Testing mode, test users: quantumneurocreations@gmail.com + admin@qncacademy.com
+- **TODO:** Create qi@qncacademy.com in Google Admin → add as test user → re-auth as qi@qncacademy.com → delete old token → that becomes QI's permanent sending address
