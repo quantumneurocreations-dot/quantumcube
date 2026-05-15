@@ -300,3 +300,12 @@ This file is the memory that prevents asking the user things we already know.
 - **Cloudflare Email Routing:** Started April 2026 but NEVER completed — disabled, MX conflict with Google. Do not use.
 - **Team emails:** Google Workspace aliases under each user in Google Admin
 - **qi@qncacademy.com:** Needs to be created as Google Group or alias in admin.google.com
+
+## QI GMAIL ALIAS CLARIFICATION (updated 2026-05-15)
+
+- `qi@qncacademy.com` is an **alias** on `admin@qncacademy.com` — NOT a separate seat
+- All team emails are aliases: info · privacy · keyzer · michelle · ronnie · qi (all @qncacademy.com)
+- Up to 30 aliases, zero extra cost. Set in Google Admin → User → Alternative email addresses.
+- OAuth authenticates as `admin@qncacademy.com`, sends FROM `qi@qncacademy.com` as alias
+- `qi@` cannot be added as GCP OAuth test user (aliases have no standalone Google Account) — doesn't matter, admin@ covers it
+- **Status: ✅ FULLY OPERATIONAL — no further setup needed**
