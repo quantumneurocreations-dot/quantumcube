@@ -144,7 +144,8 @@ html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow
 }
 .qc-otp-display.active { border-color:#0cc0df; }
 .qc-otp-display.filled { border-color:var(--border-m); }
-.qc-otp-spinner{display:none;width:32px;height:32px;border:3px solid rgba(255,255,255,0.12);border-top-color:var(--cyan);border-radius:50%;animation:qcSpin 0.85s linear infinite;margin:12px auto 0}
+.qc-otp-spinner{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center}
+.qc-otp-spinner::after{content:'';width:48px;height:48px;border:4px solid rgba(255,255,255,0.15);border-top-color:var(--cyan);border-radius:50%;animation:qcSpin 0.85s linear infinite}
 #qcOtpRealInput {
   position:absolute; top:0; left:0; width:100%; height:100%;
   opacity:0; font-size:1.5rem; z-index:2; cursor:text;
@@ -650,7 +651,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v302",
+      release: "quantum-cube@qc-v303",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3815,6 +3816,11 @@ function _qcShowOtpScreen(email){
   }
   const errEl = document.getElementById('qcOtpError');
   if(errEl) errEl.style.display = 'none';
+  // v303: Reset spinner and verify button to default state
+  const spinner = document.getElementById('qcOtpSpinner');
+  if(spinner) spinner.style.display = 'none';
+  const verifyBtn = document.getElementById('qcOtpVerifyBtn');
+  if(verifyBtn){ verifyBtn.disabled = false; verifyBtn.textContent = 'Verify'; }
   // Reset reveal button
   const revBtn = document.getElementById('revealBtn');
   if(revBtn){ revBtn.disabled = false; revBtn.textContent = 'Reveal My Cube'; }
@@ -3911,7 +3917,7 @@ async function _qcOtpVerify(){
 
   const spinner = document.getElementById('qcOtpSpinner');
   if(btn){ btn.disabled = true; btn.textContent = 'Verifying…'; }
-  if(spinner) spinner.style.display = 'block';
+  if(spinner) spinner.style.display = 'flex';
   if(errEl) errEl.style.display = 'none';
 
   // v292: breadcrumb at start
