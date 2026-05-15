@@ -195,3 +195,18 @@ This file is the memory that prevents asking the user things we already know.
 - **Main API key:** `u3481167-eff9708257dbdf0694cc4cb3` (stored in `~/.config/qi/uptimerobot_api_key`)
 - **Status page:** https://stats.uptimerobot.com/azO4bPUJJQ
 - **MCP:** available in UptimeRobot dashboard (Integrations & API → MCP) — wire up next session
+
+## FAL.AI
+
+- **API key:** stored in `~/.config/qi/fal_api_key`
+- **Account:** Quantum (quantumneurocreations@gmail.com)
+- **Pricing:** pay-per-use, no subscription
+- **SDK:** `pip install fal-client` (Python) · `npm install @fal-ai/client` (Node)
+- **Env var:** `FAL_KEY`
+- **Primary models:**
+  - Images: `fal-ai/nano-banana-2` ($0.08/img, Gemini 3.1 Flash) · `fal-ai/nano-banana-pro` ($0.15/img, Gemini 3 Pro) · `fal-ai/flux-pro/v1.1` (diffusion alternative)
+  - Video: `fal-ai/kling-video/v3.0/pro` ($0.112/sec, cinematic) · `fal-ai/veo3` ($0.40/sec, Google, native audio)
+  - Budget video: `fal-ai/seedance-2-0` (~$0.03/sec)
+- **Used for:** Head-of-Design sub-agent image generation · QI marketing agent media creation
+- **Access:** One API key → 1000+ models. Swap model by changing endpoint string only.
+- **Added:** 2026-05-15
