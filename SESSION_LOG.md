@@ -3,6 +3,29 @@ tags: [core, session]
 ---
 # Session Log
 
+## 2026-05-15 — QI Foundation Build (Chat Claude)
+
+**Goal:** Migrate QI from quantumcube → quantum-integrator, security hardening, brain memory structure.
+
+**Done:**
+- ✅ Full script migration — all 7 scripts + morning-briefing.py + qi-morning-auto.sh in quantum-integrator/scripts/
+- ✅ LaunchD plist renamed com.quantumcube.qi-server → com.quantumintegrator.qi-server, running from new path
+- ✅ All 3 crons updated to quantum-integrator/ paths (via Claude Code)
+- ✅ qi / qi-dash / qi-brief aliases already correct
+- ✅ Security quick-wins in qi-voice.py: redact() helper strips API keys from all error prints, _SAFE_ENV strips keys from all subprocess calls, QI_KILL=1 kill switch at startup. Commit ef25e34
+- ✅ obsidian-mind QMD semantic search layer installed — SessionStart hook, 18 commands (om-standup, om-dump, om-weekly etc), vault-manifest.json, 17 files indexed. Commit 7ec8e0c
+- ✅ Tiered brain memory structure built — master _index.md + 5 brain/ dirs (business, communication, coding, projects, research), each with _index.md + starter files. QMD re-indexed 17 files / 13 chunks. Commit d5e0925
+- ✅ DMARC report from Google — all emails passing DKIM + SPF, p=quarantine already active, pct=25 (can bump to 100 anytime)
+
+**Pending:**
+- 🔲 Head-of-Design sub-agent (separate session)
+- 🔲 War Room dashboard — 7 named agents + task board
+- 🔲 Continue super-QI build — more content creator videos queued
+
+**Current HEAD:** d5e0925 | QI server: UP — 4 customers
+
+---
+
 ## 2026-05-14 Night — Full Play Console audit + auth rebuild wrap-up (v283–v299)
 
 **Goal:** Complete Play Console audit, ensure everything is in order for 14-day testing window, fix all outstanding UI/UX issues flagged by testers.
