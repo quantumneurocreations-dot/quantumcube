@@ -255,3 +255,17 @@ This file is the memory that prevents asking the user things we already know.
   3. Credentials → OAuth client ID → Desktop app → name "QI Email Agent"
   4. Download JSON → `~/.config/qi/gmail_client_secret.json`
 - **Update this file** with the new project ID once created
+
+## QI GOOGLE CLOUD PROJECT (confirmed)
+
+- **Project name:** QI - Quantum Integrator
+- **Project ID:** `qi-quantum-integrator`
+- **Organisation:** quantumneurocreations-org
+- **Billing:** My Billing Account
+- **Status:** ⏳ Created — awaiting Gmail API enable + OAuth credentials
+
+### Next steps after project created:
+1. APIs & Services → Library → search "Gmail API" → Enable
+2. APIs & Services → Credentials → Create → OAuth client ID → **Desktop app** → name "QI Email Agent"
+3. Download JSON → rename `gmail_client_secret.json` → move to `~/.config/qi/`
+4. `python3 scripts/qi-gmail.py auth`  ← one-time browser auth as qi@qncacademy.com
