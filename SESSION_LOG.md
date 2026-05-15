@@ -1461,3 +1461,25 @@ Upgraded to Max $200 plan = **20× usage**. No token constraints on any future c
 **Current HEAD:** `58c25a9` | **SW:** qc-v282 | **Sentry:** quantum-cube@qc-v282 | **Paying customers:** 4 | **DB:** 4 auth.users (all has_paid=true) | **Play Store:** 14-day clock running since May 14 → apply production May 28
 
 > **Related:** [[PROJECT_BRIEF]] · [[DECISIONS]] · [[CONNECTORS]] · [[NORTH_STAR]]
+
+## 2026-05-15 — Claude Code plugin installs (Chat Claude)
+
+**Goal:** Evaluate + install Kevin's 3 recommended skills: ClaudeKit, UI UX Pro MAX, Superpowers.
+
+**Done:**
+- ✅ `superpowers@claude-plugins-official` v5.1.0 — full dev methodology: brainstorm → spec → TDD → subagent execution. Powers Agent 3 (Code Agent).
+- ✅ `ui-ux-pro-max@ui-ux-pro-max-skill` v2.5.0 — searchable design DB: 161 palettes, 57 font pairs, 50+ styles, 99 UX guidelines, 10 stacks. Companion to Head of Design.
+- ✅ `ai-ml-tools@claudekit-skills` v1.0.0 — skills: ai-multimodal, context-engineering, google-adk-python.
+- ✅ `specialized-tools@claudekit-skills` v1.0.0 — skills: sequential-thinking, mermaidjs-v11.
+- ✅ `research-tools@claudekit-skills` v1.0.0 — skills: repomix, docs-seeker.
+- ✅ Added marketplaces: `ui-ux-pro-max-skill` + `claudekit-skills`
+
+**Plugin inventory (user scope):**
+superpowers · ui-ux-pro-max · ai-ml-tools · specialized-tools · research-tools · example-skills · vercel-plugin
+
+**Pending:**
+- 🔲 War Room dashboard tiles in qi-dashboard.html
+- 🔲 Head of Design deeper tiers
+- 🔲 Marketing Agent (Agent 4) — fal.ai wire-up
+- 🔲 Security hardening Tier 2-3
+
