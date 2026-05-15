@@ -664,8 +664,11 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
           if (/ResizeObserver loop limit exceeded/i.test(msg)) return null;
           if (/Non-Error promise rejection captured/i.test(msg)) return null;
           if (/Script error\.?/i.test(msg)) return null; // cross-origin script errors with no detail
-          // v289: Drop Supabase OTP rate-limit (expected user behaviour)
-          if (/For security purposes, you can only request this after/i.test(msg)) return null;
+          // v289+: Drop Supabase OTP rate-limit & expired token (expected user behaviour)
+          if (/For security purposes|only request this after|Token has expired or is invalid/i.test(msg)) return null;
+          if (event && event.exception && event.exception.values && event.exception.values.some(function(ex){
+            return ex.value && /For security purposes|only request this after|Token has expired or is invalid/i.test(ex.value);
+          })) return null;
           // v289: Drop transient network blips on auth fetch
           var errName = (hint && hint.originalException && hint.originalException.name) || "";
           if (/Failed to fetch/i.test(msg) && errName === "AuthRetryableFetchError") return null;
