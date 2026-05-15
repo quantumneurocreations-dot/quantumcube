@@ -3,6 +3,39 @@ tags: [core, session]
 ---
 # Session Log
 
+## 2026-05-15 — QI Email + Brand Retheme + Security Fix (Chat Claude)
+
+**Goal:** Give QI its own email, retheme to correct brand colours, fix security incident.
+
+**Done:**
+- ✅ `qi@qncacademy.com` live — alias on `admin@qncacademy.com`, Gmail API OAuth2 authenticated
+- ✅ `scripts/qi-gmail.py` built — send_email(), read_inbox(), branded gradient signature
+- ✅ GCP project `qi-quantum-integrator` created (separate from quantum-cube-494914)
+- ✅ OAuth credential "QI Email Agent" (Desktop app), client ID `351155276338-fhvir238110b8h51g4mbjagqc2fmannm`
+- ✅ Gmail token at `~/.config/qi/gmail_token.pickle` — authenticated as admin@qncacademy.com
+- ✅ First two real QI emails sent to keyzer.pretorius@gmail.com
+- ✅ Brand retheme: `#5B64F9 → #9A6DE8 → #FF60CB` replaces cyan throughout dashboard + signature
+- ✅ qi-voice.py: EMAIL_SEND_TRIGGERS + EMAIL_READ_TRIGGERS routing added
+- ✅ Security: holy-leaf-e567 Cloudflare Worker deleted (had hardcoded OpenAI key from April 2026)
+- ✅ OpenAI key rotated, stored at `~/.config/qi/openai_api_key`
+- ✅ CONNECTORS.md updated: brand, GCP project, email auth, OpenAI rotation
+- ✅ `assets/qi-logo.png` saved from session
+- ✅ Name corrected everywhere: QI (never "QI Integrator")
+
+**Commits:** `a438e29` Gmail integration · `9e1f1d5` brand retheme · all pushed to origin/main
+
+**Next session:**
+- 🔲 War Room dashboard agent tiles (visual tiles in qi-dashboard.html)
+- 🔲 Marketing Agent (Agent 4) — fal.ai video/image end-to-end
+- 🔲 Head of Design deeper tiers — shadcn, Framer Motion component palette
+- 🔲 Security hardening Tier 2-3 (injection gate, auth rate-limit, startup guard)
+- 🔲 Sentry free tier verify — MAY 18 DEADLINE ⚠️
+
+**Current HEAD:** `9e1f1d5` | **SW:** qc-v282 | **QI server:** localhost:3001 (LaunchAgent) | **Paying customers:** 4
+
+---
+
+
 ## 2026-05-15 — CoS build session (Chat Claude)
 
 **Goal:** Build everything around Chief of Staff before video drop.
