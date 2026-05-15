@@ -3,6 +3,72 @@ tags: [core, session]
 ---
 # Session Log
 
+## 2026-05-15 — Play Console final audit + OTP fixes + UX improvements (v300–v305)
+
+**Goal:** Complete Play Console credential audit, fix all outstanding OTP/auth issues, add SMS groundwork.
+
+---
+
+**Done — Code (v300–v305):**
+- ✅ **v300** — SW version bump fix: Claude Code used `--no-verify` on Sentry filter commit (v299→v300 was a recovery bump). Added NEVER `--no-verify` rule to OPERATING_RULES
+- ✅ **v301** — OTP timeout recovery: `Promise.race` timeout now checks `getSession()` before showing error. Timeout extended 15s→30s. Added cyan loading spinner (full-screen fixed overlay, `rgba(0,0,0,0.55)` dim, centered). CSP: Google GSI remnant cleaned
+- ✅ **v302** — Session restore fix (JAVASCRIPT-7, 35 events, 15 users): `onAuthStateChange` now validates `profileRow.name` + `profileRow.dob` before calling `runCalculation()`. `_qcSessionRestored` flag prevents double-firing. Returning users now open straight to results
+- ✅ **v303** — Spinner state fix: spinner was visible by default on OTP screen load, button showed "Verifying..." before anything typed. Rebuilt spinner as `position:fixed` full-screen overlay. Reset state added to `showFaceOtpEntry()`. Spinner only shows on Verify tap
+- ✅ **v304** — OTP verify architecture fix (root cause of stuck spinner): stopped racing the slow Supabase SDK Promise (takes 30s+ internally). Now fires `verifyOtp()` without awaiting, races a one-shot `SIGNED_IN` listener against 30s timeout. `SIGNED_IN` fires in ~1s → spinner hides in ~1s. `_qcOtpVerifying` flag prevents global `onAuthStateChange` double-processing. `finally` block guarantees spinner always hidden
+- ✅ **v305** — Paste Code button: explicit clipboard button below OTP boxes. `navigator.clipboard.readText()` → strips non-digits → if 6 digits fills input + triggers auto-verify. Inline 2s error message if no valid code found. Falls back to focusing input if clipboard permission denied. Feature-detected — hidden if clipboard API unavailable
+
+**Done — Play Console:**
+- ✅ App Access instructions updated: now explicitly states "Normal sign-up requires: first name, last name, and date of birth (day/month/year), then a 6-digit OTP sent to the user's email"
+- ✅ Bypass URL documented: `https://quantumcube.app/app?review=qncreview2026`
+- ✅ Saved + queued for review in Publishing overview
+- ✅ Full credential policy audit completed — all requirements met
+- ✅ All 10 App Content declarations confirmed in Actioned tab, Need attention tab empty
+
+**Done — Sentry:**
+- ✅ JAVASCRIPT-12 resolved (Google auth nonce — GSI stripped in v293)
+- ✅ JAVASCRIPT-9 resolved (Android TWA internal Java object — not our code)
+- ✅ JAVASCRIPT-A resolved (RLS infinite recursion — fixed in v283)
+- ✅ OTP rate-limit `beforeSend` filter broadened: now catches all variants + expired token errors
+
+**Done — DB check:**
+- ✅ `rkelbrickmail@gmail.com` (Ronnie Carl Kelbrick) — account confirmed, `last_sign_in_at` updated after OTP fix
+
+---
+
+**Post-launch backlog (prioritised):**
+
+🔴 **NEXT SESSION — SMS OTP integration:**
+- Add Twilio as Supabase Phone provider (user needs: Account SID, Auth Token, phone number from twilio.com)
+- Restructure sign-up flow: Name + DOB only on face0 → tap Reveal → new intermediate face: "SMS or Email?" → chosen method expands to input → existing OTP screen
+- Trust rationale: user understands WHY they're giving phone number/email when they reach the verification step, not before
+- SMS autofill (`autocomplete="one-time-code"`) works natively for SMS on Android — solves paste problem permanently for SMS users
+- Returning users: detect and pre-select their previously used method
+
+🟡 **Post-SMS — Play Integrity API:**
+- Prevents cracked APK sideloads bypassing `has_paid`
+- Free up to 10K calls/month
+- One Claude Code session — must test in production (can't validate on sideloaded APK)
+
+🟡 **Post-launch — Huawei AppGallery:**
+- 400M+ active users, 3rd largest store globally
+- Huawei phones (post-2019) have NO Google Play — QC invisible to them without this
+- Honor phones fine (full GMS since 2021 split)
+- Half-day task: register HUAWEI Developer account, upload existing APK, same store assets
+- Revenue share: 85/15 (same as Google Play)
+
+🟢 **May 27 — Apply for Production in Play Console**
+🟢 **May 28 — Expected approval 🎂**
+
+---
+
+**Critical dates:**
+- May 14 = Day 1 (14-day testing clock)
+- May 27 = Day 14 → APPLY FOR PRODUCTION
+- May 28 = Birthday target 🎂
+
+**HEAD:** `d9aeb58` | **SW:** qc-v305 | **APP:** qc-v305 ✅ in sync
+
+
 ## 2026-05-15 — QI Email + Brand Retheme + Security Fix (Chat Claude)
 
 **Goal:** Give QI its own email, retheme to correct brand colours, fix security incident.
