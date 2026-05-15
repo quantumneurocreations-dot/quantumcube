@@ -210,3 +210,25 @@ This file is the memory that prevents asking the user things we already know.
 - **Used for:** Head-of-Design sub-agent image generation · QI marketing agent media creation
 - **Access:** One API key → 1000+ models. Swap model by changing endpoint string only.
 - **Added:** 2026-05-15
+
+## QI GMAIL
+
+- **QI email:** `qi@qncacademy.com`
+- **Google Workspace domain:** `qncacademy.com`
+- **Sending name:** QI — Quantum Integrator
+- **OAuth client name:** QI Email Agent (Desktop app type)
+- **Client secret location:** `~/.config/qi/gmail_client_secret.json` (download from Google Cloud → Credentials)
+- **Token location:** `~/.config/qi/gmail_token.pickle` (auto-created on first auth)
+- **Gmail API scopes:** `https://mail.google.com/` (full access)
+- **Google Cloud project:** `quantum-cube-494914` (add Gmail API + new OAuth client here)
+- **Setup script:** `python3 scripts/qi-gmail.py auth` (run once, opens browser)
+- **Voice triggers:** "send email to X about Y" → composes + sends · "check my email" → reads inbox aloud
+- **Status:** ⏳ AWAITING SETUP — needs Google Admin user creation + OAuth credential download
+
+### One-time setup steps (user must complete):
+1. `admin.google.com` → Users → Add user → `qi@qncacademy.com` · name: QI Integrator
+2. `console.cloud.google.com` → project `quantum-cube-494914` → APIs & Services → Library → Enable **Gmail API**
+3. Credentials → Create → OAuth client ID → **Desktop app** → name: "QI Email Agent" → Download JSON
+4. Rename downloaded file to `gmail_client_secret.json` → move to `~/.config/qi/`
+5. Run: `python3 scripts/qi-gmail.py auth`  ← browser opens, sign in as qi@qncacademy.com
+6. Test: `python3 scripts/qi-gmail.py test quantumneurocreations@gmail.com`
