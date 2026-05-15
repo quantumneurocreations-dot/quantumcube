@@ -309,3 +309,33 @@ This file is the memory that prevents asking the user things we already know.
 - OAuth authenticates as `admin@qncacademy.com`, sends FROM `qi@qncacademy.com` as alias
 - `qi@` cannot be added as GCP OAuth test user (aliases have no standalone Google Account) — doesn't matter, admin@ covers it
 - **Status: ✅ FULLY OPERATIONAL — no further setup needed**
+
+## QNC UMBRELLA ARCHITECTURE (locked 2026-05-15)
+
+```
+Quantum Neuro Creations (QNC)
+├── Quantum Integrator (QI) — the OS layer for all QNC
+│   ├── Supabase: currently fqqdldvnxupzxvvbyvjm (QC) — migrate when 2nd product live
+│   ├── GCP project: qi-quantum-integrator ✅
+│   ├── GitHub: quantum-integrator ✅
+│   └── Reads all QNC projects via service role keys in ~/.config/qi/
+│
+├── Quantum Cube (QC) — live app, paying customers
+│   ├── Supabase: fqqdldvnxupzxvvbyvjm ✅
+│   └── GitHub: quantumcube ✅
+│
+├── QNC Academy — website built, on hold
+│   └── Own Supabase when activated
+│
+└── Future QNC products → QI connects to each
+```
+
+**QI's role:** Central intelligence OS. Manages, monitors, and connects all QNC products.
+Not a sub-system of QC — it's the umbrella layer above all of them.
+
+**Supabase migration trigger:** When Academy activates OR a second product connects to QI
+→ create dedicated QI Supabase project
+→ rename keys: supabase_qc_service_role / supabase_qi_service_role / supabase_academy_service_role
+→ migrate qi_memory table out of QC project
+
+**Current technical debt:** qi_memory lives in QC Supabase. Acceptable until 2nd product.
