@@ -269,3 +269,12 @@ This file is the memory that prevents asking the user things we already know.
 2. APIs & Services → Credentials → Create → OAuth client ID → **Desktop app** → name "QI Email Agent"
 3. Download JSON → rename `gmail_client_secret.json` → move to `~/.config/qi/`
 4. `python3 scripts/qi-gmail.py auth`  ← one-time browser auth as qi@qncacademy.com
+
+## QI GMAIL OAUTH (confirmed credentials)
+
+- **Client ID:** `351155276338-fhvir238110b8h51g4mbjagqc2fmannm.apps.googleusercontent.com`
+- **Client secret:** stored in `~/.config/qi/gmail_client_secret.json` (chmod 600) — DO NOT commit
+- **Credential name:** QI Email Agent (Desktop app)
+- **Project:** qi-quantum-integrator
+- **Status:** ⏳ Awaiting Gmail API enable + first auth run
+- **Next:** GCP Console → Library → enable Gmail API → then run qi-gmail.py auth
