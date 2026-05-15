@@ -339,3 +339,24 @@ Not a sub-system of QC — it's the umbrella layer above all of them.
 → migrate qi_memory table out of QC project
 
 **Current technical debt:** qi_memory lives in QC Supabase. Acceptable until 2nd product.
+
+## QI SUPABASE (own project — confirmed 2026-05-15)
+
+- **Org:** QNC Internal (FREE) — `wumshcmyhsylcpugtshb`
+- **Project name:** Quantum Integrator
+- **Project ID:** `bzuvrynrjuysdgehnygh`
+- **Project URL:** `https://bzuvrynrjuysdgehnygh.supabase.co`
+- **Region:** eu-west-1
+- **Secret key:** stored at `~/.config/qi/supabase_qi_secret_key` (chmod 600)
+- **Tables:** `qi_memory` (session memory, created 2026-05-15)
+- **MCP connector:** Claude.ai Supabase connector now points HERE (QI project)
+- **Status:** ✅ ACTIVE_HEALTHY — writing confirmed
+
+### QC Supabase access from QI scripts
+- QI scripts still read QC data via `~/.config/qi/supabase_service_role` (direct REST, no MCP)
+- Claude Code (terminal) handles any QC database queries
+- MCP connector = QI only going forward
+
+### Cleanup TODO
+- `qi_memory` table still exists in QC Supabase (fqqdldvnxupzxvvbyvjm) — 1 test row, harmless
+- Drop it next time QC Supabase is accessible: `DROP TABLE IF EXISTS qi_memory;`
