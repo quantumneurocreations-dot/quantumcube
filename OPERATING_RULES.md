@@ -185,3 +185,36 @@ https://mcp.sentry.dev/mcp: search_events
 
 Report: "🔴 N new Sentry issues since last session" or "✅ Sentry clean."
 If issues found → list title + count before asking what's the focus.
+
+## COMMAND EXECUTION GOLDEN RULES (added 2026-05-15)
+
+**RULE: Always label WHERE and WHICH PROJECT — no exceptions.**
+
+Every command must include:
+1. **WHERE** — `Terminal` or `Claude Code`
+2. **WHICH PROJECT** — explicit `cd` path so there is zero cross-project risk
+
+### Correct format (always):
+
+> **Terminal → quantum-integrator:**
+> ```bash
+> cd ~/Projects/quantum-integrator
+> python3 scripts/qi-calendar.py auth
+> ```
+
+> **Terminal → quantumcube:**
+> ```bash
+> cd ~/Projects/quantumcube
+> git log --oneline -3
+> ```
+
+> **Claude Code → quantum-integrator:**
+> Run `/project:health-check` from inside `~/Projects/quantum-integrator`
+
+### Projects map:
+| Project | Path | Purpose |
+|---------|------|---------|
+| quantum-integrator | `~/Projects/quantum-integrator` | QI — Jarvis system, agents, scripts |
+| quantumcube | `~/Projects/quantumcube` | QC app — app.html, SW, Supabase edge functions |
+
+**Never paste a command without both labels. Voice users can't catch ambiguity mid-run.**
