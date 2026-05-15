@@ -285,3 +285,18 @@ This file is the memory that prevents asking the user things we already know.
 - **Token:** `~/.config/qi/gmail_token.pickle` ✅ saved
 - **Auth flow:** External + Testing mode, test users: quantumneurocreations@gmail.com + admin@qncacademy.com
 - **TODO:** Create qi@qncacademy.com in Google Admin → add as test user → re-auth as qi@qncacademy.com → delete old token → that becomes QI's permanent sending address
+
+## OPENAI
+
+- **API key:** stored in `~/.config/qi/openai_api_key` (chmod 600)
+- **Project:** Quantum Cube (only project on account)
+- **Note:** Previous key was exposed in Cloudflare Worker `holy-leaf-e567` — revoked 2026-05-15, worker deleted
+- **Usage in QI:** Not currently active — QI voice uses Anthropic (Claude). Key stored for future use.
+
+## QNCACADEMY.COM EMAIL (clarified 2026-05-15)
+
+- **Email provider:** Google Workspace (MX records point to aspmx.l.google.com)
+- **DNS:** Cloudflare zone `d8d3fbb1bfd538f3012cfa6d14a76042`
+- **Cloudflare Email Routing:** Started April 2026 but NEVER completed — disabled, MX conflict with Google. Do not use.
+- **Team emails:** Google Workspace aliases under each user in Google Admin
+- **qi@qncacademy.com:** Needs to be created as Google Group or alias in admin.google.com
