@@ -1516,3 +1516,22 @@ superpowers · ui-ux-pro-max · ai-ml-tools · specialized-tools · research-too
 - 🔲 Marketing Agent (Agent 4) — fal.ai wire-up
 - 🔲 Security hardening Tier 2-3
 
+
+## 2026-05-15 — QI State Review + Build Roadmap (end of day)
+
+**Skills live:** Voice loop · CoS briefing · Email (qi@qncacademy.com) · Dashboard · Crons (2/3/7am) · Brain/ memory (QMD installed, not yet wired to voice) · Claude Code plugins: superpowers · ui-ux-pro-max · ai-ml-tools · specialized-tools · research-tools
+
+**War Room:** CoS ✅ · Head of Design ✅ scaffold · Revenue ❌ · Code ❌ · Marketing ❌ · Analytics ❌ · Ops/Email ✅
+
+**Video context clarified:** "Videos" = Trillion, Kevin + others — reference content with QI build ideas. ~10 QNC videos made, deploy when QI is more complete. NOT assets to process yet.
+
+**Priority build order for next sessions:**
+1. 🎬 Marketing Agent — qi-marketing.py, fal.ai pipeline, content-calendar.md in brain/
+2. 📅 Google Calendar — same OAuth as Gmail, CoS needs schedule awareness
+3. 💰 Revenue Agent — milestone alerts, failed payment flags from Dodo webhook
+4. 🔔 Push alerts — macOS notifications from overnight crons (osascript)
+5. 📱 Telegram proxy — QI mobile access
+6. 🧠 Wire QMD into voice context — semantic vault search in CoS prompt
+7. 🏗️ War Room dashboard agent tiles
+
+---
