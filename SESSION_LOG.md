@@ -3,6 +3,31 @@ tags: [core, session]
 ---
 # Session Log
 
+## 2026-05-15 — CoS build session (Chat Claude)
+
+**Goal:** Build everything around Chief of Staff before video drop.
+
+**Done:**
+- ✅ fal.ai account created, API key stored at `~/.config/qi/fal_api_key`, CONNECTORS.md updated
+- ✅ AI provider strategy finalised: fal.ai = unified media API (Nano Banana/Gemini for images, Kling/Veo for video). OpenAI deferred — no gap Claude can't fill.
+- ✅ `qi-voice.py` brain/ integration: `VAULT_ROOT` + `read_brain_file()` helper. `build_cos_prompt()` now injects `brain/business/north-star.md` + `brain/projects/qi-system.md` as STRATEGIC CONTEXT — CoS is now strategy-aware, not just data-driven.
+- ✅ `.claude/skills/chief-of-staff/SKILL.md` — architecture + modification guide
+- ✅ `.claude/commands/cos.md` — preview briefing without running voice
+- ✅ `brain/projects/chief-of-staff.md` — agent architecture doc in Obsidian
+- ✅ `brain/business/war-room-agents.md` — 7 agent map with dashboard layout wireframe
+- ✅ fal-client Python SDK installed (`python3 -m pip install fal-client`)
+- ✅ Commit `9a1e7d4` pushed to origin/main
+- ⚠️ Sentry free tier: API returns "active" status, no trial features found, no subscription endpoint — likely already on free tier. Manual verify at sentry.io/settings/quantum-neuro-creations/billing/ to confirm before May 18.
+
+**Current HEAD:** `9a1e7d4`
+
+**Pending:**
+- 🔲 Sentry billing manual confirm (May 18 deadline — 3 days)
+- 🔲 Head-of-Design sub-agent (Tier 0 interview: Q2 = mockup viewer, Q3 = cost ceiling)
+- 🔲 War Room dashboard tiles in qi-dashboard.html
+- 🔲 Voice testing (deferred — skip for now)
+
+
 ## 2026-05-15 — QI Foundation Build (Chat Claude)
 
 **Goal:** Migrate QI from quantumcube → quantum-integrator, security hardening, brain memory structure.
