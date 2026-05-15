@@ -144,6 +144,7 @@ html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow
 }
 .qc-otp-display.active { border-color:#0cc0df; }
 .qc-otp-display.filled { border-color:var(--border-m); }
+.qc-otp-spinner{display:none;width:32px;height:32px;border:3px solid rgba(255,255,255,0.12);border-top-color:var(--cyan);border-radius:50%;animation:qcSpin 0.85s linear infinite;margin:12px auto 0}
 #qcOtpRealInput {
   position:absolute; top:0; left:0; width:100%; height:100%;
   opacity:0; font-size:1.5rem; z-index:2; cursor:text;
@@ -649,7 +650,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v300",
+      release: "quantum-cube@qc-v301",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -882,6 +883,7 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
   <p id="qcOtpError" style="color:#ff4444;display:none;font-size:0.85em;text-align:center;margin:0 0 8px 0"></p>
 </div>
 <button type="button" class="reset-btn" id="qcOtpVerifyBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)">Verify</button>
+<div class="qc-otp-spinner" id="qcOtpSpinner"></div>
 <p style="margin:12px 24px 0 24px;font-size:0.8em;opacity:0.7;text-align:center">
   Didn't get it? <span id="qcOtpResend" style="cursor:pointer;text-decoration:underline;color:#0cc0df">Resend code</span>
 </p>
@@ -3897,22 +3899,26 @@ async function _qcOtpVerify(){
   const errEl = document.getElementById('qcOtpError');
   const startTime = Date.now();
 
-  // v292: Helper to reset UI on any failure
+  // v301: Helper to reset UI on any failure (includes spinner)
   function resetVerifyUI(errorMsg){
+    const spin = document.getElementById('qcOtpSpinner');
+    if(spin) spin.style.display = 'none';
     if(btn){ btn.disabled = false; btn.textContent = 'Verify'; }
     if(errEl){ errEl.textContent = errorMsg; errEl.style.display = 'block'; }
   }
 
+  const spinner = document.getElementById('qcOtpSpinner');
   if(btn){ btn.disabled = true; btn.textContent = 'Verifying…'; }
+  if(spinner) spinner.style.display = 'block';
   if(errEl) errEl.style.display = 'none';
 
   // v292: breadcrumb at start
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'verify started', data:{email:email.slice(0,8)+'…', codeLen:code.length}}); } catch(_){}
 
-  // v292: 15-second timeout wrapper
+  // v301: 30-second timeout wrapper (increased from 15s — SDK can be slow to resolve)
   let timeoutId = null;
   const timeoutPromise = new Promise((_, reject) => {
-    timeoutId = setTimeout(() => reject(new Error('TIMEOUT')), 15000);
+    timeoutId = setTimeout(() => reject(new Error('TIMEOUT')), 30000);
   });
 
   try {
@@ -3978,8 +3984,25 @@ async function _qcOtpVerify(){
       }
     } catch(_){}
 
-    // v292: Show specific error messages
+    // v301: Show specific error messages (timeout checks session first)
     if(isTimeout){
+      // v301: SDK Promise may timeout but auth succeeded — check session before showing error
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        if(session){
+          // OTP succeeded — SDK was just slow to resolve. Treat as success.
+          const spin = document.getElementById('qcOtpSpinner');
+          if(spin) spin.style.display = 'none';
+          try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'timeout but session exists — treating as success'}); } catch(_){}
+          qcCurrentUser = session.user;
+          try { localStorage.removeItem('qc_otp_email'); } catch(_){}
+          await _qcSaveProfileDirect(session.access_token, session.user.id);
+          try { localStorage.removeItem(QC_PENDING_KEY); } catch(_){}
+          updateSettingsLinkVisibility();
+          try { runCalculation(); } catch(e2){ showFace(1); }
+          return;
+        }
+      } catch(_){}
       resetVerifyUI('Verification timed out — please try again.');
     } else if(isExpired){
       resetVerifyUI('Code expired or invalid — tap Resend to get a new one.');
