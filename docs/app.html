@@ -651,7 +651,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v303",
+      release: "quantum-cube@qc-v304",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1213,6 +1213,8 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 let currentFace=0,isUnlocked=false,profileData=null,deferredInstall=null;
 // v302: Guard to prevent session restore running more than once
 let _qcSessionRestored = false;
+// v304: Guard to prevent global onAuthStateChange from handling SIGNED_IN while OTP verify is running
+let _qcOtpVerifying = false;
 // v294: Review mode bypass for Play Store review
 let _qcReviewMode = false;
 // TWA detection — true when running inside the Android app wrapper
@@ -3905,86 +3907,87 @@ async function _qcOtpVerify(){
 
   const btn = document.getElementById('qcOtpVerifyBtn');
   const errEl = document.getElementById('qcOtpError');
+  const spinner = document.getElementById('qcOtpSpinner');
   const startTime = Date.now();
 
-  // v301: Helper to reset UI on any failure (includes spinner)
+  // v304: Helper to hide spinner (called in finally + all exit paths)
+  function hideSpinner(){
+    if(spinner) spinner.style.display = 'none';
+  }
+
+  // v301: Helper to reset UI on any failure
   function resetVerifyUI(errorMsg){
-    const spin = document.getElementById('qcOtpSpinner');
-    if(spin) spin.style.display = 'none';
+    hideSpinner();
     if(btn){ btn.disabled = false; btn.textContent = 'Verify'; }
     if(errEl){ errEl.textContent = errorMsg; errEl.style.display = 'block'; }
   }
 
-  const spinner = document.getElementById('qcOtpSpinner');
+  // v304: Helper for success path — hide spinner, save profile, run calculation
+  async function handleSuccess(session){
+    hideSpinner();
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'SIGNED_IN received', data:{elapsed:Date.now()-startTime}}); } catch(_){}
+    qcCurrentUser = session.user;
+    try { localStorage.removeItem('qc_otp_email'); } catch(_){}
+    try { await _qcSaveProfileDirect(session.access_token, session.user.id); } catch(_){}
+    try { localStorage.removeItem(QC_PENDING_KEY); } catch(_){}
+    updateSettingsLinkVisibility();
+    try { runCalculation(); } catch(e){ showFace(1); }
+  }
+
+  // Show loading state
   if(btn){ btn.disabled = true; btn.textContent = 'Verifying…'; }
   if(spinner) spinner.style.display = 'flex';
   if(errEl) errEl.style.display = 'none';
 
-  // v292: breadcrumb at start
+  // v304: Set flag so global onAuthStateChange skips this SIGNED_IN
+  _qcOtpVerifying = true;
+
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'verify started', data:{email:email.slice(0,8)+'…', codeLen:code.length}}); } catch(_){}
 
-  // v301: 30-second timeout wrapper (increased from 15s — SDK can be slow to resolve)
+  // v304: Race SIGNED_IN event against timeout (not the slow SDK Promise)
   let timeoutId = null;
-  const timeoutPromise = new Promise((_, reject) => {
-    timeoutId = setTimeout(() => reject(new Error('TIMEOUT')), 30000);
-  });
+  let unsubscribe = null;
 
   try {
-    // v292: breadcrumb before verifyOtp call
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'calling verifyOtp'}); } catch(_){}
+    // Create Promise that resolves when onAuthStateChange fires SIGNED_IN
+    const signedInPromise = new Promise((resolve, reject) => {
+      const { data: { subscription } } = sb.auth.onAuthStateChange((event, session) => {
+        if(event === 'SIGNED_IN' && session){
+          resolve(session);
+        }
+      });
+      unsubscribe = () => subscription.unsubscribe();
+      // 30s timeout
+      timeoutId = setTimeout(() => reject(new Error('TIMEOUT')), 30000);
+    });
 
-    // Race verifyOtp against timeout
-    const { data, error } = await Promise.race([
-      sb.auth.verifyOtp({ email, token: code, type: 'email' }),
-      timeoutPromise
-    ]);
+    // Fire verifyOtp WITHOUT awaiting — let SIGNED_IN event tell us when it's done
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'firing verifyOtp (not awaiting)'}); } catch(_){}
+    sb.auth.verifyOtp({ email, token: code, type: 'email' }).catch(e => {
+      // Log but don't throw — we're racing against SIGNED_IN, not this Promise
+      console.error('[QC] verifyOtp Promise rejected:', e);
+      try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'warning', message:'verifyOtp Promise rejected', data:{msg:e.message}}); } catch(_){}
+    });
+
+    // Wait for SIGNED_IN or timeout
+    const session = await signedInPromise;
     clearTimeout(timeoutId);
+    if(unsubscribe) unsubscribe();
 
-    // v292: breadcrumb after response
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'verifyOtp response', data:{hasError:!!error, hasData:!!data, elapsed:Date.now()-startTime}}); } catch(_){}
-
-    if(error) throw error;
-    if(!data?.session) throw new Error('No session returned');
-
-    // v292: breadcrumb success
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'verify succeeded'}); } catch(_){}
-
-    // Store session info locally
-    qcCurrentUser = data.session.user;
-    // Clear OTP email marker
-    try { localStorage.removeItem('qc_otp_email'); } catch(_){}
-
-    // v292: breadcrumb before profile save
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'saving profile'}); } catch(_){}
-
-    // Save profile via direct REST (NOT Supabase client to avoid getSession deadlock)
-    await _qcSaveProfileDirect(data.session.access_token, data.session.user.id);
-
-    // v292: breadcrumb after profile save
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'profile saved'}); } catch(_){}
-
-    // Clear pending profile
-    try { localStorage.removeItem(QC_PENDING_KEY); } catch(_){}
-
-    // Proceed to cube
-    updateSettingsLinkVisibility();
-
-    // v292: breadcrumb before runCalculation
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'calling runCalculation'}); } catch(_){}
-
-    try { runCalculation(); } catch(e){ showFace(1); }
+    // Success!
+    await handleSuccess(session);
 
   } catch(e){
     clearTimeout(timeoutId);
+    if(unsubscribe) unsubscribe();
     console.error('[QC] verifyOtp failed', e);
 
     const msg = e.message || '';
     const isTimeout = msg === 'TIMEOUT';
     const isExpired = msg.toLowerCase().includes('expired') || msg.toLowerCase().includes('invalid');
 
-    // v292: Capture to Sentry with full context
     try {
-      if(window.Sentry){
+      if(window.Sentry && !isTimeout){
         Sentry.captureException(e, {
           tags: { area: 'verifyOtp', isTimeout, isExpired },
           extra: { email: email.slice(0,8)+'…', elapsed: Date.now()-startTime, errorMsg: msg }
@@ -3992,31 +3995,26 @@ async function _qcOtpVerify(){
       }
     } catch(_){}
 
-    // v301: Show specific error messages (timeout checks session first)
     if(isTimeout){
-      // v301: SDK Promise may timeout but auth succeeded — check session before showing error
+      // v304: Timeout fallback — check if session exists anyway
       try {
         const { data: { session } } = await sb.auth.getSession();
         if(session){
-          // OTP succeeded — SDK was just slow to resolve. Treat as success.
-          const spin = document.getElementById('qcOtpSpinner');
-          if(spin) spin.style.display = 'none';
-          try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'timeout but session exists — treating as success'}); } catch(_){}
-          qcCurrentUser = session.user;
-          try { localStorage.removeItem('qc_otp_email'); } catch(_){}
-          await _qcSaveProfileDirect(session.access_token, session.user.id);
-          try { localStorage.removeItem(QC_PENDING_KEY); } catch(_){}
-          updateSettingsLinkVisibility();
-          try { runCalculation(); } catch(e2){ showFace(1); }
+          try { if(window.Sentry) Sentry.addBreadcrumb({category:'otp', level:'info', message:'timeout but session exists — recovering'}); } catch(_){}
+          await handleSuccess(session);
           return;
         }
       } catch(_){}
-      resetVerifyUI('Verification timed out — please try again.');
+      resetVerifyUI('Code expired — tap Resend to get a new one.');
     } else if(isExpired){
       resetVerifyUI('Code expired or invalid — tap Resend to get a new one.');
     } else {
       resetVerifyUI(msg || 'Verification failed. Please try again.');
     }
+  } finally {
+    // v304: Always clear flag and ensure spinner is hidden
+    _qcOtpVerifying = false;
+    hideSpinner();
   }
 }
 
@@ -4149,6 +4147,11 @@ sb.auth.onAuthStateChange(async (event, session) => {
     attemptPaymentUnlock(session);
   }
   if(event === "SIGNED_IN" && session && session.user){
+    // v304: Skip if _qcOtpVerify is handling this SIGNED_IN event
+    if(_qcOtpVerifying){
+      try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN skipped — _qcOtpVerifying active' }); } catch(_) {}
+      return;
+    }
     // v283: Clean up stale magic-link localStorage
     try { localStorage.removeItem('qc_last_magic'); } catch(_) {}
     qcCurrentUser = session.user;
