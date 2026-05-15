@@ -232,3 +232,26 @@ This file is the memory that prevents asking the user things we already know.
 4. Rename downloaded file to `gmail_client_secret.json` → move to `~/.config/qi/`
 5. Run: `python3 scripts/qi-gmail.py auth`  ← browser opens, sign in as qi@qncacademy.com
 6. Test: `python3 scripts/qi-gmail.py test quantumneurocreations@gmail.com`
+
+## QI BRAND
+
+- **Theme:** Purple → pink gradient (NOT Quantum Cube cyan)
+- **Gradient:** `linear-gradient(135deg, #5B64F9 0%, #9A6DE8 50%, #FF60CB 100%)`
+- **Purple:** `#5B64F9` (start) · `#9A6DE8` (mid/primary)
+- **Pink:** `#FF60CB` (end)
+- **Background:** `#05000F` (very dark purple-black)
+- **Text:** `#FFFFFF`
+- **Logo file:** `assets/qi-logo.png` (transparent PNG, purple→pink QUANTUM + white script "integrator")
+- **Logo use:** dashboard header, email, all QI surfaces
+- **Name:** QI (short for Quantum Integrator) — never "QI Integrator"
+
+## QI GOOGLE CLOUD PROJECT
+
+- **Status:** ⏳ NEEDS CREATION — separate from quantum-cube-494914
+- **Why separate:** QI is its own entity, not a sub-system of Quantum Cube
+- **Steps to create (user):**
+  1. console.cloud.google.com → New Project → name: "Quantum Integrator" → note project ID
+  2. Enable Gmail API in new project
+  3. Credentials → OAuth client ID → Desktop app → name "QI Email Agent"
+  4. Download JSON → `~/.config/qi/gmail_client_secret.json`
+- **Update this file** with the new project ID once created
