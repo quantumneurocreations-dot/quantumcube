@@ -360,3 +360,30 @@ Not a sub-system of QC — it's the umbrella layer above all of them.
 ### Cleanup TODO
 - `qi_memory` table still exists in QC Supabase (fqqdldvnxupzxvvbyvjm) — 1 test row, harmless
 - Drop it next time QC Supabase is accessible: `DROP TABLE IF EXISTS qi_memory;`
+
+---
+
+## QI SUPABASE — UPDATED 2026-05-15 (supersedes old entry above)
+
+> Old free org `wumshcmyhsylcpugtshb` (bzuvrynrjuysdgehnygh) DELETED. Everything now under QNC org.
+
+- **Org:** Quantum Neuro Creations — `ybhwpcakkaveapdztnrs` (SAME org as quantum-cube)
+- **Project:** Quantum Integrator — `zhvcmxtgvrogxnvqauus`
+- **URL:** `https://zhvcmxtgvrogxnvqauus.supabase.co`
+- **Region:** eu-west-1
+- **Anon key:** stored at `~/.config/qi/supabase_qi_secret_key` (chmod 600)
+- **DB connection string:** `~/.config/qi/supabase_qi_db_url` (transaction pooler + IPv4, psycopg2)
+- **Tables:** `qi_memory`
+- **MCP connector:** points to QNC org — covers BOTH quantum-cube AND quantum-integrator forever. No more org switching.
+- **Cost:** $10/month (separate project under QNC Pro org)
+- **Status:** ✅ ACTIVE_HEALTHY — full chain tested 2026-05-15
+
+### QNC Supabase final architecture
+```
+QNC org (ybhwpcakkaveapdztnrs) — one MCP connection
+├── quantum-cube       fqqdldvnxupzxvvbyvjm  (eu-central-1) ← QC app data
+└── quantum-integrator zhvcmxtgvrogxnvqauus  (eu-west-1)    ← QI OS data
+    └── Tables: qi_memory
+    └── Future: revenue_events, marketing_tasks, agent_logs...
+```
+Academy → add as 3rd project in same org when ready.
