@@ -650,7 +650,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v301",
+      release: "quantum-cube@qc-v302",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1210,6 +1210,8 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 // STATE
 // ═══════════════════════════════════════════
 let currentFace=0,isUnlocked=false,profileData=null,deferredInstall=null;
+// v302: Guard to prevent session restore running more than once
+let _qcSessionRestored = false;
 // v294: Review mode bypass for Play Store review
 let _qcReviewMode = false;
 // TWA detection — true when running inside the Android app wrapper
@@ -4180,43 +4182,60 @@ sb.auth.onAuthStateChange(async (event, session) => {
     // Populate Face 0 form fields from profile/auth metadata.
     // OAuth users with no DOB yet get email + name pre-filled, must add DOB manually.
     // Returning users with full profile get everything pre-filled.
-    const formReady = populateFormFromProfile(profileRow, session.user);
+    // v302: Session restore path — when app opens with existing session (currentFace === 0)
+    // Guard against double-firing and properly validate profile before calculating
+    const isSessionRestore = currentFace === 0 && !_qcSessionRestored;
+    const profileHasData = profileRow && profileRow.name && profileRow.dob;
+
     // v269: include truncated email in navCtx for debugging
     const _navEmail = session.user.email ? session.user.email.slice(0,8)+'…' : '(none)';
-    const navCtx = { currentFace, formReady, hasProfileRow: !!profileRow, hasProfileData: !!profileData, email: _navEmail };
+    const navCtx = { currentFace, isSessionRestore, hasProfileRow: !!profileRow, profileHasData: !!profileHasData, hasProfileData: !!profileData, email: _navEmail };
 
-    // Run calculation whenever we have the data, regardless of current face.
-    // Without this, users who land on a locked face (3/4/5/6) post-magic-link
-    // have profileData=null and hit "Please enter your details" on unlock.
-    // v266: await saveProfileFromForm first — the RLS recursion bug meant all
-    // existing profiles have name=null, dob=null. Must persist form data before
-    // runCalculation so subsequent session restores have valid profile data.
-    if(formReady && !profileData){
-      try {
-        await saveProfileFromForm();
-      } catch(e) {
-        console.error("[QC] SIGNED_IN saveProfileFromForm:", e);
-        try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'signed-in-profile-save' } }); } catch(_){}
-      }
-      try {
-        runCalculation();
-        _qcSessionNav('formReady→runCalculation→showFace(1)', navCtx);
-      } catch(e) {
-        console.error("[QC] SIGNED_IN runCalculation:", e);
-        try { if(window.Sentry) Sentry.captureException(e); } catch(_){}
-        if(currentFace === 'CheckEmail' || currentFace === 0) showFace(1);
-        _qcSessionNav('formReady but runCalculation threw → fallback face(1)', navCtx);
+    if(isSessionRestore){
+      _qcSessionRestored = true; // prevent double-firing
+      if(profileHasData){
+        // v302: Profile has valid name+dob — populate form and run calculation
+        try {
+          populateFormFromProfile(profileRow, session.user);
+          runCalculation();
+          _qcSessionNav('sessionRestore→runCalculation', navCtx);
+        } catch(e) {
+          console.error("[QC] session restore runCalculation:", e);
+          try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'session-restore' } }); } catch(_){}
+          // Stay on face0 silently — user can complete sign-up
+          _qcSessionNav('sessionRestore failed → stay face0', navCtx);
+        }
+      } else {
+        // Profile missing name or dob — stay on face0 for user to complete
+        populateFormFromProfile(profileRow, session.user); // partial fill if any
+        _qcSessionNav('sessionRestore incomplete profile → stay face0', navCtx);
       }
     } else if(currentFace === 'CheckEmail'){
-      // Never strand the user on CheckEmail. If we have a profile row but
-      // form isn't ready (incomplete profile / OAuth without DOB), bounce
-      // to Face 0 so they can complete it.
-      showFace(0);
-      _qcSessionNav('CheckEmail + no formReady → showFace(0)', navCtx);
-    } else if(currentFace === 0 && !profileRow){
-      showFace(0);
-      _qcSessionNav('face 0 + new user → stay on showFace(0)', navCtx);
+      // OTP/magic-link completion path — form was just filled, run calculation
+      const formReady = populateFormFromProfile(profileRow, session.user);
+      if(formReady && !profileData){
+        try {
+          await saveProfileFromForm();
+        } catch(e) {
+          console.error("[QC] SIGNED_IN saveProfileFromForm:", e);
+          try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'signed-in-profile-save' } }); } catch(_){}
+        }
+        try {
+          runCalculation();
+          _qcSessionNav('CheckEmail→formReady→runCalculation', navCtx);
+        } catch(e) {
+          console.error("[QC] SIGNED_IN runCalculation:", e);
+          try { if(window.Sentry) Sentry.captureException(e); } catch(_){}
+          showFace(0);
+          _qcSessionNav('CheckEmail runCalculation threw → face0', navCtx);
+        }
+      } else {
+        // Incomplete profile — bounce to face0 to complete
+        showFace(0);
+        _qcSessionNav('CheckEmail + no formReady → showFace(0)', navCtx);
+      }
     } else {
+      // User is on some other face (1-6) — don't interrupt
       _qcSessionNav('no nav action (left user in place)', navCtx);
     }
   }
