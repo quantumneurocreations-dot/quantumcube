@@ -651,7 +651,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v304",
+      release: "quantum-cube@qc-v305",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -881,6 +881,8 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
     <div class="qc-otp-display" id="qcOtpD4"></div>
     <div class="qc-otp-display" id="qcOtpD5"></div>
   </div>
+  <button type="button" id="qcOtpPasteBtn" class="reset-btn" style="display:none;margin:12px auto 0;padding:8px 18px;font-size:0.85em;opacity:0.85;background:var(--glass);border:1px solid var(--border)">Paste Code</button>
+  <p id="qcOtpPasteMsg" style="display:none;font-size:0.75em;text-align:center;margin:8px 0 0 0;color:var(--cyan);opacity:0.85"></p>
   <p id="qcOtpError" style="color:#ff4444;display:none;font-size:0.85em;text-align:center;margin:0 0 8px 0"></p>
 </div>
 <button type="button" class="reset-btn" id="qcOtpVerifyBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)">Verify</button>
@@ -3881,6 +3883,44 @@ function _qcWireOtpInputs(){
   if(resendEl && !resendEl._qcWired){
     resendEl._qcWired = true;
     resendEl.addEventListener('click', () => { haptic('light'); _qcOtpResend(); });
+  }
+
+  // v305: Wire paste button (only if clipboard API available)
+  const pasteBtn = document.getElementById('qcOtpPasteBtn');
+  const pasteMsg = document.getElementById('qcOtpPasteMsg');
+  if(pasteBtn && navigator.clipboard && navigator.clipboard.readText){
+    pasteBtn.style.display = 'block';
+    if(!pasteBtn._qcWired){
+      pasteBtn._qcWired = true;
+      pasteBtn.addEventListener('click', async () => {
+        haptic('light');
+        try {
+          const text = await navigator.clipboard.readText();
+          const digits = (text || '').replace(/\D/g, '').slice(0, 6);
+          if(digits.length === 6){
+            if(realInput){
+              realInput.value = digits;
+              realInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          } else {
+            // Show brief feedback
+            if(pasteMsg){
+              pasteMsg.textContent = 'No 6-digit code found in clipboard';
+              pasteMsg.style.display = 'block';
+              setTimeout(() => { pasteMsg.style.display = 'none'; }, 2000);
+            }
+          }
+        } catch(e){
+          // Permission denied or other error — focus input for manual paste
+          if(pasteMsg){
+            pasteMsg.textContent = 'Tap to paste manually';
+            pasteMsg.style.display = 'block';
+            setTimeout(() => { pasteMsg.style.display = 'none'; }, 2000);
+          }
+          if(realInput) realInput.focus();
+        }
+      });
+    }
   }
 }
 
