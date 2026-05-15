@@ -3,6 +3,43 @@ tags: [core, session]
 ---
 # Session Log
 
+
+## 2026-05-16 — Wake Word Integration: Hey QI / Hi QI (Chat Claude)
+
+**Goal:** Apply Kevin's OpenWakeWord tips, build proper two-state wake word gate so QI is fully hands-free.
+
+---
+
+**Done this session:**
+
+- ✅ **Wake word architecture built** — two-state loop: SLEEP (OWW listening, Deepgram ignores transcripts) → AWAKE (wake phrase detected → QI says "Yes?" → processes one utterance → back to SLEEP)
+- ✅ **`scripts/qi_wakeword.py`** — `WakeWordDetector` class: ONNX mode forced (Apple Silicon — Kevin tip applied), `hey_jarvis_v0.1` placeholder model, patience + threshold together (Kevin tip), `logging.basicConfig()` first (Kevin tip), 3s cooldown between activations
+- ✅ **`qi-voice.py` gate wired** — `_wake_active = threading.Event()` global; `handle_input()` returns early if `WAKE_WORD_ON` and event not set; `respond_now()` clears event after each response; `wake_word_then_listen()` replaces direct `listen()` call; `WAKE_WORD_ON = True` constant (set False to revert to always-listen)
+- ✅ **edge-tts installed** — 36 TTS training samples generated in `wake_word/training/hey_qi/` (4 phrases × 6 voices × 3 speeds: "hey q i", "hi q i", "hey Q I", "hi Q I")
+- ✅ **Kevin's screenshot tips** — all 6 applied: ONNX mode, patience+threshold together, logging first, helper models pre-downloaded, browser audio gotcha N/A (PyAudio desktop), confidence scores mode noted
+- ✅ **Commit `9a66bf0`** — pushed to origin/main, tree clean
+
+**Wake phrase:** "Hey QI" / "Hi QI" — 3 syllables, per Kevin's 3-4 syllable accuracy rule
+
+**Temporary trigger:** "hey jarvis" (placeholder until `hey_qi_v1.onnx` trained)
+
+---
+
+**Pending (carried forward + new):**
+
+- 🔲 **Train custom `hey_qi_v1.onnx`** — dedicated 15-20 min session: background noise dataset download + openwakeword training pipeline. Samples ready at `wake_word/training/hey_qi/`. Drop model file at `wake_word/hey_qi_v1.onnx` — auto-detected
+- 🔲 **Infrastructure inventory doc** — `brain/coding/infrastructure.md` — all subscriptions, MCPs, hardware (Mac M4)
+- 🔲 **War Room dashboard agent tiles** — visual agent tiles in `scripts/qi-dashboard.html`
+- 🔲 **Marketing Agent** — `scripts/qi-marketing.py`, fal.ai pipeline
+- 🔲 **Revenue Agent** — milestone alerts + failed payment flags from Dodo webhook
+- 🔲 **Push alerts** — macOS notifications from overnight crons (osascript)
+- 🔲 **Wire QMD into voice context** — semantic vault search in CoS prompt
+
+---
+
+**Current HEAD:** `9a66bf0` | **QI server:** localhost:3001 | **Paying customers:** 4
+
+
 ## 2026-05-15 — Play Console final audit + OTP fixes + UX improvements (v300–v305)
 
 **Goal:** Complete Play Console credential audit, fix all outstanding OTP/auth issues, add SMS groundwork.
