@@ -5,6 +5,13 @@ tags: [core, kickoff]
 
 This file is auto-loaded by Claude Code, Cursor, and other Claude surfaces opening this repo. It's a **pointer doc** — the substance lives in the docs below.
 
+## 🧠 Business brain lives in QI vault
+All strategy, decisions, connectors, and project status for QC live in the **QI vault**:
+```
+/Users/qnc/Projects/quantum-integrator/brain/projects/quantum-cube/
+```
+Start there for business context. Read `brain/projects/quantum-cube/_index.md` first. This repo is code only.
+
 ## Where the rules live
 
 - **`CHAT_KICKOFF.md`** — lean boot doc for Chat Claude (v5 Obsidian-first). Boot sequence only — full rules in `OPERATING_RULES.md`.
