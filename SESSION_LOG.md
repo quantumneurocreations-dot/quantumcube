@@ -1638,3 +1638,47 @@ superpowers · ui-ux-pro-max · ai-ml-tools · specialized-tools · research-too
 7. 🏗️ War Room dashboard agent tiles
 
 ---
+
+---
+
+## 2026-05-16 — Full QI Build Session (Chat Claude) — 20 items, 10 commits ← USE THIS ENTRY (supersedes wake word entry above)
+
+**Goal:** QC Play Store sanity check + Calendar + Persistent memory + Supabase architecture + Direct DB + Firecrawl + Brain structure + Personality persistence + Owen→QI rename + Wake word gate.
+
+**Done this session (full chronological list):**
+
+- ✅ **QC Play Store sanity check** — Google's 7-point email confirmed clean. 14-day clock May 14 → apply May 27 → approval May 28 🎂. Numerology: 28→10→1, GG33 launch reference, birthday sync = marketing story.
+- ✅ **Play Academy onboarding** — South Africa + Play Store link (informational, not blocking)
+- ✅ **qi@qncacademy.com alias resolved** — confirmed alias on admin@, NOT standalone Google Account. GCP covers qi@ via admin@ automatically. CONNECTORS.md stale TODO removed.
+- ✅ **Google Calendar** `3e78522` — `scripts/qi-calendar.py`, Calendar API enabled, OAuth token at `~/.config/qi/calendar_token.pickle`. CoS auto-injects today's schedule. Voice triggers wired.
+- ✅ **Golden rules locked** — "Always specify WHERE (Terminal/Claude Code) and WHICH PROJECT" → OPERATING_RULES.md
+- ✅ **Persistent session memory** `1c56608` — `scripts/qi_memory.py`, `qi_memory` Supabase table. "goodbye"/"good night" saves session. Last 3 sessions in CoS. Voice: "what do you remember".
+- ✅ **Kevin hybrid model video** — Mac Mini + Supabase already solves DigitalOcean's problems. No DO needed.
+- ✅ **QI architecture vision** — Claude Desktop (architect) + QI voice (operator) + Claude Code (builder). QI = future orchestrator.
+- ✅ **Personality persistence** `85ecab3` — Kevin's tonal drift fix. `QI_SYSTEM`: 7 concrete voice examples, 8 banned openers. `_VOICE_CUE` per-turn API-only. `_TONAL_CHECKPOINT` uncached per-turn. Sarcasm at the world, never at user.
+- ✅ **Supabase architecture locked** `397bfc7` — QI project `zhvcmxtgvrogxnvqauus` (eu-west-1) under QNC org ($10/mo). QC untouched. QNC Internal free → Academy later. MCP stays on QC. Scripts connect to both. DB password: `3W7p0D3BBSHs2m0L`. Old free org deleted.
+- ✅ **Direct DB via psycopg2** `9d0e96d` — Kevin's transaction pooler + IPv4. `scripts/qi_db.py`: `query()`, `execute()`, `scalar()`. Connection at `~/.config/qi/supabase_qi_db_url`.
+- ✅ **Memory wired to SQL** `a319097` — `qi_memory.py` renamed (fixed silent import bug — REST-only since day one). Wired to psycopg2. `get_action_items()`, `search_by_topic()`. REST fallback.
+- ✅ **Firecrawl integration** `60a5188` — REST-only. Key stored. `scripts/qi_firecrawl.py`: `scrape_url()`, `find_and_scrape()`, `search_web()`. Research route: Tavily finds → Firecrawl scrapes full content → saves to note.
+- ✅ **Ruflo evaluated** — NOT installing. Wrong use case (code orchestration vs QI business ops). Security vulnerabilities. Watch list only.
+- ✅ **Kevin _index.md brain structure** `0ca69d4` — Master `brain/_index.md` + folder indexes. `brain/projects/quantum-integrator/` + `brain/projects/quantum-cube/`. qi-voice.py reads: master → projects hub → QI index → business index (last = highest weight). Obsidian: QI at centre, QC satellite.
+- ✅ **Owen → QI rename** `55c7136` — 11 files updated. Voice ID `giAoKpl5weRTCJK7uB9b` stays as technical ref only.
+- ✅ **CLAUDE.md updated** `55c7136` — Full Claude Code instructions.
+- ✅ **Claude.ai custom instructions cleaned** — Added Project context ("QI, never call it Owen"), removed HR quirk. Ready to paste in Settings.
+- ✅ **Infrastructure inventory doc** — PARKED: `brain/coding/infrastructure.md`
+- ✅ **Wake word integration** `9a66bf0` — Kevin's 6 OWW tips applied. `scripts/qi_wakeword.py`. `qi-voice.py` two-state gate: `_wake_active` Event, `handle_input()` gated, `respond_now()` clears, `wake_word_then_listen()` in `__main__`. 36 TTS samples. Wake phrase: **"Hey QI" / "Hi QI"**. Temp: `hey_jarvis`.
+
+**Pending:**
+- 🔴 QC: Apply production May 27 → birthday May 28 🎂
+- 🔴 Train `hey_qi_v1.onnx` (samples ready at `wake_word/training/hey_qi/`)
+- 🟡 Infrastructure inventory doc
+- 🟡 War Room dashboard tiles
+- 🟡 Marketing Agent + fal.ai
+- 🟡 Revenue Agent — Dodo webhook alerts
+- 🟡 Push alerts — osascript macOS notifications
+- 🟢 QMD semantic search → CoS voice context
+- 🟢 Google Play Billing (pre-production)
+
+**Commits:** `3e78522` → `1c56608` → `85ecab3` → `9d0e96d` → `a319097` → `397bfc7` → `60a5188` → `0ca69d4` → `55c7136` → `9a66bf0`
+**HEAD:** `9a66bf0` | **Customers:** 4 | **QI DB:** zhvcmxtgvrogxnvqauus | **QC DB:** fqqdldvnxupzxvvbyvjm
+
