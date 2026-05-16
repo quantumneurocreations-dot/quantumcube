@@ -651,7 +651,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v307",
+      release: "quantum-cube@qc-v308",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -4181,7 +4181,7 @@ sb.auth.onAuthStateChange(async (event, session) => {
   if (_qcPendingPaymentUnlock && (event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
     attemptPaymentUnlock(session);
   }
-  if(event === "SIGNED_IN" && session && session.user){
+  if((event === "SIGNED_IN" || event === "INITIAL_SESSION") && session && session.user){
     // v304: Skip if _qcOtpVerify is handling this SIGNED_IN event
     if(_qcOtpVerifying){
       try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN skipped — _qcOtpVerifying active' }); } catch(_) {}
