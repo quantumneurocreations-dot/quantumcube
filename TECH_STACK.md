@@ -363,3 +363,90 @@ QI sub-agents are Python scripts in `scripts/qi-*.py`. Each has a matching SKILL
 | Revenue Agent | `scripts/qi-revenue.py` | `.claude/skills/qi-revenue/` (create at build time) | 🔴 Pending |
 
 > Each new agent added here + matching SKILL.md written same session. See Golden Rule #7.
+
+---
+
+## QI STACK INTELLIGENCE AGENT — SPEC
+
+> **Status:** 🔴 Pending build — spec complete, ready for next dedicated session.
+> **Script target:** `scripts/qi-stack-intel.py`
+> **Skill target:** `.claude/skills/qi-stack-intel/SKILL.md`
+> **Cron slot:** 6am daily (runs BEFORE 7am morning briefing so QI can speak a summary)
+
+### What it does
+Automated tech radar. Runs daily, scans the web for new tools/upgrades/connectors, compares against QNC's current stack, surfaces only genuine signal. QI speaks a brief at 7am. Full report saved to vault.
+
+### Architecture
+
+```
+6am cron → qi-stack-intel.py
+    │
+    ├── Layer 1: Firecrawl (scripts/qi_firecrawl.py)
+    │   Scrape specific monitored pages:
+    │   - Anthropic blog / changelog
+    │   - ElevenLabs releases
+    │   - Supabase changelog
+    │   - Cloudflare blog
+    │   - PostHog changelog
+    │   - Dodo Payments updates
+    │   - ModelContextProtocol.io (new MCPs)
+    │   - GitHub trending (AI/voice/agents filter)
+    │
+    ├── Layer 2: Tavily (web search)
+    │   Search queries (rotate weekly):
+    │   - "new Claude MCP connectors [month year]"
+    │   - "best AI voice tools 2026"
+    │   - "new AI agent frameworks [month year]"
+    │   - "Supabase new features [month year]"
+    │   - "ElevenLabs new models [month year]"
+    │   - "new developer tools for indie hackers [month year]"
+    │
+    ├── Layer 3: Claude Sonnet (api.anthropic.com direct)
+    │   System prompt includes full TECH_STACK.md
+    │   Task: rate each finding 1-5 on genuine upgrade value for QNC:
+    │     5 = must evaluate immediately
+    │     4 = worth testing this week
+    │     3 = note for future consideration
+    │     2 = interesting but not relevant to QNC
+    │     1 = noise / marketing fluff
+    │   Only output findings rated 3+
+    │   Flag cost if any paid tier required
+    │   Flag risk level (safe / low / medium / high)
+    │
+    └── Layer 4: Output
+        Write to: vault/research-notes/stack-intel-YYYY-MM-DD.md
+        Format: structured markdown (rating, tool name, what changed, why relevant, action)
+        Trigger flag: if any rating 5 found → write ~/.config/qi/stack-intel-alert.flag
+        QI 7am briefing reads flag → speaks summary of top findings
+```
+
+### Output format (per finding)
+```markdown
+## [Tool Name] — Rating: 4/5
+**What changed:** [one sentence]
+**Why relevant to QNC:** [one sentence]
+**Cost impact:** [free / $X/mo / none]
+**Risk:** [safe / low / medium]
+**Action:** [evaluate / test / note / skip]
+```
+
+### Filtering philosophy
+- **Include:** genuine new capabilities, version upgrades with meaningful features, new MCPs that extend what we do, tools that replace something we're already paying for at lower cost or better performance
+- **Exclude:** hype articles with no substance, tools that duplicate what we have without clear upside, anything that adds complexity without proportional benefit, beta/alpha tools not production-ready
+
+### Vault output location
+`research-notes/stack-intel-YYYY-MM-DD.md` — auto-created daily.
+QI brain index (`brain/_index.md`) should eventually reference this folder for semantic search.
+
+### Build checklist (for next session)
+- [ ] Create `scripts/qi-stack-intel.py` with 4-layer architecture above
+- [ ] Wire monitored URLs list as config at top of script (easy to add/remove sources)
+- [ ] Wire Tavily search queries as config list (easy to tune)
+- [ ] Load TECH_STACK.md from vault path for Claude context
+- [ ] Write output to `research-notes/` folder (create if not exists)
+- [ ] Write alert flag file if rating-5 found
+- [ ] Update `scripts/qi-morning-auto.sh` to check flag and include summary in briefing
+- [ ] Add 6am cron entry
+- [ ] Write `.claude/skills/qi-stack-intel/SKILL.md`
+- [ ] Update QI AGENTS table in TECH_STACK.md
+- [ ] Test run: `python3 scripts/qi-stack-intel.py --dry-run` (no cron, just output to terminal)
