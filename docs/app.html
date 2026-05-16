@@ -651,7 +651,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v306",
+      release: "quantum-cube@qc-v307",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1705,9 +1705,9 @@ function openFace(n){
 }
 function scrollBelowCube(){
   setTimeout(()=>{
-    const fc=document.getElementById('faceContainer');
-    if(fc && typeof fc.scrollIntoView==='function'){
-      fc.scrollIntoView({behavior:'smooth',block:'start'});
+    const lc=document.getElementById('faceLabelCard');
+    if(lc && typeof lc.scrollIntoView==='function'){
+      lc.scrollIntoView({behavior:'smooth',block:'start'});
     }
   },80);
 }
