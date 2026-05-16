@@ -190,6 +190,7 @@
   },
   "active": "7002f99f8b0c0628",
   "lastOpenFiles": [
+    "CURRENT_STATE.md",
     "brain/agents/security/identity.md",
     "brain/agents/security",
     "brain/agents/admin/identity.md",
@@ -234,7 +235,6 @@
     "vault/content/sounds/background-music.md",
     "vault/content/sounds/narration-mp3.md",
     "vault/content/sounds/welcome-mp3.md",
-    "vault/content/fonts/monospace-font.md",
-    "vault/content/fonts/system-font.md"
+    "vault/content/fonts/monospace-font.md"
   ]
 }

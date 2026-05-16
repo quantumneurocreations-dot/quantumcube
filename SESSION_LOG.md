@@ -1682,3 +1682,20 @@ superpowers · ui-ux-pro-max · ai-ml-tools · specialized-tools · research-too
 **Commits:** `3e78522` → `1c56608` → `85ecab3` → `9d0e96d` → `a319097` → `397bfc7` → `60a5188` → `0ca69d4` → `55c7136` → `9a66bf0`
 **HEAD:** `9a66bf0` | **Customers:** 4 | **QI DB:** zhvcmxtgvrogxnvqauus | **QC DB:** fqqdldvnxupzxvvbyvjm
 
+
+## 2026-05-16 — Dashboard fix + purple/pink theme (Chat Claude)
+
+**Goal:** Fix black screen on dashboard, apply original brand theme, plan session management.
+
+**Done:**
+- ✅ **Black screen root cause** — CSS chunked across two writes, `</style>` closed at line 80, all panel/orb/metric CSS was raw HTML text outside the style block. Single-file Python rewrite (`a46e285`)
+- ✅ **Purple/pink theme** (`183fc59`) — full swap: `--qi:#9A6DE8`, `--qi2:#FF60CB`, `--qi3:#5B64F9`. Orb bars idle=purple/speak=pink. All panels, borders, glow, footer bar updated.
+- ✅ **Logo treatment** — `QUANTUM` in CSS gradient (5B64F9→9A6DE8→FF60CB), `Integrator` in Great Vibes signature font (white). Subtitle "Quantum Cube Mission Control" removed.
+- ✅ **Session management design** — Added `CURRENT_STATE.md` to vault as fast-boot snapshot doc. Boot sequence now reads this instead of full SESSION_LOG.
+
+**HEAD:** `183fc59` | **Customers:** 4 | **QI server:** UP localhost:3001
+
+**Buddy's 7 remaining questions (not yet asked — carry forward):**
+- Listed by buddy as "8 things" — 1 answered (session management). 7 still pending.
+
+---
