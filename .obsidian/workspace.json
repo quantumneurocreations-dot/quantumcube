@@ -190,6 +190,8 @@
   },
   "active": "7002f99f8b0c0628",
   "lastOpenFiles": [
+    "brain/agents/upgrade/identity.md",
+    "brain/agents/upgrade",
     "brain/agents/head-of-design/identity.md",
     "brain/agents/head-of-design",
     "brain/agents/chief-of-staff/identity.md",
@@ -206,7 +208,6 @@
     "brain",
     "brand/QI",
     "brand/untitled folder",
-    "docs/mobile-redirect.js",
     "docs/install-gate-bg.png",
     "docs/install-gate-bg.png.png",
     "graphify-out/GRAPH_REPORT.md",
@@ -234,7 +235,6 @@
     "vault/content/fonts/cinzel-decorative.md",
     "vault/content/colors/color-9.md",
     "vault/content/colors/color-8.md",
-    "vault/content/colors/color-7.md",
-    "vault/content/colors/color-6.md"
+    "vault/content/colors/color-7.md"
   ]
 }
