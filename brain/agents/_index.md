@@ -123,3 +123,25 @@ updated: YYYY-MM-DD
 ---
 
 > **Related:** [[TECH_STACK]] · [[CONNECTORS]] · [[OPERATING_RULES]] · [[NORTH_STAR]]
+
+---
+
+## FINAL AGENT ROSTER — LOCKED 2026-05-16
+
+QI is the OS — overseer, delegator, voice, feedback loop. Seven agents do the heavy lifting. QI reads their outputs, speaks summaries, routes commands. QI handles nothing that an agent can handle.
+
+| Agent | Core mandate | Primary tools | Status |
+|-------|-------------|---------------|--------|
+| **QI** | OS, voice, delegator, overseer | Claude Haiku · ElevenLabs · Deepgram | ✅ Live |
+| **Upgrade** | Tech radar — stack + agent evolution | Firecrawl · Tavily · Claude Sonnet | 🔴 Build pending |
+| **Design** | Brand, visual, image, video — QNC's face | Claude Sonnet · Fal.ai | ✅ Live |
+| **Marketing** | Social, ads, trends, analytics, conversion | Tavily · PostHog · Fal.ai · Claude Sonnet | 🔴 Build pending |
+| **Security** | All security + QC app health + Sentry | File audit · Sentry API · osascript | ✅ Live |
+| **Mind** | Vault, memory, documents, knowledge graph | Obsidian · QMD · Claude Haiku | 🔴 Build pending |
+| **Admin** | Calendar, email, finance, ops | Google Calendar · Gmail · Dodo · Supabase | 🔴 Build pending |
+
+**Architecture:** QI is the interface. Agents run on crons and write reports to `research-notes/` or vault. QI reads reports and speaks summaries on demand or at 7am briefing.
+
+**No Sales agent** — QC is B2C. Marketing *is* the sales engine. Analytics fold into Marketing (data and action are inseparable).
+
+**No Dev agent** — Security watches QC app health and Sentry. Code changes are handled by Claude Code in terminal, not an autonomous agent.

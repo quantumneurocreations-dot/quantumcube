@@ -190,6 +190,14 @@
   },
   "active": "7002f99f8b0c0628",
   "lastOpenFiles": [
+    "brain/agents/security/identity.md",
+    "brain/agents/security",
+    "brain/agents/admin/identity.md",
+    "brain/agents/admin",
+    "brain/agents/mind/identity.md",
+    "brain/agents/mind",
+    "brain/agents/marketing/identity.md",
+    "brain/agents/marketing",
     "brain/agents/upgrade/identity.md",
     "brain/agents/upgrade",
     "brain/agents/head-of-design/identity.md",
@@ -204,10 +212,6 @@
     "brain/business/war-room-agents.md",
     "brain/business",
     "brain/projects/chief-of-staff.md",
-    "brain/projects",
-    "brain",
-    "brand/QI",
-    "brand/untitled folder",
     "docs/install-gate-bg.png",
     "docs/install-gate-bg.png.png",
     "graphify-out/GRAPH_REPORT.md",
@@ -231,10 +235,6 @@
     "vault/content/sounds/narration-mp3.md",
     "vault/content/sounds/welcome-mp3.md",
     "vault/content/fonts/monospace-font.md",
-    "vault/content/fonts/system-font.md",
-    "vault/content/fonts/cinzel-decorative.md",
-    "vault/content/colors/color-9.md",
-    "vault/content/colors/color-8.md",
-    "vault/content/colors/color-7.md"
+    "vault/content/fonts/system-font.md"
   ]
 }

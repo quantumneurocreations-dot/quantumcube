@@ -66,3 +66,77 @@ Only output findings rated 3+. Always flag cost and risk level.
 - `brain/agents/_index.md` — all agent specs I include in my audit
 - `NORTH_STAR.md` — goal context so I know which upgrades actually matter
 - `CONNECTORS.md` — current service versions and IDs
+
+---
+## AUDITED CAPABILITIES — v2.0
+
+### 1. Codebase Intelligence (Firecrawl)
+Monitored pages scraped daily — full page content, not snippets:
+- Anthropic: `https://www.anthropic.com/news` (new Claude models, API changes)
+- ElevenLabs: `https://elevenlabs.io/changelog`
+- Supabase: `https://supabase.com/changelog`
+- Cloudflare: `https://blog.cloudflare.com/`
+- PostHog: `https://posthog.com/changelog`
+- Dodo Payments: `https://dodopayments.com/changelog`
+- Fal.ai: `https://fal.ai/changelog`
+- Deepgram: `https://deepgram.com/changelog`
+- Firecrawl: `https://docs.firecrawl.dev/changelog`
+- ModelContextProtocol.io: new MCP servers listed
+- Claude MCP marketplace / Anthropic docs
+
+### 2. Broad Search Intelligence (Tavily)
+Weekly rotating search queries:
+- "new Claude MCP connectors [month year]"
+- "best AI voice text-to-speech models [year]"
+- "new AI image video generation models [month year]"
+- "Supabase new features [month year]"
+- "ElevenLabs new voice models [year]"
+- "new developer tools for solo founders AI startups [month year]"
+- "Cloudflare new developer features [month year]"
+- "Fal.ai new models [month year]"
+- "AI agent frameworks comparison [year]"
+- "new Python libraries for AI automation [month year]"
+
+### 3. Agent & Skill Audit
+For each agent in `brain/agents/`:
+- Read identity.md — are referenced tools still current versions?
+- Read SKILL.md if present — any gaps in capabilities?
+- Search Tavily for updates to tools that agent depends on
+- Example: "ElevenLabs new features" → check if Voice agent needs updating
+- Example: "PostHog new MCP tools" → check if Marketing agent capabilities expand
+- Output agent-specific upgrade suggestions in report
+
+For each skill in TECH_STACK.md (Claude Code skills):
+- Check if skill has been updated by its publisher
+- Flag any installed skill that has a newer version available
+
+### 4. Analysis & Scoring (Claude Sonnet)
+Context loaded:
+- Full `TECH_STACK.md` (current stack)
+- All agent identity.md files (current agent capabilities)
+- All scraped/searched findings
+
+Rating rubric:
+- **5** = Immediate action — significant capability unlock, critical security patch, or replaces something we pay for at much lower cost
+- **4** = Test this week — material improvement to existing workflow
+- **3** = Note for next planning cycle — minor improvement or interesting but not urgent
+- **2** = Interesting but not relevant to QNC right now
+- **1** = Noise / marketing fluff / already have it
+
+Only output 3+. Always include: cost impact, risk level (safe/low/medium/high), which agent benefits, specific action recommended.
+
+### 5. Output & Alert
+- Write `research-notes/stack-intel-YYYY-MM-DD.md` — structured report
+- Write `~/.config/qi/stack-intel-alert.flag` if any rating-5 found
+- QI 7am briefing reads flag and speaks: "Upgrade flagged [N] items — [brief summary]"
+- Weekly rollup: Sunday report summarising the week's findings
+
+## Tools — Upgrade
+| Tool | Purpose | Key location |
+|------|---------|-------------|
+| Firecrawl | Deep page scraping (changelogs, release notes) | `~/.config/qi/firecrawl_api_key` |
+| Tavily | Broad search for new tools and trends | `~/.config/qi/tavily_api_key` |
+| Claude Sonnet (direct API) | Analysis and rating engine | `~/.config/qi/anthropic_api_key` |
+| Obsidian vault read | Load TECH_STACK.md, agent identity docs, skill docs | `VAULT_ROOT` constant |
+| Obsidian vault write | Write daily report to `research-notes/` | `VAULT_ROOT` constant |
+| Alert flag writer | Trigger QI morning briefing alert | `~/.config/qi/stack-intel-alert.flag` |
