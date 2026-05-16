@@ -798,3 +798,33 @@ The voice profile saved on the ElevenLabs dashboard side is **not authoritative*
 
 ---
 **ADR index:** [[ADR-001]] · [[ADR-002]] · [[ADR-003]] · [[ADR-004]] · [[ADR-005]] · [[ADR-006]] · [[ADR-007]] · [[ADR-008]] · [[ADR-009]] · [[ADR-010]] · [[ADR-011]] · [[ADR-012]] · [[ADR-013]] · [[ADR-014]] · [[ADR-015]] · [[ADR-016]] · [[ADR-017]] · [[ADR-018]]
+
+---
+
+## ADR-029 — All QI Anthropic calls use direct API key, never Agent SDK or claude -p
+
+**Date:** 2026-05-16
+**Status:** Accepted
+
+### Context
+On May 13, 2026, Anthropic announced that effective June 15, 2026, programmatic usage via Agent SDK, `claude -p`, Claude Code GitHub Actions, and third-party agent apps will be metered from a separate monthly credit pool ($20–$200/mo by tier, billed at full API rates). Direct HTTP calls to `api.anthropic.com` using an API key have always been billed against the API balance independently — June 15 does not affect them.
+
+Full audit of the QI vault on May 16 confirmed zero exposure: no `claude -p` invocations, no Agent SDK imports, no `.github/workflows/` directory, no third-party agent frameworks. All Anthropic calls in `scripts/qi-voice.py`, `scripts/qi_memory.py`, and `scripts/head_of_design.py` go direct to `api.anthropic.com` via the key at `~/.config/qi/anthropic_api_key`. The three overnight crons (2am/3am/7am) do not call Anthropic at all.
+
+### Decision
+All QI scripts that call Claude must route through direct HTTP/SDK to `api.anthropic.com` using the API key at `~/.config/qi/anthropic_api_key`. Never route QI automation through:
+- `claude -p` (CLI flag that routes through subscription)
+- The Anthropic Agent SDK
+- Claude Code GitHub Actions
+- Third-party agent frameworks (OpenClaw, Conductor, etc.)
+
+### Consequences
+- QI has zero exposure to the June 15 billing change. All crons and voice automation continue unaffected.
+- Direct API calls are metered against the API balance — predictable per-token cost, no credit pool exhaustion risk.
+- Claim the monthly Agent SDK credit on June 8 regardless (free $20–$200) — useful for interactive Claude Code sessions and one-off experiments.
+- Future QI features: if `claude -p` or Agent SDK is proposed, evaluate credit spend before implementing.
+- Broader implication: as industry moves toward metered agentic AI (GitHub Copilot AI Credits, OpenAI API pricing), token discipline — prompt caching, context trimming, Haiku for cheap tasks — is a first-class engineering constraint. See Paul Chada (Doozer AI): *"Stop optimizing for the subsidy. Start optimizing for the token."*
+
+### Alternatives considered
+- Route QI crons through Agent SDK for richer tooling: rejected — direct HTTP is simpler, cheaper, zero subscription dependency.
+- Use `claude -p` for scripted QI tasks: rejected — same reasons, plus credit pool overhead for no gain.

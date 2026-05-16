@@ -218,3 +218,23 @@ Every command must include:
 | quantumcube | `~/Projects/quantumcube` | QC app — app.html, SW, Supabase edge functions |
 
 **Never paste a command without both labels. Voice users can't catch ambiguity mid-run.**
+
+
+## ANTHROPIC BILLING — JUNE 15 CONSTRAINT (added 2026-05-16)
+
+**Effective June 15, 2026:** Anthropic separates programmatic usage into a metered credit pool.
+
+| Path | Where it bills | June 15 impact |
+|------|---------------|----------------|
+| Direct `api.anthropic.com` + API key | API balance (always was) | ❌ None |
+| `claude -p` CLI | Subscription credit pool | ✅ New $20–$200/mo cap |
+| Agent SDK | Subscription credit pool | ✅ New $20–$200/mo cap |
+| Claude Code GitHub Actions | Subscription credit pool | ✅ New $20–$200/mo cap |
+| Third-party agent apps (OpenClaw etc.) | Subscription credit pool | ✅ New $20–$200/mo cap |
+
+**QI architecture is safe:** all QI Anthropic calls use direct API key. See ADR-029.
+
+**Reminder:** Claim the monthly credit on June 8 when Anthropic emails — it's free money regardless.
+
+### GOLDEN RULE #6 — NEVER ROUTE QI AUTOMATION THROUGH AGENT SDK OR claude -p (added 2026-05-16)
+All QI Anthropic calls must use direct HTTP to `api.anthropic.com` with the API key at `~/.config/qi/anthropic_api_key`. This routes against the API balance (always metered, no credit pool risk). Never use `claude -p`, Agent SDK, Claude Code GitHub Actions, or third-party agent frameworks for unattended QI scripts. Effective June 15 those paths draw from Anthropic's subscription credit pool ($20–$200/mo) at full API rates — a budget QI doesn't need to consume. See ADR-029.
