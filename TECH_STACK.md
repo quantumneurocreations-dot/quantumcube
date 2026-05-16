@@ -207,3 +207,159 @@ Claim monthly Agent SDK credit on June 8 when Anthropic emails — free $20–$2
 
 > **Related:** [[CONNECTORS]] · [[OPERATING_RULES]] · [[PROJECT_BRIEF]] · [[DECISIONS]]
 > **Last updated:** 2026-05-16
+
+---
+
+## SKILLS & SUPERPOWERS
+
+Claude's capabilities are extended via skills — loaded automatically by trigger or called explicitly. Three tiers across two surfaces.
+
+---
+
+### TIER 1 — CLAUDE DESKTOP (claude.ai) PROJECT SKILLS
+Available in this chat right now. Auto-triggered by context or read on demand.
+
+**Document creation:**
+| Skill | What it does |
+|-------|-------------|
+| `docx` | Create/edit/read Word documents |
+| `pdf` | Create, merge, split, fill, watermark PDFs |
+| `pptx` | Create/read/edit PowerPoint presentations |
+| `xlsx` | Create/edit Excel spreadsheets |
+
+**Design & UI:**
+| Skill | What it does |
+|-------|-------------|
+| `frontend-design` | Production-grade web components, pages, artifacts |
+| `canvas-design` | Visual art, posters, static designs → PNG/PDF |
+| `theme-factory` | 10 preset themes for artifacts |
+| `web-artifacts-builder` | Complex multi-component HTML artifacts (React, Tailwind, shadcn) |
+| `brand-guidelines` | Brand colors + typography applied to artifacts |
+
+**File handling:**
+| Skill | What it does |
+|-------|-------------|
+| `file-reading` | Route any uploaded file to correct reading strategy |
+| `pdf-reading` | Extract text, tables, images from PDFs |
+
+**Writing & docs:**
+| Skill | What it does |
+|-------|-------------|
+| `doc-coauthoring` | Structured co-author workflow for documentation |
+| `internal-comms` | Status reports, leadership updates, newsletters, FAQs |
+
+**Build tools:**
+| Skill | What it does |
+|-------|-------------|
+| `mcp-builder` | Guide for building MCP servers |
+| `skill-creator` | Create, modify, eval, and benchmark skills |
+| `product-self-knowledge` | Look up current Anthropic product facts |
+
+---
+
+### TIER 2 — QI + QC CUSTOM SKILLS
+Project-specific skills baked into the QNC operating system.
+
+**QI vault skills** (`quantum-integrator/.claude/skills/`):
+
+| Skill | What it does |
+|-------|-------------|
+| `chief-of-staff` | Morning briefing mode — 3 spoken priorities from strategic goals + live data. "That is your focus. Go." |
+| `head-of-design` | Design sub-agent — plain English brief → dark sci-fi HTML mockup in QC brand, auto-opens in browser |
+| `qmd` | Semantic vault search — search before reading files, proactively triggered for past decisions + architecture |
+
+**QC project skills** (`quantumcube/.claude/skills/`):
+
+| Skill | What it does |
+|-------|-------------|
+| `quantum-cube` | Full operating system for QC codebase — stack, brand, architecture, deploy rules |
+| `qc-release-procedure` | Canonical end-to-end deploy flow for any production change |
+| `qc-version-bump` | Version bump before any `app.html`/`sw.js` change |
+| `qc-smoke-test` | Post-deploy 13-point verification check |
+| `qc-incident-response` | Sentry alert triage → fix → verify flow |
+
+---
+
+### TIER 3 — GLOBAL CLAUDE CODE SKILLS (`~/.claude/skills/`)
+Available as `/skill-name` slash commands in the Claude Code terminal. 48 skills total.
+
+**Browser automation (flagship suite):**
+| Skill | What it does |
+|-------|-------------|
+| `gstack` | Full headless browser framework — QA, screenshots, forms, responsive, bug evidence. Multi-agent compatible: Cursor, OpenClaw, Slate, Factory, Kiro, Hermes (101-file suite) |
+| `browse` | Fast headless browser — navigate, interact, verify, diff |
+| `benchmark` | Performance regression detection |
+| `scrape` | Pull structured data from web pages; first call prototypes, reruns reuse |
+| `skillify` | Codify scrape flows into permanent reusable skills |
+| `pair-agent` | Pair a remote AI agent (OpenClaw compatible) with your browser |
+
+**Dev workflow:**
+| Skill | What it does |
+|-------|-------------|
+| `ship` | Full ship: merge base branch → tests → diff review → version bump → deploy |
+| `land-and-deploy` | Merge PR, wait for CI + deploy, verify |
+| `qa` / `qa-only` | QA test a web app + fix bugs found |
+| `retro` | Weekly engineering retro — analyzes commit history + work patterns |
+| `health` | Code quality dashboard — linter, type checker, project tools |
+| `investigate` | Systematic debugging — 4 phases: investigate, hypothesize, test, resolve |
+| `review` | Code review |
+| `codex` | OpenAI Codex CLI wrapper (3 modes: code review, independent diff, direct) |
+
+**Context management:**
+| Skill | What it does |
+|-------|-------------|
+| `context-save` / `context-restore` | Save + restore working context (git state, decisions, remaining work) across sessions |
+| `freeze` / `unfreeze` | Lock file edits to a specific directory for a session |
+| `guard` | Full safety mode: destructive command warnings + directory-scoped edits |
+| `careful` | Warns before `rm -rf`, `DROP TABLE`, force-push, destructive commands |
+
+**Design & planning:**
+| Skill | What it does |
+|-------|-------------|
+| `design-html` | Design finalization → production-quality HTML/CSS |
+| `design-review` / `design-consultation` / `design-shotgun` | Design workflow modes |
+| `autoplan` | Runs CEO / design / eng / DX reviews sequentially |
+| `plan-ceo-review` / `plan-design-review` / `plan-devex-review` / `plan-eng-review` / `plan-tune` | Individual planning review modes |
+
+**Strategy & operations:**
+| Skill | What it does |
+|-------|-------------|
+| `office-hours` | YC Office Hours — 6 forcing questions that expose startup weaknesses |
+| `cso` | Chief Security Officer mode — infrastructure-first security audit |
+| `graphify` | Convert any input (code, docs, images) to a knowledge graph |
+| `make-pdf` | Markdown → publication-quality PDF |
+| `learn` | Manage project learnings from gstack |
+| `benchmark-models` | Compare AI model outputs on tasks |
+| `canary` | Canary deploy / feature flag pattern |
+
+**Setup & utilities:**
+| Skill | What it does |
+|-------|-------------|
+| `setup-deploy` / `setup-gbrain` / `setup-browser-cookies` | Environment setup helpers |
+| `sync-gbrain` / `connect-chrome` / `open-gstack-browser` | Sync + browser helpers |
+| `document-release` / `landing-report` | Release notes + landing page reporting |
+
+---
+
+> **"Super powers"** = this full skills suite. Chief-of-staff, gstack, cso, office-hours, investigate are the heavy hitters.
+> Skills are loaded on-trigger — they cost no tokens unless actively used.
+> Add new skills: `skill-creator` in Claude Desktop, or `/skillify` in Claude Code terminal.
+
+---
+
+## QI AGENTS
+
+QI sub-agents are Python scripts in `scripts/qi-*.py`. Each has a matching SKILL.md in `.claude/skills/<name>/` per Golden Rule #7.
+
+| Agent | Script | Skill | Status |
+|-------|--------|-------|--------|
+| Chief of Staff | `scripts/morning-briefing.py` | `.claude/skills/chief-of-staff/` | ✅ Live |
+| Head of Design | `scripts/head_of_design.py` | `.claude/skills/head-of-design/` | ✅ Live |
+| Voice | `scripts/qi-voice.py` | — (core loop, not a sub-agent) | ✅ Live |
+| Calendar | `scripts/qi-calendar.py` | — | ✅ Live |
+| Memory | `scripts/qi_memory.py` | — | ✅ Live |
+| Firecrawl | `scripts/qi_firecrawl.py` | — | ✅ Live |
+| Marketing Agent | `scripts/qi-marketing.py` | `.claude/skills/qi-marketing/` (create at build time) | 🔴 Pending |
+| Revenue Agent | `scripts/qi-revenue.py` | `.claude/skills/qi-revenue/` (create at build time) | 🔴 Pending |
+
+> Each new agent added here + matching SKILL.md written same session. See Golden Rule #7.

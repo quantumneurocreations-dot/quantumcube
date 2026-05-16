@@ -240,3 +240,43 @@ Every command must include:
 All QI Anthropic calls must use direct HTTP to `api.anthropic.com` with the API key at `~/.config/qi/anthropic_api_key`. This routes against the API balance (always metered, no credit pool risk). Never use `claude -p`, Agent SDK, Claude Code GitHub Actions, or third-party agent frameworks for unattended QI scripts. Effective June 15 those paths draw from Anthropic's subscription credit pool ($20–$200/mo) at full API rates — a budget QI doesn't need to consume. See ADR-029.
 
 > **Full stack inventory:** see [[TECH_STACK]] — hardware, Claude surfaces, MCPs, all services.
+
+### GOLDEN RULE #7 — EVERY NEW QI AGENT GETS A SKILL.MD AT BUILD TIME (added 2026-05-16)
+
+When any new QI agent or sub-agent script is created (`scripts/qi-*.py` or `scripts/qi-*.js`), a matching `SKILL.md` must be written inside `.claude/skills/<agent-name>/SKILL.md` in the QI vault **in the same session** — not later. The skill must include:
+
+- `name:` — slash-command trigger (e.g. `qi-marketing`)
+- `description:` — one sentence on what triggers it, what it does, what it returns
+- **What it is** — plain English role/purpose
+- **Trigger phrases** — how to invoke it from voice, Claude Code, or Claude Desktop
+- **Inputs / Outputs** — what data it needs, what it produces
+- **Script location** — path to the actual script
+
+This ensures every QI agent is discoverable by Claude Code, Claude Desktop (via Obsidian MCP), and QI's own runtime routing — permanently.
+
+**Template:**
+```markdown
+---
+name: qi-agent-name
+description: "One sentence. Trigger: [phrase]. Does: [action]. Returns: [output]."
+---
+# [Agent Name] — QI Sub-Agent
+
+## What it is
+[Role in plain English]
+
+## Trigger phrases
+- "[voice trigger]"
+- "[claude code trigger]"
+
+## Inputs
+- [what it needs]
+
+## Outputs / Side effects
+- [what it produces]
+
+## Script
+`scripts/qi-[name].py`
+```
+
+Also add a row to TECH_STACK.md under a new **QI AGENTS** section when the agent is live.
