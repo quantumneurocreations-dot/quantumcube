@@ -238,3 +238,5 @@ Every command must include:
 
 ### GOLDEN RULE #6 — NEVER ROUTE QI AUTOMATION THROUGH AGENT SDK OR claude -p (added 2026-05-16)
 All QI Anthropic calls must use direct HTTP to `api.anthropic.com` with the API key at `~/.config/qi/anthropic_api_key`. This routes against the API balance (always metered, no credit pool risk). Never use `claude -p`, Agent SDK, Claude Code GitHub Actions, or third-party agent frameworks for unattended QI scripts. Effective June 15 those paths draw from Anthropic's subscription credit pool ($20–$200/mo) at full API rates — a budget QI doesn't need to consume. See ADR-029.
+
+> **Full stack inventory:** see [[TECH_STACK]] — hardware, Claude surfaces, MCPs, all services.
