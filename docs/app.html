@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com https://eu-assets.i.posthog.com https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vimeocdn.com https://*.clarity.ms; media-src 'self' blob:; connect-src 'self' https://auth.quantumcube.app https://*.ingest.de.sentry.io https://browser.sentry-cdn.com https://*.dodopayments.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.clarity.ms; frame-src https://player.vimeo.com https://*.dodopayments.com https://vimeo.com; manifest-src 'self'; worker-src 'self' blob:; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com https://eu-assets.i.posthog.com https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vimeocdn.com https://*.clarity.ms; media-src 'self' blob:; connect-src 'self' https://fqqdldvnxupzxvvbyvjm.supabase.co https://*.ingest.de.sentry.io https://browser.sentry-cdn.com https://*.dodopayments.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.clarity.ms; frame-src https://player.vimeo.com https://*.dodopayments.com https://vimeo.com; manifest-src 'self'; worker-src 'self' blob:; base-uri 'self'; form-action 'self'; object-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#05050f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -642,7 +642,7 @@ input[type="number"]{-moz-appearance:textfield}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://browser.sentry-cdn.com/8.50.0/bundle.min.js" crossorigin="anonymous"></script>
 <script>
-const SUPABASE_URL = "https://auth.quantumcube.app";
+const SUPABASE_URL = "https://fqqdldvnxupzxvvbyvjm.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
 // === Sentry error monitoring (production-only) ===
 (function initSentry(){
@@ -1729,7 +1729,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 
 /* --- Quantum Cube Narrator (ElevenLabs via Supabase Edge Function) --- */
-const NARRATE_URL = "https://auth.quantumcube.app/functions/v1/narrate";
+const NARRATE_URL = "https://fqqdldvnxupzxvvbyvjm.supabase.co/functions/v1/narrate";
 const VALORY_VOICE_ID = "VhxAIIZM8IRmnl5fyeyk";
 const NARRATION_DIR = "Sounds/Narration/";
 const voiceState = { 3:true, 4:true, 5:true };
