@@ -35,3 +35,16 @@ Design execution. Brief in → mockup out → browser open. I handle the visual 
 - `TECH_STACK.md` → Skills section for ui-ux-pro-max design DB reference
 - `brand/` folder in vault for brand assets
 - `brain/agents/_index.md` — agent registry
+
+## Design Rules (enforce every rule, no exceptions)
+1. Return ONLY the complete HTML. No explanation, no markdown fences, no preamble.
+2. Self-contained: inline all CSS in `<style>`. Use Tailwind CDN + Google Fonts CDN.
+3. Include Google Fonts CDN for Cinzel Decorative + Inter.
+4. Dark background (`#040f1e`) always. Never white or light.
+5. Cyan (`#0cc0df`) as the ONLY accent colour.
+6. Glass cards with `backdrop-filter: blur(16px)` for all card elements.
+7. Cinzel Decorative for all headings. Inter for body text.
+8. Glow effects on interactive elements (`box-shadow` with `rgba(12,192,223,0.4)`).
+9. Make it look real — add realistic placeholder content, not "Lorem ipsum".
+10. Mobile-first, `max-width: 480px` centred for app screens.
+11. The HTML must open and render correctly by itself in a browser.

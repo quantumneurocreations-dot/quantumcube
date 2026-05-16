@@ -3,6 +3,25 @@ tags: [core, agents]
 ---
 # QNC AGENT IDENTITY REGISTRY
 
+## AGENT NAMING CONVENTION
+
+Agents are referred to by their function, not by person names. Simple, clean, unambiguous. When you say it in conversation — to QI or in this chat — there's no confusion about who's who.
+
+| Call name | Full agent | Script |
+|-----------|-----------|--------|
+| **QI** | QI Voice — main agent | `scripts/qi-voice.py` |
+| **CoS** | Chief of Staff (mode within QI) | `scripts/morning-briefing.py` |
+| **Design** | Head of Design | `scripts/head_of_design.py` |
+| **Upgrade** | Stack Intelligence Agent | `scripts/qi-stack-intel.py` (pending) |
+| **Marketing** | Marketing Agent | `scripts/qi-marketing.py` (pending) |
+| **Revenue** | Revenue Agent | `scripts/qi-revenue.py` (pending) |
+| **Security** | Security Agent (3am cron) | `scripts/qi-security.py` |
+| **Calendar** | Google Calendar (wired into CoS) | `scripts/qi-calendar.py` |
+| **Memory** | Session Memory | `scripts/qi_memory.py` |
+
+Usage: "How's security looking?" = Security agent + its logs. "Run upgrade" = trigger Upgrade's scan. "Ask design to..." = Head of Design brief.
+
+
 Every QI agent loads a vault identity document at runtime as its system context.
 No hardcoded worldviews in scripts — the vault is the brain for agents too.
 
