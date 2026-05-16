@@ -32,3 +32,16 @@ node_modules/
 .env
 .env*
 *.env
+
+# Android build artifacts — large binaries, not source
+android/.gradle/
+android/app/build/
+android/app-release*.apk
+android/app-release*.aab
+android/app-release*.apk
+android/*-unsigned*.apk
+android/*-signed*.apk
+android/*-aligned*.apk
+*.apk
+*.aab
+*.dex
