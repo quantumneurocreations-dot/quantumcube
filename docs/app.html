@@ -3516,8 +3516,14 @@ function unlock(){
     alert("Please enter your details on the first side first.");
     return;
   }
-  // Skip the pre-payment overlay — lock card already shows price + features.
-  // Go straight to Dodo checkout.
+  // TWA (Android app wrapper) — show redirect overlay instead of Dodo overlay.
+  // Google Play policy: external payment must route through browser, not in-app overlay.
+  // Overlay text already contains Google-required disclosure (Dodo Payments refund notice).
+  if(IS_TWA){
+    QC_DIALOG.open("twaRedirectOverlay");
+    return;
+  }
+  // Web — go straight to Dodo checkout.
   launchDodo();
 }
 function confirmTwaRedirect(){
