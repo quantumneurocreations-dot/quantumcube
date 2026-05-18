@@ -651,7 +651,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v308",
+      release: "quantum-cube@qc-v309",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3185,7 +3185,7 @@ async function launchDodo(){
       return;
     }
 
-    const { data: { session } } = await sb.auth.getSession();
+    const { data: { session } } = await Promise.race([sb.auth.getSession(), new Promise((_,rej)=>setTimeout(()=>rej(new Error("getSession timeout")),4000))]);
     if (!session || !session.user) {
       try { if(window.Sentry) Sentry.captureMessage('launchDodo: no session at checkout', 'warning'); } catch(_){}
       alert("Please sign in before purchasing.");
