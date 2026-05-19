@@ -651,7 +651,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v313",
+      release: "quantum-cube@qc-v314",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -4250,15 +4250,21 @@ sb.auth.onAuthStateChange(async (event, session) => {
     if(isSessionRestore){
       _qcSessionRestored = true; // prevent double-firing
       if(profileHasData){
-        // v302: Profile has valid name+dob — populate form and run calculation
+        // v314: Clear stale/autofill form values before repopulating from profile.
+        // !field.value guards in populateFormFromProfile skip correct data if Android
+        // autofill or a prior attempt left values — runCalculation then silently returns
+        // early (no exception thrown), leaving user stuck on face 0.
         try {
+          ['firstName','middleName','lastName','dobDay','dobMonth','dobYear'].forEach(function(id){
+            var el=document.getElementById(id); if(el) el.value='';
+          });
           populateFormFromProfile(profileRow, session.user);
           runCalculation();
+          if(!profileData){ try { if(window.Sentry) Sentry.captureMessage('session-restore: runCalc returned but profileData null', { level: 'warning', extra: navCtx }); } catch(_){} }
           _qcSessionNav('sessionRestore→runCalculation', navCtx);
         } catch(e) {
           console.error("[QC] session restore runCalculation:", e);
           try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'session-restore' } }); } catch(_){}
-          // Stay on face0 silently — user can complete sign-up
           _qcSessionNav('sessionRestore failed → stay face0', navCtx);
         }
       } else {
