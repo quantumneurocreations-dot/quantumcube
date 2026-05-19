@@ -651,7 +651,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v311",
+      release: "quantum-cube@qc-v312",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3556,8 +3556,9 @@ async function confirmTwaRedirect(){
     if (!sessionRes.ok) { alert("Could not start checkout. Please try again."); return; }
     const { checkout_url } = await sessionRes.json();
     if (!checkout_url) { alert("Could not start checkout. Please try again."); return; }
-    try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'TWA opening Dodo checkout in browser'}); } catch(_){}
-    window.open(checkout_url, '_blank', 'noopener');
+    try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'TWA navigating to Dodo checkout via location.href'}); } catch(_){}
+    // TWA blocks window.open(_blank) — navigate current view; Dodo return_url brings back to app
+    window.location.href = checkout_url;
   } catch(e) {
     console.error("[QC] TWA checkout failed:", e);
     try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'confirmTwaRedirect' } }); } catch(_){}
