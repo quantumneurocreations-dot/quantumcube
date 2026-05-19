@@ -651,7 +651,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v316",
+      release: "quantum-cube@qc-v317",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1696,8 +1696,15 @@ function faceClick(n){
 
 function openFace(n){
   if((n===3||n===4||n===5||n===6)&&!isUnlocked){
-    showFace(n);
-    scrollBelowCube();
+    // v316: Safety net — re-check DB profile in case in-memory isUnlocked is stale.
+    // Catches race between syncUnlockFromProfile calls and DOM re-locks.
+    (async()=>{
+      try{
+        const {data:p}=await sb.from("profiles").select("has_paid").maybeSingle();
+        if(p&&p.has_paid===true){applyUnlockedState(false);showFace(n);scrollBelowCube();return;}
+      }catch(_){}
+      showFace(n);scrollBelowCube();
+    })();
     return;
   }
   showFace(n);
@@ -3325,10 +3332,10 @@ function syncUnlockFromProfile(profile){
           posthog.capture('payment_completed');
         }
       } catch(e){}
-      applyUnlockedState(false);
-    }else{
-      try{const uid=(qcCurrentUser&&qcCurrentUser.id)||null;if(uid)localStorage.setItem(STORE_KEY,uid);}catch(e){}
     }
+    // v316: Always re-apply DOM unlock state — not just on first transition.
+    // Prevents race where DOM gets re-locked between profile syncs.
+    applyUnlockedState(false);
   }else{
     // User is not paid — ALWAYS enforce locked state, regardless of previous isUnlocked value.
     // Previously guarded by `if(isUnlocked)` which meant a freshly-loaded unpaid user (isUnlocked starts false)
