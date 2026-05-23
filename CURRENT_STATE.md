@@ -3,30 +3,66 @@ tags: [core, state]
 ---
 # CURRENT STATE — overwrite this every session end
 
-**Updated:** 2026-05-16  
-**HEAD:** `183fc59` — purple/pink theme + logo fix  
-**QC SW:** qc-v305 | **QI server:** localhost:3001 | **Customers:** 4
+**Updated:** 2026-05-23 (session 15)
+**HEAD (QC):** `41fff03` — chore(android): bump versionCode 5, versionName z2
+**QC SW:** qc-v318 | **QI server:** localhost:3001 | **has_paid=true:** 6 (real paying = 2)
+**Android versionCode:** 5 | **AAB:** uploaded to Play Console ✅
 
 ---
 
-## Just done (this session)
-- Dashboard black screen fixed — CSS outside style block (chunked write bug)
-- Purple/pink theme live — QUANTUM gradient + Integrator signature logo, no subtitle
-- Session management: CURRENT_STATE.md added, CHAT_KICKOFF updated to read this first
+## Play Store status (updated 2026-05-23)
+- ✅ Closed testing release published — versionCode 5 (z2) uploaded today
+- ✅ 12 testers opted-in and on the list
+- ⏳ ~Day 9 of 14 — hit 14 days ~May 29
+- 🔴 Testers need to actively USE the app (not just be opted-in) — engagement matters for Google approval
+- 🎯 Apply for production: ~May 29 (day 14)
+- 🎯 Google review after submission: ~7 days
+- ℹ️ Google checks: tester engagement + updates pushed during testing period ✅
 
-## What's next (top 3)
-1. **Buddy's 7 remaining questions** — he said "8 things", 1 answered. Start next chat by asking for the list.
-2. **QC: Apply production May 27 → birthday May 28 🎂** — critical date
-3. **Train hey_qi_v1.onnx** — samples at `wake_word/training/hey_qi/` ready
+## Sentry (updated 2026-05-23)
+- ✅ JAVASCRIPT-8 resolved — info breadcrumb, expected nav behavior
+- ✅ JAVASCRIPT-16 resolved — happy path breadcrumb, not an error
+- 🟢 Zero open issues
 
-## Key in-progress files
-- `scripts/qi-dashboard.html` — purple/pink theme, 422 lines, single style block ✅
-- `assets/qi-neural-map.html` — Three.js neural map, served at /neural-map
-- `scripts/qi-voice.py` — wake word gated, Hey QI / Hi QI (temp: hey_jarvis)
+## Recent commits
+- `41fff03` — chore(android): bump versionCode 5, versionName z2
+- `acbc04d` — feat: auth loading overlay qc-v318 (eliminates sign-up flash for returning users)
 
-## Critical pending (don't lose)
-- 🔴 QC apply production May 27 → birthday May 28 🎂
-- 🔴 Train custom hey_qi_v1.onnx
-- 🟡 Security agent expansion (4 → 11 checks)
-- 🟡 Upgrade/Marketing/Mind/Admin agents (scaffolds exist, not built)
-- 🟡 Wire agent routing in qi-voice.py for all 7 agents
+## Agents built (all 12 complete as of 2026-05-17)
+- ✅ quantum (voice) · security · upgrade · mind · cleaner · project
+- ✅ design · marketing · admin · truth · coder · audit
+- All at v3.0.0+ · All crons wired · All briefing snippets active
+
+## Obsidian Second Brain (installed 2026-05-19)
+- ✅ claude-vault watcher · topic-linker v4.2.8 · Claude Memory mirror
+- ✅ Session hooks · Auto Note Mover · Smart Connections
+- ✅ CLAUDE.md auto-archive protocol — global, all Claude Code sessions
+
+## What's next
+1. 🔴 Message testers — nudge them to actively USE the app before May 29
+2. 🔴 Draft + submit production form answers (~May 29, day 14)
+3. 🟡 Push one more QC release before May 29 (shows active dev to Google)
+4. 🟡 Dodo refund webhook → auto-flip has_paid on refund
+5. 🟡 qi-voice.py CoS briefing: read all briefing snippets
+6. 🟡 CSP: Report-Only → Enforcing
+7. 🟡 Truth adversarial test
+8. 🟡 Marketing full `all` mode live test (first Monday)
+9. 🟡 Canva MCP + ElevenLabs narration — Design v3.1
+10. 🟡 Wake word training
+11. 🟡 ElevenLabs cancel after Valory migration
+12. 🟡 Agent handshake pairs (Upgrade→Truth, Coder→Truth) — ADR-033
+
+## Obsidian Copilot
+- ✅ Copilot v3.3.2 · claude-sonnet-4-6 · gemini-2.5-flash · llama3.2 (Ollama)
+- ✅ Semantic search ON · text-embedding-3-small (OpenAI)
+
+<!-- topic-linker:start -->
+---
+## See Also
+- [[Claude Code]]
+- [[ElevenLabs]]
+- [[Obsidian]]
+- [[Play Store]]
+- [[Sentry]]
+- [[Supabase]]
+<!-- topic-linker:end -->
