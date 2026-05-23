@@ -4,8 +4,8 @@ tags: [core, state]
 # CURRENT STATE — overwrite this every session end
 
 **Updated:** 2026-05-23 (session 15)
-**HEAD (QC):** `41fff03` — chore(android): bump versionCode 5, versionName z2
-**QC SW:** qc-v318 | **QI server:** localhost:3001 | **has_paid=true:** 6 (real paying = 2)
+**HEAD (QC):** `819a13d` — fix: adaptive auth loader timeout (v319)
+**QC SW:** qc-v319 | **QI server:** localhost:3001 | **has_paid=true:** 6 (real paying = 2)
 **Android versionCode:** 5 | **AAB:** uploaded to Play Console ✅
 
 ---
