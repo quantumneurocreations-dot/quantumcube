@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v318",
+      release: "quantum-cube@qc-v319",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2182,8 +2182,16 @@ function _qcHideAuthLoader(){
   el.classList.add('fade-out');
   setTimeout(function(){ if(el) el.style.display='none'; }, 450);
 }
-// Safety: always dismiss after 3s regardless of auth outcome
-setTimeout(_qcHideAuthLoader, 3000);
+// Safety: dismiss after 3s, but if session restore is still pending
+// (rapid re-open where Supabase token refresh takes longer than 3s),
+// extend by 5s before giving up — v318b
+setTimeout(function(){
+  if(!_qcSessionRestored && currentFace === 0){
+    setTimeout(_qcHideAuthLoader, 5000);
+  } else {
+    _qcHideAuthLoader();
+  }
+}, 3000);
 
 // Hide #app and show a full-screen gate when on mobile but NOT running as an
 // installed PWA / TWA. iOS has no beforeinstallprompt; Android Chrome fires it
