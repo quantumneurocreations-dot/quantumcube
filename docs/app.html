@@ -128,6 +128,11 @@ html{height:100%;overflow:hidden;background:var(--bg);}body{height:100%;overflow
 /* v270: install splash + spinner */
 #qcSplash{position:fixed;inset:0;z-index:10000;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity 0.6s ease}
 #qcSplash.fade-out{opacity:0;pointer-events:none}
+/* v318: auth-state loader — hides face-0 flash for returning users */
+#qcAuthLoader{position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;transition:opacity 0.4s ease}
+#qcAuthLoader.fade-out{opacity:0;pointer-events:none}
+#qcAuthLoader .ql-spin{width:44px;height:44px;border:3px solid rgba(12,192,223,0.18);border-top-color:#0cc0df;border-radius:50%;animation:qlSpin 0.75s linear infinite}
+@keyframes qlSpin{to{transform:rotate(360deg)}}
 #qcInstallSpinner{display:none;flex-direction:column;align-items:center;gap:16px}
 .install-spin{width:44px;height:44px;border:3px solid rgba(255,255,255,0.12);border-top-color:#0cc0df;border-radius:50%;animation:qcSpin 0.85s linear infinite}
 .install-spin-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6)}
@@ -651,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v317",
+      release: "quantum-cube@qc-v318",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -754,6 +759,8 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 <div id="qcSplash">
 <img src="/qc-icon-512.png" alt="Quantum Cube" style="width:120px;height:120px;border-radius:24px;animation:gateFloat 4s ease-in-out infinite;will-change:transform">
 </div>
+<!-- v318: auth loader — covers face-0 flash on app open for returning users -->
+<div id="qcAuthLoader" aria-hidden="true"><div class="ql-spin"></div></div>
 <div id="installGate" role="dialog" aria-label="Install Quantum Cube">
 <div class="install-gate-inner">
 <div class="install-gate-logo-wrap">
@@ -2165,6 +2172,19 @@ function showFace(n){
 // Video audio events disabled for development
 
 // PWA — mobile install gate
+// v318: hide auth loader once Supabase auth state is known (one-shot)
+var _qcAuthLoaderDone = false;
+function _qcHideAuthLoader(){
+  if(_qcAuthLoaderDone) return;
+  _qcAuthLoaderDone = true;
+  var el = document.getElementById('qcAuthLoader');
+  if(!el) return;
+  el.classList.add('fade-out');
+  setTimeout(function(){ if(el) el.style.display='none'; }, 450);
+}
+// Safety: always dismiss after 3s regardless of auth outcome
+setTimeout(_qcHideAuthLoader, 3000);
+
 // Hide #app and show a full-screen gate when on mobile but NOT running as an
 // installed PWA / TWA. iOS has no beforeinstallprompt; Android Chrome fires it
 // asynchronously (and sometimes never, per its own install heuristics). The
@@ -2192,6 +2212,7 @@ function showFace(n){
   if(app) app.style.display = 'none';
   // v270: show body immediately (splash covers everything), then reveal gate after 2s
   document.body.style.opacity='1';
+  try { _qcHideAuthLoader(); } catch(_) {} // v318: not needed for install-gate path
   var _splash = document.getElementById('qcSplash');
   setTimeout(function(){
     if(_splash){ _splash.classList.add('fade-out'); setTimeout(function(){ if(_splash) _splash.style.display='none'; }, 600); }
@@ -4324,6 +4345,9 @@ sb.auth.onAuthStateChange(async (event, session) => {
       if(emEl){ emEl.value = ""; emEl.readOnly = false; emEl.style.opacity = ""; }
     } catch(e) {}
   }
+  // v318: always dismiss auth loader once auth state is resolved
+  // (_qcAuthLoaderDone guard prevents double-firing)
+  try { _qcHideAuthLoader(); } catch(_) {}
 });
 
 function updateSettingsLinkVisibility(){
