@@ -46,3 +46,4 @@ android/*-aligned*.apk
 *.aab
 *.dex
 SESSION_LOG.md
+.obsidian/plugins/
