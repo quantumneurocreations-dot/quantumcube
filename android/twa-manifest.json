@@ -20,8 +20,8 @@
     "path": "/Users/qnc/Projects/quantumcube/android/quantumcube.keystore",
     "alias": "quantumcube"
   },
-  "appVersionName": "z2",
-  "appVersionCode": 6,
+  "appVersionName": "z3",
+  "appVersionCode": 8,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://quantumcube.app/manifest.json",
@@ -43,5 +43,5 @@
   "fileHandlers": [],
   "launchHandlerClientMode": "",
   "displayOverride": [],
-  "appVersion": "z2"
+  "appVersion": "z3"
 }
