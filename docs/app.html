@@ -3566,7 +3566,10 @@ function unlock(){
 }
 function confirmTwaRedirect(){
   QC_DIALOG.close("twaRedirectOverlay");
-  launchDodo();
+  // Open quantumcube.app in an external Chrome tab (CCT) — payment completes
+  // in the browser, not inside the TWA. Matches the overlay disclosure text
+  // ("You'll be taken to your browser") and keeps us Play policy-compliant.
+  window.open('https://quantumcube.app/?utm_source=twa-purchase', '_blank', 'noopener');
 }
 function cancelTwaRedirect(){
   QC_DIALOG.close("twaRedirectOverlay");
