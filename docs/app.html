@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v325",
+      release: "quantum-cube@qc-v326",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -5212,8 +5212,8 @@ if("serviceWorker" in navigator){
 <!-- ═══════════════════════════════════════════ -->
 <div id="twaRedirectOverlay" role="alertdialog" aria-modal="true" aria-labelledby="twaRedirectTitle" aria-describedby="twaRedirectBody" aria-hidden="true">
   <div class="twa-card">
-    <h2 id="twaRedirectTitle" class="twa-title">Leaving Quantum Cube</h2>
-    <p id="twaRedirectBody" class="twa-body">You'll be taken to your browser to complete your purchase outside Google Play. Refunds are handled by Dodo Payments.</p>
+    <h2 id="twaRedirectTitle" class="twa-title">Secure Checkout</h2>
+    <p id="twaRedirectBody" class="twa-body">To complete your purchase, you'll be taken to our secure payment page in your browser.<br><br>Payments and refunds are processed by Dodo Payments, our payment provider.</p>
     <button type="button" class="unlock-btn pay-overlay-btn" onclick="haptic('medium');confirmTwaRedirect()">Continue</button>
     <button type="button" class="unlock-btn pay-overlay-btn" style="border-color:#ffffff;color:#ffffff;box-shadow:none" onclick="haptic('medium');cancelTwaRedirect()">Cancel</button>
   </div>
