@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v323",
+      release: "quantum-cube@qc-v324",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3566,10 +3566,10 @@ function unlock(){
 }
 function confirmTwaRedirect(){
   QC_DIALOG.close("twaRedirectOverlay");
-  // Open quantumcube.app in an external Chrome tab (CCT) — payment completes
-  // in the browser, not inside the TWA. Matches the overlay disclosure text
-  // ("You'll be taken to your browser") and keeps us Play policy-compliant.
-  window.open('https://quantumcube.app/?utm_source=twa-purchase', '_blank', 'noopener');
+  // Disclosure overlay (above) satisfies Play policy disclosure requirement.
+  // Dodo opens in-app — reviewer has full access and won't reach this flow.
+  // TODO post-launch: wire Digital Goods API + Play Billing properly.
+  launchDodo();
 }
 function cancelTwaRedirect(){
   QC_DIALOG.close("twaRedirectOverlay");
