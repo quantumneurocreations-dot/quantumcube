@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v324",
+      release: "quantum-cube@qc-v325",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2116,7 +2116,7 @@ document.addEventListener('visibilitychange', async function(){
     if(session && session.user){
       qcCurrentUser = session.user;
       updateSettingsLinkVisibility();
-      const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
+      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").maybeSingle();
       qcCurrentProfile = profile || null;
       syncUnlockFromProfile(profile);
       restorePendingProfile();
@@ -3118,7 +3118,7 @@ async function handleDodoEvent(event){
         }
         const { data: profile, error } = await sb
           .from("profiles")
-          .select("*")
+          .select("id,has_paid,email")
           .eq("id", session.user.id)
           .single();
         if (error) {
@@ -3807,7 +3807,7 @@ async function initSupabaseSession(){
       qcCurrentUser = session.user;
       _initUser = session.user;
       hasSession = true;
-      const { data: profile } = await sb.from("profiles").select("*").maybeSingle();
+      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").maybeSingle();
       qcCurrentProfile = profile || null;
       _initProfile = profile || null;
       syncUnlockFromProfile(profile);
@@ -4249,7 +4249,7 @@ sb.auth.onAuthStateChange(async (event, session) => {
     // Fetch profile FIRST so we can populate the form before deciding whether to run
     let profileRow = null;
     try {
-      const r = await sb.from("profiles").select("*").maybeSingle();
+      const r = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").maybeSingle();
       profileRow = r.data || null;
       qcCurrentProfile = profileRow;
       syncUnlockFromProfile(qcCurrentProfile);
