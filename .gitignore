@@ -47,3 +47,7 @@ android/*-aligned*.apk
 *.dex
 SESSION_LOG.md
 .obsidian/plugins/
+
+# QI audit additions 2026-05-26
+supabase-env
+SESSION_LOG.md
