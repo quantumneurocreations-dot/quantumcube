@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v330",
+      release: "quantum-cube@qc-v331",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3108,7 +3108,11 @@ async function handleDodoEvent(event){
     // already handles this gracefully via syncUnlockFromProfile.
     setTimeout(async () => {
       try {
-        const { data: { session } } = await sb.auth.getSession();
+        // v320-audit: 4s timeout — prevents silent hang if Supabase is slow post-payment
+        const { data: { session } } = await Promise.race([
+          sb.auth.getSession(),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('getSession-timeout-post-checkout')), 4000))
+        ]);
         if (!session || !session.user) {
           try { if(window.Sentry) Sentry.captureMessage('post-checkout: no session for profile sync', 'warning'); } catch(_){}
           _qcDodoInFlight = false;
