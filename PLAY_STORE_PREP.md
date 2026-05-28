@@ -326,7 +326,14 @@ Full crawl of Google Play Policy Center completed by Claude Code (3 parallel age
 - If declaring YES: must add "Report content" link in legal footer (mailto:support@quantumcube.app?subject=Report%20content)
 
 ### 15h. Review Gmail Account for Play Store Reviewers
-🔴 [ ] Create dedicated Gmail for Google's internal review team. Sign in once at quantumcube.app/app via magic link to create Supabase profile → ping Claude to set has_paid=true. Add credentials in Play Console → App content → App access → Any other instructions. Instructions: "App uses magic-link auth. Enter [email], open Gmail at gmail.com with [password], click link."
+🟢 [✓] **DONE.** `qnc.review@gmail.com` created, `has_paid=true` set in Supabase (2026-05-12). OTP auth (NOT magic link).
+
+**Credentials to enter in Play Console → App content → App access:**
+- Email: `qnc.review@gmail.com`
+- Password: Ronnie's Gmail password
+- Instructions: "Enter email, tap Continue, check Gmail for 6-digit OTP (check spam), enter in app. Account pre-unlocked — enter any name and date of birth when prompted, then tap Reveal My Cube to explore all 4 reading faces."
+
+**Note on profile lock (qc-v332, live):** The reviewer's first-entered name/DOB will be saved to the account. An "Edit Details" button appears if they want to change it — it shows a confirmation dialog before unlocking the form. This is expected behaviour, not a bug.
 
 ### Confirmed PASS from audit
 - Ads policy ✅ (no ads, no AAID)

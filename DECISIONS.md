@@ -593,7 +593,43 @@ ADR-017 (May 8 AM) shipped the welcome-email pipeline but left two adjacent gaps
 
 ---
 
-## ADR template — copy this for new entries
+## ADR-030 — Profile name/dob locked to account: Option B (one edit, confirm dialog)
+
+**Date:** 2026-05-28
+**Status:** Accepted
+
+### Context
+Quantum Cube's core reading is generated from a user's full name + date of birth — these are the numerological inputs. Prior to qc-v332, users could enter any name/dob on every visit, generating different profiles with the same email address. This creates two problems:
+1. A single account could generate unlimited distinct readings (abuse vector)
+2. "Profile" has no continuity — users returning expect to see their reading, not a blank form
+
+Three options were considered:
+- **Option A:** Hard lock — save on first submit, no editing ever
+- **Option B:** One allowed edit, gated by a confirmation dialog warning the change is permanent
+- **Option C:** Unlimited edits — status quo, no lock
+
+### Decision
+**Option B.** Lock name/dob after first form submission. Show a "Profile Locked" display with the saved name/dob when returning users navigate to face 0. Provide an "Edit Details" button that triggers a confirm dialog before unlocking the form for one re-edit.
+
+Implementation (qc-v332, commits `ae84677` + `f3ef9c9`):
+- `_qcSavedName` + `_qcSavedDob` state vars populated from every profile fetch
+- `showFace(0)` intercepts when both are set — renders locked display via `_qcRenderLockedProfile()`
+- `_qcUnlockForEdit()` shows `confirm()` then swaps back to the entry form
+- `_qcSaveProfileDirect()` updates the in-memory lock state after a successful save
+- Both sign-out paths (`handleBackToSignUp` + `SIGNED_OUT` event) clear the lock state
+- Zero schema changes — `profiles.name` and `profiles.dob` columns + UPDATE RLS policy already existed
+
+### Consequences
+- One profile per email address. Returning users see their locked name/dob, not a blank form.
+- Google Play review account (`qnc.review@gmail.com`) has no saved profile yet — reviewer gets the normal form on first visit. Their entered name/dob then locks to the account. "Edit Details" available if they want to change it.
+- Part 3 questionnaire instructions remain valid: "enter any name and date of birth" still applies for first-time use.
+- `_qcSaveProfileDirect` bypasses the Supabase JS client (uses direct REST PATCH) — the RLS UPDATE policy `users_update_own_profile` (`auth.uid() = id`) covers this correctly.
+
+### Alternatives considered
+- **Option A (hard lock):** rejected — too harsh for a user who made a typo on first submission
+- **Option C (no lock):** rejected — core product value is a personal reading tied to one identity; unlimited switching undermines that
+
+
 
 ```markdown
 ## ADR-NNN — [short title]
