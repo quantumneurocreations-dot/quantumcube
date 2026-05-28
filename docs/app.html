@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v331",
+      release: "quantum-cube@qc-v332",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -833,6 +833,8 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 <div id="faceContainer">
 <div class="face active" id="face0" aria-label="Sign Up — Enter Your Details">
 
+<div id="qcLockedProfile" style="display:none"></div>
+<div id="qcEntryForm">
 <p class="form-title">Enter Your Details</p>
 <div class="glass-card" style="margin-top:16px">
 <div class="form-row">
@@ -859,6 +861,7 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 <button type="button" class="legal-link" onclick="showLegal('disclaimer')">Disclaimer</button>
 <button type="button" class="legal-link" id="settingsLink" style="display:none" onclick="openFace(7)">Settings</button>
 </div>
+</div><!-- /qcEntryForm -->
 </div>
 <div class="face" id="faceCheckEmail" aria-label="Check Your Email">
 <div class="glass-card" style="margin-top:8px">
@@ -2116,6 +2119,8 @@ document.addEventListener('visibilitychange', async function(){
       updateSettingsLinkVisibility();
       const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").maybeSingle();
       qcCurrentProfile = profile || null;
+      _qcSavedName = (profile && profile.name) || null;
+      _qcSavedDob  = (profile && profile.dob)  || null;
       syncUnlockFromProfile(profile);
       restorePendingProfile();
       const formReady = populateFormFromProfile(profile, session.user);
@@ -2127,8 +2132,58 @@ document.addEventListener('visibilitychange', async function(){
   } catch(e) {}
 });
 
+// v332: Profile lock helpers ─────────────────────────────────────────────────
+function _qcRenderLockedProfile(){
+  const el = document.getElementById('qcLockedProfile');
+  if(!el) return;
+  let dobDisplay = _qcSavedDob || '';
+  if(_qcSavedDob){
+    try {
+      const [y,m,d] = _qcSavedDob.split('-');
+      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      dobDisplay = parseInt(d) + ' ' + months[parseInt(m)-1] + ' ' + y;
+    } catch(_){}
+  }
+  const safeName = (_qcSavedName||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  el.innerHTML =
+    '<p class="form-title" style="margin-bottom:8px">Your Profile</p>'
+    +'<div class="glass-card" style="margin-top:16px;text-align:center;padding:28px 24px">'
+    +'<p style="color:rgba(255,255,255,0.5);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin:0 0 10px">Profile Locked</p>'
+    +'<p style="font-size:20px;color:#fff;margin:0 0 6px;font-weight:400">'+safeName+'</p>'
+    +'<p style="font-size:14px;color:rgba(255,255,255,0.6);margin:0 0 24px">'+dobDisplay+'</p>'
+    +'<p style="font-size:12px;color:rgba(255,255,255,0.45);margin:0 0 20px;line-height:1.5">Your reading is linked to these details.</p>'
+    +'<button type="button" class="reset-btn" style="width:100%;margin:0" onclick="haptic(\'light\');_qcUnlockForEdit()">Edit Details</button>'
+    +'</div>';
+}
+function _qcUnlockForEdit(){
+  const confirmed = confirm(
+    'Changing your name or date of birth will permanently update your profile and regenerate your reading. Are you sure?'
+  );
+  if(!confirmed) return;
+  _qcSavedName = null;
+  _qcSavedDob  = null;
+  const lk = document.getElementById('qcLockedProfile');
+  const ef = document.getElementById('qcEntryForm');
+  if(lk){ lk.innerHTML = ''; lk.style.display = 'none'; }
+  if(ef) ef.style.display = '';
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 function showFace(n){
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'nav', message:'showFace', data:{n:String(n)}}); } catch(_){}
+  // v332: Profile lock — intercept face0 when name+dob already saved
+  if(n === 0){
+    const lk = document.getElementById('qcLockedProfile');
+    const ef = document.getElementById('qcEntryForm');
+    if(_qcSavedName && _qcSavedDob){
+      _qcRenderLockedProfile();
+      if(lk) lk.style.display = '';
+      if(ef) ef.style.display = 'none';
+    } else {
+      if(lk){ lk.innerHTML = ''; lk.style.display = 'none'; }
+      if(ef) ef.style.display = '';
+    }
+  }
   if(window.QC_AUDIO && typeof n==="number" && n>=1 && n<=6) window.QC_AUDIO.play("select_side");
   // v285: stop music when navigating to signup or OTP screens
   if(window.QC_AUDIO && (n === 0 || n === 'OtpEntry' || n === 'CheckEmail')){
@@ -3596,6 +3651,8 @@ showFace(0);
 const QC_PENDING_KEY = "qc_pending_profile_v1";
 let qcCurrentUser = null;
 let qcCurrentProfile = null;
+let _qcSavedName = null; // v332: profile lock
+let _qcSavedDob  = null; // v332: profile lock
 
 
 
@@ -3811,6 +3868,8 @@ async function initSupabaseSession(){
       hasSession = true;
       const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").maybeSingle();
       qcCurrentProfile = profile || null;
+      _qcSavedName = (profile && profile.name) || null;
+      _qcSavedDob  = (profile && profile.dob)  || null;
       _initProfile = profile || null;
       syncUnlockFromProfile(profile);
     }
@@ -4144,6 +4203,8 @@ async function _qcSaveProfileDirect(accessToken, userId){
       throw new Error('Profile save failed: ' + res.status + ' ' + detail);
     }
     try { if(window.Sentry) Sentry.addBreadcrumb({category:'profile', message:'profile-save-direct-ok'}); } catch(_){}
+    _qcSavedName = fullName; // v332: update lock state
+    _qcSavedDob  = dobIso;   // v332: update lock state
   } catch(e){
     console.error('[QC] _qcSaveProfileDirect failed', e);
     try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'profile-save-direct' } }); } catch(_){}
@@ -4267,6 +4328,8 @@ sb.auth.onAuthStateChange(async (event, session) => {
       const r = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").maybeSingle();
       profileRow = r.data || null;
       qcCurrentProfile = profileRow;
+      _qcSavedName = (profileRow && profileRow.name) || null;
+      _qcSavedDob  = (profileRow && profileRow.dob)  || null;
       syncUnlockFromProfile(qcCurrentProfile);
     } catch(e) {
       console.error("[QC] profile fetch error:", e);
