@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v327",
+      release: "quantum-cube@qc-v328",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -4240,7 +4240,14 @@ sb.auth.onAuthStateChange(async (event, session) => {
   if (_qcPendingPaymentUnlock && (event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
     attemptPaymentUnlock(session);
   }
-  if((event === "SIGNED_IN" || event === "INITIAL_SESSION") && session && session.user){
+  // v320: TOKEN_REFRESHED added for the stuck-on-signup case:
+  // initSupabaseSession() has a 5s getSession timeout. On Android cold start,
+  // the network may not be ready — timeout fires, hasSession=false, blank signup.
+  // Supabase SDK continues the refresh in background and fires TOKEN_REFRESHED
+  // when it completes. Without this it was silently ignored.
+  // TOKEN_REFRESHED only enters this block when face=0 AND not yet restored,
+  // so normal mid-session token refreshes are a no-op here.
+  if((event === "SIGNED_IN" || event === "INITIAL_SESSION" || (event === "TOKEN_REFRESHED" && currentFace === 0 && !_qcSessionRestored)) && session && session.user){
     // v304: Skip if _qcOtpVerify is handling this SIGNED_IN event
     if(_qcOtpVerifying){
       try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN skipped — _qcOtpVerifying active' }); } catch(_) {}
