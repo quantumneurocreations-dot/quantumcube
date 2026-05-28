@@ -4266,6 +4266,8 @@ function handleBackToSignUp(){
   // Reset auth state
   qcCurrentUser = null;
   qcCurrentProfile = null;
+  _qcSavedName = null; // v332: clear profile lock
+  _qcSavedDob  = null; // v332: clear profile lock
   updateSettingsLinkVisibility();
 
   // Clear form fields
@@ -4423,6 +4425,8 @@ sb.auth.onAuthStateChange(async (event, session) => {
   if(event === "SIGNED_OUT"){
     qcCurrentUser = null;
     qcCurrentProfile = null;
+    _qcSavedName = null; // v332: clear profile lock
+    _qcSavedDob  = null; // v332: clear profile lock
     updateSettingsLinkVisibility();
     try { localStorage.removeItem(STORE_KEY); } catch(e) {}
     try { localStorage.removeItem(QC_PENDING_KEY); } catch(e) {}
