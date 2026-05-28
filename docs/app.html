@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v328",
+      release: "quantum-cube@qc-v329",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -836,13 +836,13 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 <p class="form-title">Enter Your Details</p>
 <div class="glass-card" style="margin-top:16px">
 <div class="form-row">
-<div class="form-group form-full" style="text-align:center"><label for="firstName" style="text-align:center;display:block">First Name</label><input type="text" id="firstName" placeholder="" autocomplete="given-name" required style="text-align:center"></div>
-<div class="form-group form-full" style="text-align:center"><label for="middleName" style="text-align:center;display:block">Middle Name &#8212; Optional</label><input type="text" id="middleName" placeholder="" autocomplete="additional-name" style="text-align:center"></div>
-<div class="form-group form-full" style="text-align:center"><label for="lastName" style="text-align:center;display:block">Last Name</label><input type="text" id="lastName" placeholder="" autocomplete="family-name" required style="text-align:center"></div>
-<div class="form-group form-full" style="text-align:center"><label for="email" style="text-align:center;display:block">Email</label><input type="email" id="email" placeholder="" autocomplete="email" required style="text-align:center"></div>
-<div class="form-group" style="text-align:center"><label for="dobDay" style="text-align:center;display:block">Day</label><input type="number" id="dobDay" placeholder="" min="1" max="31" inputmode="numeric" required style="text-align:center" value="" oninput="var mx=parseInt(this.getAttribute('max'))||31;if(parseInt(this.value)>mx)this.value=mx;if(parseInt(this.value)<1&&this.value!=='')this.value=1;"></div>
-<div class="form-group" style="text-align:center"><label for="dobMonth" style="text-align:center;display:block">Month</label><div class="sel-wrap"><select id="dobMonth" style="text-align:center"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select></div></div>
-<div class="form-group" style="text-align:center"><label for="dobYear" style="text-align:center;display:block">Year</label><input type="number" id="dobYear" placeholder="" min="1900" inputmode="numeric" required style="text-align:center" value="" oninput="var m=new Date().getFullYear()-1;if(parseInt(this.value)>m)this.value=m;if(parseInt(this.value)<1900&&this.value.length>=4)this.value=1900;"></div>
+<div class="form-group form-full" style="text-align:center"><label for="firstName" style="text-align:center;display:block">First Name</label><input type="text" id="firstName" placeholder="" autocomplete="given-name" required data-clarity-mask="true" style="text-align:center"></div>
+<div class="form-group form-full" style="text-align:center"><label for="middleName" style="text-align:center;display:block">Middle Name &#8212; Optional</label><input type="text" id="middleName" placeholder="" autocomplete="additional-name" data-clarity-mask="true" style="text-align:center"></div>
+<div class="form-group form-full" style="text-align:center"><label for="lastName" style="text-align:center;display:block">Last Name</label><input type="text" id="lastName" placeholder="" autocomplete="family-name" required data-clarity-mask="true" style="text-align:center"></div>
+<div class="form-group form-full" style="text-align:center"><label for="email" style="text-align:center;display:block">Email</label><input type="email" id="email" placeholder="" autocomplete="email" required data-clarity-mask="true" style="text-align:center"></div>
+<div class="form-group" style="text-align:center"><label for="dobDay" style="text-align:center;display:block">Day</label><input type="number" id="dobDay" placeholder="" min="1" max="31" inputmode="numeric" required data-clarity-mask="true" style="text-align:center" value="" oninput="var mx=parseInt(this.getAttribute('max'))||31;if(parseInt(this.value)>mx)this.value=mx;if(parseInt(this.value)<1&&this.value!=='')this.value=1;"></div>
+<div class="form-group" style="text-align:center"><label for="dobMonth" style="text-align:center;display:block">Month</label><div class="sel-wrap"><select id="dobMonth" data-clarity-mask="true" style="text-align:center"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select></div></div>
+<div class="form-group" style="text-align:center"><label for="dobYear" style="text-align:center;display:block">Year</label><input type="number" id="dobYear" placeholder="" min="1900" inputmode="numeric" required data-clarity-mask="true" style="text-align:center" value="" oninput="var m=new Date().getFullYear()-1;if(parseInt(this.value)>m)this.value=m;if(parseInt(this.value)<1900&&this.value.length>=4)this.value=1900;"></div>
 </div>
 <p class="err-msg" id="errMsg" role="alert" aria-live="assertive">Please complete all fields</p>
 </div>
@@ -867,9 +867,9 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
   <p class="form-title" style="margin:0">Click On The Link To Verify Your Email</p>
   <p class="err-msg" id="resendMsg" role="status" aria-live="polite" style="display:none">Link resent</p>
 </div>
-<button type="button" class="reset-btn" id="alreadyVerifiedBtn" style="margin-top:16px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleAlreadyVerified()">I've Verified — Continue</button>
+<!-- v320-audit: alreadyVerifiedBtn removed — handleAlreadyVerified() dead code (magic-link era) -->
 <p id="alreadyVerifiedMsg" role="status" aria-live="polite" style="display:none;margin:8px 24px 0 24px;text-align:center;font-size:13px;color:rgba(255,255,255,0.85);"></p>
-<button type="button" class="reset-btn" id="resendBtn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleResendMagicLink()">Resend Email</button>
+<!-- v320-audit: resendBtn removed — handleResendMagicLink() dead code (magic-link era) -->
 <button type="button" class="reset-btn" style="margin-top:14px;margin-left:24px;margin-right:24px;width:calc(100% - 48px)" onclick="haptic(&apos;medium&apos;);handleBackToSignUp()" aria-label="Back to Sign Up">Back to<br>Sign Up</button>
 </div>
 <!-- v280: OTP code entry face -->
@@ -4960,7 +4960,7 @@ window.showFace=function(n){_sfBase(n);if([0,1,5].includes(n))setTimeout(()=>loa
 
 // ═══ SERVICE WORKER ═══
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register('sw.js').catch(function(e){console.warn('SW register failed',e);});
+  navigator.serviceWorker.register('/sw.js').catch(function(e){console.warn('SW register failed',e);});
   navigator.serviceWorker.addEventListener('message', function(e){
     if(!e.data || e.data.type !== 'SW_UPDATED') return;
     // v257: suppress mid-load reload while the install gate is showing.
@@ -5009,7 +5009,7 @@ if("serviceWorker" in navigator){
       <div class="legal-h2">3. Information We Do Not Collect</div>
       <p class="legal-p">We do not collect or store your reading history, your device identifiers, your location, your browsing history outside the app, or any behavioural tracking data. We do not sell your data, share it with advertisers, or build profiles on you.</p>
       <div class="legal-h2">4. How We Use Your Email</div>
-      <p class="legal-p">We use your email only for: (a) sending the magic link that signs you in &mdash; we do not use passwords; (b) contacting you about your purchase or your account; and (c) product updates, if and only if you opted in on sign-up. The marketing checkbox is unchecked by default. You can withdraw consent any time from a link in any marketing email or by writing to privacy@qncacademy.com.</p>
+      <p class="legal-p">We use your email only for: (a) sending the one-time sign-in code &mdash; we do not use passwords; (b) contacting you about your purchase or your account; and (c) product updates, if and only if you opted in on sign-up. The marketing checkbox is unchecked by default. You can withdraw consent any time from a link in any marketing email or by writing to privacy@qncacademy.com.</p>
       <div class="legal-h2">5. Where Your Data Is Stored</div>
       <p class="legal-p">Account data is stored in Frankfurt, Germany on infrastructure operated by Supabase Inc., our database provider. Your data is encrypted in transit and at rest. We chose the European Union for storage because it provides a strong data protection framework recognised under POPIA.</p>
       <div class="legal-h2">6. How Long We Keep Your Data</div>
@@ -5039,7 +5039,7 @@ if("serviceWorker" in navigator){
       <div class="legal-h2">1. The Service</div>
       <p class="legal-p">Quantum Cube generates numerology, Western astrology, and Chinese zodiac readings from the name and date of birth you enter. The app is offered for entertainment and personal self-reflection purposes only. It is not a substitute for professional advice of any kind.</p>
       <div class="legal-h2">2. Your Account</div>
-      <p class="legal-p">To unlock the full reading you create an account using your email address. We use passwordless magic-link authentication &mdash; we send a one-time sign-in link to your email, and we do not store any password.</p>
+      <p class="legal-p">To unlock the full reading you create an account using your email address. We use passwordless one-time code (OTP) authentication — we send a 6-digit code to your email address.</p>
       <p class="legal-p">You are responsible for keeping your email account secure. If your email is compromised, the attacker could gain access to your Quantum Cube account. Contact us at privacy@qncacademy.com if you suspect unauthorised access.</p>
       <div class="legal-h2">3. Licence</div>
       <p class="legal-p">Quantum Neuro Creations grants you a personal, non-exclusive, non-transferable, revocable licence to use Quantum Cube for your own personal, non-commercial purposes. You may not copy, distribute, modify, reverse engineer, or create derivative works based on the app or its content.</p>
@@ -5153,7 +5153,7 @@ if("serviceWorker" in navigator){
       <p class="legal-p">Account data is stored in Supabase&rsquo;s managed Postgres database, encrypted at rest. Supabase maintains SOC 2 Type II certification and publishes the results of third-party audits.</p>
       <div class="legal-h2">Authentication</div>
       <p class="legal-p"><strong>Your data rights:</strong> You can download a copy of all account data we hold about you, or permanently delete your account, at any time from the Settings screen inside the app. Deletion is immediate and irreversible &mdash; we remove your authentication record and your profile row, including unlock status and marketing preference. Reading content is generated from your inputs and is not stored, so nothing else remains.</p>
-      <p class="legal-p">We use magic-link authentication. You sign in by clicking a one-time link sent to your email. No password is stored on our servers or yours. If your email is compromised, the attacker would gain access to your Quantum Cube account &mdash; which holds only your email, your unlock status, and your marketing preference &mdash; and you should change your email password and contact us at privacy@qncacademy.com immediately.</p>
+      <p class="legal-p">We use one-time code (OTP) authentication. You sign in by entering a 6-digit code sent to your email. No password is stored on our servers or yours. If your email is compromised, the attacker would gain access to your Quantum Cube account &mdash; which holds only your email, your unlock status, and your marketing preference &mdash; and you should change your email password and contact us at privacy@qncacademy.com immediately.</p>
       <div class="legal-h2">No Readings History</div>
       <p class="legal-p">We do not store your reading results. Calculations are deterministic &mdash; the same inputs always produce the same output &mdash; so there is no need to keep a history, and we do not. Nothing about your character analysis is held by us.</p>
       <div class="legal-h2">Access Controls</div>
