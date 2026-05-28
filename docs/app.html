@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v326",
+      release: "quantum-cube@qc-v327",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3816,8 +3816,13 @@ async function initSupabaseSession(){
   // v283: Clean up stale magic-link localStorage from pre-OTP versions
   try { localStorage.removeItem('qc_last_magic'); } catch(_){}
   restorePendingProfile();
-  // Populate form from profile/auth so returning users skip manual entry
-  if(_initUser) populateFormFromProfile(_initProfile, _initUser);
+  // v319: Apply v314 form-clear fix to initSupabaseSession (was only in onAuthStateChange).
+  // Android autofill pre-fills fields during the async awaits above, blocking
+  // populateFormFromProfile's !field.value guards → wrong data or blank form.
+  if(_initUser){
+    try{['firstName','middleName','lastName','dobDay','dobMonth','dobYear'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});}catch(_){}
+    populateFormFromProfile(_initProfile, _initUser);
+  }
   // v275: Always ensure email field is editable after populate — defensive
   // measure for cross-device scenarios where readOnly might block input.
   try { const emEl = document.getElementById('email'); if(emEl){ emEl.readOnly = false; emEl.style.opacity = ''; } } catch(_){}
@@ -3833,6 +3838,7 @@ async function initSupabaseSession(){
   updateSettingsLinkVisibility();
   // Chunk 5b: if already signed in on page load, skip Face 0 entirely
   if(hasSession && currentFace === 0){
+    _qcSessionRestored = true; // v319: prevent onAuthStateChange double-fire when initSupabaseSession handles restore first
     const _formReady = !!(document.getElementById('firstName')?.value &&
       document.getElementById('lastName')?.value &&
       document.getElementById('dobDay')?.value &&
