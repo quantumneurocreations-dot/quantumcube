@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com https://eu-assets.i.posthog.com https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vimeocdn.com https://*.clarity.ms; media-src 'self' blob:; connect-src 'self' https://fqqdldvnxupzxvvbyvjm.supabase.co https://*.ingest.de.sentry.io https://browser.sentry-cdn.com https://*.dodopayments.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.clarity.ms; frame-src https://player.vimeo.com https://*.dodopayments.com https://vimeo.com; manifest-src 'self'; worker-src 'self' blob:; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://player.vimeo.com https://cdn.jsdelivr.net https://browser.sentry-cdn.com https://eu-assets.i.posthog.com https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vimeocdn.com https://*.clarity.ms; media-src 'self' blob:; connect-src 'self' https://fqqdldvnxupzxvvbyvjm.supabase.co https://*.ingest.de.sentry.io https://browser.sentry-cdn.com https://*.dodopayments.com https://eu.i.posthog.com https://eu-assets.i.posthog.com https://*.clarity.ms https://play.google.com https://androidpublisher.googleapis.com https://oauth2.googleapis.com; frame-src https://player.vimeo.com https://*.dodopayments.com https://vimeo.com; manifest-src 'self'; worker-src 'self' blob:; base-uri 'self'; form-action 'self'; object-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#05050f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3611,26 +3611,92 @@ function unlock(){
     alert("Please enter your details on the first side first.");
     return;
   }
-  // TWA (Android app wrapper) — show redirect overlay instead of Dodo overlay.
-  // Google Play policy: external payment must route through browser, not in-app overlay.
-  // Overlay text already contains Google-required disclosure (Dodo Payments refund notice).
   if(IS_TWA){
-    QC_DIALOG.open("twaRedirectOverlay");
+    // TWA: use Google Play Billing (Digital Goods API)
+    launchPlayBilling();
     return;
   }
   // Web — go straight to Dodo checkout.
   launchDodo();
 }
-function confirmTwaRedirect(){
-  QC_DIALOG.close("twaRedirectOverlay");
-  // Disclosure overlay (above) satisfies Play policy disclosure requirement.
-  // Dodo opens in-app — reviewer has full access and won't reach this flow.
-  // TODO post-launch: wire Digital Goods API + Play Billing properly.
-  launchDodo();
+
+// ── Google Play Billing (TWA only) ────────────────────────────────────────────
+async function launchPlayBilling(){
+  try {
+    if(window.Sentry) Sentry.addBreadcrumb({category:"payment",level:"info",message:"launchPlayBilling: entry"});
+    if(!("getDigitalGoodsService" in window)){
+      console.error("[QC] Digital Goods API not available");
+      if(window.Sentry) Sentry.captureMessage("launchPlayBilling: getDigitalGoodsService unavailable","warning");
+      return;
+    }
+    const service = await window.getDigitalGoodsService("https://play.google.com/billing");
+    const [details] = await service.getDetails(["quantum_cube_unlock"]);
+    if(!details){
+      console.error("[QC] Play product quantum_cube_unlock not found");
+      if(window.Sentry) Sentry.captureMessage("launchPlayBilling: product not found","error");
+      return;
+    }
+    const request = new PaymentRequest([{
+      supportedMethods: "https://play.google.com/billing",
+      data: { sku: "quantum_cube_unlock" }
+    }], {
+      total: { label: details.title, amount: { currency: details.price.currency, value: details.price.value } }
+    });
+    const result = await request.show();
+    await verifyPlayPurchase(result.details.purchaseToken);
+    await result.complete("success");
+  } catch(e){
+    console.error("[QC] launchPlayBilling error:", e);
+    if(window.Sentry) Sentry.captureException(e, { tags: { area: "launchPlayBilling" } });
+  }
 }
-function cancelTwaRedirect(){
-  QC_DIALOG.close("twaRedirectOverlay");
+
+async function verifyPlayPurchase(purchaseToken){
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session){ console.error("[QC] verifyPlayPurchase: no session"); return; }
+    const fnUrl = (window.QC_SUPABASE_URL || supabaseUrl) + "/functions/v1/verify-play-purchase";
+    const res = await fetch(fnUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + session.access_token },
+      body: JSON.stringify({ purchaseToken, userId: session.user.id })
+    });
+    if(!res.ok){ throw new Error("verify-play-purchase " + res.status + ": " + await res.text()); }
+    const data = await res.json();
+    if(data.ok){
+      if(window.Sentry) Sentry.addBreadcrumb({category:"payment",level:"info",message:"Play purchase verified + unlocked"});
+      await pollForUnlock();
+    }
+  } catch(e){
+    console.error("[QC] verifyPlayPurchase error:", e);
+    if(window.Sentry) Sentry.captureException(e, { tags: { area: "verifyPlayPurchase" } });
+  }
 }
+
+// Restore purchases on TWA boot — catches users who paid but lost state
+async function restorePlayPurchases(){
+  if(!IS_TWA || !("getDigitalGoodsService" in window)) return;
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session) return;
+    const { data: profile } = await sb.from("profiles").select("has_paid").eq("id", session.user.id).maybeSingle();
+    if(profile && profile.has_paid) return;
+    const service = await window.getDigitalGoodsService("https://play.google.com/billing");
+    const purchases = await service.listPurchases();
+    const unlock = purchases.find(p => p.itemId === "quantum_cube_unlock");
+    if(unlock){
+      console.log("[QC] restorePlayPurchases: restoring existing purchase");
+      if(window.Sentry) Sentry.addBreadcrumb({category:"payment",level:"info",message:"restorePlayPurchases: restoring"});
+      await verifyPlayPurchase(unlock.purchaseToken);
+    }
+  } catch(e){
+    console.warn("[QC] restorePlayPurchases (non-fatal):", e);
+  }
+}
+
+// Legacy stubs — overlay HTML may still exist in DOM
+function confirmTwaRedirect(){ QC_DIALOG.close("twaRedirectOverlay"); }
+function cancelTwaRedirect(){ QC_DIALOG.close("twaRedirectOverlay"); }
 function resetAll(){
 isUnlocked=false;profileData=null;
 ["face3-lock","face4-lock","face5-lock","face6-lock"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display="block"});
@@ -4333,6 +4399,8 @@ sb.auth.onAuthStateChange(async (event, session) => {
       _qcSavedName = (profileRow && profileRow.name) || null;
       _qcSavedDob  = (profileRow && profileRow.dob)  || null;
       syncUnlockFromProfile(qcCurrentProfile);
+      // Play Billing: attempt restore for TWA users who may have purchased
+      restorePlayPurchases().catch(()=>{});
     } catch(e) {
       console.error("[QC] profile fetch error:", e);
       try { if(window.Sentry) Sentry.captureException(e); } catch(_){}

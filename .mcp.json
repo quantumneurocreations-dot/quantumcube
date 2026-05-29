@@ -32,6 +32,15 @@
         "/tmp",
         "@upstash/context7-mcp@latest"
       ]
+    },
+    "codex": {
+      "command": "/Users/qnc/.nvm/versions/node/v24.15.0/bin/codex",
+      "args": [
+        "mcp-server"
+      ],
+      "env": {
+        "PATH": "/Users/qnc/.nvm/versions/node/v24.15.0/bin:/usr/local/bin:/usr/bin:/bin"
+      }
     }
   }
 }
