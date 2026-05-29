@@ -1,0 +1,9 @@
+[extend]
+# Allow known public/publishable keys — these are intentionally in client code
+[[allowlist.regexes]]
+description = "Supabase publishable anon key — intentionally public, protected by RLS"
+regex = '''sb_publishable_[A-Za-z0-9_\-]+'''
+
+[[allowlist.regexes]]
+description = "PostHog public project key — intentionally public analytics key"
+regex = '''phc_[A-Za-z0-9_\-]+'''
