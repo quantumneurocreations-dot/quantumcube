@@ -4106,6 +4106,130 @@ function syncMarketingConsent(source){
   all.forEach(cb => { if(cb !== source) cb.checked = val; });
 }
 
+// v356: single source of truth for "fetch this user's profile". Replaces three
+// copy-pasted `sb.from("profiles").select(...)` calls (initSupabaseSession,
+// onAuthStateChange, visibilitychange).
+async function _qcFetchProfile(userId){
+  try {
+    const { data } = await sb.from("profiles")
+      .select("id,email,has_paid,marketing_consent,dob,name,edit_count")
+      .eq("id", userId).maybeSingle();
+    return data || null;
+  } catch(e){
+    console.error("[QC] _qcFetchProfile error:", e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'fetch-profile' } }); } catch(_){}
+    return null;
+  }
+}
+
+// v356: apply a fetched profile to the shared lock/unlock state. Pure side-effects on
+// globals — no navigation. Centralises what was duplicated across all three paths.
+function _qcApplyProfile(profile){
+  qcCurrentProfile = profile || null;
+  _qcSavedName = (profile && profile.name) || null;
+  _qcSavedDob  = (profile && profile.dob)  || null;
+  _qcSavedEditCount = (profile && typeof profile.edit_count === 'number') ? profile.edit_count : 0;
+  try { syncUnlockFromProfile(profile); } catch(_){}
+}
+
+// v356: mark a terminal "settled" state and let the loader dismiss. Idempotent.
+function _qcSettle(phase, reason, ctx){
+  _qcAuthPhase = phase;            // 'restored' | 'awaiting-input'
+  _qcAuthSettled = true;
+  try { _qcSessionNav('settled:'+phase+' ('+reason+')', ctx || {}); } catch(_){}
+}
+
+// v356: THE single restore-and-navigate entry point. Every trigger calls this.
+//   session: a Supabase session object (or null/undefined for "no session")
+//   source : 'init' | 'authchange' | 'visibility'  (breadcrumb only)
+// Idempotent + re-entrancy-safe via _qcAuthPhase. On a FAILED nav it returns the
+// phase to 'idle' (NOT settled) so a later trigger retries and the loader stays up.
+async function _qcResolveAuth(session, source){
+  const ctx = { source, phase: _qcAuthPhase, currentFace,
+                hasSession: !!(session && session.user) };
+
+  // The OTP verify path owns its own SIGNED_IN — never interfere with it.
+  if(_qcOtpVerifying){ try { _qcSessionNav('resolveAuth skip — otp verifying', ctx); } catch(_){} return; }
+
+  // Idempotency / re-entrancy: a restore in flight or already-succeeded short-circuits.
+  if(_qcAuthPhase === 'restoring' || _qcAuthPhase === 'restored'){
+    try { _qcSessionNav('resolveAuth skip — phase '+_qcAuthPhase, ctx); } catch(_){}
+    return;
+  }
+
+  // No session → settle on face 0 (show the form), unless we already restored.
+  if(!session || !session.user){
+    if(_qcAuthPhase !== 'restored') _qcSettle('awaiting-input', 'no session', ctx);
+    return;
+  }
+
+  _qcAuthPhase = 'restoring';
+  qcCurrentUser = session.user;
+  try { if(session.user.email) localStorage.setItem('qc_last_email', session.user.email); } catch(_){}
+  updateSettingsLinkVisibility();
+  try { restorePendingProfile(); } catch(_){}
+
+  const profile = await _qcFetchProfile(session.user.id);
+  _qcApplyProfile(profile);
+  try { restorePlayPurchases().catch(()=>{}); } catch(_){}
+
+  // If the user already navigated to a content face during the await, don't interrupt.
+  if(currentFace !== 0){ _qcSettle('restored', 'already on content face', ctx); return; }
+
+  const complete = profile && profile.name && profile.dob;
+  if(!complete){
+    // Incomplete profile (or brand-new user with metadata only) → stay on face 0 to
+    // complete it. Recover any stashed signup metadata, then settle (loader dismisses).
+    try {
+      if(!profile){
+        const meta = session.user.user_metadata || {};
+        let hasPending = false; try { hasPending = !!localStorage.getItem(QC_PENDING_KEY); } catch(_){}
+        if(!hasPending && (meta.pending_first_name || meta.pending_dob_year)){
+          const set = (id,v)=>{const el=document.getElementById(id);if(el&&v!=null&&v!=='')el.value=v;};
+          set("firstName",meta.pending_first_name); set("middleName",meta.pending_middle_name);
+          set("lastName",meta.pending_last_name); set("dobDay",meta.pending_dob_day);
+          set("dobMonth",meta.pending_dob_month); set("dobYear",meta.pending_dob_year);
+          if(typeof updateCalcBtnReady === "function") updateCalcBtnReady();
+        }
+      } else {
+        populateFormFromProfile(profile, session.user);
+        const errEl = document.getElementById('errMsg');
+        if(errEl){ errEl.textContent = "Welcome back! Please enter your name and date of birth to reveal your Cube."; errEl.style.display = "block"; errEl.style.color = "#0cc0df"; }
+      }
+      const emEl = document.getElementById('email');
+      if(emEl){ emEl.readOnly = false; emEl.style.opacity = ""; }
+    } catch(_){}
+    _qcSettle('awaiting-input', complete === undefined ? 'no profile' : 'incomplete profile', ctx);
+    return;
+  }
+
+  // Complete profile → force-populate (clears autofill corruption) + navigate.
+  try {
+    _qcForcePopulateFromProfile(profile, session.user);
+    runCalculation();
+  } catch(e){
+    console.error("[QC] _qcResolveAuth runCalculation:", e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'resolve-auth-runcalc' } }); } catch(_){}
+  }
+
+  if(currentFace !== 0){ _qcSettle('restored', 'runCalculation navigated', ctx); return; }
+
+  // Nav did NOT happen (silent early-return — autofill DOM corruption). Retry once
+  // after the DOM settles. If it still fails, drop back to 'idle' (NOT settled) so a
+  // later trigger / the 12s loader timeout handles it — loader stays up meanwhile.
+  _qcAuthPhase = 'idle';
+  setTimeout(function(){
+    if(currentFace !== 0 && _qcAuthPhase === 'idle' && !_qcOtpVerifying){
+      try {
+        _qcForcePopulateFromProfile(profile, session.user);
+        runCalculation();
+      } catch(e){ try { showFace(1); } catch(_){} }
+      if(currentFace !== 0){ _qcSettle('restored', 'runCalculation navigated (retry)', ctx); }
+      else { try { if(window.Sentry) Sentry.captureMessage('v356: restore retry still on face 0', { level:'warning', extra: ctx }); } catch(_){} }
+    }
+  }, 300);
+}
+
 async function initSupabaseSession(){
   let hasSession = false;
   let _initProfile = null;
