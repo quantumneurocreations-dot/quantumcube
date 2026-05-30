@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v338",
+      release: "quantum-cube@qc-v339",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2183,6 +2183,13 @@ function showFace(n){
   if(n === 0){
     const lk = document.getElementById('qcLockedProfile');
     const ef = document.getElementById('qcEntryForm');
+    // v338: Use qcCurrentProfile as primary source for lock (always fresh after login).
+    // Sync _qcSavedName/_qcSavedDob from it so _qcRenderLockedProfile has data.
+    if(qcCurrentProfile && qcCurrentProfile.name && qcCurrentProfile.dob){
+      _qcSavedName = qcCurrentProfile.name;
+      _qcSavedDob  = qcCurrentProfile.dob;
+      _qcSavedEditCount = (typeof qcCurrentProfile.edit_count === 'number') ? qcCurrentProfile.edit_count : _qcSavedEditCount;
+    }
     if(_qcSavedName && _qcSavedDob){
       _qcRenderLockedProfile();
       if(lk) lk.style.display = '';
@@ -3281,7 +3288,9 @@ async function launchDodo(){
   try {
     if (!ensureDodoSdk()) {
       try { if(window.Sentry) Sentry.captureMessage('launchDodo: SDK not loaded', 'warning'); } catch(_){}
-      alert("Payment system is loading. Please try again in a moment.");
+      // Show user-facing error so they know something failed, not silent
+      const errFaces = [document.getElementById('payErr1'), document.getElementById('payErr2'), document.getElementById('payErr3'), document.getElementById('payErr4')];
+      errFaces.forEach(el => { if(el){ el.textContent = 'Payment loading failed. Please refresh and try again.'; el.style.display = 'block'; } });
       return;
     }
 
@@ -3674,7 +3683,7 @@ async function launchPlayBilling(){
     if(e && (e.name === 'OperationError' || (e.message && e.message.includes('clientAppUnavailable')) || (e.message && e.message.includes('clientApp')))){
       try { sessionStorage.removeItem('qc_twa'); } catch(_){}
       try { if(window.Sentry) Sentry.captureMessage('launchPlayBilling: clientAppUnavailable — Dodo fallback', 'warning'); } catch(_){}
-      launchDodo();
+      setTimeout(() => launchDodo(), 300);
     }
   }
 }
@@ -4030,6 +4039,10 @@ async function initSupabaseSession(){
     const profileComplete = _initProfile && _initProfile.name && _initProfile.dob;
     if(profileComplete){
       _qcSessionRestored = true; // Only lock out onAuthStateChange when we actually succeed
+      // Ensure lock vars are set so showFace(0) shows lock card if user navigates back
+      _qcSavedName = _initProfile.name;
+      _qcSavedDob  = _initProfile.dob;
+      _qcSavedEditCount = (typeof _initProfile.edit_count === 'number') ? _initProfile.edit_count : 0;
       try { runCalculation(); } catch(e) { showFace(1); }
     } else if(_initProfile) {
       // v273: returning authenticated user with incomplete profile (RLS save gap)
