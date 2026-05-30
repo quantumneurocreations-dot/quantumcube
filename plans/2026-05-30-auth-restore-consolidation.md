@@ -313,13 +313,14 @@ Replace the entire function (`async function initSupabaseSession(){ … }`, line
 async function initSupabaseSession(){
   // v356: thin trigger. getSession (12s timeout — v347) then hand off to the single
   // restore function. All populate/runCalc/flag logic now lives in _qcResolveAuth.
-  let session = null;
+  let session = null, resolved = false;
   try {
     const r = await Promise.race([
       sb.auth.getSession(),
       new Promise((_, reject) => setTimeout(() => reject(new Error('getSession-timeout-init')), 12000))
     ]);
     session = r && r.data ? r.data.session : null;
+    resolved = true;
   } catch(e){
     // v347: log but NEVER clear the token on a getSession error. SIGNED_OUT fires for a
     // genuinely-invalid token; INITIAL_SESSION/TOKEN_REFRESHED fires when a valid-but-slow
@@ -329,7 +330,10 @@ async function initSupabaseSession(){
   try { localStorage.removeItem('qc_last_magic'); } catch(_){}  // v283 cleanup
   // Defensive: keep the email field editable (cross-device / autofill edge cases — v275/v267).
   try { const emEl = document.getElementById('email'); if(emEl){ emEl.readOnly = false; emEl.style.opacity = ''; } } catch(_){}
-  await _qcResolveAuth(session, 'init');
+  // v356 review-fix: only resolve when getSession actually returned. On timeout/error,
+  // leave phase 'idle' and let onAuthStateChange resolve it under the loader — passing
+  // null here would flash the signup form for slow-network users with a valid token.
+  if(resolved) await _qcResolveAuth(session, 'init');
 }
 ```
 
