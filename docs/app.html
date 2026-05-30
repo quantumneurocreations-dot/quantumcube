@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v333",
+      release: "quantum-cube@qc-v334",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1704,14 +1704,16 @@ function faceClick(n){
 
 function openFace(n){
   if((n===3||n===4||n===5||n===6)&&!isUnlocked){
-    // v316: Safety net — re-check DB profile in case in-memory isUnlocked is stale.
-    // Catches race between syncUnlockFromProfile calls and DOM re-locks.
+    // Show locked faces immediately; the paywall content lives inside each face.
+    showFace(n);
+    scrollBelowCube();
+    // Safety net: re-check DB profile in the background in case in-memory
+    // isUnlocked is stale, but never gate navigation on this network call.
     (async()=>{
       try{
-        const {data:p}=await sb.from("profiles").select("has_paid").maybeSingle();
-        if(p&&p.has_paid===true){applyUnlockedState(false);showFace(n);scrollBelowCube();return;}
+        const {data:p}=await sb.from("profiles").select("has_paid").eq("id", qcCurrentUser?.id).maybeSingle();
+        if(p&&p.has_paid===true){applyUnlockedState(false);}
       }catch(_){}
-      showFace(n);scrollBelowCube();
     })();
     return;
   }
@@ -3611,6 +3613,12 @@ function unlock(){
     alert("Please enter your details on the first side first.");
     return;
   }
+  if(IS_TWA && !("getDigitalGoodsService" in window)){
+    // Stale TWA flag from a prior session; use web checkout in normal Chrome.
+    try { sessionStorage.removeItem('qc_twa'); } catch(_) {}
+    launchDodo();
+    return;
+  }
   if(IS_TWA){
     // TWA: use Google Play Billing (Digital Goods API)
     launchPlayBilling();
@@ -3990,12 +3998,8 @@ async function initSupabaseSession(){
   // Chunk 5b: if already signed in on page load, skip Face 0 entirely
   if(hasSession && currentFace === 0){
     _qcSessionRestored = true; // v319: prevent onAuthStateChange double-fire when initSupabaseSession handles restore first
-    const _formReady = !!(document.getElementById('firstName')?.value &&
-      document.getElementById('lastName')?.value &&
-      document.getElementById('dobDay')?.value &&
-      document.getElementById('dobMonth')?.value &&
-      document.getElementById('dobYear')?.value);
-    if(_formReady){
+    const profileComplete = _initProfile && _initProfile.name && _initProfile.dob;
+    if(profileComplete){
       try { runCalculation(); } catch(e) { showFace(1); }
     } else {
       // v273: returning authenticated user with incomplete profile (RLS save gap)
