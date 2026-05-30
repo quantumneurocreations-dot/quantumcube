@@ -4199,7 +4199,7 @@ async function _qcResolveAuth(session, source){
       const emEl = document.getElementById('email');
       if(emEl){ emEl.readOnly = false; emEl.style.opacity = ""; }
     } catch(_){}
-    _qcSettle('awaiting-input', complete === undefined ? 'no profile' : 'incomplete profile', ctx);
+    _qcSettle('awaiting-input', !profile ? 'no profile' : 'incomplete profile', ctx);
     return;
   }
 
@@ -4219,7 +4219,7 @@ async function _qcResolveAuth(session, source){
   // later trigger / the 12s loader timeout handles it — loader stays up meanwhile.
   _qcAuthPhase = 'idle';
   setTimeout(function(){
-    if(currentFace !== 0 && _qcAuthPhase === 'idle' && !_qcOtpVerifying){
+    if(currentFace === 0 && _qcAuthPhase === 'idle' && !_qcOtpVerifying){
       try {
         _qcForcePopulateFromProfile(profile, session.user);
         runCalculation();
