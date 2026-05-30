@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v347",
+      release: "quantum-cube@qc-v348",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -690,7 +690,6 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
         return event;
       }
     });
-    console.log("[QC] Sentry initialised");
       window.addEventListener("securitypolicyviolation", function(e) {
         if (window.Sentry) {
           Sentry.captureMessage("CSP violation: " + e.violatedDirective + " blocked " + e.blockedURI, {
@@ -722,7 +721,6 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
       api_host: 'https://eu.i.posthog.com',
       defaults: '2025-05-24'
     });
-    console.log("[QC] PostHog initialised");
   } catch(e) {
     console.warn("[QC] PostHog init failed:", e);
   }
@@ -2110,6 +2108,11 @@ document.addEventListener('visibilitychange', async function(){
   // While a Dodo checkout overlay is open or post-close sync is in flight,
   // returning to the tab must NOT trigger any auth side-effects
   if(_qcDodoInFlight) return;
+  // v348: do not race the OTP verify path (it owns SIGNED_IN handling)
+  if(_qcOtpVerifying) return;
+  // v348: session already restored — re-running on every foreground re-fetches
+  // the profile and re-touches the form during Android autofill (corruption vector)
+  if(_qcSessionRestored) return;
   // Only handle Face 0 — returning user may have existing session
   if(currentFace !== 0) return;
   try {
@@ -2129,7 +2132,8 @@ document.addEventListener('visibilitychange', async function(){
       restorePendingProfile();
       const formReady = populateFormFromProfile(profile, session.user);
       if(formReady){
-        try { await saveProfileFromForm(); } catch(e) {}
+        // v348: removed saveProfileFromForm() — a passive visibility event must
+        // never WRITE to the profile (Android autofill could PATCH garbage).
         try { runCalculation(); } catch(e) { showFace(1); }
       }
     }
@@ -3753,7 +3757,6 @@ async function restorePlayPurchases(){
     const purchases = await service.listPurchases();
     const unlock = purchases.find(p => p.itemId === "quantum_cube_unlock");
     if(unlock){
-      console.log("[QC] restorePlayPurchases: restoring existing purchase");
       if(window.Sentry) Sentry.addBreadcrumb({category:"payment",level:"info",message:"restorePlayPurchases: restoring"});
       await verifyPlayPurchase(unlock.purchaseToken);
     }
