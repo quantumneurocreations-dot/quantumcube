@@ -2292,7 +2292,7 @@ function _qcHideAuthLoader(instant){
 var _qcLoaderPollStart = Date.now();
 var _qcLoaderPoll = setInterval(function(){
   var elapsed = Date.now() - _qcLoaderPollStart;
-  if(_qcSessionRestored || currentFace !== 0){
+  if(_qcAuthSettled || currentFace !== 0){   // v356: dismiss only on a settled state or real nav
     // Restore completed or user navigated away — hide loader instantly (no fade flash)
     clearInterval(_qcLoaderPoll);
     _qcHideAuthLoader(currentFace !== 0); // instant when already on a face
