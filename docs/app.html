@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v336",
+      release: "quantum-cube@qc-v337",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2119,10 +2119,11 @@ document.addEventListener('visibilitychange', async function(){
     if(session && session.user){
       qcCurrentUser = session.user;
       updateSettingsLinkVisibility();
-      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").eq("id", qcCurrentUser.id).maybeSingle();
+      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name,edit_count").eq("id", qcCurrentUser.id).maybeSingle();
       qcCurrentProfile = profile || null;
       _qcSavedName = (profile && profile.name) || null;
       _qcSavedDob  = (profile && profile.dob)  || null;
+      _qcSavedEditCount = (profile && typeof profile.edit_count === 'number') ? profile.edit_count : 0;
       syncUnlockFromProfile(profile);
       restorePendingProfile();
       const formReady = populateFormFromProfile(profile, session.user);
@@ -2147,6 +2148,10 @@ function _qcRenderLockedProfile(){
     } catch(_){}
   }
   const safeName = (_qcSavedName||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const editBtn = _qcSavedEditCount >= 1
+    ? '<button type="button" class="reset-btn" style="width:100%;margin:0;opacity:0.35;cursor:not-allowed" disabled>Edit Used</button>'
+      + '<p style="font-size:11px;color:rgba(255,255,255,0.35);margin:10px 0 0;line-height:1.4">Your one-time edit has been used.<br>Contact support to update your details.</p>'
+    : '<button type="button" class="reset-btn" style="width:100%;margin:0" onclick="haptic(\'light\');_qcUnlockForEdit()">Edit Details</button>';
   el.innerHTML =
     '<p class="form-title" style="margin-bottom:8px">Your Profile</p>'
     +'<div class="glass-card" style="margin-top:16px;text-align:center;padding:28px 24px">'
@@ -2154,7 +2159,7 @@ function _qcRenderLockedProfile(){
     +'<p style="font-size:20px;color:#fff;margin:0 0 6px;font-weight:400">'+safeName+'</p>'
     +'<p style="font-size:14px;color:rgba(255,255,255,0.6);margin:0 0 24px">'+dobDisplay+'</p>'
     +'<p style="font-size:12px;color:rgba(255,255,255,0.45);margin:0 0 20px;line-height:1.5">Your reading is linked to these details.</p>'
-    +'<button type="button" class="reset-btn" style="width:100%;margin:0" onclick="haptic(\'light\');_qcUnlockForEdit()">Edit Details</button>'
+    +editBtn
     +'</div>';
 }
 function _qcUnlockForEdit(){
@@ -2162,6 +2167,7 @@ function _qcUnlockForEdit(){
     'Changing your name or date of birth will permanently update your profile and regenerate your reading. Are you sure?'
   );
   if(!confirmed) return;
+  _qcUnlockForEditUsed = true;
   _qcSavedName = null;
   _qcSavedDob  = null;
   const lk = document.getElementById('qcLockedProfile');
@@ -3734,6 +3740,8 @@ let qcCurrentUser = null;
 let qcCurrentProfile = null;
 let _qcSavedName = null; // v332: profile lock
 let _qcSavedDob  = null; // v332: profile lock
+let _qcSavedEditCount = 0;
+let _qcUnlockForEditUsed = false;
 
 
 
@@ -3793,6 +3801,16 @@ async function saveProfileFromForm(){
     } else {
       // v266: log success for debugging profile persistence issues
       try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'profile', message: 'profile save OK', data: { name_len: fullName.length, dob: dobIso } }); } catch(_) {}
+      // Increment edit_count if this is an edit (not first-time save)
+      if(_qcSavedEditCount === 0 && _qcUnlockForEditUsed) {
+        try {
+          const { data: { session } } = await sb.auth.getSession();
+          if(session && session.user) {
+            await sb.from('profiles').update({ edit_count: 1 }).eq('id', session.user.id);
+            _qcSavedEditCount = 1;
+          }
+        } catch(_){}
+      }
     }
   } catch(err) {
     console.error('[QC] profile save failed', err);
@@ -3968,10 +3986,11 @@ async function initSupabaseSession(){
       qcCurrentUser = session.user;
       _initUser = session.user;
       hasSession = true;
-      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").eq("id", session.user.id).maybeSingle();
+      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name,edit_count").eq("id", session.user.id).maybeSingle();
       qcCurrentProfile = profile || null;
       _qcSavedName = (profile && profile.name) || null;
       _qcSavedDob  = (profile && profile.dob)  || null;
+      _qcSavedEditCount = (profile && typeof profile.edit_count === 'number') ? profile.edit_count : 0;
       _initProfile = profile || null;
       syncUnlockFromProfile(profile);
     }
@@ -4369,6 +4388,8 @@ function handleBackToSignUp(){
   qcCurrentProfile = null;
   _qcSavedName = null; // v332: clear profile lock
   _qcSavedDob  = null; // v332: clear profile lock
+  _qcSavedEditCount = 0;
+  _qcUnlockForEditUsed = false;
   updateSettingsLinkVisibility();
 
   // Clear form fields
@@ -4428,11 +4449,12 @@ sb.auth.onAuthStateChange(async (event, session) => {
     // Fetch profile FIRST so we can populate the form before deciding whether to run
     let profileRow = null;
     try {
-      const r = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").eq("id", session.user.id).maybeSingle();
+      const r = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name,edit_count").eq("id", session.user.id).maybeSingle();
       profileRow = r.data || null;
       qcCurrentProfile = profileRow;
       _qcSavedName = (profileRow && profileRow.name) || null;
       _qcSavedDob  = (profileRow && profileRow.dob)  || null;
+      _qcSavedEditCount = (profileRow && typeof profileRow.edit_count === 'number') ? profileRow.edit_count : 0;
       syncUnlockFromProfile(qcCurrentProfile);
       // Play Billing: attempt restore for TWA users who may have purchased
       restorePlayPurchases().catch(()=>{});
@@ -4530,6 +4552,8 @@ sb.auth.onAuthStateChange(async (event, session) => {
     qcCurrentProfile = null;
     _qcSavedName = null; // v332: clear profile lock
     _qcSavedDob  = null; // v332: clear profile lock
+    _qcSavedEditCount = 0;
+    _qcUnlockForEditUsed = false;
     updateSettingsLinkVisibility();
     try { localStorage.removeItem(STORE_KEY); } catch(e) {}
     try { localStorage.removeItem(QC_PENDING_KEY); } catch(e) {}
