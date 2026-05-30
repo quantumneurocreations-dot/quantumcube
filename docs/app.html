@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v354",
+      release: "quantum-cube@qc-v355",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -4750,8 +4750,42 @@ sb.auth.onAuthStateChange(async (event, session) => {
         showFace(0);
         _qcSessionNav('CheckEmail + no formReady → showFace(0)', navCtx);
       }
+    } else if(currentFace === 0 && profileHasData && !profileData){
+      // v355: COLD-START BLANK PAGE FIX (Sentry JAVASCRIPT-8, since v324).
+      // _qcSessionRestored gets set true OPTIMISTICALLY by an earlier restore path
+      // (initSupabaseSession ~line 4167, or this handler line 4691) BEFORE its
+      // setTimeout'd runCalculation confirms the user left face 0. When that
+      // runCalculation silently returns early (Android autofill DOM corruption —
+      // see v314/v343), the user is stranded on the blank sign-up page and this
+      // late INITIAL_SESSION/SIGNED_IN event used to give up as "no nav action".
+      // Guard: currentFace 0 + complete profile + NO reading computed yet
+      // (!profileData) — i.e. genuinely stuck, not a paid user who deliberately
+      // navigated back to the face-0 profile-lock card (they have profileData).
+      try {
+        _qcForcePopulateFromProfile(profileRow, session.user);
+        setTimeout(function(){
+          try {
+            runCalculation();
+            setTimeout(function(){
+              if(currentFace === 0){
+                _qcForcePopulateFromProfile(profileRow, session.user);
+                try { runCalculation(); } catch(e){ showFace(1); }
+              }
+            }, 300);
+            _qcSessionNav('v355 rescue: stranded on face0 → runCalculation', navCtx);
+          } catch(e){
+            showFace(1);
+            try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'v355-coldstart-rescue' } }); } catch(_){}
+            _qcSessionNav('v355 rescue failed → showFace(1)', navCtx);
+          }
+        }, 50);
+      } catch(e){
+        showFace(1);
+        _qcSessionNav('v355 rescue threw → showFace(1)', navCtx);
+      }
     } else {
-      // User is on some other face (1-6) — don't interrupt
+      // User is on a content face (1-6), or face 0 with a reading already shown —
+      // don't interrupt.
       _qcSessionNav('no nav action (left user in place)', navCtx);
     }
   }
