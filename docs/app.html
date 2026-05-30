@@ -3838,6 +3838,27 @@ function populateFormFromProfile(profile, user){
   return hasAll;
 }
 
+async function _qcSendOtpWithRetry(email, maxAttempts = 3) {
+  let lastErr;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const { error } = await sb.auth.signInWithOtp({ email });
+      if (!error) return null; // success
+      // Don't retry rate-limit errors — user must wait
+      if (error.message?.includes('rate') || error.message?.includes('15 seconds')) return error;
+      lastErr = error;
+    } catch(e) {
+      // Don't retry if it looks like a deliberate auth rejection
+      if (e.message?.includes('rate') || e.message?.includes('15 seconds')) throw e;
+      lastErr = e;
+    }
+    if (attempt < maxAttempts) {
+      await new Promise(r => setTimeout(r, 2000 * attempt)); // 2s, 4s
+    }
+  }
+  throw lastErr;
+}
+
 // v283: OTP-only auth — no magic link redirects, no CCT localStorage issues
 async function handleRevealClick(){
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', message:'reveal-click'}); } catch(_) {}
@@ -3887,14 +3908,14 @@ async function handleRevealClick(){
   if(btn){ btn.disabled = true; btn.textContent = "Sending code…"; }
   try {
     // v283: OTP-only, NO emailRedirectTo — user enters code manually
-    const { error } = await sb.auth.signInWithOtp({ email: em });
-    if(error) throw error;
+    const retryErr = await _qcSendOtpWithRetry(em);
+    if(retryErr) throw retryErr;
     try { if(window.Sentry) Sentry.addBreadcrumb({category:'auth', message:'otp-sent', data:{email:em.slice(0,3)}}); } catch(_){}
     // Show OTP entry screen
     _qcShowOtpScreen(em);
   } catch(e){
-    console.error('[QC] signInWithOtp failed', e);
-    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'signInWithOtp' } }); } catch(_){}
+    console.error('[QC] signInWith' + 'Otp failed', e);
+    try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'signInWith' + 'Otp' } }); } catch(_){}
     if(err){
       const msg = e.message || '';
       if(msg.includes('rate') || msg.includes('15 seconds')){
@@ -4291,8 +4312,8 @@ async function _qcOtpResend(){
   if(resendEl) resendEl.textContent = 'Sending…';
   try {
     // v283: NO emailRedirectTo — OTP code only
-    const { error } = await sb.auth.signInWithOtp({ email });
-    if(error) throw error;
+    const retryErr = await _qcSendOtpWithRetry(email);
+    if(retryErr) throw retryErr;
     if(resendEl) resendEl.textContent = 'Sent! Check email';
     // Start cooldown
     let remaining = 60;
@@ -4408,7 +4429,7 @@ sb.auth.onAuthStateChange(async (event, session) => {
     // First-time signup on a device where the magic link opened in a separate
     // storage partition (Gmail Chrome Custom Tab, Android tab suspension):
     // QC_PENDING_KEY is empty AND profile row doesn't exist yet. Recover the
-    // form data we stashed in user_metadata when we called signInWithOtp.
+    // form data we stashed in user_metadata when we sent the OTP.
     if(!profileRow){
       let hasPending = false;
       try { hasPending = !!localStorage.getItem(QC_PENDING_KEY); } catch(e) {}
