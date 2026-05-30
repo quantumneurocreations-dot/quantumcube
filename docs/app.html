@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v348",
+      release: "quantum-cube@qc-v349",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -4587,8 +4587,10 @@ sb.auth.onAuthStateChange(async (event, session) => {
   if(event === "INITIAL_SESSION"){
     try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'INITIAL_SESSION fired', data: { hasSession: !!session, hasUser: !!(session && session.user), currentFace, sessionRestored: _qcSessionRestored } }); } catch(_){}
   }
-  const _emailBlank = (function(){ try { const e = document.getElementById('email'); return !e || !e.value; } catch(_){ return true; } })();
-  const _isLateRestore = (event === "TOKEN_REFRESHED" || event === "INITIAL_SESSION") && currentFace === 0 && (!_qcSessionRestored || _emailBlank);
+  // v349: dropped "|| _emailBlank" — it defeated the _qcSessionRestored guard,
+  // re-entering the full restore block (profile re-fetch + form re-populate) on
+  // every hourly TOKEN_REFRESHED while the user sat on face 0 with a blank email.
+  const _isLateRestore = (event === "TOKEN_REFRESHED" || event === "INITIAL_SESSION") && currentFace === 0 && !_qcSessionRestored;
   if((event === "SIGNED_IN" || event === "INITIAL_SESSION" || _isLateRestore) && session && session.user){
     // v304: Skip if _qcOtpVerify is handling this SIGNED_IN event
     if(_qcOtpVerifying){
