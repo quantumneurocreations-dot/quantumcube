@@ -4231,105 +4231,25 @@ async function _qcResolveAuth(session, source){
 }
 
 async function initSupabaseSession(){
-  let hasSession = false;
-  let _initProfile = null;
-  let _initUser = null;
-  try{
-    // v278: 5s timeout prevents deadlock on concurrent token refresh
-    const { data: { session } } = await Promise.race([
+  // v356: thin trigger. getSession (12s timeout — v347) then hand off to the single
+  // restore function. All populate/runCalc/flag logic now lives in _qcResolveAuth.
+  let session = null;
+  try {
+    const r = await Promise.race([
       sb.auth.getSession(),
       new Promise((_, reject) => setTimeout(() => reject(new Error('getSession-timeout-init')), 12000))
     ]);
-    if(session && session.user){
-      // v277: Removed stale-session guard — it called signOut() which triggered
-      // SIGNED_OUT handler, clearing QC_PENDING_KEY AND emptying the email field.
-      // Email-mismatch signOut already exists in handleRevealClick where it belongs.
-      qcCurrentUser = session.user;
-      _initUser = session.user;
-      hasSession = true;
-      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name,edit_count").eq("id", session.user.id).maybeSingle();
-      qcCurrentProfile = profile || null;
-      _qcSavedName = (profile && profile.name) || null;
-      _qcSavedDob  = (profile && profile.dob)  || null;
-      _qcSavedEditCount = (profile && typeof profile.edit_count === 'number') ? profile.edit_count : 0;
-      _initProfile = profile || null;
-      syncUnlockFromProfile(profile);
-    }
-  }catch(e){
-    // v347: Log error but do NOT clear auth token from localStorage.
-    // Clearing it was deleting valid tokens on temporary network failures.
-    // SIGNED_OUT will fire if the token is genuinely invalid — that handler
-    // shows the session-expired message and pre-fills the email.
-    // INITIAL_SESSION fires when the SDK completes its internal refresh — that
-    // handler restores the session if the token was valid but slow to refresh.
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'warning', message: 'initSupabaseSession getSession error', data: { msg: e && e.message } }); } catch(_){}
+    session = r && r.data ? r.data.session : null;
+  } catch(e){
+    // v347: log but NEVER clear the token on a getSession error. SIGNED_OUT fires for a
+    // genuinely-invalid token; INITIAL_SESSION/TOKEN_REFRESHED fires when a valid-but-slow
+    // token finishes refreshing — both routed through _qcResolveAuth via onAuthStateChange.
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category:'auth', level:'warning', message:'initSupabaseSession getSession error', data:{ msg: e && e.message } }); } catch(_){}
   }
-  // v283: Clean up stale magic-link localStorage from pre-OTP versions
-  try { localStorage.removeItem('qc_last_magic'); } catch(_){}
-  restorePendingProfile();
-  // v319: Apply v314 form-clear fix to initSupabaseSession (was only in onAuthStateChange).
-  // Android autofill pre-fills fields during the async awaits above, blocking
-  // populateFormFromProfile's !field.value guards → wrong data or blank form.
-  if(_initUser){
-    const _initProfileComplete = _initProfile && _initProfile.name && _initProfile.dob;
-    if(_initProfileComplete){
-      _qcForcePopulateFromProfile(_initProfile, _initUser);
-    } else {
-      try{['firstName','middleName','lastName','dobDay','dobMonth','dobYear'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});}catch(_){}
-      populateFormFromProfile(_initProfile, _initUser);
-    }
-  }
-  // v275: Always ensure email field is editable after populate — defensive
-  // measure for cross-device scenarios where readOnly might block input.
+  try { localStorage.removeItem('qc_last_magic'); } catch(_){}  // v283 cleanup
+  // Defensive: keep the email field editable (cross-device / autofill edge cases — v275/v267).
   try { const emEl = document.getElementById('email'); if(emEl){ emEl.readOnly = false; emEl.style.opacity = ''; } } catch(_){}
-  // v267: if NO session and NO user, ensure email field is clean and editable.
-  // Catches edge cases where restorePendingProfile cleared expired data but
-  // browser autofill or other mechanisms might have populated the field.
-  if(!_initUser){
-    try {
-      const emEl = document.getElementById("email");
-      if(emEl && emEl.readOnly){ emEl.readOnly = false; emEl.style.opacity = ""; }
-    } catch(_) {}
-  }
-  updateSettingsLinkVisibility();
-  // Chunk 5b: if already signed in on page load, skip Face 0 entirely
-  if(hasSession && currentFace === 0){
-    const profileComplete = _initProfile && _initProfile.name && _initProfile.dob;
-    if(profileComplete){
-      _qcSessionRestored = true; // Only lock out onAuthStateChange when we actually succeed
-      // Ensure lock vars are set so showFace(0) shows lock card if user navigates back
-      _qcSavedName = _initProfile.name;
-      _qcSavedDob  = _initProfile.dob;
-      _qcSavedEditCount = (typeof _initProfile.edit_count === 'number') ? _initProfile.edit_count : 0;
-      try {
-        _qcForcePopulateFromProfile(_initProfile, _initUser);
-        setTimeout(function(){
-          try {
-            runCalculation();
-            // v343: If still on face 0 after 300ms, retry once — catches Android
-            // post-autofill DOM corruption that fires after our 50ms window
-            setTimeout(function(){
-              if(currentFace === 0){
-                _qcForcePopulateFromProfile(_initProfile, _initUser);
-                try { runCalculation(); } catch(e){ showFace(1); }
-              }
-            }, 300);
-          } catch(e){ showFace(1); }
-        }, 50);
-      } catch(e) { showFace(1); }
-    } else if(_initProfile) {
-      // v273: returning authenticated user with incomplete profile (RLS save gap)
-      // Show a clear prompt so they know to fill in name + DOB to continue.
-      _qcSessionRestored = true; // prevent onAuthStateChange double-fire for a real incomplete profile
-      const errEl = document.getElementById('errMsg');
-      if(errEl){ errEl.textContent = "Welcome back! Please enter your name and date of birth to reveal your Cube."; errEl.style.display = "block"; errEl.style.color = "#0cc0df"; }
-      // Also unlock the email field so the form doesn't feel frozen
-      const emEl = document.getElementById('email');
-      if(emEl){ emEl.readOnly = false; emEl.style.opacity = ""; }
-    }
-    // If _initProfile is null (fetch failed), do not set _qcSessionRestored.
-    // onAuthStateChange INITIAL_SESSION or TOKEN_REFRESHED will handle it as fallback.
-  }
+  await _qcResolveAuth(session, 'init');
 }
 
 // --- Chunk 5b helpers: OTP code entry (v283) ---
