@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v353",
+      release: "quantum-cube@qc-v354",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3374,16 +3374,31 @@ async function launchDodo(){
     const fnUrl = (window.QC_SUPABASE_URL || supabaseUrl) + "/functions/v1/dodo-create-session";
     const fnKey = (window.QC_SUPABASE_ANON_KEY || supabaseKey);
 
+    // v354: send the user's access token so the Edge Function verifies identity
+    // server-side (it no longer trusts user_id/email from the body). Read the token
+    // from localStorage first to dodge the getSession() hang this file is riddled with.
+    let _accessToken = "";
+    try { _accessToken = (_readSessionFromStorage() || {}).access_token || ""; } catch(_){}
+    if (!_accessToken) {
+      try {
+        const { data: { session: _s } } = await Promise.race([sb.auth.getSession(), new Promise((_,rej)=>setTimeout(()=>rej(new Error('getSession timeout')),3000))]);
+        _accessToken = (_s && _s.access_token) || "";
+      } catch(_){}
+    }
+    if (!_accessToken) {
+      try { if(window.Sentry) Sentry.captureMessage('launchDodo: no access token at checkout', 'warning'); } catch(_){}
+      alert("Please sign in before purchasing.");
+      return;
+    }
+
     const sessionRes = await fetch(fnUrl, {
       method: "POST",
       headers: {
         "apikey": fnKey,
-        "Authorization": "Bearer " + fnKey,
+        "Authorization": "Bearer " + _accessToken,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        user_id: userId,
-        email: email,
         fullName: fullName,
       }),
     });

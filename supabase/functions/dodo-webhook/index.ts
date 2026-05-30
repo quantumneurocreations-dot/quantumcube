@@ -257,8 +257,16 @@ serve(async (req) => {
     const customerName = data.customer?.name;
     const userId = metadata.user_id;
 
-    if (!userId && !customerEmail) {
-      console.error("no user identifier in event:", JSON.stringify(event));
+    // v354: validate user_id is a real UUID before trusting it (defence-in-depth +
+    // injection-safety for the PostgREST URL interpolation in getProfile/setHasPaid).
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const validUserId = (typeof userId === "string" && UUID_RE.test(userId)) ? userId : null;
+    if (userId && !validUserId) {
+      console.warn(`webhook: metadata.user_id present but not a valid UUID: ${JSON.stringify(userId)}`);
+    }
+
+    if (!validUserId && !customerEmail) {
+      console.error("no usable user identifier in event:", JSON.stringify(event));
       // Acknowledge with 200 to prevent retry storm — unrecoverable on our side
       return new Response(JSON.stringify({ ok: true, warning: "no user identifier" }), {
         status: 200,
@@ -266,7 +274,14 @@ serve(async (req) => {
       });
     }
 
-    const target = userId ? { user_id: userId } : { email: customerEmail };
+    // v354: prefer the verified user_id (create-session now sets metadata.user_id from
+    // the user's JWT). Email is a secondary fallback only — authentic post-v354 since
+    // create-session derives it from the JWT too — but log when relied upon so the
+    // fallback path is observable (it should be rare once all sessions carry user_id).
+    const target = validUserId ? { user_id: validUserId } : { email: customerEmail };
+    if (!validUserId) {
+      console.warn(`webhook: falling back to email match for ${customerEmail} (no valid user_id in metadata)`);
+    }
 
     if (event.type === "payment.succeeded") {
       // Capture previous state for idempotency (only welcome on unpaid->paid transition)

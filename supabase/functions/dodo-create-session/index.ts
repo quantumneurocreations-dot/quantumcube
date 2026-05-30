@@ -48,9 +48,20 @@ serve(async (req) => {
     return new Response("Method not allowed", { status: 405, headers: CORS });
   }
 
-  // Manual JWT-style auth via apikey header (consistent with narrate function)
-  const apikey = req.headers.get("apikey") || req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
-  if (!apikey || apikey !== ANON_KEY) {
+  // v354: authenticate the USER via their access-token JWT, NOT the public anon key.
+  // The anon key ships in the client bundle and proves nothing about identity. We now
+  // validate the bearer token via auth.getUser() and derive user_id/email from it —
+  // the request body is never trusted for identity. (Frontend sends the apikey header
+  // for the gateway and the user's access_token as Authorization: Bearer.)
+  const _authToken = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
+  if (!_authToken || _authToken === ANON_KEY) {
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { ...CORS, "Content-Type": "application/json" },
+    });
+  }
+  const { data: { user: _authUser }, error: _authErr } = await sb.auth.getUser(_authToken);
+  if (_authErr || !_authUser) {
     return new Response(JSON.stringify({ error: "unauthorized" }), {
       status: 401,
       headers: { ...CORS, "Content-Type": "application/json" },
@@ -95,17 +106,21 @@ serve(async (req) => {
   }
 
   try {
-    const body = await req.json();
-    const { user_id, email, fullName } = body || {};
+    const body = await req.json().catch(() => ({}));
+    const { fullName } = body || {};
+    // v354: identity is server-derived from the verified JWT — never the body.
+    const user_id = _authUser.id;
+    const email = _authUser.email ?? "";
 
-    if (!user_id || !email) {
-      return new Response(JSON.stringify({ error: "missing user_id or email" }), {
+    if (!email) {
+      return new Response(JSON.stringify({ error: "verified user has no email" }), {
         status: 400,
         headers: { ...CORS, "Content-Type": "application/json" },
       });
     }
 
-    // Verify the user_id actually exists in profiles (defence-in-depth)
+    // Verify the user_id exists in profiles (defence-in-depth; user_id is a verified
+    // UUID from auth.users, so this URL interpolation is now injection-safe)
     const profileCheck = await fetch(
       `${SUPABASE_URL}/rest/v1/profiles?id=eq.${user_id}&select=id`,
       {
