@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v343",
+      release: "quantum-cube@qc-v344",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2179,6 +2179,16 @@ function _qcUnlockForEdit(){
 // ─────────────────────────────────────────────────────────────────────────────
 
 function showFace(n){
+  // v344: During auth loader fade-out, hide face 0 immediately to prevent flash
+  // when session restore navigates to face 1+
+  if(typeof n === 'number' && n >= 1 && currentFace === 0 && !_qcAuthLoaderDone){
+    var _f0 = document.querySelector('.face[data-face="0"], #face0, .face:first-of-type');
+    // Hide all faces marked as face 0 / the entry form area
+    var _ef = document.getElementById('qcEntryForm');
+    var _lk = document.getElementById('qcLockedProfile');
+    if(_ef) _ef.style.visibility = 'hidden';
+    if(_lk) _lk.style.visibility = 'hidden';
+  }
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'nav', message:'showFace', data:{n:String(n)}}); } catch(_){}
   // v332: Profile lock — intercept face0 when name+dob already saved
   if(n === 0){
@@ -2220,6 +2230,11 @@ function showFace(n){
   if(target){
     target.classList.add('active');
     target.scrollTop=0;  }
+  // v344: Restore visibility when showing any face (was hidden during loader fade)
+  var _efR = document.getElementById('qcEntryForm');
+  var _lkR = document.getElementById('qcLockedProfile');
+  if(_efR) _efR.style.visibility = '';
+  if(_lkR) _lkR.style.visibility = '';
   currentFace=n;
   // Hide cube on entry screen (face0) and interstitials; show elsewhere
   const cs=document.getElementById('cubeScene');
@@ -2243,22 +2258,26 @@ function showFace(n){
 // PWA — mobile install gate
 // v318: hide auth loader once Supabase auth state is known (one-shot)
 var _qcAuthLoaderDone = false;
-function _qcHideAuthLoader(){
+function _qcHideAuthLoader(instant){
   if(_qcAuthLoaderDone) return;
   _qcAuthLoaderDone = true;
   var el = document.getElementById('qcAuthLoader');
   if(!el) return;
-  el.classList.add('fade-out');
-  setTimeout(function(){ if(el) el.style.display='none'; }, 450);
+  if(instant){
+    el.style.display = 'none';
+  } else {
+    el.classList.add('fade-out');
+    setTimeout(function(){ if(el) el.style.display='none'; }, 450);
+  }
 }
 // v341: Poll until session restored or 12s max — don't dismiss loader prematurely
 var _qcLoaderPollStart = Date.now();
 var _qcLoaderPoll = setInterval(function(){
   var elapsed = Date.now() - _qcLoaderPollStart;
   if(_qcSessionRestored || currentFace !== 0){
-    // Restore completed or user navigated away — hide loader
+    // Restore completed or user navigated away — hide loader instantly (no fade flash)
     clearInterval(_qcLoaderPoll);
-    _qcHideAuthLoader();
+    _qcHideAuthLoader(currentFace !== 0); // instant when already on a face
   } else if(elapsed >= 12000){
     // 12s hard timeout — give up, show face 0
     clearInterval(_qcLoaderPoll);
