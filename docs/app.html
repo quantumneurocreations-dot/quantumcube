@@ -2117,41 +2117,18 @@ function onFaceShown(n){
 // v283: _qcCheckSessionOnce removed — OTP flow doesn't need session polling
 
 // v283: Visibility handler for returning authenticated users on Face 0
+// v356: returning-to-tab handler — now a thin trigger. Reads the session from
+// localStorage (avoids the getSession hang) and hands off to the single restore fn,
+// which is itself idempotent (won't double-run if already restored/restoring).
 document.addEventListener('visibilitychange', async function(){
   if(document.visibilityState !== 'visible') return;
-  // While a Dodo checkout overlay is open or post-close sync is in flight,
-  // returning to the tab must NOT trigger any auth side-effects
-  if(_qcDodoInFlight) return;
-  // v348: do not race the OTP verify path (it owns SIGNED_IN handling)
-  if(_qcOtpVerifying) return;
-  // v348: session already restored — re-running on every foreground re-fetches
-  // the profile and re-touches the form during Android autofill (corruption vector)
-  if(_qcSessionRestored) return;
-  // Only handle Face 0 — returning user may have existing session
-  if(currentFace !== 0) return;
-  try {
-    const { data: { session } } = await Promise.race([
-      sb.auth.getSession(),
-      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 3000))
-    ]);
-    if(session && session.user){
-      qcCurrentUser = session.user;
-      updateSettingsLinkVisibility();
-      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name,edit_count").eq("id", qcCurrentUser.id).maybeSingle();
-      qcCurrentProfile = profile || null;
-      _qcSavedName = (profile && profile.name) || null;
-      _qcSavedDob  = (profile && profile.dob)  || null;
-      _qcSavedEditCount = (profile && typeof profile.edit_count === 'number') ? profile.edit_count : 0;
-      syncUnlockFromProfile(profile);
-      restorePendingProfile();
-      const formReady = populateFormFromProfile(profile, session.user);
-      if(formReady){
-        // v348: removed saveProfileFromForm() — a passive visibility event must
-        // never WRITE to the profile (Android autofill could PATCH garbage).
-        try { runCalculation(); } catch(e) { showFace(1); }
-      }
-    }
-  } catch(e) {}
+  if(_qcDodoInFlight) return;                 // never interfere with a checkout in flight
+  if(_qcOtpVerifying) return;                 // OTP path owns SIGNED_IN
+  if(_qcAuthPhase === 'restored') return;     // already inside — nothing to do
+  if(currentFace !== 0) return;               // only act while stranded on face 0
+  let session = null;
+  try { session = _readSessionFromStorage(); } catch(_){}
+  if(session && session.user){ await _qcResolveAuth(session, 'visibility'); }
 });
 
 // v332: Profile lock helpers ─────────────────────────────────────────────────
