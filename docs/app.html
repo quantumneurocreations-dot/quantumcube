@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v350",
+      release: "quantum-cube@qc-v351",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -4921,7 +4921,9 @@ document.addEventListener('DOMContentLoaded', function(){
       } catch(_){}
       return 'v?';
     })();
-    var dodo = (window.Dodo && window.Dodo.Checkout) ? 'dodo✓' : 'dodo✗';
+    // v351: was checking window.Dodo (wrong global — SDK is window.DodoPaymentsCheckout),
+    // so the badge always read dodo✗ even when the SDK loaded fine. Use the real resolver.
+    var dodo = (typeof _resolveDodoSdk === 'function' && _resolveDodoSdk()) ? 'dodo✓' : 'dodo✗';
     badge.textContent = swVer + ' · ' + dodo;
   }, 3000); // 3s delay so Dodo SDK has time to load
 });
