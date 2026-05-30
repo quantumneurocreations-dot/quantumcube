@@ -3625,8 +3625,11 @@ async function launchPlayBilling(){
   try {
     if(window.Sentry) Sentry.addBreadcrumb({category:"payment",level:"info",message:"launchPlayBilling: entry"});
     if(!("getDigitalGoodsService" in window)){
-      console.error("[QC] Digital Goods API not available");
-      if(window.Sentry) Sentry.captureMessage("launchPlayBilling: getDigitalGoodsService unavailable","warning");
+      // Not a real TWA context (e.g. Chrome mobile with stale sessionStorage) — fall back to Dodo web checkout
+      console.warn("[QC] launchPlayBilling: Digital Goods API unavailable — falling back to Dodo");
+      if(window.Sentry) Sentry.captureMessage("launchPlayBilling: getDigitalGoodsService unavailable — Dodo fallback","warning");
+      sessionStorage.removeItem('qc_twa'); // clear stale TWA flag
+      launchDodo();
       return;
     }
     const service = await window.getDigitalGoodsService("https://play.google.com/billing");
