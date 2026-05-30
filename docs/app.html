@@ -1227,7 +1227,15 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 // ═══════════════════════════════════════════
 let currentFace=0,isUnlocked=false,profileData=null,deferredInstall=null;
 // v302: Guard to prevent session restore running more than once
-let _qcSessionRestored = false;
+// v356: auth restore state machine. Replaces the overloaded _qcSessionRestored flag,
+// which conflated "double-fire guard" + "nav succeeded" + "loader may dismiss".
+//   _qcAuthPhase: 'idle' | 'restoring' | 'restored' | 'awaiting-input'
+let _qcAuthPhase = 'idle';
+// Loader-dismiss signal — true once we've reached a stable end state (navigated to a
+// content face, or settled deliberately on face 0). NEVER true mid-restore.
+let _qcAuthSettled = false;
+// NOTE: the old `_qcSessionRestored` readers are removed across Tasks 4-8; the app is
+// not expected to run cleanly until Task 8 completes the sweep. Do not deploy mid-branch.
 // v304: Guard to prevent global onAuthStateChange from handling SIGNED_IN while OTP verify is running
 let _qcOtpVerifying = false;
 // v294: Review mode bypass for Play Store review
