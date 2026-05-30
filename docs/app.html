@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v352",
+      release: "quantum-cube@qc-v353",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3415,6 +3415,13 @@ async function launchDodo(){
     }
     _qcScaleDodoOverlay();
     _qcDodoInFlight = true;
+    // v353: safety net — if no terminal Dodo event (checkout.redirect/closed/error)
+    // ever fires (webview kills the overlay, unknown event_type), _qcDodoInFlight
+    // would latch true forever and permanently suppress the visibility/restore
+    // handlers until reload. Force-clear after 90s. The next launchDodo() cancels
+    // any pending guard; a stray fire after a clean completion is a harmless no-op.
+    clearTimeout(window._qcDodoFlightGuard);
+    window._qcDodoFlightGuard = setTimeout(function(){ _qcDodoInFlight = false; }, 90000);
     try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'opening Dodo overlay ('+DODO_MODE+')'}); } catch(_){}
     SDK.Checkout.open({ checkoutUrl: checkout_url });
   } catch (e) {
