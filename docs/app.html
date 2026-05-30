@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v337",
+      release: "quantum-cube@qc-v338",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2243,16 +2243,16 @@ function _qcHideAuthLoader(){
   el.classList.add('fade-out');
   setTimeout(function(){ if(el) el.style.display='none'; }, 450);
 }
-// Safety: dismiss after 6s, but if session restore is still pending
-// (rapid re-open where Supabase token refresh takes longer than 6s),
-// extend by 5s before giving up — v318b
+// Safety: dismiss after 8s, but if session restore is still pending
+// (rapid re-open where Supabase token refresh takes longer than 8s),
+// extend by 4s before giving up — v318b
 setTimeout(function(){
   if(!_qcSessionRestored && currentFace === 0){
-    setTimeout(_qcHideAuthLoader, 5000);
+    setTimeout(_qcHideAuthLoader, 4000);
   } else {
     _qcHideAuthLoader();
   }
-}, 6000);
+}, 8000);
 
 // Hide #app and show a full-screen gate when on mobile but NOT running as an
 // installed PWA / TWA. iOS has no beforeinstallprompt; Android Chrome fires it
@@ -3669,6 +3669,13 @@ async function launchPlayBilling(){
   } catch(e){
     console.error("[QC] launchPlayBilling error:", e);
     if(window.Sentry) Sentry.captureException(e, { tags: { area: "launchPlayBilling" } });
+    // OperationError: clientAppUnavailable fires on Android Chrome when getDigitalGoodsService
+    // exists but we're not in a real TWA Play billing context. Fall back to Dodo web checkout.
+    if(e && (e.name === 'OperationError' || (e.message && e.message.includes('clientAppUnavailable')) || (e.message && e.message.includes('clientApp')))){
+      try { sessionStorage.removeItem('qc_twa'); } catch(_){}
+      try { if(window.Sentry) Sentry.captureMessage('launchPlayBilling: clientAppUnavailable — Dodo fallback', 'warning'); } catch(_){}
+      launchDodo();
+    }
   }
 }
 
@@ -4434,7 +4441,9 @@ sb.auth.onAuthStateChange(async (event, session) => {
   // when it completes. Without this it was silently ignored.
   // TOKEN_REFRESHED only enters this block when face=0 AND not yet restored,
   // so normal mid-session token refreshes are a no-op here.
-  if((event === "SIGNED_IN" || event === "INITIAL_SESSION" || (event === "TOKEN_REFRESHED" && currentFace === 0 && !_qcSessionRestored)) && session && session.user){
+  const _emailBlank = (function(){ try { const e = document.getElementById('email'); return !e || !e.value; } catch(_){ return true; } })();
+  const _isLateRestore = event === "TOKEN_REFRESHED" && currentFace === 0 && (!_qcSessionRestored || _emailBlank);
+  if((event === "SIGNED_IN" || event === "INITIAL_SESSION" || _isLateRestore) && session && session.user){
     // v304: Skip if _qcOtpVerify is handling this SIGNED_IN event
     if(_qcOtpVerifying){
       try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN skipped — _qcOtpVerifying active' }); } catch(_) {}
