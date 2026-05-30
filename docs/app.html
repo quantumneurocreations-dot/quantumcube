@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v339",
+      release: "quantum-cube@qc-v340",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -847,6 +847,7 @@ Tap your browser menu → <strong>Add to Home Screen</strong>
 <div class="form-group" style="text-align:center"><label for="dobYear" style="text-align:center;display:block">Year</label><input type="number" id="dobYear" placeholder="" min="1900" inputmode="numeric" required data-clarity-mask="true" style="text-align:center" value="" oninput="var m=new Date().getFullYear()-1;if(parseInt(this.value)>m)this.value=m;if(parseInt(this.value)<1900&&this.value.length>=4)this.value=1900;"></div>
 </div>
 <p class="err-msg" id="errMsg" role="alert" aria-live="assertive">Please complete all fields</p>
+<div id="qcVerBadge" style="text-align:center;margin-top:12px;font-family:monospace;font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px"></div>
 </div>
 <label class="marketing-consent">
   <input type="checkbox" id="marketingConsent" class="qc-consent-checkbox" aria-label="Subscribe to Quantum news and insights" onchange="syncMarketingConsent(this)">
@@ -3628,6 +3629,13 @@ function redeemCode(){
 
 // ── UNLOCK (called from lock screen buttons) ──
 function unlock(){
+  // v339: If Dodo SDK failed to load, tell user and offer reload
+  if(!window.Dodo || !window.Dodo.Checkout){
+    if(confirm('Payment system failed to load. Reload the app and try again?')){
+      window.location.reload();
+    }
+    return;
+  }
   if(!profileData){
     alert("Please enter your details on the first side first.");
     return;
@@ -4742,6 +4750,17 @@ async function confirmDeleteAccount(){
     window.location.href = "/";
   }
 }
+
+// v339: version badge for debugging — shows SW cache version + Dodo SDK status
+document.addEventListener('DOMContentLoaded', function(){
+  setTimeout(function(){
+    var badge = document.getElementById('qcVerBadge');
+    if(!badge) return;
+    var swVer = typeof CACHE !== 'undefined' ? CACHE : 'sw?';
+    var dodo = (window.Dodo && window.Dodo.Checkout) ? 'dodo✓' : 'dodo✗';
+    badge.textContent = swVer + ' · ' + dodo;
+  }, 2000); // 2s delay so Dodo SDK has time to load
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   // v294: Review mode bypass for Google Play Store review
