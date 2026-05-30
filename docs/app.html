@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v334",
+      release: "quantum-cube@qc-v335",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2119,7 +2119,7 @@ document.addEventListener('visibilitychange', async function(){
     if(session && session.user){
       qcCurrentUser = session.user;
       updateSettingsLinkVisibility();
-      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").maybeSingle();
+      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").eq("id", qcCurrentUser.id).maybeSingle();
       qcCurrentProfile = profile || null;
       _qcSavedName = (profile && profile.name) || null;
       _qcSavedDob  = (profile && profile.dob)  || null;
@@ -3405,6 +3405,10 @@ async function checkStoredUnlock(){
 }
 
 function syncUnlockFromProfile(profile){
+  // v334: Never downgrade confirmed paid state based on a null/failed fetch.
+  // If we already have isUnlocked=true and profile is null, skip - the fetch failed.
+  if(!profile && isUnlocked) return;
+
   // v294: Review mode bypasses payment check entirely
   if(_qcReviewMode) return;
   const paid = !!(profile && profile.has_paid === true);
@@ -3964,7 +3968,7 @@ async function initSupabaseSession(){
       qcCurrentUser = session.user;
       _initUser = session.user;
       hasSession = true;
-      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").maybeSingle();
+      const { data: profile } = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").eq("id", session.user.id).maybeSingle();
       qcCurrentProfile = profile || null;
       _qcSavedName = (profile && profile.name) || null;
       _qcSavedDob  = (profile && profile.dob)  || null;
@@ -4421,7 +4425,7 @@ sb.auth.onAuthStateChange(async (event, session) => {
     // Fetch profile FIRST so we can populate the form before deciding whether to run
     let profileRow = null;
     try {
-      const r = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").maybeSingle();
+      const r = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name").eq("id", session.user.id).maybeSingle();
       profileRow = r.data || null;
       qcCurrentProfile = profileRow;
       _qcSavedName = (profileRow && profileRow.name) || null;
