@@ -4088,9 +4088,16 @@ function syncMarketingConsent(source){
 // onAuthStateChange, visibilitychange).
 async function _qcFetchProfile(userId){
   try {
-    const { data } = await sb.from("profiles")
-      .select("id,email,has_paid,marketing_consent,dob,name,edit_count")
-      .eq("id", userId).maybeSingle();
+    // v356: 8s timeout. Supabase query builder is a thenable, so Promise.race works.
+    // On timeout we throw → caught below → return null, so _qcResolveAuth settles cleanly
+    // via the no-profile branch (phase 'awaiting-input') instead of latching at 'restoring'
+    // forever and blocking every future restore. A later auth/visibility event retries.
+    const { data } = await Promise.race([
+      sb.from("profiles")
+        .select("id,email,has_paid,marketing_consent,dob,name,edit_count")
+        .eq("id", userId).maybeSingle(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('fetch-profile-timeout')), 8000))
+    ]);
     return data || null;
   } catch(e){
     console.error("[QC] _qcFetchProfile error:", e);
@@ -4615,233 +4622,49 @@ function _qcSessionNav(decision, ctx){
 }
 
 sb.auth.onAuthStateChange(async (event, session) => {
-  if(event === "SIGNED_IN"){
-    // v269: include email in breadcrumb for debugging which user landed
-    const _signedInEmail = session?.user?.email || '(no email)';
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN fired', data: { hasSession: !!session, hasUser: !!(session && session.user), email: _signedInEmail.slice(0,8)+'…', currentFace } }); } catch(_) {}
-  }
+  try { if(window.Sentry) Sentry.addBreadcrumb({ category:'auth', level:'info', message:'authchange: '+event, data:{ hasSession: !!(session&&session.user), currentFace, phase:_qcAuthPhase } }); } catch(_){}
+
+  // Post-payment unlock path (unchanged contract — see attemptPaymentUnlock).
   if (_qcPendingPaymentUnlock && (event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
     attemptPaymentUnlock(session);
   }
-  if(event === "SIGNED_OUT" && currentFace === 0 && !_qcSessionRestored){
-    // Refresh token was invalid on cold start — session couldn't be restored
-    // Clear any stale user state
-    qcCurrentUser = null;
-    qcCurrentProfile = null;
-    // If we have a stored email, pre-fill it so the user just taps "Send OTP"
-    try {
-      const storedEmail = localStorage.getItem('qc_last_email');
-      if(storedEmail){
-        const emEl = document.getElementById('email');
-        if(emEl && !emEl.value) emEl.value = storedEmail;
-      }
-    } catch(_){}
-    // Show gentle message — don't leave blank form with no explanation
-    try {
-      const errEl = document.getElementById('errMsg');
-      if(errEl){
-        errEl.textContent = 'Your session expired. Enter your email to sign in again.';
-        errEl.style.display = 'block';
-        errEl.style.color = '#0cc0df';
-      }
-    } catch(_){}
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_OUT on cold start — session expired' }); } catch(_){}
-  }
-  // v320: TOKEN_REFRESHED added for the stuck-on-signup case:
-  // initSupabaseSession() has a 5s getSession timeout. On Android cold start,
-  // the network may not be ready — timeout fires, hasSession=false, blank signup.
-  // Supabase SDK continues the refresh in background and fires TOKEN_REFRESHED
-  // when it completes. Without this it was silently ignored.
-  // TOKEN_REFRESHED only enters this block when face=0 AND not yet restored,
-  // so normal mid-session token refreshes are a no-op here.
-  if(event === "INITIAL_SESSION"){
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'INITIAL_SESSION fired', data: { hasSession: !!session, hasUser: !!(session && session.user), currentFace, sessionRestored: _qcSessionRestored } }); } catch(_){}
-  }
-  // v349: dropped "|| _emailBlank" — it defeated the _qcSessionRestored guard,
-  // re-entering the full restore block (profile re-fetch + form re-populate) on
-  // every hourly TOKEN_REFRESHED while the user sat on face 0 with a blank email.
-  const _isLateRestore = (event === "TOKEN_REFRESHED" || event === "INITIAL_SESSION") && currentFace === 0 && !_qcSessionRestored;
-  if((event === "SIGNED_IN" || event === "INITIAL_SESSION" || _isLateRestore) && session && session.user){
-    // v304: Skip if _qcOtpVerify is handling this SIGNED_IN event
-    if(_qcOtpVerifying){
-      try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'SIGNED_IN skipped — _qcOtpVerifying active' }); } catch(_) {}
-      return;
-    }
-    // v283: Clean up stale magic-link localStorage
-    try { localStorage.removeItem('qc_last_magic'); } catch(_) {}
-    qcCurrentUser = session.user;
-    try { if(session.user.email) localStorage.setItem('qc_last_email', session.user.email); } catch(_){}
-    updateSettingsLinkVisibility();
-    // Magic-link path: restore pending name+DOB from localStorage
-    restorePendingProfile();
-    // Fetch profile FIRST so we can populate the form before deciding whether to run
-    let profileRow = null;
-    try {
-      const r = await sb.from("profiles").select("id,email,has_paid,marketing_consent,dob,name,edit_count").eq("id", session.user.id).maybeSingle();
-      profileRow = r.data || null;
-      qcCurrentProfile = profileRow;
-      _qcSavedName = (profileRow && profileRow.name) || null;
-      _qcSavedDob  = (profileRow && profileRow.dob)  || null;
-      _qcSavedEditCount = (profileRow && typeof profileRow.edit_count === 'number') ? profileRow.edit_count : 0;
-      syncUnlockFromProfile(qcCurrentProfile);
-      // Play Billing: attempt restore for TWA users who may have purchased
-      restorePlayPurchases().catch(()=>{});
-    } catch(e) {
-      console.error("[QC] profile fetch error:", e);
-      try { if(window.Sentry) Sentry.captureException(e); } catch(_){}
-    }
-    // First-time signup on a device where the magic link opened in a separate
-    // storage partition (Gmail Chrome Custom Tab, Android tab suspension):
-    // QC_PENDING_KEY is empty AND profile row doesn't exist yet. Recover the
-    // form data we stashed in user_metadata when we sent the OTP.
-    if(!profileRow){
-      let hasPending = false;
-      try { hasPending = !!localStorage.getItem(QC_PENDING_KEY); } catch(e) {}
-      const meta = session.user.user_metadata || {};
-      if(!hasPending && (meta.pending_first_name || meta.pending_dob_year)){
-        const set = (id,v)=>{const el=document.getElementById(id);if(el&&v!=null&&v!=='')el.value=v;};
-        set("firstName",  meta.pending_first_name);
-        set("middleName", meta.pending_middle_name);
-        set("lastName",   meta.pending_last_name);
-        set("dobDay",     meta.pending_dob_day);
-        set("dobMonth",   meta.pending_dob_month);
-        set("dobYear",    meta.pending_dob_year);
-        if(typeof updateCalcBtnReady === "function") updateCalcBtnReady();
-      }
-    }
-    // Populate Face 0 form fields from profile/auth metadata.
-    // OAuth users with no DOB yet get email + name pre-filled, must add DOB manually.
-    // Returning users with full profile get everything pre-filled.
-    // v302: Session restore path — when app opens with existing session (currentFace === 0)
-    // Guard against double-firing and properly validate profile before calculating
-    const isSessionRestore = currentFace === 0 && !_qcSessionRestored;
-    const profileHasData = profileRow && profileRow.name && profileRow.dob;
 
-    // v269: include truncated email in navCtx for debugging
-    const _navEmail = session.user.email ? session.user.email.slice(0,8)+'…' : '(none)';
-    const navCtx = { currentFace, isSessionRestore, hasProfileRow: !!profileRow, profileHasData: !!profileHasData, hasProfileData: !!profileData, email: _navEmail };
-
-    if(isSessionRestore){
-      _qcSessionRestored = true; // prevent double-firing
-      if(profileHasData){
-        // v314: Clear stale/autofill form values before repopulating from profile.
-        // !field.value guards in populateFormFromProfile skip correct data if Android
-        // autofill or a prior attempt left values — runCalculation then silently returns
-        // early (no exception thrown), leaving user stuck on face 0.
-        try {
-          _qcForcePopulateFromProfile(profileRow, session.user);
-          setTimeout(function(){
-            try {
-              runCalculation();
-              // v343: If still on face 0 after 300ms, retry once — catches Android
-              // post-autofill DOM corruption that fires after our 50ms window
-              setTimeout(function(){
-                if(currentFace === 0){
-                  _qcForcePopulateFromProfile(profileRow, session.user);
-                  try { runCalculation(); } catch(e){ showFace(1); }
-                }
-              }, 300);
-              if(!profileData){ try { if(window.Sentry) Sentry.captureMessage('session-restore: runCalc returned but profileData null', { level: 'warning', extra: navCtx }); } catch(_){} }
-              _qcSessionNav('sessionRestore→runCalculation', navCtx);
-            } catch(e){
-              showFace(1);
-              console.error("[QC] session restore runCalculation:", e);
-              try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'session-restore' } }); } catch(_){}
-              _qcSessionNav('sessionRestore failed → stay face0', navCtx);
-            }
-          }, 50);
-        } catch(e) {
-          console.error("[QC] session restore runCalculation:", e);
-          try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'session-restore' } }); } catch(_){}
-          _qcSessionNav('sessionRestore failed → stay face0', navCtx);
-        }
-      } else {
-        // Profile missing name or dob — stay on face0 for user to complete
-        populateFormFromProfile(profileRow, session.user); // partial fill if any
-        _qcSessionNav('sessionRestore incomplete profile → stay face0', navCtx);
-      }
-    } else if(currentFace === 'CheckEmail'){
-      // OTP/magic-link completion path — form was just filled, run calculation
-      const formReady = populateFormFromProfile(profileRow, session.user);
-      if(formReady && !profileData){
-        try {
-          await saveProfileFromForm();
-        } catch(e) {
-          console.error("[QC] SIGNED_IN saveProfileFromForm:", e);
-          try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'signed-in-profile-save' } }); } catch(_){}
-        }
-        try {
-          runCalculation();
-          _qcSessionNav('CheckEmail→formReady→runCalculation', navCtx);
-        } catch(e) {
-          console.error("[QC] SIGNED_IN runCalculation:", e);
-          try { if(window.Sentry) Sentry.captureException(e); } catch(_){}
-          showFace(0);
-          _qcSessionNav('CheckEmail runCalculation threw → face0', navCtx);
-        }
-      } else {
-        // Incomplete profile — bounce to face0 to complete
-        showFace(0);
-        _qcSessionNav('CheckEmail + no formReady → showFace(0)', navCtx);
-      }
-    } else if(currentFace === 0 && profileHasData && !profileData){
-      // v355: COLD-START BLANK PAGE FIX (Sentry JAVASCRIPT-8, since v324).
-      // _qcSessionRestored gets set true OPTIMISTICALLY by an earlier restore path
-      // (initSupabaseSession ~line 4167, or this handler line 4691) BEFORE its
-      // setTimeout'd runCalculation confirms the user left face 0. When that
-      // runCalculation silently returns early (Android autofill DOM corruption —
-      // see v314/v343), the user is stranded on the blank sign-up page and this
-      // late INITIAL_SESSION/SIGNED_IN event used to give up as "no nav action".
-      // Guard: currentFace 0 + complete profile + NO reading computed yet
-      // (!profileData) — i.e. genuinely stuck, not a paid user who deliberately
-      // navigated back to the face-0 profile-lock card (they have profileData).
-      try {
-        _qcForcePopulateFromProfile(profileRow, session.user);
-        setTimeout(function(){
-          try {
-            runCalculation();
-            setTimeout(function(){
-              if(currentFace === 0){
-                _qcForcePopulateFromProfile(profileRow, session.user);
-                try { runCalculation(); } catch(e){ showFace(1); }
-              }
-            }, 300);
-            _qcSessionNav('v355 rescue: stranded on face0 → runCalculation', navCtx);
-          } catch(e){
-            showFace(1);
-            try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'v355-coldstart-rescue' } }); } catch(_){}
-            _qcSessionNav('v355 rescue failed → showFace(1)', navCtx);
-          }
-        }, 50);
-      } catch(e){
-        showFace(1);
-        _qcSessionNav('v355 rescue threw → showFace(1)', navCtx);
-      }
-    } else {
-      // User is on a content face (1-6), or face 0 with a reading already shown —
-      // don't interrupt.
-      _qcSessionNav('no nav action (left user in place)', navCtx);
-    }
-  }
   if(event === "SIGNED_OUT"){
-    qcCurrentUser = null;
-    qcCurrentProfile = null;
-    _qcSavedName = null; // v332: clear profile lock
-    _qcSavedDob  = null; // v332: clear profile lock
-    _qcSavedEditCount = 0;
-    _qcUnlockForEditUsed = false;
+    // Clear all user state and settle on face 0 with a gentle message if this was a
+    // cold-start expiry (we never reached a content face).
+    qcCurrentUser = null; qcCurrentProfile = null;
+    _qcSavedName = null; _qcSavedDob = null; _qcSavedEditCount = 0; _qcUnlockForEditUsed = false;
     updateSettingsLinkVisibility();
-    try { localStorage.removeItem(STORE_KEY); } catch(e) {}
-    try { localStorage.removeItem(QC_PENDING_KEY); } catch(e) {}
-    // v266: unlock email field so new user can enter a different address
-    try {
-      const emEl = document.getElementById("email");
-      if(emEl){ emEl.value = ""; emEl.readOnly = false; emEl.style.opacity = ""; }
-    } catch(e) {}
+    try { localStorage.removeItem(STORE_KEY); } catch(_){}
+    try { localStorage.removeItem(QC_PENDING_KEY); } catch(_){}
+    if(currentFace === 0 && _qcAuthPhase !== 'restored'){
+      try {
+        const storedEmail = localStorage.getItem('qc_last_email');
+        const emEl = document.getElementById('email');
+        if(emEl){ emEl.readOnly = false; emEl.style.opacity = ""; if(storedEmail && !emEl.value) emEl.value = storedEmail; else if(!storedEmail) emEl.value = ""; }
+        const errEl = document.getElementById('errMsg');
+        if(errEl){ errEl.textContent = 'Your session expired. Enter your email to sign in again.'; errEl.style.display = 'block'; errEl.style.color = '#0cc0df'; }
+      } catch(_){}
+      _qcSettle('awaiting-input', 'signed out on face 0', { event });
+    }
+    try { _qcHideAuthLoader(); } catch(_) {}   // a SIGNED_OUT is itself a resolved state
+    return;
   }
-  // v318: always dismiss auth loader once auth state is resolved
-  // (_qcAuthLoaderDone guard prevents double-firing)
-  try { _qcHideAuthLoader(); } catch(_) {}
+
+  // OTP/magic-link completion: the OTP verify path owns SIGNED_IN while verifying.
+  if(_qcOtpVerifying) return;
+
+  // Any event carrying a session → route through the single restore fn. INITIAL_SESSION
+  // and TOKEN_REFRESHED are the "late restore" recoveries (valid-but-slow token); SIGNED_IN
+  // is a fresh login. _qcResolveAuth is idempotent, so duplicate events are safe no-ops.
+  if((event === "SIGNED_IN" || event === "INITIAL_SESSION" || event === "TOKEN_REFRESHED") && session && session.user){
+    try { localStorage.removeItem('qc_last_magic'); } catch(_){}
+    await _qcResolveAuth(session, 'authchange');
+  }
+
+  // NOTE: the v318 unconditional _qcHideAuthLoader() at the end of this handler is
+  // REMOVED. Loader dismissal is now owned solely by the poll, keyed off
+  // _qcAuthSettled / currentFace / 12s. SIGNED_OUT above dismisses explicitly.
 });
 
 function updateSettingsLinkVisibility(){
