@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v351",
+      release: "quantum-cube@qc-v352",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3045,6 +3045,10 @@ let _qcPreDodoFace = null;
 // Visibility-driven handlers consult this and bail rather than triggering
 // auth or nav side-effects that race with the unlock sync.
 let _qcDodoInFlight = false;
+// v352: both checkout.redirect AND checkout.closed fire on a successful payment,
+// so the post-checkout profile sync ran twice. This dedupes per checkout; reset
+// to false at launchDodo() entry so a subsequent purchase attempt runs again.
+let _qcPostCheckoutHandled = false;
 
 async function checkDodoReturn(){
   const params = new URLSearchParams(window.location.search);
@@ -3206,6 +3210,9 @@ async function handleDodoEvent(event){
   // checkout.closed fires whether the user paid, cancelled, or hit X.
   // Either way: refetch profile and let RLS-backed has_paid be the truth.
   if (event.event_type === "checkout.redirect" || event.event_type === "checkout.closed") {
+    // v352: redirect + closed both fire on success — run the sync once per checkout
+    if (_qcPostCheckoutHandled) return;
+    _qcPostCheckoutHandled = true;
     // Webhook may lag the overlay close by 1-2 seconds — give it a moment,
     // then refetch profile. If has_paid is still false, the user closed
     // without paying (or webhook hasn't landed yet). The unlock logic
@@ -3318,6 +3325,7 @@ function _qcScaleDodoOverlay(){
 
 async function launchDodo(){
   _qcPreDodoFace = currentFace;
+  _qcPostCheckoutHandled = false; // v352: fresh checkout — allow the post-checkout sync to run again
   try { if(window.Sentry) Sentry.addBreadcrumb({category:'payment', level:'info', message:'launchDodo entry; preDodoFace='+_qcPreDodoFace}); } catch(_){}
   try {
     if (!ensureDodoSdk()) {
