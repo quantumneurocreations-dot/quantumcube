@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v335",
+      release: "quantum-cube@qc-v336",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -2237,8 +2237,8 @@ function _qcHideAuthLoader(){
   el.classList.add('fade-out');
   setTimeout(function(){ if(el) el.style.display='none'; }, 450);
 }
-// Safety: dismiss after 3s, but if session restore is still pending
-// (rapid re-open where Supabase token refresh takes longer than 3s),
+// Safety: dismiss after 6s, but if session restore is still pending
+// (rapid re-open where Supabase token refresh takes longer than 6s),
 // extend by 5s before giving up — v318b
 setTimeout(function(){
   if(!_qcSessionRestored && currentFace === 0){
@@ -2246,7 +2246,7 @@ setTimeout(function(){
   } else {
     _qcHideAuthLoader();
   }
-}, 3000);
+}, 6000);
 
 // Hide #app and show a full-screen gate when on mobile but NOT running as an
 // installed PWA / TWA. iOS has no beforeinstallprompt; Android Chrome fires it
@@ -4001,19 +4001,22 @@ async function initSupabaseSession(){
   updateSettingsLinkVisibility();
   // Chunk 5b: if already signed in on page load, skip Face 0 entirely
   if(hasSession && currentFace === 0){
-    _qcSessionRestored = true; // v319: prevent onAuthStateChange double-fire when initSupabaseSession handles restore first
     const profileComplete = _initProfile && _initProfile.name && _initProfile.dob;
     if(profileComplete){
+      _qcSessionRestored = true; // Only lock out onAuthStateChange when we actually succeed
       try { runCalculation(); } catch(e) { showFace(1); }
-    } else {
+    } else if(_initProfile) {
       // v273: returning authenticated user with incomplete profile (RLS save gap)
       // Show a clear prompt so they know to fill in name + DOB to continue.
+      _qcSessionRestored = true; // prevent onAuthStateChange double-fire for a real incomplete profile
       const errEl = document.getElementById('errMsg');
       if(errEl){ errEl.textContent = "Welcome back! Please enter your name and date of birth to reveal your Cube."; errEl.style.display = "block"; errEl.style.color = "#0cc0df"; }
       // Also unlock the email field so the form doesn't feel frozen
       const emEl = document.getElementById('email');
       if(emEl){ emEl.readOnly = false; emEl.style.opacity = ""; }
     }
+    // If _initProfile is null (fetch failed), do not set _qcSessionRestored.
+    // onAuthStateChange INITIAL_SESSION or TOKEN_REFRESHED will handle it as fallback.
   }
 }
 
