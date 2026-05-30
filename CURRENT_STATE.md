@@ -3,92 +3,86 @@ tags: [core, state]
 ---
 # CURRENT STATE — overwrite this every session end
 
-**Updated:** 2026-05-28 (session 16 — production access day)
-**HEAD (QC):** `f3ef9c9` — fix: clear _qcSavedName/Dob on sign-out (v332 profile lock gap)
-**QC SW:** qc-v332 | **QI server:** localhost:3001 | **has_paid=true:** 6 (real paying = 2)
+**Updated:** 2026-05-30 (session 27 — auth/payment deep audit)
+**HEAD (QC):** `39ab4b3` — qc-v354 (NOT YET PUSHED — deploy runbook below)
+**QC SW:** qc-v354 | **QI server:** localhost:3001 | **has_paid=true:** 7 (real paying: 2)
 **Android versionCode:** 5 | **AAB:** versionCode 5 uploaded to Play Console ✅
 
 ---
 
-## Play Store — PRODUCTION ACCESS TONIGHT
+## ⚠️ DEPLOY PENDING — DO IN LOW-TRAFFIC WINDOW (tonight)
 
-**14-day testing window completes ~6-7pm TODAY (May 28).**
+8 commits ahead of origin/main. Nothing pushed yet.
 
-### What to do tonight
-1. 🔴 **Click "Apply for production access"** — button unlocks on Play Console Dashboard at ~6-7pm. Submit immediately.
-2. 🔴 **Fill questionnaire** — Parts 1, 2, 3. Use prepared copy-paste answers.
-3. 🔴 **DO NOT click Publish** after Google approval. Managed Publishing is ON — won't auto-release.
+### Deploy order (MUST follow — breaking window if out of order)
+```bash
+# Step 1 — functions FIRST
+supabase functions deploy dodo-create-session dodo-webhook --project-ref fqqdldvnxupzxvvbyvjm
 
-### Review credentials (Part 3)
-- **Email:** `qnc.review@gmail.com`
-- **Password:** Ronnie's Gmail password
-- **Instructions:** "Enter email, tap Continue, check Gmail for 6-digit OTP, enter in app. Account pre-unlocked — enter any name and date of birth, then tap Reveal My Cube to explore all 4 faces."
-- **Note:** Profile lock is live (qc-v332). Reviewer's first-entered name/DOB saves to their account. They can tap "Edit Details" to change if needed.
+# Step 2 — frontend immediately after
+git push origin main
+```
 
-### Before Publishing (after Google approval — DO NOT skip)
-- 🔴 External Content Links enrollment in Play Console (PLAY_STORE_PREP §15a)
-- 🔴 External content links disclosure modal in IS_TWA unlock flow (PLAY_STORE_PREP §15b)
-- 🔴 TWA payment path confirmed as web redirect (ADR-026)
+### After deploy
+1. Verify version badge reads `qc-v354 · dodo✓`
+2. Do real $17 round-trip test — confirm `profiles.has_paid = true` in Supabase
+3. Watch Sentry ~30 min for 401/400s on dodo-create-session
+4. Check welcome email arrived via Resend
+
+### Rollback refs
+- Pre-v354 function commit: `3822656`
+- Frontend revert: `git revert 39ab4b3`
 
 ---
 
-## Sentry (updated 2026-05-23 — CLEAN)
-- ✅ JAVASCRIPT-8 resolved
-- ✅ JAVASCRIPT-16 resolved
-- ✅ JAVASCRIPT-18 resolved
-- 🟡 JAVASCRIPT-3 — CSP blocking Clarity img `c.clarity.ms/c.gif` — low priority, backlog
+## What landed this session (qc-v348–v354)
+
+### Auth/payment fixes (Claude Code audit)
+| Version | Severity | Fix |
+|---------|----------|-----|
+| v348 | CRITICAL | visibilitychange guards — add `_qcOtpVerifying` + `_qcSessionRestored` checks, remove `saveProfileFromForm()` (was writing autofill garbage to DB) |
+| v349 | HIGH | Drop `\|\| _emailBlank` from `_isLateRestore` — was re-running full restore on every token refresh |
+| v350 | HIGH | Dodo SDK `onload`/`onerror` on script tag — SDK now initialises on arrival, not lazily on first Pay tap |
+| v351 | MEDIUM | Fix version badge — `window.Dodo` → `_resolveDodoSdk()` (badge was always showing dodo✗ even when loaded) |
+| v352 | MEDIUM | `_qcPostCheckoutHandled` guard — prevent double-fire of post-checkout sync |
+| v353 | MEDIUM | `_qcDodoInFlight` 90s safety timeout — prevents permanent latch if overlay closes without emitting terminal event |
+| v354 | HIGH (security) | Server-side identity verification — dodo-create-session now verifies JWT via `auth.getUser()`, derives user_id+email server-side, stops trusting request body. Frontend sends real access token instead of anon key. Webhook email fallback hardened. |
+
+### Root cause identified (not yet fixed — tracked)
+Three duplicated session-restore paths (initSupabaseSession / onAuthStateChange / visibilitychange) with boolean-flag coordination and no mutex. This is why auth keeps breaking. **Permanent fix = consolidate to one idempotent `_qcRestoreAndNavigate()` function.** Tracked as qc-v355+ task.
+
+---
+
+## Pending — next sessions
+
+### qc-v355 — dispute/chargeback handler (MEDIUM revenue leak)
+- `dispute.lost` + `dispute.accepted` → `has_paid = false`
+- Dodo event names confirmed: dispute.lost, dispute.accepted (terminal, lost-funds states)
+- **Blocked on:** confirm dispute payload shape (where `user_id`/`email` sit) before wiring
+- Action: pull real dispute payload from Dodo sandbox or docs, then implement
+
+### Path A/B/C consolidation (permanent auth fix)
+- Collapse three duplicated restore paths into one `_qcRestoreAndNavigate()` function
+- Replace boolean soup with single `_qcAuthPhase` state variable
+- Higher risk, dedicated session — do after deploy confirmed stable
+
+### External Content Links (before publishing to production)
+- Enrollment in Play Console
+- Disclosure modal in IS_TWA unlock flow (PLAY_STORE_PREP §15a + §15b)
+
+---
+
+## Sentry
+- ✅ JAVASCRIPT-8, 16, 18 resolved
+- 🟡 JAVASCRIPT-3 — CSP blocking Clarity img — low priority backlog
 
 ---
 
 ## Recent commits
-- `f3ef9c9` — fix: clear _qcSavedName/Dob on sign-out (v332 profile lock gap)
-- `ae84677` — feat: lock profile name/dob to account — one profile per user (qc-v332)
-- `ee5b2a0` — feat: dodo getSession 4s timeout guard (qc-v331)
-- `819a13d` — fix: adaptive auth loader timeout (qc-v319)
-
----
-
-## Agents (all 12 complete as of 2026-05-17)
-- ✅ quantum · security · upgrade · mind · cleaner · project
-- ✅ design · marketing · admin · truth · coder · audit
-
----
-
-## Full backlog (priority order)
-1. 🔴 Submit production access form tonight (~6-7pm)
-2. 🔴 External Content Links enrollment + disclosure modal (before publishing)
-3. 🟡 Supabase Pro upgrade — auto-pause risk (ADR-028, deferred)
-4. 🟡 JAVASCRIPT-3 — CSP img-src add `c.clarity.ms`
-5. 🟡 Dodo refund webhook → auto-flip has_paid on refund ✅ (edge function exists, needs verification)
-6. 🟡 qi-voice.py CoS briefing: read all briefing snippets
-7. 🟡 CSP: Report-Only → Enforcing
-8. 🟡 Truth adversarial test
-9. 🟡 Marketing full `all` mode live test
-10. 🟡 Canva MCP + ElevenLabs narration — Design v3.1
-11. 🟡 Wake word training
-12. 🟡 ElevenLabs cancel after Valory migration
-13. 🟡 Agent handshake pairs (Upgrade→Truth, Coder→Truth) — ADR-033
-14. 🟡 Claude Code 401 — run `/login`
-
----
-
-## Key facts
-- **QC DB:** Supabase `fqqdldvnxupzxvvbyvjm` | **QI DB:** `zhvcmxtgvrogxnvqauus`
-- **Real paying customers:** 2 (keyzer.pretorius + booyens.michelle)
-- **Review account:** `qnc.review@gmail.com` — `has_paid=true` confirmed (created 2026-05-12)
-- **Tester account:** `noel92.nh@gmail.com` — `has_paid=true` (manual, not real customer)
-- **Voice:** ElevenLabs `uju3wxzG5OhpWcoi3SMy` | model: `eleven_turbo_v2_5`
-- **Play Console:** Developer `9099327495444765719` | App `4973211872239545786`
-- **Keystore:** `android/quantumcube.keystore` · alias `quantumcube` · pw in Apple Passwords
-- **Managed Publishing:** ON — Google approval will NOT auto-publish
-- **Obsidian vault:** `/Users/qnc/Projects/quantum-integrator`
-
-<!-- topic-linker:start -->
----
-## See Also
-- [[Claude Code]]
-- [[ElevenLabs]]
-- [[Play Store]]
-- [[Sentry]]
-- [[Supabase]]
-<!-- topic-linker:end -->
+- `39ab4b3` — qc-v354: server-side identity verification (security)
+- `3822656` — qc-v353: _qcDodoInFlight 90s safety timeout
+- `14478a3` — qc-v352: dedupe post-checkout double-fire
+- `60ea1f8` — qc-v351: version badge fix
+- `4eb8d83` — qc-v350: Dodo SDK onload/onerror
+- `8820622` — qc-v349: drop _emailBlank from _isLateRestore
+- `bb62ec1` — qc-v348: visibilitychange auth race (CRITICAL)
