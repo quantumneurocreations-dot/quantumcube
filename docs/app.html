@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v346",
+      release: "quantum-cube@qc-v347",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -4067,7 +4067,7 @@ async function initSupabaseSession(){
     // v278: 5s timeout prevents deadlock on concurrent token refresh
     const { data: { session } } = await Promise.race([
       sb.auth.getSession(),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('getSession-timeout-init')), 5000))
+      new Promise((_, reject) => setTimeout(() => reject(new Error('getSession-timeout-init')), 12000))
     ]);
     if(session && session.user){
       // v277: Removed stale-session guard — it called signOut() which triggered
@@ -4085,21 +4085,13 @@ async function initSupabaseSession(){
       syncUnlockFromProfile(profile);
     }
   }catch(e){
-    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'warning', message: 'initSupabaseSession error', data: { msg: e && e.message } }); } catch(_){}
-    // If refresh token invalid, clear it so onAuthStateChange doesn't loop
-    if(e && e.message && (e.message.includes('refresh_token') || e.message.includes('Refresh Token') || e.message.includes('invalid_grant'))){
-      try { localStorage.removeItem('sb-fqqdldvnxupzxvvbyvjm-auth-token'); } catch(_){}
-      // v345: Show session-expired message immediately — SIGNED_OUT may not fire
-      // when getSession() throws synchronously on a bad token (cold start race).
-      // Pre-fill stored email so user only needs to tap Send OTP.
-      try {
-        const storedEmail = localStorage.getItem('qc_last_email');
-        const emEl = document.getElementById('email');
-        if(emEl && storedEmail && !emEl.value) emEl.value = storedEmail;
-        const errEl = document.getElementById('errMsg');
-        if(errEl){ errEl.textContent = 'Session expired. Enter your email to sign in again.'; errEl.style.display = 'block'; errEl.style.color = '#0cc0df'; }
-      } catch(_){}
-    }
+    // v347: Log error but do NOT clear auth token from localStorage.
+    // Clearing it was deleting valid tokens on temporary network failures.
+    // SIGNED_OUT will fire if the token is genuinely invalid — that handler
+    // shows the session-expired message and pre-fills the email.
+    // INITIAL_SESSION fires when the SDK completes its internal refresh — that
+    // handler restores the session if the token was valid but slow to refresh.
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'warning', message: 'initSupabaseSession getSession error', data: { msg: e && e.message } }); } catch(_){}
   }
   // v283: Clean up stale magic-link localStorage from pre-OTP versions
   try { localStorage.removeItem('qc_last_magic'); } catch(_){}
@@ -4589,8 +4581,11 @@ sb.auth.onAuthStateChange(async (event, session) => {
   // when it completes. Without this it was silently ignored.
   // TOKEN_REFRESHED only enters this block when face=0 AND not yet restored,
   // so normal mid-session token refreshes are a no-op here.
+  if(event === "INITIAL_SESSION"){
+    try { if(window.Sentry) Sentry.addBreadcrumb({ category: 'auth', level: 'info', message: 'INITIAL_SESSION fired', data: { hasSession: !!session, hasUser: !!(session && session.user), currentFace, sessionRestored: _qcSessionRestored } }); } catch(_){}
+  }
   const _emailBlank = (function(){ try { const e = document.getElementById('email'); return !e || !e.value; } catch(_){ return true; } })();
-  const _isLateRestore = event === "TOKEN_REFRESHED" && currentFace === 0 && (!_qcSessionRestored || _emailBlank);
+  const _isLateRestore = (event === "TOKEN_REFRESHED" || event === "INITIAL_SESSION") && currentFace === 0 && (!_qcSessionRestored || _emailBlank);
   if((event === "SIGNED_IN" || event === "INITIAL_SESSION" || _isLateRestore) && session && session.user){
     // v304: Skip if _qcOtpVerify is handling this SIGNED_IN event
     if(_qcOtpVerifying){
