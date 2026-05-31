@@ -3,14 +3,19 @@ tags: [core, state]
 ---
 # CURRENT STATE — overwrite this every session end
 
-**Updated:** 2026-05-31 (session 28 — auth session-restore consolidation, deployed)
-**HEAD (QC):** `c0c9cc8` — qc-v356 auth session-restore consolidation ✅ DEPLOYED (live, verified)
-**QC SW:** qc-v356 | **QI server:** localhost:3001 | **has_paid=true:** 7 (real paying: 2)
+**Updated:** 2026-05-31 (session 28 — auth consolidation v356 + Dodo CSP fix v357, both deployed)
+**HEAD (QC):** `2c86eb6` — qc-v357 Dodo CSP fix (on top of v356 auth consolidation) ✅ DEPLOYED (live, verified)
+**QC SW:** qc-v357 | **QI server:** localhost:3001 | **has_paid=true:** 7 (real paying: 2)
 **Android versionCode:** 5 | **AAB:** versionCode 5 uploaded to Play Console ✅
 
 ---
 
-## ✅ DEPLOYED — qc-v348 → qc-v356
+## ✅ DEPLOYED — qc-v348 → qc-v357
+
+**qc-v357** (2026-05-31): CSP `script-src` now allows `https://*.dodopayments.com` — fixes the
+recurring JAVASCRIPT-6 CSP violation (Dodo SDK's `sdk.hs.dodopayments.com` sub-script was blocked
+on every Pay tap). Standalone, not auth-related. Live + verified on quantumcube.app.
+
 
 Frontend + both edge functions live. $17 round-trip passed (v354). v356 device-tested on the real
 Chrome engine (cloudflared tunnel → Android Chrome) — cold-start restore recovers (loader holds, brief
@@ -57,7 +62,7 @@ Plan: `plans/2026-05-30-auth-restore-consolidation.md` · Runbooks:
 
 ## Pending — next sessions
 
-### qc-v357 — dispute/chargeback handler (MEDIUM revenue leak)  ← was reserved as v356; bumped (v356 became the consolidation)
+### qc-v358 — dispute/chargeback handler (MEDIUM revenue leak)  ← bumped again (v356 = consolidation, v357 = Dodo CSP fix)
 - `dispute.lost` + `dispute.accepted` → `has_paid = false`
 - Dodo event names confirmed: `dispute.lost`, `dispute.accepted` (do NOT revert on `dispute.opened`)
 - **Blocked on:** confirm the dispute payload shape (where `user_id`/`email` sit) — pull a real dispute payload from Dodo sandbox/docs first; do not wire blind
