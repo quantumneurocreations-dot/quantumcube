@@ -160,9 +160,16 @@ Insert this block before `async function initSupabaseSession(){`:
 // onAuthStateChange, visibilitychange).
 async function _qcFetchProfile(userId){
   try {
-    const { data } = await sb.from("profiles")
-      .select("id,email,has_paid,marketing_consent,dob,name,edit_count")
-      .eq("id", userId).maybeSingle();
+    // v356 (Task 7): 8s timeout. Supabase query builder is a thenable, so Promise.race
+    // works. On timeout we throw → caught below → return null, so _qcResolveAuth settles
+    // cleanly via the no-profile branch instead of latching _qcAuthPhase at 'restoring'
+    // forever and blocking every future restore. A later auth/visibility event retries.
+    const { data } = await Promise.race([
+      sb.from("profiles")
+        .select("id,email,has_paid,marketing_consent,dob,name,edit_count")
+        .eq("id", userId).maybeSingle(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('fetch-profile-timeout')), 8000))
+    ]);
     return data || null;
   } catch(e){
     console.error("[QC] _qcFetchProfile error:", e);
@@ -274,7 +281,13 @@ async function _qcResolveAuth(session, source){
         runCalculation();
       } catch(e){ try { showFace(1); } catch(_){} }
       if(currentFace !== 0){ _qcSettle('restored', 'runCalculation navigated (retry)', ctx); }
-      else { try { if(window.Sentry) Sentry.captureMessage('v356: restore retry still on face 0', { level:'warning', extra: ctx }); } catch(_){} }
+      else {
+        try { if(window.Sentry) Sentry.captureMessage('v356: restore retry still on face 0', { level:'warning', extra: ctx }); } catch(_){}
+        // v356 (Task 7 quality pass): force-settle so the loader dismisses now (form is
+        // force-populated; user can tap Reveal) instead of hanging 12s. 'awaiting-input'
+        // still lets a later auth/visibility event retry.
+        _qcSettle('awaiting-input', 'restore retry failed — force settle', ctx);
+      }
     }
   }, 300);
 }

@@ -4209,7 +4209,14 @@ async function _qcResolveAuth(session, source){
         runCalculation();
       } catch(e){ try { showFace(1); } catch(_){} }
       if(currentFace !== 0){ _qcSettle('restored', 'runCalculation navigated (retry)', ctx); }
-      else { try { if(window.Sentry) Sentry.captureMessage('v356: restore retry still on face 0', { level:'warning', extra: ctx }); } catch(_){} }
+      else {
+        try { if(window.Sentry) Sentry.captureMessage('v356: restore retry still on face 0', { level:'warning', extra: ctx }); } catch(_){}
+        // v356 review-fix (Task 7 quality pass): runCalculation silently failed twice.
+        // Force-settle to 'awaiting-input' so the loader dismisses NOW (form is already
+        // force-populated, user can tap Reveal) instead of hanging the full 12s. Phase
+        // 'awaiting-input' still lets a later auth/visibility event retry the restore.
+        _qcSettle('awaiting-input', 'restore retry failed — force settle', ctx);
+      }
     }
   }, 300);
 }
