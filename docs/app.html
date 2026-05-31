@@ -4180,7 +4180,10 @@ async function _qcResolveAuth(session, source){
   // genuine no-row (null). Failure must not be treated as "no profile".
   const _fetchFailed = (fetched === _QC_FETCH_FAILED);
   const profile = _fetchFailed ? null : fetched;
-  _qcApplyProfile(profile);
+  // v356(hardening): on a transient fetch FAILURE do NOT apply a null profile — that would
+  // stomp cached unlock/profile state (syncUnlockFromProfile(null) re-locks) and flicker the
+  // UI before the scheduled retry recovers it. Only apply on a real result (profile OR no-row).
+  if(!_fetchFailed) _qcApplyProfile(profile);
   try { restorePlayPurchases().catch(()=>{}); } catch(_){}
 
   // If the user already navigated to a content face during the await, don't interrupt.
