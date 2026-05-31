@@ -4098,12 +4098,20 @@ async function _qcFetchProfile(userId){
     // On timeout we throw → caught below → return null, so _qcResolveAuth settles cleanly
     // via the no-profile branch (phase 'awaiting-input') instead of latching at 'restoring'
     // forever and blocking every future restore. A later auth/visibility event retries.
-    const { data } = await Promise.race([
+    const { data, error } = await Promise.race([
       sb.from("profiles")
         .select("id,email,has_paid,marketing_consent,dob,name,edit_count")
         .eq("id", userId).maybeSingle(),
       new Promise((_, reject) => setTimeout(() => reject(new Error('fetch-profile-timeout')), 8000))
     ]);
+    // v356(hardening): Supabase reports API/RLS/network errors as { error } WITHOUT throwing.
+    // Treat that as a failure (→ caller retries), NOT a genuine no-row, so we never strand a
+    // returning user or clear their cached state on a transient DB error.
+    if(error){
+      console.error("[QC] _qcFetchProfile supabase error:", error);
+      try { if(window.Sentry) Sentry.captureMessage('fetch-profile supabase error: '+(error.message||error.code||'?'), 'warning'); } catch(_){}
+      return _QC_FETCH_FAILED;
+    }
     return data || null;   // null = genuine no-row (maybeSingle, no error)
   } catch(e){
     console.error("[QC] _qcFetchProfile error:", e);
@@ -4200,7 +4208,10 @@ async function _qcResolveAuth(session, source){
       _qcProfileRetryScheduled = true;
       const _retryGen = _gen;
       setTimeout(function(){
-        if(_qcAuthGen === _retryGen && _qcAuthPhase !== 'restored' && !_qcOtpVerifying && currentFace === 0){
+        // v356(hardening): also skip if a restore is already in flight ('restoring') — a
+        // later auth/visibility event may have taken over during the 1500ms window; firing
+        // here would clobber its phase to 'idle' and double-run. (_qcAuthGen guards sign-out.)
+        if(_qcAuthGen === _retryGen && _qcAuthPhase !== 'restored' && _qcAuthPhase !== 'restoring' && !_qcOtpVerifying && currentFace === 0){
           _qcAuthPhase = 'idle';
           _qcResolveAuth(session, source + '-retry');
         }

@@ -611,6 +611,16 @@ issues. Fixed #1/#2/#4/#6 (deferred #3 cosmetic, #5 pre-existing-minor). Canonic
 - **#6 OAuth prefill:** the `!profile` branch calls `populateFormFromProfile(null, session.user)` to
   restore email/name prefill lost in the rewrite.
 
+**Re-review round (superpowers quality + Codex, on the hardened result):**
+- **Quality pass:** `_qcApplyProfile` now only runs when `!_fetchFailed` (don't stomp cached
+  unlock/profile state on a transient failure before the retry recovers it).
+- **Codex pass (HIGH):** `_qcFetchProfile` now destructures `{ data, error }` and returns
+  `_QC_FETCH_FAILED` when `error` is set — Supabase reports API/RLS/network errors as `{ error }`
+  WITHOUT throwing, so the throw-only catch missed them and misclassified errors as no-row.
+- **Codex pass (MEDIUM):** the fetch-failure retry timer now also skips when `_qcAuthPhase ===
+  'restoring'` (a later event-driven restore took over during the 1500ms window) to prevent a
+  double-fire that would clobber the in-flight restore's phase.
+
 ## Self-review notes (done by author)
 
 - **Spec coverage:** state machine (Task 2) ✓, single restore fn (Task 3) ✓, loader rewrite (Task 5) ✓, all touch points from the inventory (Tasks 4/6/7/8) ✓, device testing (Task 9) ✓.
