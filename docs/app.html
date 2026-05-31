@@ -3102,6 +3102,17 @@ async function attemptPaymentUnlock(passedSession){
   let attempts = 0;
   const maxAttempts = 8;
 
+  // v356(hardening): when the unlock poll gives up, hand back to a normal restore so a
+  // signed-in returning user whose Dodo webhook lagged past this window isn't stranded on
+  // face 0 (Codex). _qcResolveAuth handles a null session (settles the form) and is
+  // idempotent; we clear _qcPendingPaymentUnlock first so it won't bail on the payment guard.
+  const _giveUp = function(why){
+    console.error("post-payment unlock: gave up — " + why);
+    _qcPendingPaymentUnlock = false;
+    _qcUnlockInFlight = false;
+    try { if (typeof _qcResolveAuth === "function") _qcResolveAuth(_readSessionFromStorage(), 'payment-giveup'); } catch(_){}
+  };
+
   const poll = async () => {
     attempts++;
 
@@ -3113,9 +3124,7 @@ async function attemptPaymentUnlock(passedSession){
       if (attempts < maxAttempts) {
         setTimeout(poll, 1500);
       } else {
-        console.error("post-payment unlock: gave up — no session after", maxAttempts, "attempts");
-        _qcPendingPaymentUnlock = false;
-        _qcUnlockInFlight = false;
+        _giveUp("no session after " + maxAttempts + " attempts");
       }
       return;
     }
@@ -3137,8 +3146,7 @@ async function attemptPaymentUnlock(passedSession){
         if (attempts < maxAttempts) {
           setTimeout(poll, 1500);
         } else {
-          _qcPendingPaymentUnlock = false;
-          _qcUnlockInFlight = false;
+          _giveUp("profile fetch failed after " + maxAttempts + " attempts");
         }
         return;
       }
@@ -3176,17 +3184,14 @@ async function attemptPaymentUnlock(passedSession){
       if (attempts < maxAttempts) {
         setTimeout(poll, 1500);
       } else {
-        console.error("post-payment unlock: gave up waiting for has_paid after", maxAttempts, "attempts");
-        _qcPendingPaymentUnlock = false;
-        _qcUnlockInFlight = false;
+        _giveUp("has_paid still false after " + maxAttempts + " attempts");
       }
     } catch (e) {
       console.error("post-payment unlock: profile fetch error:", e);
       if (attempts < maxAttempts) {
         setTimeout(poll, 1500);
       } else {
-        _qcPendingPaymentUnlock = false;
-        _qcUnlockInFlight = false;
+        _giveUp("fetch exception after " + maxAttempts + " attempts");
       }
     }
   };

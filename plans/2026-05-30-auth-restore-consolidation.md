@@ -620,6 +620,10 @@ issues. Fixed #1/#2/#4/#6 (deferred #3 cosmetic, #5 pre-existing-minor). Canonic
 - **Codex pass (MEDIUM):** the fetch-failure retry timer now also skips when `_qcAuthPhase ===
   'restoring'` (a later event-driven restore took over during the 1500ms window) to prevent a
   double-fire that would clobber the in-flight restore's phase.
+- **Codex pass #3 (MEDIUM):** payment-unlock exhaustion no longer strands the user — all 4
+  give-up exits in `attemptPaymentUnlock` route through a `_giveUp()` helper that clears the
+  flag then hands back to `_qcResolveAuth(_readSessionFromStorage(), 'payment-giveup')` for a
+  normal restore (into the cube if the profile is complete, else the form).
 
 ## Self-review notes (done by author)
 
