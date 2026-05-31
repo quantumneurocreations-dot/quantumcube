@@ -1234,8 +1234,14 @@ let _qcAuthPhase = 'idle';
 // Loader-dismiss signal — true once we've reached a stable end state (navigated to a
 // content face, or settled deliberately on face 0). NEVER true mid-restore.
 let _qcAuthSettled = false;
-// NOTE: the old `_qcSessionRestored` readers are removed across Tasks 4-8; the app is
-// not expected to run cleanly until Task 8 completes the sweep. Do not deploy mid-branch.
+// v356(hardening): bumped on SIGNED_OUT to cancel an in-flight _qcResolveAuth so a slow
+// restore can't resurrect a signed-out user (Codex #1).
+let _qcAuthGen = 0;
+// v356(hardening): bound the profile-fetch-failure retry to once per page load (Codex #2).
+let _qcProfileRetryScheduled = false;
+// v356(hardening): sentinel returned by _qcFetchProfile on timeout/error, distinct from
+// null (= genuine no profile row) so _qcResolveAuth can retry instead of stranding (Codex #2).
+const _QC_FETCH_FAILED = Symbol('qc-fetch-failed');
 // v304: Guard to prevent global onAuthStateChange from handling SIGNED_IN while OTP verify is running
 let _qcOtpVerifying = false;
 // v294: Review mode bypass for Play Store review
@@ -4098,11 +4104,11 @@ async function _qcFetchProfile(userId){
         .eq("id", userId).maybeSingle(),
       new Promise((_, reject) => setTimeout(() => reject(new Error('fetch-profile-timeout')), 8000))
     ]);
-    return data || null;
+    return data || null;   // null = genuine no-row (maybeSingle, no error)
   } catch(e){
     console.error("[QC] _qcFetchProfile error:", e);
     try { if(window.Sentry) Sentry.captureException(e, { tags: { area: 'fetch-profile' } }); } catch(_){}
-    return null;
+    return _QC_FETCH_FAILED;  // v356(hardening): timeout/error — distinct from no-row so the caller can retry
   }
 }
 
@@ -4135,6 +4141,11 @@ async function _qcResolveAuth(session, source){
   // The OTP verify path owns its own SIGNED_IN — never interfere with it.
   if(_qcOtpVerifying){ try { _qcSessionNav('resolveAuth skip — otp verifying', ctx); } catch(_){} return; }
 
+  // v356(hardening #4): a post-payment unlock owns nav + the unlock. Don't let a restore
+  // here fetch a stale unpaid profile and re-lock the user (syncUnlockFromProfile downgrades
+  // unpaid). attemptPaymentUnlock clears _qcPendingPaymentUnlock when done; later events restore.
+  if(_qcPendingPaymentUnlock){ try { _qcSessionNav('resolveAuth skip — payment unlock in flight', ctx); } catch(_){} return; }
+
   // Idempotency / re-entrancy: a restore in flight or already-succeeded short-circuits.
   if(_qcAuthPhase === 'restoring' || _qcAuthPhase === 'restored'){
     try { _qcSessionNav('resolveAuth skip — phase '+_qcAuthPhase, ctx); } catch(_){}
@@ -4148,17 +4159,52 @@ async function _qcResolveAuth(session, source){
   }
 
   _qcAuthPhase = 'restoring';
+  const _gen = _qcAuthGen;   // v356(hardening #1): snapshot — SIGNED_OUT bumps _qcAuthGen to cancel us
   qcCurrentUser = session.user;
   try { if(session.user.email) localStorage.setItem('qc_last_email', session.user.email); } catch(_){}
   updateSettingsLinkVisibility();
   try { restorePendingProfile(); } catch(_){}
 
-  const profile = await _qcFetchProfile(session.user.id);
+  const fetched = await _qcFetchProfile(session.user.id);
+
+  // v356(hardening #1): a SIGNED_OUT landed during the fetch await — abort. Don't apply
+  // stale state or navigate (that would resurrect the signed-out user). Drop 'restoring'
+  // back to 'idle' (unless SIGNED_OUT already settled the phase) so restores aren't blocked.
+  if(_qcAuthGen !== _gen){
+    if(_qcAuthPhase === 'restoring') _qcAuthPhase = 'idle';
+    try { _qcSessionNav('resolveAuth aborted — signed out during fetch', ctx); } catch(_){}
+    return;
+  }
+
+  // v356(hardening #2): distinguish a FAILED fetch (timeout/error → sentinel) from a
+  // genuine no-row (null). Failure must not be treated as "no profile".
+  const _fetchFailed = (fetched === _QC_FETCH_FAILED);
+  const profile = _fetchFailed ? null : fetched;
   _qcApplyProfile(profile);
   try { restorePlayPurchases().catch(()=>{}); } catch(_){}
 
   // If the user already navigated to a content face during the await, don't interrupt.
   if(currentFace !== 0){ _qcSettle('restored', 'already on content face', ctx); return; }
+
+  // v356(hardening #2): fetch failed but we DO have a valid session. Settle so the loader
+  // dismisses (form shown), AND schedule ONE retry so a returning user with a complete
+  // profile recovers automatically instead of being stranded — events that fired during
+  // 'restoring' were skipped, so there may be no later trigger otherwise.
+  if(_fetchFailed){
+    try { const emEl = document.getElementById('email'); if(emEl){ emEl.readOnly = false; emEl.style.opacity = ""; } } catch(_){}
+    _qcSettle('awaiting-input', 'profile fetch failed', ctx);
+    if(!_qcProfileRetryScheduled){
+      _qcProfileRetryScheduled = true;
+      const _retryGen = _gen;
+      setTimeout(function(){
+        if(_qcAuthGen === _retryGen && _qcAuthPhase !== 'restored' && !_qcOtpVerifying && currentFace === 0){
+          _qcAuthPhase = 'idle';
+          _qcResolveAuth(session, source + '-retry');
+        }
+      }, 1500);
+    }
+    return;
+  }
 
   const complete = profile && profile.name && profile.dob;
   if(!complete){
@@ -4166,6 +4212,9 @@ async function _qcResolveAuth(session, source){
     // complete it. Recover any stashed signup metadata, then settle (loader dismisses).
     try {
       if(!profile){
+        // v356(hardening #6): restore the OAuth/auth email + name prefill that the old
+        // per-path code did (lost in the rewrite). Fills email from session.user.email etc.
+        try { populateFormFromProfile(null, session.user); } catch(_){}
         const meta = session.user.user_metadata || {};
         let hasPending = false; try { hasPending = !!localStorage.getItem(QC_PENDING_KEY); } catch(_){}
         if(!hasPending && (meta.pending_first_name || meta.pending_dob_year)){
@@ -4203,7 +4252,7 @@ async function _qcResolveAuth(session, source){
   // later trigger / the 12s loader timeout handles it — loader stays up meanwhile.
   _qcAuthPhase = 'idle';
   setTimeout(function(){
-    if(currentFace === 0 && _qcAuthPhase === 'idle' && !_qcOtpVerifying){
+    if(currentFace === 0 && _qcAuthPhase === 'idle' && !_qcOtpVerifying && _qcAuthGen === _gen){
       try {
         _qcForcePopulateFromProfile(profile, session.user);
         runCalculation();
@@ -4637,6 +4686,9 @@ sb.auth.onAuthStateChange(async (event, session) => {
   }
 
   if(event === "SIGNED_OUT"){
+    // v356(hardening #1): cancel any in-flight _qcResolveAuth so a slow restore can't
+    // resume after this and resurrect the signed-out user into content.
+    _qcAuthGen++;
     // Clear all user state and settle on face 0 with a gentle message if this was a
     // cold-start expiry (we never reached a content face).
     qcCurrentUser = null; qcCurrentProfile = null;

@@ -591,6 +591,26 @@ Because there's no DB/edge change, revert is clean and immediate. Keep the branc
 
 ---
 
+## Task 7 — Post-Codex hardening (applied)
+
+After the onAuthStateChange rewrite, the Codex layer (third review) found real auth/payment
+issues. Fixed #1/#2/#4/#6 (deferred #3 cosmetic, #5 pre-existing-minor). Canonical code is in
+`docs/app.html`; summary of changes:
+
+- **New state:** `_qcAuthGen` (bumped on SIGNED_OUT), `_qcProfileRetryScheduled` (bounds the
+  fetch-failure retry to once/load), `const _QC_FETCH_FAILED = Symbol(...)` (fetch-failed sentinel).
+- **#1 resurrection race:** `_qcResolveAuth` snapshots `const _gen = _qcAuthGen` before the
+  profile-fetch await; after the await (and in the runCalc retry) it aborts if `_qcAuthGen !== _gen`
+  (a SIGNED_OUT bumped it), resetting `'restoring' → 'idle'` so it can't apply stale state / navigate.
+- **#2 fetch-failure vs no-row:** `_qcFetchProfile` returns `_QC_FETCH_FAILED` on timeout/error
+  (null stays = genuine no-row). On failure with a valid session, `_qcResolveAuth` settles
+  `awaiting-input` (loader dismisses) AND schedules one `1500ms` retry so a complete-profile user
+  isn't stranded (events during `'restoring'` were skipped).
+- **#4 payment downgrade:** `_qcResolveAuth` early-returns when `_qcPendingPaymentUnlock` is true —
+  `attemptPaymentUnlock` owns the unlock + nav; prevents a stale unpaid profile re-locking a paid user.
+- **#6 OAuth prefill:** the `!profile` branch calls `populateFormFromProfile(null, session.user)` to
+  restore email/name prefill lost in the rewrite.
+
 ## Self-review notes (done by author)
 
 - **Spec coverage:** state machine (Task 2) ✓, single restore fn (Task 3) ✓, loader rewrite (Task 5) ✓, all touch points from the inventory (Tasks 4/6/7/8) ✓, device testing (Task 9) ✓.
