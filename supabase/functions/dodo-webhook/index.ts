@@ -264,7 +264,10 @@ serve(async (req) => {
   // Verify signature (Standard Webhooks spec)
   let event: any;
   try {
-    event = await dodoClient.webhooks.unwrap(rawBody, webhookHeaders);
+    // unwrap(body, { headers }) — the 2nd arg MUST be an options object. Passing the
+    // headers map directly leaves `headers` undefined inside the SDK, which SKIPS
+    // signature verification entirely (silent forgery-accept). See SDK webhooks.unwrap.
+    event = await dodoClient.webhooks.unwrap(rawBody, { headers: webhookHeaders });
   } catch (e) {
     console.error("webhook signature verification failed:", String(e));
     return new Response(JSON.stringify({ error: "invalid signature" }), {
