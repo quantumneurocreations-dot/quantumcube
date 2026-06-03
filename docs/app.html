@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v357",
+      release: "quantum-cube@qc-v359",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -1829,11 +1829,26 @@ function _qcSplitForNarration(text, maxLen){
 }
 
 async function _qcFetchNarrationChunk(text){
+  // v359: the narrate edge function now REQUIRES a real user JWT — the public
+  // anon key is rejected (401). Read the current session straight from
+  // localStorage (mirrors _readSessionFromStorage usage elsewhere — dodges the
+  // getSession() hang) and send session.access_token as the bearer. The anon
+  // key stays as the `apikey` header for Supabase function routing.
+  const session = _readSessionFromStorage();
+  const accessToken = session && session.access_token;
+  if(!accessToken){
+    // Narration is a logged-in feature. With no session we'd only get a 401 —
+    // skip the call so we don't crash, spin, or burn a request on a bad token.
+    const err = new Error("narrate no-session");
+    err.status = 401;
+    err.noSession = true;
+    throw err;
+  }
   const res = await fetch(NARRATE_URL, {
     method: "POST",
     headers: {
       "apikey": SUPABASE_ANON_KEY,
-      "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+      "Authorization": "Bearer " + accessToken,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ text: text, voice_id: VALORY_VOICE_ID })
@@ -1869,6 +1884,13 @@ async function fetchNarration(text){
     try { if(window.posthog) posthog.capture('narrate_api_succeeded', { latency_ms: Date.now() - _narrateStart, size_bytes: combined.size, chunk_count: chunks.length }); } catch(e){}
     return URL.createObjectURL(combined);
   }catch(e){
+    // v359: no logged-in session — narration is gated behind sign-in. This is an
+    // expected skip, not a fault: don't report it to Sentry, just bail quietly.
+    if(e && e.noSession){
+      try { if(window.posthog) posthog.capture('narrate_api_failed', { status: 401, reason: 'no_session', latency_ms: Date.now() - _narrateStart, chunk_count: chunks.length }); } catch(_){}
+      console.warn("[QC] narrate skipped — no session");
+      return null;
+    }
     const reason = e && e.status ? 'http_error' : 'network_error';
     try { if(window.posthog) posthog.capture('narrate_api_failed', { status: e && e.status, error: String(e && e.message || e).slice(0,200), latency_ms: Date.now() - _narrateStart, reason: reason, chunk_count: chunks.length }); } catch(_){}
     console.error("[QC] narrate err", e);
