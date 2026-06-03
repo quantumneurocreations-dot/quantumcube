@@ -10,6 +10,9 @@
 // Subscribed events:
 //   payment.succeeded -> has_paid = true (+ welcome email on transition)
 //   refund.succeeded  -> has_paid = false
+//   dispute.lost      -> has_paid = false  (merchant fought + lost; funds taken)
+//   dispute.accepted  -> has_paid = false  (merchant accepted; refund issued)
+//   (dispute.opened / dispute.won are intentionally ignored — not terminal losses)
 //
 // Required Supabase secrets (set via dashboard or `supabase secrets set`):
 //   DODO_PAYMENTS_WEBHOOK_KEY  (signing secret from Dodo webhook config)
@@ -92,6 +95,28 @@ async function setHasPaid(
 
   const rows = (await res.json()) as unknown[];
   return rows.length;
+}
+
+// v358: dispute (and as a safety net, refund) events originate outside our
+// checkout flow — they come from the card network/bank — so they may omit our
+// metadata.user_id and, depending on payload shape, the customer block. When we
+// have no usable identifier but the event references a payment, recover identity
+// from the originating payment (which carries our create-session metadata.user_id
+// and the customer email).
+async function recoverIdentityFromPayment(
+  paymentId: string,
+): Promise<{ user_id?: string; email?: string } | null> {
+  try {
+    const payment = (await dodoClient.payments.retrieve(paymentId)) as any;
+    const uid = payment?.metadata?.user_id;
+    const email = payment?.customer?.email;
+    if (typeof uid === "string" && uid) return { user_id: uid, email };
+    if (typeof email === "string" && email) return { email };
+    return null;
+  } catch (e) {
+    console.error(`payment lookup failed for ${paymentId}:`, String(e));
+    return null;
+  }
 }
 
 // ── Resend helpers (best-effort; never throw) ───────────────────────────────
@@ -253,16 +278,33 @@ serve(async (req) => {
   try {
     const data = event.data ?? {};
     const metadata = data.metadata ?? {};
-    const customerEmail = data.customer?.email;
+    let customerEmail: string | undefined = data.customer?.email;
     const customerName = data.customer?.name;
     const userId = metadata.user_id;
 
     // v354: validate user_id is a real UUID before trusting it (defence-in-depth +
     // injection-safety for the PostgREST URL interpolation in getProfile/setHasPaid).
     const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    const validUserId = (typeof userId === "string" && UUID_RE.test(userId)) ? userId : null;
+    let validUserId = (typeof userId === "string" && UUID_RE.test(userId)) ? userId : null;
     if (userId && !validUserId) {
       console.warn(`webhook: metadata.user_id present but not a valid UUID: ${JSON.stringify(userId)}`);
+    }
+
+    // v358: last-resort identity recovery for events that reference a payment but
+    // carry no usable identifier of their own (dispute.* especially). Resolves via
+    // the originating payment's metadata.user_id / customer.email.
+    if (!validUserId && !customerEmail && typeof data.payment_id === "string") {
+      const recovered = await recoverIdentityFromPayment(data.payment_id);
+      if (recovered) {
+        if (typeof recovered.user_id === "string" && UUID_RE.test(recovered.user_id)) {
+          validUserId = recovered.user_id;
+        }
+        if (!customerEmail && recovered.email) customerEmail = recovered.email;
+        console.log(
+          `webhook: recovered identity from payment ${data.payment_id} ` +
+            `(user_id=${validUserId ? "yes" : "no"} email=${customerEmail ? "yes" : "no"})`,
+        );
+      }
     }
 
     if (!validUserId && !customerEmail) {
@@ -302,9 +344,15 @@ serve(async (req) => {
           sendWelcomeEmail(customerEmail, firstName || undefined),
         ]);
       }
-    } else if (event.type === "refund.succeeded") {
+    } else if (
+      event.type === "refund.succeeded" ||
+      event.type === "dispute.lost" ||
+      event.type === "dispute.accepted"
+    ) {
+      // Revenue-leak guard (v358): a lost/accepted dispute means the funds are gone,
+      // so revoke access. dispute.opened / dispute.won are NOT terminal — ignore them.
       const updated = await setHasPaid(target, false);
-      console.log(`refund.succeeded -> has_paid=false target=${JSON.stringify(target)} rows=${updated}`);
+      console.log(`${event.type} -> has_paid=false target=${JSON.stringify(target)} rows=${updated}`);
     } else {
       console.log(`ignoring event type: ${event.type}`);
     }
