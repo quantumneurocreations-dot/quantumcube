@@ -75,7 +75,7 @@ serve(async (req) => {
 
   const { data: profile, error: profileErr } = await sb
     .from("profiles")
-    .select("id, email, has_paid, marketing_consent, created_at")
+    .select("id, email, name, dob, has_paid, marketing_consent, created_at")
     .eq("id", user.id)
     .single();
 
@@ -92,12 +92,14 @@ serve(async (req) => {
     account: {
       user_id: profile.id,
       email: profile.email,
+      name: profile.name,
+      dob: profile.dob,
       account_created_at: profile.created_at,
       has_paid: profile.has_paid,
       marketing_consent: profile.marketing_consent,
     },
     note:
-      "This export contains all personal data Quantum Cube stores about your account. Reading content (numerology, astrology, zodiac) is generated deterministically from your name and date of birth at runtime and is not stored on our servers.",
+      "This export contains all personal data Quantum Cube stores about your account, including your name and date of birth. Reading content (numerology, astrology, zodiac) is generated deterministically from your name and date of birth at runtime and is not stored on our servers.",
   };
 
   return new Response(JSON.stringify(exportPayload, null, 2), {
