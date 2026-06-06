@@ -656,7 +656,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_wp2cRcjgyJcarRVuq_Q1zw_Vd68AEcZ";
     if (location.hostname !== "quantumcube.app") return; // skip on local/test
     Sentry.init({
       dsn: "https://fc0733d091a210fe80f9213b64fafa8e@o4511330222604288.ingest.de.sentry.io/4511330235908176",
-      release: "quantum-cube@qc-v359",
+      release: "quantum-cube@qc-v360",
       environment: "production",
       sampleRate: 1.0,
       tracesSampleRate: 0,
@@ -3501,6 +3501,33 @@ async function checkStoredUnlock(){
   }catch(e){}
 }
 
+// v360: fast, un-throttled unlock probe. The 8s-raced _qcFetchProfile can time out on a
+// cold connection, leaving the DEFAULT lock icons visible for a PAID user — worst case a
+// fresh device / right after paying, before checkStoredUnlock has a marker. This mirrors the
+// recovery openFace() already does on click; run it PROACTIVELY after auth so paid users
+// never see stale padlocks. A genuine unpaid result stops (no retry); only a network
+// error/throw retries (≤2×, 2s apart) to ride out the cold connection. Idempotent.
+async function _qcUnlockProbe(userId, attempt){
+  attempt = attempt || 0;
+  const _gen = (typeof _qcAuthGen !== 'undefined') ? _qcAuthGen : null;   // snapshot for stale-guard
+  try{
+    const uid = userId || (qcCurrentUser && qcCurrentUser.id);
+    if(!uid || isUnlocked) return;
+    const { data:p, error } = await sb.from("profiles").select("has_paid").eq("id", uid).maybeSingle();
+    if(error) throw error;                                  // transient → retry below
+    // v360: STALE-GUARD. applyUnlockedState() writes unlock + persists STORE_KEY using the
+    // GLOBAL qcCurrentUser. If a sign-out / different sign-in happened during the await, a late
+    // paid-probe for user A must NOT unlock for whoever is current now. Apply ONLY if the probed
+    // user is still the current session user AND no auth-gen change (sign-out) occurred.
+    const stillCurrent = (typeof _qcAuthGen === 'undefined' || _qcAuthGen === _gen)
+                         && qcCurrentUser && qcCurrentUser.id === uid;
+    if(p && p.has_paid === true && stillCurrent){ applyUnlockedState(false); }  // paid: clear stale locks
+    // p with has_paid !== true = genuine unpaid → leave locked, do not retry.
+  }catch(_){
+    if(attempt < 2){ setTimeout(function(){ _qcUnlockProbe(userId, attempt + 1); }, 2000); }
+  }
+}
+
 function syncUnlockFromProfile(profile){
   // v334: Never downgrade confirmed paid state based on a null/failed fetch.
   // If we already have isUnlocked=true and profile is null, skip - the fetch failed.
@@ -4231,6 +4258,10 @@ async function _qcResolveAuth(session, source){
   if(_fetchFailed){
     try { const emEl = document.getElementById('email'); if(emEl){ emEl.readOnly = false; emEl.style.opacity = ""; } } catch(_){}
     _qcSettle('awaiting-input', 'profile fetch failed', ctx);
+    // v360: the raced full-profile fetch failed (timeout/transient). Fire the fast, single-
+    // column unlock probe so a PAID user's lock icons clear immediately rather than waiting
+    // for the 1.5s retry (or a face click). Genuine unpaid users stay locked.
+    try { _qcUnlockProbe(session.user.id); } catch(_){}
     if(!_qcProfileRetryScheduled){
       _qcProfileRetryScheduled = true;
       const _retryGen = _gen;
@@ -4507,6 +4538,9 @@ async function _qcOtpVerify(){
     try { localStorage.removeItem(QC_PENDING_KEY); } catch(_){}
     updateSettingsLinkVisibility();
     try { runCalculation(); } catch(e){ showFace(1); }
+    // v360: proactively clear stale lock icons for a paid user — the restore-path profile
+    // fetch can time out on a fresh login, so don't make the user click a face to recover.
+    try { _qcUnlockProbe(session.user.id); } catch(_){}
   }
 
   // Show loading state
